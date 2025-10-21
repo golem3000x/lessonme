@@ -1,6 +1,10 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Lesson\LessonController;
+use App\Livewire\Chat\ChatLesson;
+use App\Livewire\Onboarding\ProfileSetup;
+use App\Livewire\Onboarding\TopicSelector;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -14,11 +18,16 @@ Route::middleware('guest')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
 });
 
-// Защищенные маршруты
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::get('/onboarding', ProfileSetup::class)->name('onboarding.profile');
+    Route::get('/topics', TopicSelector::class)->name('onboarding.topics');
+
+    Route::get('/chat', ChatLesson::class)->name('chat');
+
+    Route::resource('lessons', LessonController::class)->only(['index', 'show', 'create', 'store']);
 });
