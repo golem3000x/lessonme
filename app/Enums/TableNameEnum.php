@@ -7,6 +7,7 @@ enum TableNameEnum: string
 {
     case USERS = 'users';
     case TOPICS = 'topics';
+    case TOPIC_TRANSLATIONS = 'topic_translations';
     case LESSONS = 'lessons';
     case CACHE = 'cache';
     case CACHE_LOCK = 'cache_locks';

@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Lesson;
 use App\Dto\LessonDto;
 use App\Http\Controllers\Controller;
 use App\Models\Lesson;
+use App\Models\Topic;
 use App\Services\OpenAi\OpenAIService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
@@ -35,12 +36,14 @@ class LessonController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'topic' => 'required|string|max:255',
+            'topic' => 'nullable|string|max:255', //проверка что имя topic в enum
             'level' => 'required|string',
             'themes' => 'nullable|array',
         ]);
 
         $user = Auth::user();
+
+        $topic_id = //
 
         $lessonDto = new LessonDto(
             $request->topic,
@@ -55,7 +58,7 @@ class LessonController extends Controller
         /** @var Lesson $lesson */
         $lesson = Lesson::create([
             'user_id' => Auth::id(),
-            'topic' => $data['topic'] ?? $request->topic,
+            'topic_id' => $topic_id,
             'lesson_text' => $data['lesson_text'] ?? '',
             'grammar_data' => $data['grammar_highlights'] ?? [],
             'vocabulary' => $data['vocabulary'] ?? [],

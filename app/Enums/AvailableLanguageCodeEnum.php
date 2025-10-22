@@ -5,6 +5,6 @@ namespace App\Enums;
 
 enum AvailableLanguageCodeEnum: string
 {
-    case EN = 'en';
-    case VI = 'vi';
+    case Vietnamese = 'vi';
+    case English = 'en';
 }

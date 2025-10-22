@@ -15,7 +15,7 @@ return new class extends Migration {
         Schema::create(TableNameEnum::LESSONS->value, function (Blueprint $table): void {
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->string('topic')->nullable();
+            $table->unsignedTinyInteger('topic_id')->nullable();
             $table->text('lesson_text')->nullable();
             $table->json('grammar_data')->nullable();
             $table->json('vocabulary')->nullable();

@@ -13,7 +13,7 @@ use Illuminate\Support\Carbon;
 /**
  * @property int $id
  * @property int $user_id
- * @property string|null $topic
+ * @property int $topic_id
  * @property string|null $lesson_text
  * @property array<array-key, mixed>|null $grammar_data
  * @property array<array-key, mixed>|null $vocabulary
@@ -21,6 +21,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read User $user
+ * @property-read Topic|null $topicRelation
  * @method static Builder<static>|Lesson newModelQuery()
  * @method static Builder<static>|Lesson newQuery()
  * @method static Builder<static>|Lesson query()
@@ -40,7 +41,7 @@ class Lesson extends Model
     protected $table = TableNameEnum::LESSONS->value;
     protected $fillable = [
         'user_id',
-        'topic',
+        'topic_id',
         'lesson_text',
         'grammar_data',
         'vocabulary',
@@ -55,5 +56,10 @@ class Lesson extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function topicRelation(): BelongsTo
+    {
+        return $this->belongsTo(Topic::class, 'topic_id');
     }
 }

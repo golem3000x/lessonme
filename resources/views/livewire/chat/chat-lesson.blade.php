@@ -1,9 +1,18 @@
 <div class="max-w-2xl mx-auto p-6 bg-white rounded shadow">
     <div class="flex justify-between items-center mb-4">
-        <h3 class="text-lg font-semibold">AI Practice — {{ $topic }}</h3>
-        <div>
-            <input type="text" wire:model="topic" class="border rounded px-2 py-1" />
-            <button wire:click="startLesson" class="ml-2 bg-green-600 text-white px-3 py-1 rounded">Start</button>
+        <h3 class="text-lg font-semibold">
+            {{ __('chat.title') }} — {{ $topic }}
+        </h3>
+
+        <div class="flex items-center">
+            <select wire:model="topic_id" class="border rounded px-2 py-1">
+                @foreach($topics as $t)
+                    <option value="{{ $t['id'] }}">{{ $t['label'] }}</option>
+                @endforeach
+            </select>
+            <button wire:click="startLesson" class="ml-2 bg-green-600 text-white px-3 py-1 rounded">
+                {{ __('chat.start') }}
+            </button>
         </div>
     </div>
 
@@ -18,7 +27,14 @@
     </div>
 
     <div class="flex">
-        <input wire:model="input" wire:keydown.enter="send" class="flex-grow border rounded px-3 py-2" placeholder="Type your reply..." />
-        <button wire:click="send" class="ml-2 bg-blue-600 text-white px-4 py-2 rounded">Send</button>
+        <input
+                wire:model="input"
+                wire:keydown.enter="send"
+                class="flex-grow border rounded px-3 py-2"
+                placeholder="{{ __('chat.placeholder') }}"
+        />
+        <button wire:click="send" class="ml-2 bg-blue-600 text-white px-4 py-2 rounded">
+            {{ __('chat.send') }}
+        </button>
     </div>
 </div>

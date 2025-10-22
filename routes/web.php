@@ -6,10 +6,18 @@ use App\Livewire\Chat\ChatLesson;
 use App\Livewire\Onboarding\ProfileSetup;
 use App\Livewire\Onboarding\TopicSelector;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Session;
 
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/locale/{locale}', function (string $locale) {
+    if (in_array($locale, ['en', 'vi'], true)) {
+        Session::put('locale', $locale);
+    }
+    return redirect()->back();
+})->name('locale.switch');
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');

@@ -3,9 +3,10 @@ declare(strict_types=1);
 
 use App\Enums\AvailableLanguageCodeEnum;
 use App\Enums\TableNameEnum;
-use App\Enums\TopicEnum;
+use App\Enums\AvailableTopicEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
@@ -16,16 +17,15 @@ return new class extends Migration {
     {
         Schema::create(TableNameEnum::TOPICS->value, function (Blueprint $table): void {
             $table->id();
-            $table->string('name');
-            $table->string('language');
+            $table->unsignedTinyInteger('name');
             $table->timestamps();
         });
 
         DB::table(TableNameEnum::TOPICS->value)->insert([
-            ['name' => TopicEnum::PROGRAMMING, 'created_at' => now(), 'updated_at' => now(), 'language' => AvailableLanguageCodeEnum::EN],
-            ['name' => TopicEnum::COOKING, 'created_at' => now(), 'updated_at' => now(), 'language' => AvailableLanguageCodeEnum::EN],
-            ['name' => TopicEnum::TRAVEL, 'created_at' => now(), 'updated_at' => now(), 'language' => AvailableLanguageCodeEnum::EN],
-            ['name' => TopicEnum::ART, 'created_at' => now(), 'updated_at' => now(), 'language' => AvailableLanguageCodeEnum::EN],
+            ['name' => AvailableTopicEnum::Programming, 'created_at' => now(), 'updated_at' => now()],
+            ['name' => AvailableTopicEnum::Cooking, 'created_at' => now(), 'updated_at' => now()],
+            ['name' => AvailableTopicEnum::Travel, 'created_at' => now(), 'updated_at' => now()],
+            ['name' => AvailableTopicEnum::Art, 'created_at' => now(), 'updated_at' => now()],
         ]);
     }
 

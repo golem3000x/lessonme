@@ -10,19 +10,19 @@ namespace App\Dto;
  * between different layers of the application. It helps maintain data integrity
  * and provides a clear contract for the data structure.
  *
- * @property string $topic Topic of the lesson (e.g., 'programming', 'cooking', 'travel', 'art')
+ * @property int $topic_id Topic of the lesson (e.g., 'programming', 'cooking', 'travel', 'art')
  * @property string $level The level of the lesson (e.g., 'beginner', 'intermediate', 'advanced')
- * @property string $native_language The native language of the lesson
- * @property string $learning_lang The learning language of the lesson
+ * @property int $native_language_id The native language of the lesson
+ * @property int $learning_lang_id The learning language of the lesson
  * @property array $themes The themes of the lesson
  */
 class LessonDto
 {
     public function __construct(
-        public string $topic,
+        public int $topic_id,
         public string $level,
-        public string $native_language,
-        public string $learning_lang,
+        public int $native_language_id,
+        public int $learning_lang_id,
         public array  $themes
     )
     {

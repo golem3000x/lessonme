@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\AvailableLanguageEnum;
 use App\Enums\TableNameEnum;
 use Barryvdh\LaravelIdeHelper\Eloquent;
 use Database\Factories\UserFactory;
@@ -28,7 +29,9 @@ use Illuminate\Support\Carbon;
  * @property string|null $zalo_user_id
  * @property string|null $avatar
  * @property string $native_lang
+ * @property int $native_lang_id
  * @property string $learning_lang
+ * @property int $learning_lang_id
  * @property-read Collection<int, \App\Models\Lesson> $lessons
  * @property-read int|null $lessons_count
  * @property-read DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
@@ -69,8 +72,8 @@ class User extends Authenticatable
         'password',
         'zalo_user_id',
         'avatar',
-        'native_lang',
-        'learning_lang'
+        'native_lang_id',
+        'learning_lang_id'
     ];
 
     /**
@@ -99,5 +102,15 @@ class User extends Authenticatable
     public function lessons(): HasMany
     {
         return $this->hasMany(Lesson::class);
+    }
+
+    public function getNativeLangAttribute(): string
+    {
+        return AvailableLanguageEnum::from($this->native_lang_id)->name;
+    }
+
+    public function getLearningLangAttribute(): string
+    {
+        return AvailableLanguageEnum::from($this->learning_lang_id)->name;
     }
 }

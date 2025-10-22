@@ -3,25 +3,35 @@ declare(strict_types=1);
 
 namespace App\Livewire\Onboarding;
 
+use App\Enums\AvailableLanguageEnum;
+use App\Models\User;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
+
 class ProfileSetup extends Component
 {
-    public $name;
-    public $native_lang = 'vi';
-    public $learning_lang = 'en';
-    public $preferred_time = '19:00';
+    public string $name = '';
+    public int $native_lang_id;
+    public int $learning_lang_id;
+    public string $preferred_time = '19:00';
+
+    /** @var \App\Enums\AvailableLanguageEnum[] */
+    public array $languages = [];
 
     public function mount(): void
     {
+        /** @var User $user */
         $user = Auth::user();
+
         $this->name = $user->name ?? '';
-        $this->native_lang = $user->native_lang ?? 'vi';
-        $this->learning_lang = $user->learning_lang ?? 'en';
+        $this->native_lang_id = $user->native_lang_id ?? AvailableLanguageEnum::Vietnamese->value;
+        $this->learning_lang_id = $user->learning_lang_id ?? AvailableLanguageEnum::English->value;
+
+        $this->languages = AvailableLanguageEnum::all();
     }
 
     public function save(): Redirector
@@ -29,11 +39,11 @@ class ProfileSetup extends Component
         $user = Auth::user();
         $user->update([
             'name' => $this->name,
-            'native_lang' => $this->native_lang,
-            'learning_lang' => $this->learning_lang,
+            'native_lang_id' => $this->native_lang_id,
+            'learning_lang_id' => $this->learning_lang_id,
         ]);
 
-        session()->flash('message', 'Profile saved.');
+        session()->flash('message', __('onboarding.profile_saved'));
         return redirect()->route('onboarding.topics');
     }
 
