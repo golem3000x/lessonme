@@ -10,18 +10,19 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 
+
 /**
  * @property int $id
  * @property int $user_id
- * @property int $topic_id
+ * @property int|null $topic_id
  * @property string|null $lesson_text
  * @property array<array-key, mixed>|null $grammar_data
  * @property array<array-key, mixed>|null $vocabulary
  * @property array<array-key, mixed>|null $quiz
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read User $user
  * @property-read Topic|null $topicRelation
+ * @property-read User $user
  * @method static Builder<static>|Lesson newModelQuery()
  * @method static Builder<static>|Lesson newQuery()
  * @method static Builder<static>|Lesson query()
@@ -30,7 +31,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|Lesson whereId($value)
  * @method static Builder<static>|Lesson whereLessonText($value)
  * @method static Builder<static>|Lesson whereQuiz($value)
- * @method static Builder<static>|Lesson whereTopic($value)
+ * @method static Builder<static>|Lesson whereTopicId($value)
  * @method static Builder<static>|Lesson whereUpdatedAt($value)
  * @method static Builder<static>|Lesson whereUserId($value)
  * @method static Builder<static>|Lesson whereVocabulary($value)

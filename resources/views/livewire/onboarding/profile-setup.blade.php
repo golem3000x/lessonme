@@ -1,8 +1,5 @@
 <div class="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow">
     <h2 class="text-xl font-semibold mb-4">{{ __('onboarding.profile_setup') }}</h2>
-
-    <p>Locale: {{ app()->getLocale() }}</p>
-    <p>Test: {{ __('languages.english') }}</p>
     <div class="mb-3">
         <label class="block">{{ __('onboarding.name') }}</label>
         <input type="text" wire:model="name" class="w-full border rounded p-2" />

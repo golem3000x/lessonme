@@ -13,9 +13,11 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Notifications\DatabaseNotificationCollection;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
+
 
 /**
  * @property int $id
@@ -28,13 +30,11 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $updated_at
  * @property string|null $zalo_user_id
  * @property string|null $avatar
- * @property string $native_lang
  * @property int $native_lang_id
- * @property string $learning_lang
  * @property int $learning_lang_id
- * @property-read Collection<int, \App\Models\Lesson> $lessons
+ * @property-read Collection<int, Lesson> $lessons
  * @property-read int|null $lessons_count
- * @property-read DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
+ * @property-read DatabaseNotificationCollection<int, DatabaseNotification> $notifications
  * @property-read int|null $notifications_count
  * @method static UserFactory factory($count = null, $state = [])
  * @method static Builder<static>|User newModelQuery()
@@ -45,9 +45,9 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|User whereEmail($value)
  * @method static Builder<static>|User whereEmailVerifiedAt($value)
  * @method static Builder<static>|User whereId($value)
- * @method static Builder<static>|User whereLearningLang($value)
+ * @method static Builder<static>|User whereLearningLangId($value)
  * @method static Builder<static>|User whereName($value)
- * @method static Builder<static>|User whereNativeLang($value)
+ * @method static Builder<static>|User whereNativeLangId($value)
  * @method static Builder<static>|User wherePassword($value)
  * @method static Builder<static>|User whereRememberToken($value)
  * @method static Builder<static>|User whereUpdatedAt($value)
@@ -102,15 +102,5 @@ class User extends Authenticatable
     public function lessons(): HasMany
     {
         return $this->hasMany(Lesson::class);
-    }
-
-    public function getNativeLangAttribute(): string
-    {
-        return AvailableLanguageEnum::from($this->native_lang_id)->name;
-    }
-
-    public function getLearningLangAttribute(): string
-    {
-        return AvailableLanguageEnum::from($this->learning_lang_id)->name;
     }
 }

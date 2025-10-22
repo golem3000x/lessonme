@@ -94,7 +94,6 @@ class ChatLesson extends Component
         $this->messages[] = ['sender' => 'user', 'content' => $userMessage];
         $this->input = '';
 
-        // Demo reply
         $this->messages[] = ['sender' => 'ai', 'content' => 'Thanks — got it!'];
     }
 
