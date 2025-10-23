@@ -75,6 +75,7 @@ class ChatLesson extends Component
         $lesson = Lesson::create([
             'user_id' => $user->id,
             'topic_id' => $this->topic_id,
+            'lesson_name' => $data['lesson_name'] ?? '',
             'lesson_text' => $data['lesson_text'] ?? '',
             'grammar_data' => $data['grammar_highlights'] ?? [],
             'vocabulary' => $data['vocabulary'] ?? [],

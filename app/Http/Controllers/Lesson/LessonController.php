@@ -59,6 +59,7 @@ class LessonController extends Controller
         $lesson = Lesson::create([
             'user_id' => Auth::id(),
             'topic_id' => $topic_id,
+            'lesson_name' => $data['lesson_name'] ?? '',
             'lesson_text' => $data['lesson_text'] ?? '',
             'grammar_data' => $data['grammar_highlights'] ?? [],
             'vocabulary' => $data['vocabulary'] ?? [],

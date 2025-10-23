@@ -15,6 +15,7 @@ use Illuminate\Support\Carbon;
  * @property int $id
  * @property int $user_id
  * @property int|null $topic_id
+ * @property string|null $lesson_name
  * @property string|null $lesson_text
  * @property array<array-key, mixed>|null $grammar_data
  * @property array<array-key, mixed>|null $vocabulary
@@ -43,6 +44,7 @@ class Lesson extends Model
     protected $fillable = [
         'user_id',
         'topic_id',
+        'lesson_name',
         'lesson_text',
         'grammar_data',
         'vocabulary',

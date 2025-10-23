@@ -16,7 +16,7 @@ class OpenAIService
 
         $learning_lang_name = AvailableLanguageEnum::from($lessonDto->learning_lang_id)->name;
 
-        $native_lang_name   = AvailableLanguageEnum::from($lessonDto->native_language_id)->name;
+        $native_lang_name = AvailableLanguageEnum::from($lessonDto->native_language_id)->name;
 
         $teacher_prompt = "You are an $learning_lang_name teacher.";
 
@@ -26,6 +26,7 @@ class OpenAIService
 
         $system = "$teacher_prompt Generate a short lesson for a learner. Return JSON with keys:
                     - topic
+                    - lesson_name (not longer than 100 characters)
                     - lesson_text
                     - grammar_highlights (array of {phrase,label,explanation,formula,example})
                     - vocabulary (array of {word,translation,example})

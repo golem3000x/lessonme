@@ -6,14 +6,9 @@
         @else
             <ul>
                 @foreach($lessons as $lesson)
-                    @php
-                        $baseName = optional($lesson->topicRelation)->name ?? '';
-                        $key = 'topics.' . $baseName;
-                        $translated = __($key);
-                        $label = $translated !== $key ? $translated : $baseName;
-                    @endphp
                     <li class="mb-2">
-                        <a href="{{ route('lessons.show', $lesson->id) }}" class="text-blue-600">{{ $label }}</a>
+                        <a href="{{ route('lessons.show', $lesson->id) }}"
+                           class="text-blue-600">{{ $lesson->lesson_name ?? Str::limit($lesson->lesson_text,50).'...' }}</a>
                     </li>
                 @endforeach
             </ul>

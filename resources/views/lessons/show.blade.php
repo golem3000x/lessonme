@@ -8,13 +8,7 @@
         </button>
     </div>
     <div class="p-6 bg-white rounded shadow">
-        @php
-            $baseName = optional($lesson->topicRelation)->name ?? '';
-            $topicKey = 'topics.' . $baseName;
-            $topicTranslated = __($topicKey);
-            $displayTopic = $topicTranslated !== $topicKey ? $topicTranslated : $baseName;
-        @endphp
-        <h2 class="text-2xl font-bold mb-2">{{ $displayTopic }}</h2>
+        <h2 class="text-2xl font-bold mb-2">{{ $lesson->lesson_name }}</h2>
 
         <div class="prose max-w-none">
             <p>{{ $lesson->lesson_text }}</p>
@@ -42,7 +36,8 @@
                             </div>
                         @endif
                         @if(!empty($g['example']))
-                            <div class="mt-2 italic text-gray-600">{{ __('lessons.example') }}: {{ $g['example'] }}</div>
+                            <div class="mt-2 italic text-gray-600">{{ __('lessons.example') }}
+                                : {{ $g['example'] }}</div>
                         @endif
                     </div>
                 @endforeach
@@ -58,7 +53,8 @@
                 <ul class="mt-2">
                     @foreach($vocab as $v)
                         <li class="mb-1">
-                            <strong>{{ $v['word'] ?? '' }}</strong> — <span class="text-gray-600">{{ $v['translation'] ?? '' }}</span>
+                            <strong>{{ $v['word'] ?? '' }}</strong> — <span
+                                    class="text-gray-600">{{ $v['translation'] ?? '' }}</span>
                             @if(!empty($v['example']))
                                 <div class="text-sm italic text-gray-500">{{ $v['example'] }}</div>
                             @endif
@@ -73,7 +69,7 @@
         @endphp
         @if(!empty($quiz))
             <div class="mt-6">
-                <livewire:vocabulary-quiz :quiz="$quiz" />
+                <livewire:vocabulary-quiz :quiz="$quiz"/>
             </div>
         @endif
     </div>
