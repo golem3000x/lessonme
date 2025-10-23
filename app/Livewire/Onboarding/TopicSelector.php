@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Livewire\Onboarding;
@@ -21,13 +22,15 @@ class TopicSelector extends Component
     public function save(): Redirector
     {
         // In real app save to user settings
-        session()->flash('message', 'Topics saved: ' . implode(', ', $this->selected));
+        session()->flash('message', 'Topics saved: '.implode(', ', $this->selected));
+
         return redirect()->route('dashboard');
     }
 
     public function render(): Factory|View|\Illuminate\View\View
     {
         $topics = Topic::all();
+
         return view('livewire.onboarding.topic-selector', compact('topics'));
     }
 }

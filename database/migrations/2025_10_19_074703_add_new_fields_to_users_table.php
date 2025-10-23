@@ -1,14 +1,15 @@
 <?php
+
 declare(strict_types=1);
 
-use App\Enums\AvailableLanguageCodeEnum;
 use App\Enums\AvailableLanguageEnum;
 use App\Enums\TableNameEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      */
@@ -18,7 +19,7 @@ return new class extends Migration {
             $table->string('zalo_user_id')->nullable()->unique();
             $table->string('avatar')->nullable();
             $table->unsignedTinyInteger('native_lang_id')->default(AvailableLanguageEnum::Vietnamese->value);
-            $table->unsignedTinyInteger('learning_lang_id')->default(AvailableLanguageEnum::English->value);;
+            $table->unsignedTinyInteger('learning_lang_id')->default(AvailableLanguageEnum::English->value);
         });
     }
 

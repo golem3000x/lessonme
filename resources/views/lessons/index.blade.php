@@ -8,7 +8,7 @@
                 @foreach($lessons as $lesson)
                     <li class="mb-2">
                         <a href="{{ route('lessons.show', $lesson->id) }}"
-                           class="text-blue-600">{{ $lesson->lesson_name ?? Str::limit($lesson->lesson_text,50).'...' }}</a>
+                           class="text-blue-600">{{ $lesson->lesson_name ?? Str::limit($lesson->lesson_text,50) }}</a>
                     </li>
                 @endforeach
             </ul>

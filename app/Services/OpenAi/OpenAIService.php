@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Services\OpenAi;
@@ -40,10 +41,11 @@ class OpenAIService
                 ['role' => 'user', 'content' => "Create lesson about $topic for level $lessonDto->level."],
             ],
             'response_format' => ['type' => 'json_object'],
-            'max_tokens' => 800
+            'max_tokens' => 800,
         ]);
 
         $content = $response->choices[0]->message->content ?? '{}';
+
         return json_decode($content, true) ?? [];
     }
 }

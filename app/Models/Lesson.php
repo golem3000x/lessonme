@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Models;
@@ -9,7 +10,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
-
 
 /**
  * @property int $id
@@ -24,6 +24,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $updated_at
  * @property-read Topic|null $topicRelation
  * @property-read User $user
+ *
  * @method static Builder<static>|Lesson newModelQuery()
  * @method static Builder<static>|Lesson newQuery()
  * @method static Builder<static>|Lesson query()
@@ -36,11 +37,13 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|Lesson whereUpdatedAt($value)
  * @method static Builder<static>|Lesson whereUserId($value)
  * @method static Builder<static>|Lesson whereVocabulary($value)
+ *
  * @mixin Eloquent
  */
 class Lesson extends Model
 {
     protected $table = TableNameEnum::LESSONS->value;
+
     protected $fillable = [
         'user_id',
         'topic_id',
@@ -48,8 +51,9 @@ class Lesson extends Model
         'lesson_text',
         'grammar_data',
         'vocabulary',
-        'quiz'
+        'quiz',
     ];
+
     protected $casts = [
         'grammar_data' => 'array',
         'vocabulary' => 'array',

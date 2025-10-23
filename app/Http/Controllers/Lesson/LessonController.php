@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Http\Controllers\Lesson;
@@ -11,20 +12,19 @@ use App\Services\OpenAi\OpenAIService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
-use Illuminate\View\View;
 use Illuminate\View\Factory;
+use Illuminate\View\View;
 
 class LessonController extends Controller
 {
     public function __construct(
         private readonly OpenAIService $openAIService,
-    )
-    {
-    }
+    ) {}
 
     public function index(): Factory|View
     {
         $lessons = Lesson::where('user_id', Auth::id())->latest()->get();
+
         return view('lessons.index', compact('lessons'));
     }
 
@@ -36,7 +36,7 @@ class LessonController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'topic' => 'nullable|string|max:255', //проверка что имя topic в enum
+            'topic' => 'nullable|string|max:255', // проверка что имя topic в enum
             'level' => 'required|string',
             'themes' => 'nullable|array',
         ]);
@@ -72,6 +72,7 @@ class LessonController extends Controller
     public function show(Lesson $lesson): Factory|View
     {
         abort_if($lesson->user_id !== Auth::id(), 403);
+
         return view('lessons.show', compact('lesson'));
     }
 }

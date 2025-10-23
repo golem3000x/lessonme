@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Livewire\Onboarding;
@@ -11,12 +12,14 @@ use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
-
 class ProfileSetup extends Component
 {
     public string $name = '';
+
     public int $native_lang_id;
+
     public int $learning_lang_id;
+
     public string $preferred_time = '19:00';
 
     /** @var \App\Enums\AvailableLanguageEnum[] */
@@ -44,6 +47,7 @@ class ProfileSetup extends Component
         ]);
 
         session()->flash('message', __('onboarding.profile_saved'));
+
         return redirect()->route('onboarding.topics');
     }
 

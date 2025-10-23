@@ -1,10 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use App\Enums\AvailableLanguageEnum;
 use App\Enums\TableNameEnum;
 use Barryvdh\LaravelIdeHelper\Eloquent;
 use Database\Factories\UserFactory;
@@ -17,7 +17,6 @@ use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Notifications\DatabaseNotificationCollection;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
-
 
 /**
  * @property int $id
@@ -36,6 +35,7 @@ use Illuminate\Support\Carbon;
  * @property-read int|null $lessons_count
  * @property-read DatabaseNotificationCollection<int, DatabaseNotification> $notifications
  * @property-read int|null $notifications_count
+ *
  * @method static UserFactory factory($count = null, $state = [])
  * @method static Builder<static>|User newModelQuery()
  * @method static Builder<static>|User newQuery()
@@ -52,6 +52,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|User whereRememberToken($value)
  * @method static Builder<static>|User whereUpdatedAt($value)
  * @method static Builder<static>|User whereZaloUserId($value)
+ *
  * @mixin Eloquent
  */
 class User extends Authenticatable
@@ -73,7 +74,7 @@ class User extends Authenticatable
         'zalo_user_id',
         'avatar',
         'native_lang_id',
-        'learning_lang_id'
+        'learning_lang_id',
     ];
 
     /**

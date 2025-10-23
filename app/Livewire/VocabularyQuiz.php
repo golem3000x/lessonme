@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Livewire;
@@ -10,8 +11,11 @@ use Livewire\Component;
 class VocabularyQuiz extends Component
 {
     public $quiz = [];
+
     public $answers = [];
+
     public $checked = false;
+
     public $score = 0;
 
     public function mount($quiz): void

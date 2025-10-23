@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Traits;
@@ -11,11 +12,11 @@ trait HasTranslation
      * Возвращает локализованную метку для enum.
      * Ищет в resources/lang/{locale}/{group}.php
      */
-    public function label(string $group = null): string
+    public function label(?string $group = null): string
     {
         $group ??= $this->translationGroup();
 
-        $key = "{$group}." . $this->key();
+        $key = "{$group}.".$this->key();
         $value = Lang::get($key);
 
         // Если перевода нет, Laravel вернёт сам ключ (например, "languages.en")
@@ -34,7 +35,8 @@ trait HasTranslation
     protected function translationGroup(): string
     {
         $shortName = class_basename(static::class);
-        return strtolower(str_replace('Enum', '', $shortName)) . 's';
+
+        return strtolower(str_replace('Enum', '', $shortName)).'s';
     }
 
     /**

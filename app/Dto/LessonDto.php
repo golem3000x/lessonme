@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Dto;
@@ -23,8 +24,6 @@ class LessonDto
         public string $level,
         public int $native_language_id,
         public int $learning_lang_id,
-        public array  $themes
-    )
-    {
-    }
+        public array $themes
+    ) {}
 }

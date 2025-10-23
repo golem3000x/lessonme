@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Livewire\Chat;
@@ -13,13 +14,16 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Lang;
 use Livewire\Component;
 
-
 class ChatLesson extends Component
 {
     public array $messages = [];
+
     public string $input = '';
+
     public string $topic = '';
+
     public int $topic_id;
+
     public ?int $lesson_id = null;
 
     /** @var array<int,array{id:int,label:string}> */
@@ -30,15 +34,15 @@ class ChatLesson extends Component
         $this->messages = [];
 
         $this->topics = collect(AvailableTopicEnum::cases())
-            ->map(fn($case) => [
+            ->map(fn ($case) => [
                 'id' => $case->value,
-                'label' => Lang::get('topics.' . $case->name, [], app()->getLocale()),
+                'label' => Lang::get('topics.'.$case->name, [], app()->getLocale()),
             ])
             ->sortBy('label')
             ->values()
             ->all();
 
-        if (!empty($this->topics)) {
+        if (! empty($this->topics)) {
             $this->topic_id = $this->topics[0]['id'];
             $this->topic = $this->topics[0]['label'];
         }
@@ -47,7 +51,7 @@ class ChatLesson extends Component
     public function updatedTopicId($value): void
     {
         foreach ($this->topics as $topic) {
-            if ((int)$topic['id'] === (int)$value) {
+            if ((int) $topic['id'] === (int) $value) {
                 $this->topic = $topic['label'];
                 break;
             }
@@ -87,7 +91,7 @@ class ChatLesson extends Component
 
     public function send(): void
     {
-        if (!trim($this->input)) {
+        if (! trim($this->input)) {
             return;
         }
 

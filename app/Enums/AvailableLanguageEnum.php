@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Enums;
@@ -20,7 +21,7 @@ enum AvailableLanguageEnum: int
 
     public function label(): string
     {
-        return Lang::get('languages.' . $this->key());
+        return Lang::get('languages.'.$this->key());
     }
 
     public static function all(): array
