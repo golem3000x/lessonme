@@ -29,9 +29,9 @@ class SystemTopicsSeeder extends Seeder
 
         foreach ($lang_dirs as $lang_dir) {
             $locale = basename($lang_dir);
-            $file = $lang_dir . '/system-topics.php';
+            $file = $lang_dir.'/system-topics.php';
 
-            if (!File::exists($file)) {
+            if (! File::exists($file)) {
                 continue;
             }
 
@@ -44,7 +44,7 @@ class SystemTopicsSeeder extends Seeder
                     ->where('slug', '=', $slug)
                     ->first();
 
-                if (!$topic) {
+                if (! $topic) {
                     continue;
                 }
 
@@ -53,7 +53,7 @@ class SystemTopicsSeeder extends Seeder
                     ->where('language_code', '=', $locale)
                     ->exists();
 
-                if (!$exists) {
+                if (! $exists) {
                     DB::table(TableNameEnum::TOPIC_TRANSLATIONS->value)->insert([
                         'topic_id' => $topic->id,
                         'language_code' => $locale,

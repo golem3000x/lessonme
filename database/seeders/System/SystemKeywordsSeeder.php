@@ -19,15 +19,15 @@ class SystemKeywordsSeeder extends Seeder
                 ->where('slug', '=', Str::slug($keyword_enum->topic()->value))
                 ->first();
 
-            if (!$topic) {
+            if (! $topic) {
                 continue;
             }
 
             $slug = Str::slug($keyword_enum->value);
 
             $keyword = DB::table(TableNameEnum::KEYWORDS->value)
-                ->where('slug', '=',$slug)
-                ->where('topic_id', '=',$topic->id)
+                ->where('slug', '=', $slug)
+                ->where('topic_id', '=', $topic->id)
                 ->first();
 
             $keyword_id = $keyword
@@ -46,17 +46,19 @@ class SystemKeywordsSeeder extends Seeder
             ];
 
             foreach ($lang_files as $locale => $file) {
-                if (!file_exists($file)) continue;
+                if (! file_exists($file)) {
+                    continue;
+                }
 
                 $translations = include $file;
                 $value = $translations[$keyword_enum->name] ?? $keyword_enum->value;
 
                 $exists = DB::table(TableNameEnum::KEYWORD_TRANSLATIONS->value)
-                    ->where('keyword_id', '=',$keyword_id)
-                    ->where('language_code', '=',$locale)
+                    ->where('keyword_id', '=', $keyword_id)
+                    ->where('language_code', '=', $locale)
                     ->exists();
 
-                if (!$exists) {
+                if (! $exists) {
                     DB::table(TableNameEnum::KEYWORD_TRANSLATIONS->value)->insert([
                         'keyword_id' => $keyword_id,
                         'language_code' => $locale,

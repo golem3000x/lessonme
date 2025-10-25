@@ -15,15 +15,15 @@ use Livewire\Component;
 
 class ChatLesson extends Component
 {
-    public $messages = [];
+    public array $messages = [];
 
-    public $input = '';
+    public string $input = '';
 
-    public $topic = '';
+    public string $topic = '';
 
-    public $topic_id = null;
+    public ?int $topic_id = null;
 
-    public $lesson_id = null;
+    public ?int $lesson_id = null;
 
     /** @var array<int,array{id:int,label:string}> */
     public array $topics = [];

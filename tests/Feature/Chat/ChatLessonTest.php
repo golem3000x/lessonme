@@ -16,7 +16,7 @@ class ChatLessonTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_updatedTopicId_updates_session_and_label(): void
+    public function test_updated_topic_id_updates_session_and_label(): void
     {
         $user = User::factory()->create([
             'native_lang' => 'en',

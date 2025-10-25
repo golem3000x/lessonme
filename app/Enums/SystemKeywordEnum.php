@@ -36,7 +36,7 @@ enum SystemKeywordEnum: string
 
     public function topic(): SystemTopicEnum
     {
-        return match($this) {
+        return match ($this) {
             self::PHP, self::JAVASCRIPT, self::PYTHON, self::LARAVEL, self::REACT => SystemTopicEnum::PROGRAMMING,
             self::BAKING, self::GRILLING, self::SPICES, self::VEGETARIAN, self::DESSERTS => SystemTopicEnum::COOKING,
             self::HOTELS, self::FLIGHTS, self::BACKPACKING, self::BEACHES, self::GUIDES => SystemTopicEnum::TRAVEL,
