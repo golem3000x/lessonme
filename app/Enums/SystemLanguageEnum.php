@@ -6,16 +6,16 @@ namespace App\Enums;
 
 use Illuminate\Support\Facades\Lang;
 
-enum AvailableLanguageEnum: int
+enum SystemLanguageEnum: string
 {
-    case Vietnamese = 1;
-    case English = 2;
+    case VIETNAMESE = 'vi';
+    case ENGLISH = 'en';
 
     public function key(): string
     {
         return match ($this) {
-            self::Vietnamese => 'Vietnamese',
-            self::English => 'English',
+            self::VIETNAMESE => 'vi',
+            self::ENGLISH => 'en',
         };
     }
 
@@ -27,8 +27,8 @@ enum AvailableLanguageEnum: int
     public static function all(): array
     {
         return [
-            self::Vietnamese,
-            self::English,
+            self::VIETNAMESE,
+            self::ENGLISH,
         ];
     }
 }

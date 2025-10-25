@@ -5,25 +5,25 @@ declare(strict_types=1);
 namespace App\Services\OpenAi;
 
 use App\Dto\LessonDto;
-use App\Enums\AvailableLanguageEnum;
-use App\Enums\AvailableTopicEnum;
 use OpenAI\Laravel\Facades\OpenAI;
 
 class OpenAIService
 {
+    const string GPT_FOUR_O_MINI = 'gpt-4o-mini';
+
     public function generateLesson(LessonDto $lessonDto): array
     {
         $interest = count($lessonDto->themes) ? implode(', ', $lessonDto->themes) : 'general';
 
-        $learning_lang_name = AvailableLanguageEnum::from($lessonDto->learning_lang_id)->name;
+        $learning_lang_name = $lessonDto->learning_lang;
 
-        $native_lang_name = AvailableLanguageEnum::from($lessonDto->native_language_id)->name;
+        $native_lang_name = $lessonDto->native_lang;
 
         $teacher_prompt = "You are an $learning_lang_name teacher.";
 
         $explanation_prompt = "Generate explanations in $native_lang_name for a student learning $learning_lang_name.";
 
-        $topic = AvailableTopicEnum::from($lessonDto->topic_id)->name;
+        $topic = $lessonDto->topic;
 
         $system = "$teacher_prompt Generate a short lesson for a learner. Return JSON with keys:
                     - topic
@@ -35,7 +35,7 @@ class OpenAIService
                     Use themes: $interest. $explanation_prompt";
 
         $response = OpenAI::chat()->create([
-            'model' => 'gpt-4o-mini',
+            'model' => self::GPT_FOUR_O_MINI,
             'messages' => [
                 ['role' => 'system', 'content' => $system],
                 ['role' => 'user', 'content' => "Create lesson about $topic for level $lessonDto->level."],

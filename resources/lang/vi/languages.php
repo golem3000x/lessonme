@@ -1,6 +1,6 @@
 <?php
 
 return [
-    'Vietnamese' => 'Tiếng Việt',
-    'English' => 'Tiếng Anh',
+    'vi' => 'Tiếng Việt',
+    'en' => 'Tiếng Anh',
 ];

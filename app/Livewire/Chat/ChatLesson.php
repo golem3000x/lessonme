@@ -5,75 +5,89 @@ declare(strict_types=1);
 namespace App\Livewire\Chat;
 
 use App\Dto\LessonDto;
-use App\Enums\AvailableTopicEnum;
 use App\Models\Lesson;
+use App\Models\Topic\Topic;
 use App\Services\OpenAi\OpenAIService;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Lang;
 use Livewire\Component;
 
 class ChatLesson extends Component
 {
-    public array $messages = [];
+    public $messages = [];
 
-    public string $input = '';
+    public $input = '';
 
-    public string $topic = '';
+    public $topic = '';
 
-    public int $topic_id;
+    public $topic_id = null;
 
-    public ?int $lesson_id = null;
+    public $lesson_id = null;
 
     /** @var array<int,array{id:int,label:string}> */
     public array $topics = [];
 
     public function mount(): void
     {
-        $this->messages = [];
+        $user = Auth::user();
+        $locale = app()->getLocale();
 
-        $this->topics = collect(AvailableTopicEnum::cases())
-            ->map(fn ($case) => [
-                'id' => $case->value,
-                'label' => Lang::get('topics.'.$case->name, [], app()->getLocale()),
-            ])
-            ->sortBy('label')
-            ->values()
-            ->all();
+        $topics = Topic::with('translations')
+            ->visibleForUser($user->id)
+            ->get();
 
-        if (! empty($this->topics)) {
+        $this->topics = $topics->map(function (Topic $topic) use ($locale) {
+            return [
+                'id' => $topic->id,
+                'label' => $topic->title($locale),
+            ];
+        })->values()->toArray();
+
+        $this->topic_id ??= session('selected_topic_id');
+
+        if (! $this->topic_id && ! empty($this->topics)) {
             $this->topic_id = $this->topics[0]['id'];
-            $this->topic = $this->topics[0]['label'];
         }
+
+        $selected = collect($this->topics)->firstWhere('id', $this->topic_id);
+        $this->topic = $selected['label'] ?? '';
+
+        session(['selected_topic_id' => $this->topic_id]);
     }
 
-    public function updatedTopicId($value): void
+    public function updatedTopicId(int|string $value): void
     {
-        foreach ($this->topics as $topic) {
-            if ((int) $topic['id'] === (int) $value) {
-                $this->topic = $topic['label'];
-                break;
-            }
-        }
+        $this->topic_id = (int) $value;
+        session(['selected_topic_id' => $this->topic_id]); // 💾 сохраняем выбор
+
+        $selected = collect($this->topics)->firstWhere('id', $this->topic_id);
+        $this->topic = $selected['label'] ?? '';
     }
 
     public function startLesson(OpenAIService $openAIService): void
     {
         $user = Auth::user();
 
+        $topic = Topic::find($this->topic_id);
+        if (! $topic) {
+            $this->dispatch('error', message: __('chat.topic_not_found'));
+
+            return;
+        }
+
         $lessonDto = new LessonDto(
-            $this->topic_id,
+            $this->topic,
             'beginner',
-            $user->native_lang_id,
-            $user->learning_lang_id,
+            $user->native_lang,
+            $user->learning_lang,
             [$this->topic]
         );
 
         $data = $openAIService->generateLesson($lessonDto);
 
         $this->messages = [
-            ['sender' => 'ai', 'content' => $data['lesson_text'] ?? 'Hello!'],
+            ['sender' => 'ai', 'content' => $data['lesson_text'] ?? __('chat.default_message')],
         ];
 
         $lesson = Lesson::create([
@@ -99,7 +113,7 @@ class ChatLesson extends Component
         $this->messages[] = ['sender' => 'user', 'content' => $userMessage];
         $this->input = '';
 
-        $this->messages[] = ['sender' => 'ai', 'content' => 'Thanks — got it!'];
+        $this->messages[] = ['sender' => 'ai', 'content' => __('chat.response_acknowledged')];
     }
 
     public function render(): Factory|View

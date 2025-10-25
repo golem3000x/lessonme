@@ -6,12 +6,12 @@ namespace App\Http\Controllers\Lesson;
 
 use App\Dto\LessonDto;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Lesson\StoreLessonRequest;
 use App\Models\Lesson;
-use App\Models\Topic;
+use App\Models\User;
 use App\Services\OpenAi\OpenAIService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Request;
 use Illuminate\View\Factory;
 use Illuminate\View\View;
 
@@ -33,24 +33,19 @@ class LessonController extends Controller
         return view('lessons.create');
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(StoreLessonRequest $request): RedirectResponse
     {
-        $request->validate([
-            'topic' => 'nullable|string|max:255', // проверка что имя topic в enum
-            'level' => 'required|string',
-            'themes' => 'nullable|array',
-        ]);
+        $validated = $request->validated();
 
+        /** @var User $user */
         $user = Auth::user();
 
-        $topic_id = //
-
         $lessonDto = new LessonDto(
-            $request->topic,
-            $request->level,
+            $validated['topic_id'],
+            $validated['level'],
             $user->native_lang,
             $user->learning_lang,
-            $request->themes ?? []
+            $validated['themes'] ?? []
         );
 
         $data = $this->openAIService->generateLesson($lessonDto);
@@ -58,7 +53,7 @@ class LessonController extends Controller
         /** @var Lesson $lesson */
         $lesson = Lesson::create([
             'user_id' => Auth::id(),
-            'topic_id' => $topic_id,
+            'topic_id' => $validated['topic_id'],
             'lesson_name' => $data['lesson_name'] ?? '',
             'lesson_text' => $data['lesson_text'] ?? '',
             'grammar_data' => $data['grammar_highlights'] ?? [],

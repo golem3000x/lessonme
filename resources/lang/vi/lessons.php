@@ -11,7 +11,6 @@ return [
     'generate' => 'Tạo',
 
     // Lesson show page
-    'switch_explanation_language' => 'Chuyển ngôn ngữ giải thích',
     'grammar' => 'Ngữ pháp',
     'vocabulary' => 'Từ vựng',
     'example' => 'Ví dụ',

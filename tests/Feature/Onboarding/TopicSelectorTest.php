@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Feature\Onboarding;
 
 use App\Livewire\Onboarding\TopicSelector;
-use App\Models\Topic;
+use App\Models\Topic\Topic;
 use App\Models\User;
 use Livewire\Livewire;
 use Tests\TestCase;

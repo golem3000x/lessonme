@@ -30,7 +30,7 @@ trait HasTranslation
 
     /**
      * По умолчанию используем имя enum-класса в нижнем регистре как группу переводов.
-     * Например: AvailableLanguageEnum → languages
+     * Например: SystemLanguageEnum → languages
      */
     protected function translationGroup(): string
     {

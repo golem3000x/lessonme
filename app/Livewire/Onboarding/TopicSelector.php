@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Livewire\Onboarding;
 
-use App\Models\Topic;
+use App\Models\Topic\Topic;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Redirector;
@@ -21,7 +21,6 @@ class TopicSelector extends Component
 
     public function save(): Redirector
     {
-        // In real app save to user settings
         session()->flash('message', 'Topics saved: '.implode(', ', $this->selected));
 
         return redirect()->route('dashboard');

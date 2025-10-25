@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Livewire\Onboarding;
 
-use App\Enums\AvailableLanguageEnum;
+use App\Enums\SystemLanguageEnum;
 use App\Models\User;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -16,13 +16,13 @@ class ProfileSetup extends Component
 {
     public string $name = '';
 
-    public int $native_lang_id;
+    public string $native_lang;
 
-    public int $learning_lang_id;
+    public string $learning_lang;
 
     public string $preferred_time = '19:00';
 
-    /** @var \App\Enums\AvailableLanguageEnum[] */
+    /** @var SystemLanguageEnum[] */
     public array $languages = [];
 
     public function mount(): void
@@ -31,10 +31,10 @@ class ProfileSetup extends Component
         $user = Auth::user();
 
         $this->name = $user->name ?? '';
-        $this->native_lang_id = $user->native_lang_id ?? AvailableLanguageEnum::Vietnamese->value;
-        $this->learning_lang_id = $user->learning_lang_id ?? AvailableLanguageEnum::English->value;
+        $this->native_lang = $user->native_lang ?? SystemLanguageEnum::VIETNAMESE->value;
+        $this->learning_lang = $user->learning_lang ?? SystemLanguageEnum::ENGLISH->value;
 
-        $this->languages = AvailableLanguageEnum::all();
+        $this->languages = SystemLanguageEnum::all();
     }
 
     public function save(): Redirector
@@ -42,8 +42,8 @@ class ProfileSetup extends Component
         $user = Auth::user();
         $user->update([
             'name' => $this->name,
-            'native_lang_id' => $this->native_lang_id,
-            'learning_lang_id' => $this->learning_lang_id,
+            'native_lang' => $this->native_lang,
+            'learning_lang' => $this->learning_lang,
         ]);
 
         session()->flash('message', __('onboarding.profile_saved'));

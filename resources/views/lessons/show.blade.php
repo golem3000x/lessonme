@@ -1,12 +1,5 @@
 <x-app-layout>
 
-    <div class="flex justify-end mb-2">
-        <button
-            class="text-sm text-gray-600 hover:text-blue-600"
-            @click="tooltipLang = (tooltipLang === 'en' ? 'vi' : 'en')">
-            🌐 {{ __('lessons.switch_explanation_language') }}
-        </button>
-    </div>
     <div class="p-6 bg-white rounded shadow">
         <h2 class="text-2xl font-bold mb-2">{{ $lesson->lesson_name }}</h2>
 

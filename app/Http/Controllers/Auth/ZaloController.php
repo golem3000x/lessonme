@@ -1,0 +1,73 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Http\Controllers\Auth;
+
+use App\Http\Controllers\Controller;
+use App\Models\User;
+use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Routing\Redirector;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
+
+class ZaloController extends Controller
+{
+    public function redirect(): Redirector|RedirectResponse
+    {
+        $zalo_app_id = config('services.zalo.app_id');
+        $redirect_uri = urlencode(config('services.zalo.redirect_uri'));
+
+        return redirect("https://oauth.zaloapp.com/v4/permission?app_id=$zalo_app_id&redirect_uri=$redirect_uri&state=login");
+    }
+
+    /**
+     * @throws ConnectionException
+     */
+    public function callback(): Redirector|RedirectResponse
+    {
+        $code = request('code');
+        $app_id = config('services.zalo.app_id');
+        $app_secret = config('services.zalo.app_secret');
+
+        $token_response = Http::asForm()->post('https://oauth.zaloapp.com/v4/access_token', [
+            'app_id' => $app_id,
+            'app_secret' => $app_secret,
+            'code' => $code,
+            'grant_type' => 'authorization_code',
+        ]);
+
+        $token_data = $token_response->json();
+        $access_token = $token_data['access_token'] ?? null;
+
+        if (! $access_token) {
+            return redirect('/login')->with('error', 'Zalo login failed.');
+        }
+
+        $profile = Http::withToken($access_token)
+            ->get('https://graph.zalo.me/v2.0/me?fields=id,name,picture')
+            ->json();
+
+        $zalo_id = $profile['id'] ?? null;
+        $name = $profile['name'] ?? 'Zalo User';
+        $avatar = $profile['picture']['data']['url'] ?? null;
+
+        if (! $zalo_id) {
+            return redirect('/login')->with('error', 'Zalo user not found.');
+        }
+
+        $user = User::updateOrCreate(
+            ['zalo_user_id' => $zalo_id],
+            [
+                'name' => $name,
+                'avatar' => $avatar,
+                'password' => bcrypt(str()->random(12)),
+            ]
+        );
+
+        Auth::login($user);
+
+        return redirect()->route('dashboard');
+    }
+}

@@ -29,8 +29,8 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $updated_at
  * @property string|null $zalo_user_id
  * @property string|null $avatar
- * @property int $native_lang_id
- * @property int $learning_lang_id
+ * @property string $native_lang
+ * @property string $learning_lang
  * @property-read Collection<int, Lesson> $lessons
  * @property-read int|null $lessons_count
  * @property-read DatabaseNotificationCollection<int, DatabaseNotification> $notifications
@@ -73,8 +73,8 @@ class User extends Authenticatable
         'password',
         'zalo_user_id',
         'avatar',
-        'native_lang_id',
-        'learning_lang_id',
+        'native_lang',
+        'learning_lang',
     ];
 
     /**

@@ -11,7 +11,6 @@ return [
     'generate' => 'Generate',
 
     // Lesson show page
-    'switch_explanation_language' => 'Switch Explanation Language',
     'grammar' => 'Grammar',
     'vocabulary' => 'Vocabulary',
     'example' => 'Example',

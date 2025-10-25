@@ -3,12 +3,12 @@
     <div class="grid grid-cols-2 gap-2">
         @foreach($topics as $t)
             @php
-                $key = 'topics.' . ($t->name ?? '');
+                $key = 'topics.' . ($t->slug ?? '');
                 $translated = __($key);
-                $label = $translated !== $key ? $translated : ($t->name ?? '');
+                $label = $translated !== $key ? $translated : ($t->slug ?? '');
             @endphp
             <label class="p-3 border rounded">
-                <input type="checkbox" wire:model="selected" value="{{ $t->name }}" /> {{ $label }}
+                <input type="checkbox" wire:model="selected" value="{{ $t->slug }}" /> {{ $label }}
             </label>
         @endforeach
     </div>

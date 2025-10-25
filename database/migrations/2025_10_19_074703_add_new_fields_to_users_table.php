@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Enums\AvailableLanguageEnum;
+use App\Enums\SystemLanguageEnum;
 use App\Enums\TableNameEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -18,15 +18,15 @@ return new class extends Migration
         Schema::table(TableNameEnum::USERS->value, function (Blueprint $table): void {
             $table->string('zalo_user_id')->nullable()->unique();
             $table->string('avatar')->nullable();
-            $table->unsignedTinyInteger('native_lang_id')->default(AvailableLanguageEnum::Vietnamese->value);
-            $table->unsignedTinyInteger('learning_lang_id')->default(AvailableLanguageEnum::English->value);
+            $table->string('native_lang')->default(SystemLanguageEnum::VIETNAMESE->value);
+            $table->string('learning_lang')->default(SystemLanguageEnum::ENGLISH->value);
         });
     }
 
     public function down(): void
     {
         Schema::table(TableNameEnum::USERS->value, function (Blueprint $table): void {
-            $table->dropColumn(['zalo_user_id', 'avatar', 'native_lang_id', 'learning_lang_id']);
+            $table->dropColumn(['zalo_user_id', 'avatar', 'native_lang', 'learning_lang']);
         });
     }
 };

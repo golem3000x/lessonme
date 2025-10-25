@@ -23,17 +23,24 @@
                 <span class="text-sm text-gray-600">{{ Auth::user()->name }}</span>
                 <form method="POST" action="{{ route('logout') }}" class="inline">
                     @csrf
-                    <button type="submit" class="text-sm text-red-600 hover:text-red-800">{{ __('nav.logout') }}</button>
+                    <button type="submit"
+                            class="text-sm text-red-600 hover:text-red-800">{{ __('nav.logout') }}</button>
                 </form>
             @else
                 <a href="{{ route('login') }}" class="text-sm">{{ __('nav.login') }}</a>
-                <a href="{{ route('register') }}" class="text-sm bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">{{ __('nav.register') }}</a>
+                <a href="{{ route('register') }}"
+                   class="text-sm bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">{{ __('nav.register') }}</a>
             @endauth
             @php($currentLocale = app()->getLocale())
             @php($targetLocale = $currentLocale === 'vi' ? 'en' : 'vi')
-            <a href="{{ route('locale.switch', $targetLocale) }}" title="{{ __('nav.switch_to', ['lang' => $targetLocale === 'vi' ? __('nav.vietnamese') : __('nav.english')]) }}" class="text-sm inline-flex items-center" aria-label="{{ __('nav.switch_to', ['lang' => $targetLocale === 'vi' ? __('nav.vietnamese') : __('nav.english')]) }}">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3c4.97 0 9 4.03 9 9s-4.03 9-9 9-9-4.03-9-9 4.03-9 9-9zm0 0c2.5 2.5 2.5 15.5 0 18m0-18c-2.5 2.5-2.5 15.5 0 18M3 12h18" />
+            <a href="{{ route('locale.switch', $targetLocale) }}"
+               title="{{ __('nav.switch_to', ['lang' => $targetLocale === 'vi' ? __('nav.vietnamese') : __('nav.english')]) }}"
+               class="text-sm inline-flex items-center"
+               aria-label="{{ __('nav.switch_to', ['lang' => $targetLocale === 'vi' ? __('nav.vietnamese') : __('nav.english')]) }}">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24"
+                     stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M12 3c4.97 0 9 4.03 9 9s-4.03 9-9 9-9-4.03-9-9 4.03-9 9-9zm0 0c2.5 2.5 2.5 15.5 0 18m0-18c-2.5 2.5-2.5 15.5 0 18M3 12h18"/>
                 </svg>
                 {{ $targetLocale === 'vi' ? 'VI' : 'EN' }}
             </a>

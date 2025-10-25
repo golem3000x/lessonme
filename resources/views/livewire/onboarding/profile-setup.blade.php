@@ -7,7 +7,7 @@
 
     <div class="mb-3">
         <label class="block">{{ __('onboarding.native_language') }}</label>
-        <select wire:model="native_lang_id" class="w-full border rounded p-2">
+        <select wire:model="native_lang" class="w-full border rounded p-2">
             @foreach($languages as $lang)
                 <option value="{{ $lang->value }}">
                     {{ $lang->label() }}
@@ -18,7 +18,7 @@
 
     <div class="mb-3">
         <label class="block">{{ __('onboarding.learning_language') }}</label>
-        <select wire:model="learning_lang_id" class="w-full border rounded p-2">
+        <select wire:model="learning_lang" class="w-full border rounded p-2">
             @foreach($languages as $lang)
                 <option value="{{ $lang->value }}">
                     {{ $lang->label() }}

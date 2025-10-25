@@ -13,7 +13,10 @@ return new class extends Migration
     {
         Schema::table(TableNameEnum::LESSONS->value, function (Blueprint $table): void {
             if (! Schema::hasColumn(TableNameEnum::LESSONS->value, 'topic_id')) {
-                $table->foreignId('topic_id')->nullable()->constrained(TableNameEnum::TOPICS->value)->nullOnDelete()->after('user_id');
+                $table->foreignId('topic_id')->nullable()
+                    ->constrained(TableNameEnum::TOPICS->value)
+                    ->nullOnDelete()
+                    ->after('user_id');
             }
         });
     }

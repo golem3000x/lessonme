@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\TableNameEnum;
+use App\Models\Topic\Topic;
 use Barryvdh\LaravelIdeHelper\Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -14,9 +15,9 @@ use Illuminate\Support\Carbon;
 /**
  * @property int $id
  * @property int $user_id
- * @property int|null $topic_id
- * @property string|null $lesson_name
- * @property string|null $lesson_text
+ * @property int $topic_id
+ * @property string $lesson_name
+ * @property string $lesson_text
  * @property array<array-key, mixed>|null $grammar_data
  * @property array<array-key, mixed>|null $vocabulary
  * @property array<array-key, mixed>|null $quiz

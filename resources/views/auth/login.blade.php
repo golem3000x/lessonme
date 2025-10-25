@@ -59,6 +59,11 @@
                     </button>
                 </div>
             </form>
+            <a href="{{ route('zalo.login') }}"
+               class="flex items-center justify-center gap-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 mt-4">
+                <img src="https://stc-developers.zdn.vn/images/logo-zalo.svg" alt="Zalo" class="h-5">
+                <span>Sign in with Zalo</span>
+            </a>
         </div>
     </div>
 </x-app-layout>

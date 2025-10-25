@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
@@ -24,6 +26,9 @@ class AuthController extends Controller
         return view('auth.register');
     }
 
+    /**
+     * @throws ValidationException
+     */
     public function login(Request $request): RedirectResponse
     {
         $request->validate([

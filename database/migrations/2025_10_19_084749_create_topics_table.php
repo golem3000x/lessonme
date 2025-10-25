@@ -2,11 +2,9 @@
 
 declare(strict_types=1);
 
-use App\Enums\AvailableTopicEnum;
 use App\Enums\TableNameEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -18,16 +16,13 @@ return new class extends Migration
     {
         Schema::create(TableNameEnum::TOPICS->value, function (Blueprint $table): void {
             $table->id();
-            $table->unsignedTinyInteger('name');
+            $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade');
+            $table->string('slug')->unique();
+            $table->boolean('is_system')->default(false);
+            $table->boolean('is_hidden')->default(false);
+            $table->softDeletes();
             $table->timestamps();
         });
-
-        DB::table(TableNameEnum::TOPICS->value)->insert([
-            ['name' => AvailableTopicEnum::Programming, 'created_at' => now(), 'updated_at' => now()],
-            ['name' => AvailableTopicEnum::Cooking, 'created_at' => now(), 'updated_at' => now()],
-            ['name' => AvailableTopicEnum::Travel, 'created_at' => now(), 'updated_at' => now()],
-            ['name' => AvailableTopicEnum::Art, 'created_at' => now(), 'updated_at' => now()],
-        ]);
     }
 
     public function down(): void

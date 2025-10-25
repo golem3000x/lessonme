@@ -1,0 +1,12 @@
+includes:
+  - vendor/nunomaduro/larastan/extension.neon
+
+parameters:
+  paths:
+    - app
+    - database
+  level: 8
+  checkMissingTypehints: true
+  checkUninitializedProperties: true
+  inferPrivatePropertyTypeFromConstructor: true
+  reportUnmatchedIgnoredErrors: true
