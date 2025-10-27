@@ -18,8 +18,7 @@ class TopicTranslation extends Model
     protected $fillable = [
         'topic_id',
         'language_code',
-        'title',
-        'description',
+        'value',
     ];
 
     public function topic(): BelongsTo

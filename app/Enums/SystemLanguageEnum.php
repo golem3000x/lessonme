@@ -31,4 +31,12 @@ enum SystemLanguageEnum: string
             self::ENGLISH,
         ];
     }
+
+    public static function toArray(): array
+    {
+        return [
+            self::VIETNAMESE->value,
+            self::ENGLISH->value,
+        ];
+    }
 }

@@ -4,16 +4,19 @@
             {{ __('chat.title') }} — {{ $topic }}
         </h3>
 
-        <div class="flex items-center">
-            <select wire:model.live="topic_id" class="border rounded px-2 py-1">
+        <div class="flex items-center space-x-2">
+            <label class="sr-only" for="topic-select">{{ __('chat.topic_label') }}</label>
+            <select id="topic-select" wire:model.live="topic_id" class="border rounded px-2 py-1">
                 @foreach($topics as $t)
                     <option value="{{ $t['id'] }}">{{ $t['label'] }}</option>
                 @endforeach
             </select>
 
+            <livewire:chat.keyword-select :topic_id="$topic_id" :keyword_ids="$keyword_ids" />
+
             <button
                     wire:click="startLesson"
-                    class="ml-2 bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 transition"
+                    class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 transition"
             >
                 {{ __('chat.start') }}
             </button>

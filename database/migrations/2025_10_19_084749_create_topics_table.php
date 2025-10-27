@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade');
             $table->string('slug')->unique();
             $table->boolean('is_system')->default(false);
-            $table->boolean('is_hidden')->default(false);
+            $table->boolean('is_approved')->default(false);
             $table->softDeletes();
             $table->timestamps();
         });

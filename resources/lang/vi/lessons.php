@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
     'generate_lesson' => 'Tạo bài học',
     'topic' => 'Chủ đề',

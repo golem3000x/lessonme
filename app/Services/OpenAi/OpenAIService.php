@@ -5,11 +5,14 @@ declare(strict_types=1);
 namespace App\Services\OpenAi;
 
 use App\Dto\LessonDto;
+use App\Enums\SystemLanguageEnum;
 use OpenAI\Laravel\Facades\OpenAI;
 
 class OpenAIService
 {
     const string GPT_FOUR_O_MINI = 'gpt-4o-mini';
+
+    const string OMNI_MODERATION_LATEST = 'omni-moderation-latest';
 
     public function generateLesson(LessonDto $lessonDto): array
     {
@@ -47,5 +50,33 @@ class OpenAIService
         $content = $response->choices[0]->message->content ?? '{}';
 
         return json_decode($content, true) ?? [];
+    }
+
+    public function moderateTopicName(string $text): bool
+    {
+        $response = OpenAI::moderations()->create([
+            'model' => self::OMNI_MODERATION_LATEST,
+            'input' => $text,
+        ]);
+
+        return ! ($response->results[0]->flagged ?? false);
+    }
+
+    public function translateTopicName(string $text, SystemLanguageEnum $target_lang): ?string
+    {
+        $prompt = "Translate the following topic name into $target_lang->value, keeping it concise and natural. Return only the translated text:\n\n$text";
+
+        $response = OpenAI::chat()->create([
+            'model' => self::GPT_FOUR_O_MINI,
+            'messages' => [
+                ['role' => 'system', 'content' => 'You are a professional translator.'],
+                ['role' => 'user', 'content' => $prompt],
+            ],
+            'max_tokens' => 40,
+        ]);
+
+        $content = trim($response->choices[0]->message->content ?? '');
+
+        return $content !== '' ? $content : null;
     }
 }

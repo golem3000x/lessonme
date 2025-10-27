@@ -48,6 +48,7 @@ class Topic extends Model
         'slug',
         'is_system',
         'is_hidden',
+        'is_approved',
     ];
 
     public $timestamps = true;

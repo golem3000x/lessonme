@@ -20,7 +20,6 @@ return new class extends Migration
                 ->after('user_id');
             $table->string('slug')->unique();
             $table->boolean('is_system')->default(false);
-            $table->boolean('is_hidden')->default(false);
             $table->softDeletes();
             $table->timestamps();
         });
