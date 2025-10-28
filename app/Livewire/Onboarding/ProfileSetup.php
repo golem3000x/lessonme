@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Livewire\Onboarding;
 
 use App\Enums\SystemLanguageEnum;
+use App\Jobs\ModerateKeywordJob;
 use App\Jobs\ModerateTopicJob;
 use App\Models\Keyword\Keyword;
 use App\Models\Keyword\KeywordTranslation;
@@ -161,6 +162,9 @@ class ProfileSetup extends Component
         $this->visible_keyword_ids[] = $keyword->id;
         $this->visible_keyword_ids = array_values(array_unique(array_map('intval', $this->visible_keyword_ids)));
         $this->new_keyword_by_topic[$topic_id] = '';
+
+        // Dispatch moderation & translation job for the new keyword
+        dispatch(new ModerateKeywordJob($keyword));
     }
 
     public function save(): Redirector

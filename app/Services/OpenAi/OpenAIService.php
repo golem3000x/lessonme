@@ -10,9 +10,9 @@ use OpenAI\Laravel\Facades\OpenAI;
 
 class OpenAIService
 {
-    const string GPT_FOUR_O_MINI = 'gpt-4o-mini';
+    public const GPT_FOUR_O_MINI = 'gpt-4o-mini';
 
-    const string OMNI_MODERATION_LATEST = 'omni-moderation-latest';
+    public const OMNI_MODERATION_LATEST = 'omni-moderation-latest';
 
     public function generateLesson(LessonDto $lessonDto): array
     {
@@ -62,9 +62,14 @@ class OpenAIService
         return ! ($response->results[0]->flagged ?? false);
     }
 
+    public function moderateKeywordValue(string $text): bool
+    {
+        return $this->moderateTopicName($text);
+    }
+
     public function translateTopicName(string $text, SystemLanguageEnum $target_lang): ?string
     {
-        $prompt = "Translate the following topic name into $target_lang->value, keeping it concise and natural. Return only the translated text:\n\n$text";
+        $prompt = 'Translate the following topic name into '.$target_lang->value.', keeping it concise and natural. Return only the translated text:'."\n\n".$text;
 
         $response = OpenAI::chat()->create([
             'model' => self::GPT_FOUR_O_MINI,
@@ -78,5 +83,11 @@ class OpenAIService
         $content = trim($response->choices[0]->message->content ?? '');
 
         return $content !== '' ? $content : null;
+    }
+
+    public function translateKeywordValue(string $text, SystemLanguageEnum $target_lang): ?string
+    {
+        // Re-use topic translation logic for keywords
+        return $this->translateTopicName($text, $target_lang);
     }
 }
