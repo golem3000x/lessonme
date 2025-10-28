@@ -67,8 +67,8 @@ class Keyword extends Model
         return $query
             ->where(function ($q) use ($userId): void {
                 $q->whereNull('user_id')
-                    ->where('is_hidden', '=', false)
                     ->whereDoesntHave('visibility', function ($v) use ($userId): void {
+                        // Exclude only keywords explicitly hidden by the user
                         $v->where('user_id', '=', $userId)
                             ->where('is_hidden', '=', true);
                     });

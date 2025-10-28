@@ -28,7 +28,6 @@ class ChatLessonTest extends TestCase
         $t1 = Topic::create([
             'slug' => 'business',
             'is_system' => true,
-            'is_hidden' => false,
         ]);
         TopicTranslation::create([
             'topic_id' => $t1->id,

@@ -40,18 +40,15 @@ class ModerateTopicJob implements ShouldQueue
 
         if ($is_approved) {
             $translated = $openAI->translateTopicName($original_name, $target_lang);
-
-            if ($translated && $translated !== $original_name) {
-                TopicTranslation::updateOrCreate(
-                    [
-                        'topic_id' => $this->topic->id,
-                        'language_code' => $target_lang,
-                    ],
-                    [
-                        'value' => $translated,
-                    ]
-                );
-            }
+            TopicTranslation::updateOrCreate(
+                [
+                    'topic_id' => $this->topic->id,
+                    'language_code' => $target_lang,
+                ],
+                [
+                    'value' => $translated,
+                ]
+            );
 
             $this->topic->user->notify(new TopicApprovedNotification($this->topic));
         } else {
