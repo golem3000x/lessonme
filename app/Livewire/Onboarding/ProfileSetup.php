@@ -6,6 +6,9 @@ namespace App\Livewire\Onboarding;
 
 use App\Enums\SystemLanguageEnum;
 use App\Jobs\ModerateTopicJob;
+use App\Models\Keyword\Keyword;
+use App\Models\Keyword\KeywordTranslation;
+use App\Models\Keyword\UserKeywordVisibility;
 use App\Models\Topic\Topic;
 use App\Models\Topic\UserTopicVisibility;
 use App\Models\User;
@@ -37,6 +40,19 @@ class ProfileSetup extends Component
     /** @var array<int,int> */
     public array $visible_topic_ids = [];
 
+    /**
+     * topic_id => list of keywords [ [id,label], ... ]
+     *
+     * @var array<int, array<int, array{id:int,label:string}>>
+     */
+    public array $topic_keywords = [];
+
+    /** @var array<int,int> */
+    public array $visible_keyword_ids = [];
+
+    /** @var array<int,string> topic_id => new keyword value */
+    public array $new_keyword_by_topic = [];
+
     public function mount(): void
     {
         /** @var User $user */
@@ -53,6 +69,10 @@ class ProfileSetup extends Component
         $topics = Topic::with([
             'translations',
             'visibility' => function ($q) use ($user): void {
+                $q->where('user_id', '=', $user->id);
+            },
+            'keywords.translations',
+            'keywords.visibility' => function ($q) use ($user): void {
                 $q->where('user_id', '=', $user->id);
             },
         ])
@@ -74,6 +94,73 @@ class ProfileSetup extends Component
 
             return ! ($record && $record->is_hidden === true);
         })->pluck('id')->values()->all();
+
+        // Prepare per-topic keywords and visibility list
+        $this->topic_keywords = [];
+        $visible_keyword_ids = [];
+        foreach ($topics as $topic) {
+            $this->topic_keywords[$topic->id] = $topic->keywords->map(function (Keyword $kw) use ($locale) {
+                return [
+                    'id' => $kw->id,
+                    'label' => $kw->value($locale),
+                ];
+            })->values()->toArray();
+
+            foreach ($topic->keywords as $kw) {
+                $record = $kw->visibility->first();
+                if (! ($record && $record->is_hidden === true)) {
+                    $visible_keyword_ids[] = $kw->id;
+                }
+            }
+        }
+        $this->visible_keyword_ids = array_values(array_unique(array_map('intval', $visible_keyword_ids)));
+    }
+
+    public function addKeyword(int $topic_id): void
+    {
+        $value = trim($this->new_keyword_by_topic[$topic_id] ?? '');
+        if ($value === '') {
+            return;
+        }
+
+        /** @var User $user */
+        $user = Auth::user();
+
+        $base_slug = Str::slug($value);
+        $slug = $base_slug;
+        $i = 1;
+        while (Keyword::where('slug', $slug)->exists()) {
+            $slug = $base_slug.'-'.$i;
+            $i++;
+        }
+
+        $keyword = Keyword::create([
+            'user_id' => $user->id,
+            'topic_id' => $topic_id,
+            'slug' => $slug,
+            'is_system' => false,
+        ]);
+
+        KeywordTranslation::create([
+            'keyword_id' => $keyword->id,
+            'language_code' => $this->native_lang,
+            'value' => $value,
+        ]);
+
+        // Ensure it's visible by default for the creator
+        UserKeywordVisibility::updateOrCreate(
+            ['user_id' => $user->id, 'keyword_id' => $keyword->id],
+            ['is_hidden' => false]
+        );
+
+        // Update component state
+        $this->topic_keywords[$topic_id][] = [
+            'id' => $keyword->id,
+            'label' => $value,
+        ];
+        $this->visible_keyword_ids[] = $keyword->id;
+        $this->visible_keyword_ids = array_values(array_unique(array_map('intval', $this->visible_keyword_ids)));
+        $this->new_keyword_by_topic[$topic_id] = '';
     }
 
     public function save(): Redirector
@@ -106,13 +193,31 @@ class ProfileSetup extends Component
         }
 
         // Persist topic visibility preferences
-        $selected_ids = array_values(array_unique(array_map('intval', $this->visible_topic_ids)));
-        $all_ids = array_values(array_unique(array_map(fn ($t) => (int) $t['id'], $this->available_topics)));
+        $selected_topic_ids = array_values(array_unique(array_map('intval', $this->visible_topic_ids)));
+        $all_topic_ids = array_values(array_unique(array_map(fn ($t) => (int) $t['id'], $this->available_topics)));
 
-        foreach ($all_ids as $topic_id) {
-            $is_visible = in_array($topic_id, $selected_ids, true);
+        foreach ($all_topic_ids as $topic_id) {
+            $is_visible = in_array($topic_id, $selected_topic_ids, true);
             UserTopicVisibility::updateOrCreate(
                 ['user_id' => $user->id, 'topic_id' => $topic_id],
+                ['is_hidden' => ! $is_visible]
+            );
+        }
+
+        // Persist keyword visibility preferences
+        $selected_keyword_ids = array_values(array_unique(array_map('intval', $this->visible_keyword_ids)));
+        $all_keyword_ids = [];
+        foreach ($this->topic_keywords as $topic_id => $keywords) {
+            foreach ($keywords as $k) {
+                $all_keyword_ids[] = (int) $k['id'];
+            }
+        }
+        $all_keyword_ids = array_values(array_unique($all_keyword_ids));
+
+        foreach ($all_keyword_ids as $kid) {
+            $is_visible = in_array($kid, $selected_keyword_ids, true);
+            UserKeywordVisibility::updateOrCreate(
+                ['user_id' => $user->id, 'keyword_id' => $kid],
                 ['is_hidden' => ! $is_visible]
             );
         }
