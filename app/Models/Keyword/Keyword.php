@@ -25,6 +25,7 @@ class Keyword extends Model
         'slug',
         'is_system',
         'is_hidden',
+        'is_approved'
     ];
 
     public function user(): BelongsTo
@@ -65,17 +66,25 @@ class Keyword extends Model
     public function scopeVisibleForUser($query, $userId)
     {
         return $query
+            ->whereNull('deleted_at')
             ->where(function ($q) use ($userId): void {
-                $q->whereNull('user_id')
-                    ->whereDoesntHave('visibility', function ($v) use ($userId): void {
-                        // Exclude only keywords explicitly hidden by the user
-                        $v->where('user_id', '=', $userId)
-                            ->where('is_hidden', '=', true);
+                // System topics visible unless explicitly hidden by the user
+                $q->where(function ($sys) use ($userId): void {
+                    $sys->whereNull('user_id')
+                        ->whereDoesntHave('visibility', function ($v) use ($userId): void {
+                            $v->where('user_id', '=', $userId)
+                                ->where('is_hidden', '=', true);
+                        });
+                })
+                    // User-owned topics also respect visibility and soft-deletes
+                    ->orWhere(function ($own) use ($userId): void {
+                        $own->where('user_id', '=', $userId)
+                            ->whereDoesntHave('visibility', function ($v) use ($userId): void {
+                                $v->where('user_id', '=', $userId)
+                                    ->where('is_hidden', '=', true);
+                            })
+                            ->where('is_approved', '=', true);
                     });
-            })
-            ->orWhere(function ($q) use ($userId): void {
-                $q->where('user_id', '=', $userId)
-                    ->whereNull('deleted_at');
             });
     }
 }

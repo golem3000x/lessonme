@@ -4,9 +4,13 @@ declare(strict_types=1);
 
 namespace App\Jobs;
 
+use App\Enums\ModerationStatusEnum;
 use App\Enums\SystemLanguageEnum;
 use App\Models\Keyword\Keyword;
 use App\Models\Keyword\KeywordTranslation;
+use App\Notifications\Keyword\KeywordApprovedNotification;
+use App\Notifications\Keyword\KeywordErrorNotification;
+use App\Notifications\Keyword\KeywordRejectedNotification;
 use App\Services\OpenAi\OpenAIService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -18,45 +22,66 @@ class ModerateKeywordJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public function __construct(public Keyword $keyword) {}
+    public function __construct(public Keyword $keyword)
+    {
+    }
 
     public function handle(OpenAIService $openAI): void
     {
+        $status = $this->processKeyword($openAI);
+
+        $this->notifyUser($status);
+    }
+
+    private function processKeyword(OpenAIService $openAI): ModerationStatusEnum
+    {
         $translation = $this->keyword->translation();
+        $targetLang = SystemLanguageEnum::tryFrom($this->keyword->user?->learning_lang ?? '');
 
-        if (! $translation) {
-            return;
+        if (!$translation || !$targetLang) {
+            return ModerationStatusEnum::INVALID;
         }
 
-        $original_value = $translation->value;
+        $originalValue = $translation->value;
 
-        $target_lang = SystemLanguageEnum::tryFrom($this->keyword->user?->learning_lang ?? '');
-
-        $is_approved = $openAI->moderateKeywordValue($original_value);
-
-        if (! $is_approved) {
-            // For now, simply skip translation if not approved
-            return;
+        if (!$this->keyword->is_approved && !$openAI->moderateKeywordValue($originalValue)) {
+            return ModerationStatusEnum::REJECTED;
         }
 
-        if ($target_lang === null) {
-            return;
+        $this->keyword->update(['is_approved' => true]);
+
+        $translated = $openAI->translateKeywordValue($originalValue, $targetLang);
+
+        if (!empty($translated)) {
+            KeywordTranslation::updateOrCreate(
+                [
+                    'keyword_id' => $this->keyword->id,
+                    'language_code' => $targetLang->value,
+                ],
+                [
+                    'value' => $translated,
+                ]
+            );
+        } else {
+            return ModerationStatusEnum::INVALID;
         }
 
-        $translated = $openAI->translateKeywordValue($original_value, $target_lang);
+        return ModerationStatusEnum::APPROVED;
+    }
 
-        if ($translated === null || $translated === '') {
-            return;
-        }
+    private function notifyUser(ModerationStatusEnum $status): void
+    {
+        $user = $this->keyword->user;
 
-        KeywordTranslation::updateOrCreate(
-            [
-                'keyword_id' => $this->keyword->id,
-                'language_code' => $target_lang->value,
-            ],
-            [
-                'value' => $translated,
-            ]
-        );
+        match ($status) {
+            ModerationStatusEnum::APPROVED =>
+            $user->notify(new KeywordApprovedNotification($this->keyword)),
+
+            ModerationStatusEnum::REJECTED =>
+            $user->notify(new KeywordRejectedNotification($this->keyword)),
+
+            ModerationStatusEnum::INVALID =>
+            $user->notify(new KeywordErrorNotification($this->keyword)),
+        };
     }
 }

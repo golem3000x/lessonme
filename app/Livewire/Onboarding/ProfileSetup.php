@@ -93,7 +93,7 @@ class ProfileSetup extends Component
         $this->visible_topic_ids = $topics->filter(function (Topic $topic) {
             $record = $topic->visibility->first();
 
-            return ! ($record && $record->is_hidden === true);
+            return !($record && $record->is_hidden === true);
         })->pluck('id')->values()->all();
 
         // Prepare per-topic keywords and visibility list
@@ -109,7 +109,7 @@ class ProfileSetup extends Component
 
             foreach ($topic->keywords as $kw) {
                 $record = $kw->visibility->first();
-                if (! ($record && $record->is_hidden === true)) {
+                if (!($record && $record->is_hidden === true)) {
                     $visible_keyword_ids[] = $kw->id;
                 }
             }
@@ -131,7 +131,7 @@ class ProfileSetup extends Component
         $slug = $base_slug;
         $i = 1;
         while (Keyword::where('slug', $slug)->exists()) {
-            $slug = $base_slug.'-'.$i;
+            $slug = $base_slug . '-' . $i;
             $i++;
         }
 
@@ -198,13 +198,13 @@ class ProfileSetup extends Component
 
         // Persist topic visibility preferences
         $selected_topic_ids = array_values(array_unique(array_map('intval', $this->visible_topic_ids)));
-        $all_topic_ids = array_values(array_unique(array_map(fn ($t) => (int) $t['id'], $this->available_topics)));
+        $all_topic_ids = array_values(array_unique(array_map(fn($t) => (int)$t['id'], $this->available_topics)));
 
         foreach ($all_topic_ids as $topic_id) {
             $is_visible = in_array($topic_id, $selected_topic_ids, true);
             UserTopicVisibility::updateOrCreate(
                 ['user_id' => $user->id, 'topic_id' => $topic_id],
-                ['is_hidden' => ! $is_visible]
+                ['is_hidden' => !$is_visible]
             );
         }
 
@@ -213,7 +213,7 @@ class ProfileSetup extends Component
         $all_keyword_ids = [];
         foreach ($this->topic_keywords as $topic_id => $keywords) {
             foreach ($keywords as $k) {
-                $all_keyword_ids[] = (int) $k['id'];
+                $all_keyword_ids[] = (int)$k['id'];
             }
         }
         $all_keyword_ids = array_values(array_unique($all_keyword_ids));
@@ -222,7 +222,7 @@ class ProfileSetup extends Component
             $is_visible = in_array($kid, $selected_keyword_ids, true);
             UserKeywordVisibility::updateOrCreate(
                 ['user_id' => $user->id, 'keyword_id' => $kid],
-                ['is_hidden' => ! $is_visible]
+                ['is_hidden' => !$is_visible]
             );
         }
 

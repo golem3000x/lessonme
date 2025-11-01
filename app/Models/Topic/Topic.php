@@ -108,13 +108,14 @@ class Topic extends Model
                                 ->where('is_hidden', '=', true);
                         });
                 })
-                // User-owned topics also respect visibility and soft-deletes
+                    // User-owned topics also respect visibility and soft-deletes
                     ->orWhere(function ($own) use ($userId): void {
                         $own->where('user_id', '=', $userId)
                             ->whereDoesntHave('visibility', function ($v) use ($userId): void {
                                 $v->where('user_id', '=', $userId)
                                     ->where('is_hidden', '=', true);
-                            });
+                            })
+                            ->where('is_approved', '=', true);
                     });
             });
     }

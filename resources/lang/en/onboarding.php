@@ -11,4 +11,9 @@ return [
     'learning_language' => 'Learning language',
     'new_topic' => 'New topic',
     'enter_topic_name' => 'Enter topic name',
+    'topics_visibility' => '',
+    'topics_visibility_hint' => 'Select which topics and keywords will be visible to the chat.',
+    'enter_keyword' => 'Enter a keyword',
+    'add' => 'Add',
+    'no_keywords_yet' => 'No keywords yet. Add some to get started!',
 ];
