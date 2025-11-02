@@ -18,11 +18,13 @@ return new class extends Migration
                 ->constrained(TableNameEnum::TOPICS->value)
                 ->nullOnDelete()
                 ->after('user_id');
-            $table->string('slug')->unique();
+            $table->string('slug');
             $table->boolean('is_system')->default(false);
             $table->boolean('is_approved')->default(false);
-            $table->softDeletes();
             $table->timestamps();
+
+            // Unique constraint: keyword slug must be unique within a topic
+            $table->unique(['topic_id', 'slug']);
         });
     }
 

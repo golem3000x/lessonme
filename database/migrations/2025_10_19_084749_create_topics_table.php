@@ -17,11 +17,13 @@ return new class extends Migration
         Schema::create(TableNameEnum::TOPICS->value, function (Blueprint $table): void {
             $table->id();
             $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade');
-            $table->string('slug')->unique();
+            $table->string('slug');
             $table->boolean('is_system')->default(false);
             $table->boolean('is_approved')->default(false);
-            $table->softDeletes();
             $table->timestamps();
+
+            // Unique constraint: user can't have duplicate slugs
+            $table->unique(['user_id', 'slug']);
         });
     }
 

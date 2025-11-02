@@ -35,16 +35,16 @@ class ProfileSetup extends Component
     /** @var SystemLanguageEnum[] */
     public array $languages = [];
 
-    /** @var array<int, array{id:int,label:string}> */
+    /** @var array<int, array{id:int,label:string,user_id:?int}> */
     public array $available_topics = [];
 
     /** @var array<int,int> */
     public array $visible_topic_ids = [];
 
     /**
-     * topic_id => list of keywords [ [id,label], ... ]
+     * topic_id => list of keywords [ [id,label,user_id], ... ]
      *
-     * @var array<int, array<int, array{id:int,label:string}>>
+     * @var array<int, array<int, array{id:int,label:string,user_id:?int}>>
      */
     public array $topic_keywords = [];
 
@@ -77,7 +77,6 @@ class ProfileSetup extends Component
                 $q->where('user_id', '=', $user->id);
             },
         ])
-            ->whereNull('deleted_at')
             ->where(function ($q) use ($user): void {
                 $q->whereNull('user_id')->orWhere('user_id', '=', $user->id);
             })
@@ -87,13 +86,14 @@ class ProfileSetup extends Component
             return [
                 'id' => $topic->id,
                 'label' => $topic->title($locale),
+                'user_id' => $topic->user_id,
             ];
         })->values()->toArray();
 
         $this->visible_topic_ids = $topics->filter(function (Topic $topic) {
             $record = $topic->visibility->first();
 
-            return !($record && $record->is_hidden === true);
+            return ! ($record && $record->is_hidden === true);
         })->pluck('id')->values()->all();
 
         // Prepare per-topic keywords and visibility list
@@ -104,12 +104,13 @@ class ProfileSetup extends Component
                 return [
                     'id' => $kw->id,
                     'label' => $kw->value($locale),
+                    'user_id' => $kw->user_id,
                 ];
             })->values()->toArray();
 
             foreach ($topic->keywords as $kw) {
                 $record = $kw->visibility->first();
-                if (!($record && $record->is_hidden === true)) {
+                if (! ($record && $record->is_hidden === true)) {
                     $visible_keyword_ids[] = $kw->id;
                 }
             }
@@ -127,13 +128,26 @@ class ProfileSetup extends Component
         /** @var User $user */
         $user = Auth::user();
 
-        $base_slug = Str::slug($value);
-        $slug = $base_slug;
-        $i = 1;
-        while (Keyword::where('slug', $slug)->exists()) {
-            $slug = $base_slug . '-' . $i;
-            $i++;
-        }
+        $slug = Str::slug($value);
+
+        // Validate uniqueness of keyword slug within topic
+        $this->validate([
+            'new_keyword_by_topic.'.$topic_id => [
+                'required',
+                'string',
+                'max:255',
+                function ($attribute, $value, $fail) use ($slug, $topic_id) {
+                    // Check if keyword with same slug already exists in this topic
+                    $exists = Keyword::where('slug', $slug)
+                        ->where('topic_id', $topic_id)
+                        ->exists();
+
+                    if ($exists) {
+                        $fail(__('onboarding.keyword_already_exists'));
+                    }
+                },
+            ],
+        ]);
 
         $keyword = Keyword::create([
             'user_id' => $user->id,
@@ -158,6 +172,7 @@ class ProfileSetup extends Component
         $this->topic_keywords[$topic_id][] = [
             'id' => $keyword->id,
             'label' => $value,
+            'user_id' => $keyword->user_id,
         ];
         $this->visible_keyword_ids[] = $keyword->id;
         $this->visible_keyword_ids = array_values(array_unique(array_map('intval', $this->visible_keyword_ids)));
@@ -165,6 +180,72 @@ class ProfileSetup extends Component
 
         // Dispatch moderation & translation job for the new keyword
         dispatch(new ModerateKeywordJob($keyword));
+    }
+
+    public function deleteTopic(int $topic_id): void
+    {
+        /** @var User $user */
+        $user = Auth::user();
+
+        $topic = Topic::where('id', $topic_id)
+            ->where('user_id', $user->id)
+            ->first();
+
+        if (! $topic) {
+            return;
+        }
+
+        $topic->delete();
+
+        // Remove from available topics
+        $this->available_topics = array_values(array_filter(
+            $this->available_topics,
+            fn ($t) => $t['id'] !== $topic_id
+        ));
+
+        // Remove from visible topics
+        $this->visible_topic_ids = array_values(array_filter(
+            $this->visible_topic_ids,
+            fn ($id) => $id !== $topic_id
+        ));
+
+        // Remove topic keywords
+        unset($this->topic_keywords[$topic_id]);
+
+        session()->flash('message', __('onboarding.topic_deleted'));
+    }
+
+    public function deleteKeyword(int $keyword_id): void
+    {
+        /** @var User $user */
+        $user = Auth::user();
+
+        $keyword = Keyword::where('id', $keyword_id)
+            ->where('user_id', $user->id)
+            ->first();
+
+        if (! $keyword) {
+            return;
+        }
+
+        $topic_id = $keyword->topic_id;
+        $keyword->delete();
+
+        // Remove from topic_keywords
+        if (isset($this->topic_keywords[$topic_id])) {
+            $this->topic_keywords[$topic_id] = array_values(array_filter(
+                $this->topic_keywords[$topic_id],
+                fn ($k) => $k['id'] !== $keyword_id
+            ));
+        }
+
+        // Remove from visible keywords
+        $this->visible_keyword_ids = array_values(array_filter(
+            $this->visible_keyword_ids,
+            fn ($id) => $id !== $keyword_id
+        ));
+
+        session()->flash('message', __('onboarding.keyword_deleted'));
     }
 
     public function save(): Redirector
@@ -180,6 +261,24 @@ class ProfileSetup extends Component
 
         if (trim($this->new_topic_name) !== '') {
             $slug = Str::slug($this->new_topic_name);
+
+            // Validate uniqueness of topic slug for current user
+            $this->validate([
+                'new_topic_name' => [
+                    'required',
+                    'string',
+                    'max:255',
+                    function ($attribute, $value, $fail) use ($slug, $user) {
+                        $exists = Topic::where('slug', $slug)
+                            ->where('user_id', $user->id)
+                            ->exists();
+
+                        if ($exists) {
+                            $fail(__('onboarding.topic_already_exists'));
+                        }
+                    },
+                ],
+            ]);
 
             $topic = Topic::create([
                 'user_id' => $user->id,
@@ -198,13 +297,13 @@ class ProfileSetup extends Component
 
         // Persist topic visibility preferences
         $selected_topic_ids = array_values(array_unique(array_map('intval', $this->visible_topic_ids)));
-        $all_topic_ids = array_values(array_unique(array_map(fn($t) => (int)$t['id'], $this->available_topics)));
+        $all_topic_ids = array_values(array_unique(array_map(fn ($t) => (int) $t['id'], $this->available_topics)));
 
         foreach ($all_topic_ids as $topic_id) {
             $is_visible = in_array($topic_id, $selected_topic_ids, true);
             UserTopicVisibility::updateOrCreate(
                 ['user_id' => $user->id, 'topic_id' => $topic_id],
-                ['is_hidden' => !$is_visible]
+                ['is_hidden' => ! $is_visible]
             );
         }
 
@@ -213,7 +312,7 @@ class ProfileSetup extends Component
         $all_keyword_ids = [];
         foreach ($this->topic_keywords as $topic_id => $keywords) {
             foreach ($keywords as $k) {
-                $all_keyword_ids[] = (int)$k['id'];
+                $all_keyword_ids[] = (int) $k['id'];
             }
         }
         $all_keyword_ids = array_values(array_unique($all_keyword_ids));
@@ -222,7 +321,7 @@ class ProfileSetup extends Component
             $is_visible = in_array($kid, $selected_keyword_ids, true);
             UserKeywordVisibility::updateOrCreate(
                 ['user_id' => $user->id, 'keyword_id' => $kid],
-                ['is_hidden' => !$is_visible]
+                ['is_hidden' => ! $is_visible]
             );
         }
 

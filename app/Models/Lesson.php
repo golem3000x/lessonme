@@ -25,7 +25,6 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $updated_at
  * @property-read Topic|null $topicRelation
  * @property-read User $user
- *
  * @method static Builder<static>|Lesson newModelQuery()
  * @method static Builder<static>|Lesson newQuery()
  * @method static Builder<static>|Lesson query()
@@ -38,8 +37,9 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|Lesson whereUpdatedAt($value)
  * @method static Builder<static>|Lesson whereUserId($value)
  * @method static Builder<static>|Lesson whereVocabulary($value)
- *
  * @mixin Eloquent
+ * @method static Builder<static>|Lesson whereLessonName($value)
+ * @mixin \Eloquent
  */
 class Lesson extends Model
 {

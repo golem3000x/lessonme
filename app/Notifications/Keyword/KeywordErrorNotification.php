@@ -5,37 +5,22 @@ declare(strict_types=1);
 namespace App\Notifications\Keyword;
 
 use App\Models\Keyword\Keyword;
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Notifications\Notification;
+use App\Notifications\Abstracts\SlugEntityErrorNotification;
 
-class KeywordErrorNotification extends Notification implements ShouldQueue
+class KeywordErrorNotification extends SlugEntityErrorNotification
 {
-    use Queueable;
-
-    public function __construct(public Keyword $keyword) {}
-
-    public function via(object $notifiable): array
+    public function __construct(public Keyword $keyword)
     {
-        return ['database', 'mail'];
+        parent::__construct($keyword);
     }
 
-    public function toMail(object $notifiable): MailMessage
+    protected function getEntityName(): string
     {
-        return (new MailMessage)
-            ->subject(__('notifications.keyword_error_subject'))
-            ->line(__('notifications.keyword_error_body', ['keyword' => $this->keyword->translation()?->value ?? $this->keyword->slug]))
-            ->line(__('notifications.keyword_error_reason'))
-            ->line(__('notifications.thanks'));
+        return 'keyword';
     }
 
-    public function toArray(object $notifiable): array
+    protected function getEntityIdKey(): string
     {
-        return [
-            'keyword_id' => $this->keyword->id,
-            'title' => $this->keyword->translation()?->value ?? $this->keyword->slug,
-            'message' => __('notifications.keyword_error_db'),
-        ];
+        return 'keyword_id';
     }
 }

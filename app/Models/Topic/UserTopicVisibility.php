@@ -5,38 +5,41 @@ declare(strict_types=1);
 namespace App\Models\Topic;
 
 use App\Enums\TableNameEnum;
-use App\Models\User;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Abstracts\Slug\UserSlugVisibility;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class UserTopicVisibility extends Model
+/**
+ * @property int $id
+ * @property int $user_id
+ * @property int $topic_id
+ * @property bool $is_hidden
+ * @property string|null $created_at
+ * @property string|null $updated_at
+ * @property-read \App\Models\Topic\Topic $entity
+ * @property-read \App\Models\Topic\Topic $topic
+ * @property-read \App\Models\User $user
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserTopicVisibility newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserTopicVisibility newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserTopicVisibility query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserTopicVisibility whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserTopicVisibility whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserTopicVisibility whereIsHidden($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserTopicVisibility whereTopicId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserTopicVisibility whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserTopicVisibility whereUserId($value)
+ * @mixin \Eloquent
+ */
+class UserTopicVisibility extends UserSlugVisibility
 {
-    use HasFactory;
-
     protected $table = TableNameEnum::USER_TOPIC_VISIBILITY->value;
 
-    protected $fillable = [
-        'user_id',
+    protected array $extra_fillable = [
         'topic_id',
-        'is_hidden',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
+    public function entity(): BelongsTo
     {
-        return [
-            'is_hidden' => 'boolean',
-        ];
-    }
-
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
+        return $this->topic();
     }
 
     public function topic(): BelongsTo

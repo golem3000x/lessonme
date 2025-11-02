@@ -71,8 +71,8 @@ class ModerateKeywordJobTest extends TestCase
         $keyword = $this->create_keyword($user, $topic, 'Cafe');
 
         $openAI = Mockery::mock(OpenAIService::class);
-        $openAI->shouldReceive('moderateKeywordValue')->once()->with('Cafe')->andReturn(true);
-        $openAI->shouldReceive('translateKeywordValue')->once()->with('Cafe', SystemLanguageEnum::VIETNAMESE)->andReturn('Quán cà phê');
+        $openAI->shouldReceive('moderateText')->once()->with('Cafe')->andReturn(true);
+        $openAI->shouldReceive('translateText')->once()->with('Cafe', SystemLanguageEnum::VIETNAMESE)->andReturn('Quán cà phê');
 
         $job = new ModerateKeywordJob($keyword);
         $job->handle($openAI);
@@ -91,8 +91,8 @@ class ModerateKeywordJobTest extends TestCase
         $keyword = $this->create_keyword($user, $topic, 'Restricted');
 
         $openAI = Mockery::mock(OpenAIService::class);
-        $openAI->shouldReceive('moderateKeywordValue')->once()->with('Restricted')->andReturn(false);
-        $openAI->shouldNotReceive('translateKeywordValue');
+        $openAI->shouldReceive('moderateText')->once()->with('Restricted')->andReturn(false);
+        $openAI->shouldNotReceive('translateText');
 
         $job = new ModerateKeywordJob($keyword);
         $job->handle($openAI);

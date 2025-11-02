@@ -5,37 +5,22 @@ declare(strict_types=1);
 namespace App\Notifications\Topic;
 
 use App\Models\Topic\Topic;
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Notifications\Notification;
+use App\Notifications\Abstracts\SlugEntityRejectedNotification;
 
-class TopicRejectedNotification extends Notification implements ShouldQueue
+class TopicRejectedNotification extends SlugEntityRejectedNotification
 {
-    use Queueable;
-
-    public function __construct(public Topic $topic) {}
-
-    public function via(object $notifiable): array
+    public function __construct(public Topic $topic)
     {
-        return ['database', 'mail'];
+        parent::__construct($topic);
     }
 
-    public function toMail(object $notifiable): MailMessage
+    protected function getEntityName(): string
     {
-        return (new MailMessage)
-            ->subject(__('notifications.topic_rejected_subject'))
-            ->line(__('notifications.topic_rejected_body', ['topic' => $this->topic->translation()?->value ?? $this->topic->slug]))
-            ->line(__('notifications.topic_rejected_reason'))
-            ->line(__('notifications.thanks'));
+        return 'topic';
     }
 
-    public function toArray(object $notifiable): array
+    protected function getEntityIdKey(): string
     {
-        return [
-            'topic_id' => $this->topic->id,
-            'title' => $this->topic->translation()?->value ?? $this->topic->slug,
-            'message' => __('notifications.topic_rejected_db'),
-        ];
+        return 'topic_id';
     }
 }

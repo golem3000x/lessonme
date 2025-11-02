@@ -5,37 +5,27 @@ declare(strict_types=1);
 namespace App\Notifications\Keyword;
 
 use App\Models\Keyword\Keyword;
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Notifications\Notification;
+use App\Notifications\Abstracts\SlugEntityApprovedNotification;
 
-class KeywordApprovedNotification extends Notification implements ShouldQueue
+class KeywordApprovedNotification extends SlugEntityApprovedNotification
 {
-    use Queueable;
-
-    public function __construct(public Keyword $keyword) {}
-
-    public function via(object $notifiable): array
+    public function __construct(public Keyword $keyword)
     {
-        return ['database', 'mail'];
+        parent::__construct($keyword);
     }
 
-    public function toMail(object $notifiable): MailMessage
+    protected function getEntityName(): string
     {
-        return (new MailMessage)
-            ->subject(__('notifications.keyword_approved_subject'))
-            ->line(__('notifications.keyword_approved_body', ['keyword' => $this->keyword->translation()?->value ?? $this->keyword->slug]))
-            ->action(__('notifications.view_keywords'), url('/keywords'))
-            ->line(__('notifications.thanks'));
+        return 'keyword';
     }
 
-    public function toArray(object $notifiable): array
+    protected function getEntityUrl(): string
     {
-        return [
-            'keyword_id' => $this->keyword->id,
-            'title' => $this->keyword->translation()?->value ?? $this->keyword->slug,
-            'message' => __('notifications.keyword_approved_db'),
-        ];
+        return '/keywords';
+    }
+
+    protected function getEntityIdKey(): string
+    {
+        return 'keyword_id';
     }
 }

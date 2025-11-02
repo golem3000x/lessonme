@@ -5,21 +5,41 @@ declare(strict_types=1);
 namespace App\Models\Topic;
 
 use App\Enums\TableNameEnum;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Abstracts\Slug\SlugTranslation;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class TopicTranslation extends Model
+/**
+ * @property int $id
+ * @property int $topic_id
+ * @property string $language_code
+ * @property string $value
+ * @property string|null $created_at
+ * @property string|null $updated_at
+ * @property-read \App\Models\Topic\Topic $entity
+ * @property-read \App\Models\Topic\Topic $topic
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TopicTranslation newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TopicTranslation newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TopicTranslation query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TopicTranslation whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TopicTranslation whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TopicTranslation whereLanguageCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TopicTranslation whereTopicId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TopicTranslation whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TopicTranslation whereValue($value)
+ * @mixin \Eloquent
+ */
+class TopicTranslation extends SlugTranslation
 {
-    use HasFactory;
-
     protected $table = TableNameEnum::TOPIC_TRANSLATIONS->value;
 
-    protected $fillable = [
+    protected array $extra_fillable = [
         'topic_id',
-        'language_code',
-        'value',
     ];
+
+    public function entity(): BelongsTo
+    {
+        return $this->topic();
+    }
 
     public function topic(): BelongsTo
     {

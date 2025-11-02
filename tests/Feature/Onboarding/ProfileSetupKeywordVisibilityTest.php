@@ -134,7 +134,9 @@ class ProfileSetupKeywordVisibilityTest extends TestCase
             ->call('addKeyword', $topic->id)
             ->assertSet('new_keyword_by_topic.'.$topic->id, '')
             ->assertSet('topic_keywords.'.$topic->id, fn ($value) => collect($value)->pluck('label')->contains('Museums'))
-            ->assertSet('visible_keyword_ids', fn ($arr) => in_array(Keyword::whereHas('translations', function ($q): void { $q->where("value", 'Museums'); })->latest('id')->first()->id, $arr, true));
+            ->assertSet('visible_keyword_ids', fn ($arr) => in_array(Keyword::whereHas('translations', function ($q): void {
+                $q->where('value', 'Museums');
+            })->latest('id')->first()->id, $arr, true));
 
         $this->assertDatabaseHas('keywords', [
             // slug will be derived from value
@@ -144,7 +146,9 @@ class ProfileSetupKeywordVisibilityTest extends TestCase
             'language_code' => 'en',
             'value' => 'Museums',
         ]);
-        $kid = Keyword::whereHas('translations', function ($q): void { $q->where('value', 'Museums'); })->first()?->id;
+        $kid = Keyword::whereHas('translations', function ($q): void {
+            $q->where('value', 'Museums');
+        })->first()?->id;
         $this->assertNotNull($kid);
         $this->assertDatabaseHas('user_keyword_visibility', [
             'user_id' => $user->id,

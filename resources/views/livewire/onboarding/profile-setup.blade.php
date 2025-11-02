@@ -38,7 +38,17 @@
                 <div class="border rounded">
                     <label class="flex items-center gap-2 p-2 border-b">
                         <input type="checkbox" class="h-4 w-4" value="{{ $t['id'] }}" wire:model="visible_topic_ids">
-                        <span class="font-medium">{{ $t['label'] }}</span>
+                        <span class="font-medium flex-1">{{ $t['label'] }}</span>
+                        @if($t['user_id'] !== null)
+                            <button 
+                                type="button" 
+                                wire:click="deleteTopic({{ $t['id'] }})"
+                                wire:confirm="{{ __('onboarding.confirm_delete_topic') ?? 'Are you sure you want to delete this topic?' }}"
+                                class="px-2 py-1 text-xs bg-red-600 text-white rounded hover:bg-red-700"
+                            >
+                                {{ __('onboarding.delete') ?? 'Delete' }}
+                            </button>
+                        @endif
                     </label>
 
                     <div class="p-2 space-y-2">
@@ -51,10 +61,22 @@
                         @if(count($keywords) > 0)
                             <div class="grid grid-cols-1 gap-1">
                                 @foreach($keywords as $kw)
-                                    <label class="flex items-center gap-2 px-2 py-1 rounded hover:bg-gray-50">
-                                        <input type="checkbox" class="h-4 w-4" value="{{ $kw['id'] }}" wire:model="visible_keyword_ids">
-                                        <span class="text-sm">{{ $kw['label'] }}</span>
-                                    </label>
+                                    <div class="flex items-center gap-2 px-2 py-1 rounded hover:bg-gray-50">
+                                        <label class="flex items-center gap-2 flex-1 cursor-pointer">
+                                            <input type="checkbox" class="h-4 w-4" value="{{ $kw['id'] }}" wire:model="visible_keyword_ids">
+                                            <span class="text-sm">{{ $kw['label'] }}</span>
+                                        </label>
+                                        @if($kw['user_id'] !== null)
+                                            <button 
+                                                type="button" 
+                                                wire:click="deleteKeyword({{ $kw['id'] }})"
+                                                wire:confirm="{{ __('onboarding.confirm_delete_keyword') ?? 'Are you sure you want to delete this keyword?' }}"
+                                                class="px-1.5 py-0.5 text-xs bg-red-600 text-white rounded hover:bg-red-700"
+                                            >
+                                                {{ __('onboarding.delete') ?? 'Delete' }}
+                                            </button>
+                                        @endif
+                                    </div>
                                 @endforeach
                             </div>
                         @else

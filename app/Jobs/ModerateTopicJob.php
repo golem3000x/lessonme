@@ -4,84 +4,42 @@ declare(strict_types=1);
 
 namespace App\Jobs;
 
-use App\Enums\ModerationStatusEnum;
-use App\Enums\SystemLanguageEnum;
 use App\Models\Topic\Topic;
 use App\Models\Topic\TopicTranslation;
 use App\Notifications\Topic\TopicApprovedNotification;
 use App\Notifications\Topic\TopicErrorNotification;
 use App\Notifications\Topic\TopicRejectedNotification;
-use App\Services\OpenAi\OpenAIService;
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
+use Illuminate\Notifications\Notification;
 
-class ModerateTopicJob implements ShouldQueue
+class ModerateTopicJob extends ModerateSlugEntityJob
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-
     public function __construct(public Topic $topic)
     {
+        parent::__construct($topic);
     }
 
-    public function handle(OpenAIService $openAI): void
+    protected function getTranslationModelClass(): string
     {
-        $status = $this->processTopic($openAI);
-
-        $this->notifyUser($status);
+        return TopicTranslation::class;
     }
 
-    private function processTopic(OpenAIService $openAI): ModerationStatusEnum
+    protected function getEntityIdColumn(): string
     {
-        $translation = $this->topic->translation();
-        $targetLang = SystemLanguageEnum::tryFrom($this->topic->user->learning_lang);
-
-        if (!$translation || !$targetLang) {
-            return ModerationStatusEnum::INVALID;
-        }
-
-        $originalValue = $translation->value;
-
-        if (!$this->topic->is_approved && !$openAI->moderateTopicName($originalValue)) {
-            return ModerationStatusEnum::REJECTED;
-        }
-
-        $this->topic->update(['is_approved' => true]);
-
-        $translated = $openAI->translateTopicName($originalValue, $targetLang);
-
-        if (!empty($translated)) {
-            TopicTranslation::updateOrCreate(
-                [
-                    'topic_id' => $this->topic->id,
-                    'language_code' => $targetLang->value,
-                ],
-                [
-                    'value' => $translated,
-                ]
-            );
-        } else {
-            return ModerationStatusEnum::INVALID;
-        }
-
-        return ModerationStatusEnum::APPROVED;
+        return 'topic_id';
     }
 
-    private function notifyUser(ModerationStatusEnum $status): void
+    protected function getApprovedNotification(): Notification
     {
-        $user = $this->topic->user;
+        return new TopicApprovedNotification($this->topic);
+    }
 
-        match ($status) {
-            ModerationStatusEnum::APPROVED =>
-            $user->notify(new TopicApprovedNotification($this->topic)),
+    protected function getRejectedNotification(): Notification
+    {
+        return new TopicRejectedNotification($this->topic);
+    }
 
-            ModerationStatusEnum::REJECTED =>
-            $user->notify(new TopicRejectedNotification($this->topic)),
-
-            ModerationStatusEnum::INVALID =>
-            $user->notify(new TopicErrorNotification($this->topic)),
-        };
+    protected function getErrorNotification(): Notification
+    {
+        return new TopicErrorNotification($this->topic);
     }
 }

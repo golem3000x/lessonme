@@ -5,33 +5,48 @@ declare(strict_types=1);
 namespace App\Models\Keyword;
 
 use App\Enums\TableNameEnum;
+use App\Models\Abstracts\Slug\SlugEntity;
 use App\Models\Topic\Topic;
-use App\Models\User;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Keyword extends Model
+/**
+ * @property int $id
+ * @property int|null $user_id
+ * @property int|null $topic_id
+ * @property string $slug
+ * @property int $is_system
+ * @property int $is_approved
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read Topic|null $topic
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Keyword\KeywordTranslation> $translations
+ * @property-read int|null $translations_count
+ * @property-read \App\Models\User|null $user
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Keyword\UserKeywordVisibility> $visibility
+ * @property-read int|null $visibility_count
+ * @method static Builder<static>|Keyword newModelQuery()
+ * @method static Builder<static>|Keyword newQuery()
+ * @method static Builder<static>|Keyword query()
+ * @method static Builder<static>|Keyword visibleForUser(int $userId)
+ * @method static Builder<static>|Keyword whereCreatedAt($value)
+ * @method static Builder<static>|Keyword whereId($value)
+ * @method static Builder<static>|Keyword whereIsApproved($value)
+ * @method static Builder<static>|Keyword whereIsSystem($value)
+ * @method static Builder<static>|Keyword whereSlug($value)
+ * @method static Builder<static>|Keyword whereTopicId($value)
+ * @method static Builder<static>|Keyword whereUpdatedAt($value)
+ * @method static Builder<static>|Keyword whereUserId($value)
+ * @mixin \Eloquent
+ */
+class Keyword extends SlugEntity
 {
-    use HasFactory, SoftDeletes;
-
     protected $table = TableNameEnum::KEYWORDS->value;
 
-    protected $fillable = [
-        'user_id',
+    protected array $extra_fillable = [
         'topic_id',
-        'slug',
-        'is_system',
-        'is_hidden',
-        'is_approved'
     ];
-
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
 
     public function translations(): HasMany
     {
@@ -48,43 +63,39 @@ class Keyword extends Model
         return $this->hasMany(UserKeywordVisibility::class);
     }
 
-    public function translation(?string $lang = null)
-    {
-        $lang = $lang ?? app()->getLocale();
-
-        return $this->translations
-            ->where('language_code', $lang)
-            ->first()
-            ?? $this->translations->first();
-    }
-
+    /**
+     * Get value in specific language (alias for translatedValue)
+     */
     public function value(?string $lang = null): string
     {
-        return $this->translation($lang)?->value ?? '—';
+        return $this->translatedValue($lang);
     }
 
-    public function scopeVisibleForUser($query, $userId)
+    /**
+     * Scope to get keywords visible for specific user
+     * Includes check for parent topic visibility
+     */
+    public function scopeVisibleForUser(Builder $query, int $userId): Builder
     {
         return $query
-            ->whereNull('deleted_at')
-            ->where(function ($q) use ($userId): void {
-                // System topics visible unless explicitly hidden by the user
-                $q->where(function ($sys) use ($userId): void {
+            ->whereHas('topic', function (Builder $topicQuery) use ($userId): void {
+                $topicQuery->visibleForUser($userId);
+            })
+            ->where(function (Builder $q) use ($userId): void {
+                $q->where(function (Builder $sys) use ($userId): void {
                     $sys->whereNull('user_id')
-                        ->whereDoesntHave('visibility', function ($v) use ($userId): void {
-                            $v->where('user_id', '=', $userId)
-                                ->where('is_hidden', '=', true);
+                        ->whereDoesntHave('visibility', function (Builder $v) use ($userId): void {
+                            $v->where('user_id', $userId)
+                                ->where('is_hidden', true);
                         });
-                })
-                    // User-owned topics also respect visibility and soft-deletes
-                    ->orWhere(function ($own) use ($userId): void {
-                        $own->where('user_id', '=', $userId)
-                            ->whereDoesntHave('visibility', function ($v) use ($userId): void {
-                                $v->where('user_id', '=', $userId)
-                                    ->where('is_hidden', '=', true);
-                            })
-                            ->where('is_approved', '=', true);
-                    });
+                })->orWhere(function (Builder $own) use ($userId): void {
+                    $own->where('user_id', $userId)
+                        ->whereDoesntHave('visibility', function (Builder $v) use ($userId): void {
+                            $v->where('user_id', $userId)
+                                ->where('is_hidden', true);
+                        })
+                        ->where('is_approved', true);
+                });
             });
     }
 }
