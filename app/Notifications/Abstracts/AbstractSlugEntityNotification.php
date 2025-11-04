@@ -12,6 +12,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Str;
 
 abstract class AbstractSlugEntityNotification extends Notification implements ShouldBroadcast
 {
@@ -21,7 +22,7 @@ abstract class AbstractSlugEntityNotification extends Notification implements Sh
 
     public function __construct(protected SlugEntity $entity)
     {
-        $this->entity_name = class_basename($entity);
+        $this->entity_name = Str::lcfirst(class_basename($entity));
     }
 
     abstract protected function getStatusEnum(): BackedEnum;
@@ -42,7 +43,7 @@ abstract class AbstractSlugEntityNotification extends Notification implements Sh
             'status' => $status,
             'entity' => $this->entity_name,
             'slug' => $this->entity->slug,
-            'message' => __("notifications.{$this->entity_name}_{$status}_realtime"),
+            'message' => __("notifications.{$this->entity_name}_{$this->getEventType()}_$status"),
         ];
     }
 
@@ -58,7 +59,7 @@ abstract class AbstractSlugEntityNotification extends Notification implements Sh
 
     public function broadcastOn(): PrivateChannel
     {
-        return new PrivateChannel('App.Models.User.'.$this->entity->user_id);
+        return new PrivateChannel('App.Models.User.' . $this->entity->user_id);
     }
 
     public function broadcastAs(): string

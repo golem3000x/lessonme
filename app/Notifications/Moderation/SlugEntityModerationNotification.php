@@ -5,15 +5,17 @@ declare(strict_types=1);
 namespace App\Notifications\Moderation;
 
 use App\Enums\ModerationStatusEnum;
+use App\Enums\NotificationEventTypeEnum;
 use App\Models\Abstracts\Slug\SlugEntity;
 use App\Notifications\Abstracts\AbstractSlugEntityNotification;
 
 class SlugEntityModerationNotification extends AbstractSlugEntityNotification
 {
     public function __construct(
-        SlugEntity $entity,
+        SlugEntity                   $entity,
         private ModerationStatusEnum $moderation_status_enum
-    ) {
+    )
+    {
         parent::__construct($entity);
     }
 
@@ -24,6 +26,6 @@ class SlugEntityModerationNotification extends AbstractSlugEntityNotification
 
     protected function getEventType(): string
     {
-        return 'moderation';
+        return NotificationEventTypeEnum::MODERATION->value;
     }
 }
