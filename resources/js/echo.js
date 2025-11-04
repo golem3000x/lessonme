@@ -19,5 +19,10 @@ const userId = userIdMeta ? userIdMeta.getAttribute('content') : null;
 window.Echo.private(`App.Models.User.${userId}`)
     .listen('.moderation.approved', (notification) => {
         console.log('🔥 Уведомление пришло:', notification);
-        Livewire.dispatch('slug-moderation-updated', notification);
+        Livewire.dispatch('slug-moderation-updated', {notification});
+    });
+window.Echo.private(`App.Models.User.${userId}`)
+    .listen('.translate.successfully', (notification) => {
+        console.log('🔥 Уведомление пришло:', notification);
+        Livewire.dispatch('slug-translate-updated', {notification});
     });

@@ -63,6 +63,7 @@
 @endif
 
 <main>
+    @livewire('notifications-panel')
     {{ $slot }}
 </main>
 
