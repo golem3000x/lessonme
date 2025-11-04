@@ -6,6 +6,8 @@ namespace App\Models\Topic;
 
 use App\Enums\TableNameEnum;
 use App\Models\Abstracts\Slug\SlugTranslation;
+use Barryvdh\LaravelIdeHelper\Eloquent;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
@@ -15,18 +17,20 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $value
  * @property string|null $created_at
  * @property string|null $updated_at
- * @property-read \App\Models\Topic\Topic $entity
- * @property-read \App\Models\Topic\Topic $topic
- * @method static \Illuminate\Database\Eloquent\Builder<static>|TopicTranslation newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|TopicTranslation newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|TopicTranslation query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|TopicTranslation whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|TopicTranslation whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|TopicTranslation whereLanguageCode($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|TopicTranslation whereTopicId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|TopicTranslation whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|TopicTranslation whereValue($value)
- * @mixin \Eloquent
+ * @property-read Topic $entity
+ * @property-read Topic $topic
+ *
+ * @method static Builder<static>|TopicTranslation newModelQuery()
+ * @method static Builder<static>|TopicTranslation newQuery()
+ * @method static Builder<static>|TopicTranslation query()
+ * @method static Builder<static>|TopicTranslation whereCreatedAt($value)
+ * @method static Builder<static>|TopicTranslation whereId($value)
+ * @method static Builder<static>|TopicTranslation whereLanguageCode($value)
+ * @method static Builder<static>|TopicTranslation whereTopicId($value)
+ * @method static Builder<static>|TopicTranslation whereUpdatedAt($value)
+ * @method static Builder<static>|TopicTranslation whereValue($value)
+ *
+ * @mixin Eloquent
  */
 class TopicTranslation extends SlugTranslation
 {
@@ -43,6 +47,6 @@ class TopicTranslation extends SlugTranslation
 
     public function topic(): BelongsTo
     {
-        return $this->belongsTo(Topic::class);
+        return $this->belongsTo(Topic::class, 'topic_id', 'id');
     }
 }

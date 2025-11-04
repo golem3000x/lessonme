@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models\Abstracts\Slug;
 
+use App\Events\SlugEntityChanged;
 use App\Models\Abstracts\BaseModel;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
@@ -20,6 +21,11 @@ abstract class SlugEntity extends BaseModel
         'slug',
         'is_system',
         'is_approved',
+    ];
+
+    protected $dispatchesEvents = [
+        'created' => SlugEntityChanged::class,
+        'updated' => SlugEntityChanged::class,
     ];
 
     public $timestamps = true;

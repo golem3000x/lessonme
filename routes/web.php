@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\ZaloController;
 use App\Http\Controllers\Lesson\LessonController;
 use App\Livewire\Chat\ChatLesson;
+use App\Livewire\ManageTopics;
 use App\Livewire\Onboarding\ProfileSetup;
 use App\Livewire\Onboarding\TopicSelector;
 use Illuminate\Support\Facades\Route;
@@ -39,6 +40,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('/onboarding', ProfileSetup::class)->name('onboarding.profile');
     Route::get('/topics', TopicSelector::class)->name('onboarding.topics');
+
+    // Manage topics and keywords
+    Route::get('/manage-topics', ManageTopics::class)->name('manage-topics');
 
     Route::get('/chat', ChatLesson::class)->name('chat');
 

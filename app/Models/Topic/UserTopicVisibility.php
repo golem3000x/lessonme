@@ -6,6 +6,9 @@ namespace App\Models\Topic;
 
 use App\Enums\TableNameEnum;
 use App\Models\Abstracts\Slug\UserSlugVisibility;
+use App\Models\User;
+use Barryvdh\LaravelIdeHelper\Eloquent;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
@@ -15,19 +18,21 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property bool $is_hidden
  * @property string|null $created_at
  * @property string|null $updated_at
- * @property-read \App\Models\Topic\Topic $entity
- * @property-read \App\Models\Topic\Topic $topic
- * @property-read \App\Models\User $user
- * @method static \Illuminate\Database\Eloquent\Builder<static>|UserTopicVisibility newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|UserTopicVisibility newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|UserTopicVisibility query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|UserTopicVisibility whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|UserTopicVisibility whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|UserTopicVisibility whereIsHidden($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|UserTopicVisibility whereTopicId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|UserTopicVisibility whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|UserTopicVisibility whereUserId($value)
- * @mixin \Eloquent
+ * @property-read Topic $entity
+ * @property-read Topic $topic
+ * @property-read User $user
+ *
+ * @method static Builder<static>|UserTopicVisibility newModelQuery()
+ * @method static Builder<static>|UserTopicVisibility newQuery()
+ * @method static Builder<static>|UserTopicVisibility query()
+ * @method static Builder<static>|UserTopicVisibility whereCreatedAt($value)
+ * @method static Builder<static>|UserTopicVisibility whereId($value)
+ * @method static Builder<static>|UserTopicVisibility whereIsHidden($value)
+ * @method static Builder<static>|UserTopicVisibility whereTopicId($value)
+ * @method static Builder<static>|UserTopicVisibility whereUpdatedAt($value)
+ * @method static Builder<static>|UserTopicVisibility whereUserId($value)
+ *
+ * @mixin Eloquent
  */
 class UserTopicVisibility extends UserSlugVisibility
 {

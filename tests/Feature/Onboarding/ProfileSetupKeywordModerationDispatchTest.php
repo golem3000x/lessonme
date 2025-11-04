@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Onboarding;
 
-use App\Jobs\ModerateKeywordJob;
+use App\Jobs\Moderate\ModerateKeywordJob;
 use App\Livewire\Onboarding\ProfileSetup;
 use App\Models\Topic\Topic;
 use App\Models\Topic\TopicTranslation;

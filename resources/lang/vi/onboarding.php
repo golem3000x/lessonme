@@ -23,4 +23,9 @@ return [
     'topic_already_exists' => 'Chủ đề với tên này đã tồn tại.',
     'keyword_already_exists' => 'Từ khóa này đã tồn tại trong chủ đề đã chọn.',
     'profile_saved' => 'Đã lưu hồ sơ thành công.',
+    'topic_created' => 'Đã tạo chủ đề thành công.',
+    'keyword_created' => 'Đã tạo từ khóa thành công.',
+    'manage_topics' => 'Quản lý Chủ đề',
+    'next_step_message' => 'Sau khi lưu hồ sơ của bạn, nhấp vào nút "Quản lý Chủ đề" để tạo và cấu hình các chủ đề và từ khóa của bạn.',
+    'languages_must_be_different' => 'Ngôn ngữ mẹ đẻ và ngôn ngữ đang học phải khác nhau.',
 ];

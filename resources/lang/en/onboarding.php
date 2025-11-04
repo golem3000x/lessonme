@@ -24,4 +24,9 @@ return [
     'topic_already_exists' => 'A topic with this name already exists.',
     'keyword_already_exists' => 'This keyword already exists in the selected topic.',
     'profile_saved' => 'Profile saved successfully.',
+    'topic_created' => 'Topic created successfully.',
+    'keyword_created' => 'Keyword created successfully.',
+    'manage_topics' => 'Manage Topics',
+    'next_step_message' => 'After saving your profile, click "Manage Topics" button to create and configure your topics and keywords.',
+    'languages_must_be_different' => 'Native language and learning language must be different.',
 ];

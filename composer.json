@@ -9,6 +9,7 @@
         "php": "^8.4",
         "laravel/framework": "^12.0",
         "laravel/horizon": "^5.37",
+        "laravel/reverb": "^1.6",
         "laravel/tinker": "^2.10.1",
         "livewire/livewire": "^3.6",
         "openai-php/laravel": "^0.17.1",

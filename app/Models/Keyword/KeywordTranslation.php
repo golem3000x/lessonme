@@ -6,6 +6,8 @@ namespace App\Models\Keyword;
 
 use App\Enums\TableNameEnum;
 use App\Models\Abstracts\Slug\SlugTranslation;
+use Barryvdh\LaravelIdeHelper\Eloquent;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
@@ -15,18 +17,20 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $value
  * @property string|null $created_at
  * @property string|null $updated_at
- * @property-read \App\Models\Keyword\Keyword $entity
- * @property-read \App\Models\Keyword\Keyword $keyword
- * @method static \Illuminate\Database\Eloquent\Builder<static>|KeywordTranslation newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|KeywordTranslation newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|KeywordTranslation query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|KeywordTranslation whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|KeywordTranslation whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|KeywordTranslation whereKeywordId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|KeywordTranslation whereLanguageCode($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|KeywordTranslation whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|KeywordTranslation whereValue($value)
- * @mixin \Eloquent
+ * @property-read Keyword $entity
+ * @property-read Keyword $keyword
+ *
+ * @method static Builder<static>|KeywordTranslation newModelQuery()
+ * @method static Builder<static>|KeywordTranslation newQuery()
+ * @method static Builder<static>|KeywordTranslation query()
+ * @method static Builder<static>|KeywordTranslation whereCreatedAt($value)
+ * @method static Builder<static>|KeywordTranslation whereId($value)
+ * @method static Builder<static>|KeywordTranslation whereKeywordId($value)
+ * @method static Builder<static>|KeywordTranslation whereLanguageCode($value)
+ * @method static Builder<static>|KeywordTranslation whereUpdatedAt($value)
+ * @method static Builder<static>|KeywordTranslation whereValue($value)
+ *
+ * @mixin Eloquent
  */
 class KeywordTranslation extends SlugTranslation
 {
@@ -43,6 +47,6 @@ class KeywordTranslation extends SlugTranslation
 
     public function keyword(): BelongsTo
     {
-        return $this->belongsTo(Keyword::class);
+        return $this->belongsTo(Keyword::class, 'keyword_id', 'id');
     }
 }

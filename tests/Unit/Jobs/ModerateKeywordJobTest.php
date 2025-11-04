@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Jobs;
 
 use App\Enums\SystemLanguageEnum;
-use App\Jobs\ModerateKeywordJob;
+use App\Jobs\Moderate\ModerateKeywordJob;
 use App\Models\Keyword\Keyword;
 use App\Models\Keyword\KeywordTranslation;
 use App\Models\Topic\Topic;
@@ -71,8 +71,8 @@ class ModerateKeywordJobTest extends TestCase
         $keyword = $this->create_keyword($user, $topic, 'Cafe');
 
         $openAI = Mockery::mock(OpenAIService::class);
-        $openAI->shouldReceive('moderateText')->once()->with('Cafe')->andReturn(true);
-        $openAI->shouldReceive('translateText')->once()->with('Cafe', SystemLanguageEnum::VIETNAMESE)->andReturn('Quán cà phê');
+        $openAI->shouldReceive('moderateSlug')->once()->with('Cafe')->andReturn(true);
+        $openAI->shouldReceive('translateSlugAllLanguages')->once()->with('Cafe', SystemLanguageEnum::VIETNAMESE)->andReturn('Quán cà phê');
 
         $job = new ModerateKeywordJob($keyword);
         $job->handle($openAI);
@@ -91,7 +91,7 @@ class ModerateKeywordJobTest extends TestCase
         $keyword = $this->create_keyword($user, $topic, 'Restricted');
 
         $openAI = Mockery::mock(OpenAIService::class);
-        $openAI->shouldReceive('moderateText')->once()->with('Restricted')->andReturn(false);
+        $openAI->shouldReceive('moderateSlug')->once()->with('Restricted')->andReturn(false);
         $openAI->shouldNotReceive('translateText');
 
         $job = new ModerateKeywordJob($keyword);
