@@ -43,7 +43,9 @@ abstract class AbstractSlugEntityNotification extends Notification implements Sh
             'status' => $status,
             'entity' => $this->entity_name,
             'slug' => $this->entity->slug,
-            'message' => __("notifications.{$this->entity_name}_{$this->getEventType()}_$status"),
+            'message' => __("notifications.{$this->entity_name}_{$this->getEventType()}_$status", [
+                'slug' => $this->entity->slug,
+            ]),
         ];
     }
 
@@ -59,7 +61,7 @@ abstract class AbstractSlugEntityNotification extends Notification implements Sh
 
     public function broadcastOn(): PrivateChannel
     {
-        return new PrivateChannel('App.Models.User.' . $this->entity->user_id);
+        return new PrivateChannel('App.Models.User.'.$this->entity->user_id);
     }
 
     public function broadcastAs(): string

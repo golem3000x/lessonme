@@ -25,8 +25,8 @@
             </div>
 
             <div class="text-sm flex-1">
-                <div class="font-semibold">{{ $n['entity'] }}</div>
-                <div>{{ __($n['message']) }}</div>
+                <div class="font-semibold">{{ ucfirst($n['entity']) }}</div>
+                <div>{{ $n['message'] }}</div>
             </div>
 
             <button

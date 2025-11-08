@@ -8,6 +8,7 @@ namespace App\Models;
 use App\Enums\TableNameEnum;
 use Barryvdh\LaravelIdeHelper\Eloquent;
 use Database\Factories\UserFactory;
+use Illuminate\Contracts\Translation\HasLocalePreference;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -58,7 +59,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|User whereLearningLang($value)
  * @method static Builder<static>|User whereNativeLang($value)
  */
-class User extends Authenticatable
+class User extends Authenticatable implements HasLocalePreference
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
@@ -106,5 +107,13 @@ class User extends Authenticatable
     public function lessons(): HasMany
     {
         return $this->hasMany(Lesson::class);
+    }
+
+    /**
+     * Get the user's preferred locale for notifications.
+     */
+    public function preferredLocale(): string
+    {
+        return $this->native_lang;
     }
 }

@@ -8,6 +8,7 @@ use App\Events\SlugEntityChanged;
 use App\Models\Topic\Topic;
 use App\Models\Topic\UserTopicVisibility;
 use App\Models\User;
+use App\Notifications\Processing\SlugEntityProcessingNotification;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
@@ -64,16 +65,9 @@ class CreateTopic extends Component
             'is_approved' => false,
         ]);
 
-        // Ensure it's visible by default for the creator
-        UserTopicVisibility::updateOrCreate(
-            ['user_id' => $user->id, 'topic_id' => $topic->id],
-            ['is_hidden' => false]
-        );
+        $user->notify(new SlugEntityProcessingNotification($topic));
 
-        // Dispatch moderation & translation event
-        SlugEntityChanged::dispatch($topic);
-
-        session()->flash('message', __('onboarding.topic_created'));
+        session()->flash('message', __('onboarding.topic_processing'));
 
         $this->topic_name = '';
 

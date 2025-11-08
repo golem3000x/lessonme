@@ -12,10 +12,9 @@ use App\Notifications\Abstracts\AbstractSlugEntityNotification;
 class SlugEntityModerationNotification extends AbstractSlugEntityNotification
 {
     public function __construct(
-        SlugEntity                   $entity,
+        SlugEntity $entity,
         private ModerationStatusEnum $moderation_status_enum
-    )
-    {
+    ) {
         parent::__construct($entity);
     }
 

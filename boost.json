@@ -1,9 +1,11 @@
 {
     "agents": [
-        "phpstorm"
+        "windsurf"
     ],
     "editors": [
-        "phpstorm"
+        "windsurf"
     ],
-    "guidelines": []
+    "guidelines": [
+        ".junie/guidelines.md"
+    ]
 }

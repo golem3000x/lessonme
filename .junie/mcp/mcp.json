@@ -3,7 +3,7 @@
         "laravel-boost": {
             "command": "/usr/bin/php8.4",
             "args": [
-                "/var/www/html/artisan",
+                "/home/golem/html/ai-demo/artisan",
                 "boost:mcp"
             ]
         }

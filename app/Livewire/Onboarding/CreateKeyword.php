@@ -6,8 +6,8 @@ namespace App\Livewire\Onboarding;
 
 use App\Events\SlugEntityChanged;
 use App\Models\Keyword\Keyword;
-use App\Models\Keyword\UserKeywordVisibility;
 use App\Models\User;
+use App\Notifications\Processing\SlugEntityProcessingNotification;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
@@ -69,16 +69,9 @@ class CreateKeyword extends Component
             'is_system' => false,
         ]);
 
-        // Ensure it's visible by default for the creator
-        UserKeywordVisibility::updateOrCreate(
-            ['user_id' => $user->id, 'keyword_id' => $keyword->id],
-            ['is_hidden' => false]
-        );
+        $user->notify(new SlugEntityProcessingNotification($keyword));
 
-        // Dispatch moderation & translation event
-        SlugEntityChanged::dispatch($keyword);
-
-        session()->flash('message', __('onboarding.keyword_created'));
+        session()->flash('message', __('onboarding.keyword_processing'));
 
         $this->keyword_value = '';
 

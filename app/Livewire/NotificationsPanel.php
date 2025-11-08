@@ -9,6 +9,7 @@ class NotificationsPanel extends Component
 {
     public array $notifications = [];
 
+    #[On('slug-processing-updated')]
     #[On('slug-moderation-updated')]
     #[On('slug-translate-updated')]
     public function addNotification($notification): void
@@ -29,7 +30,7 @@ class NotificationsPanel extends Component
     {
         $this->notifications = array_filter(
             $this->notifications,
-            fn($n) => $n['id'] !== $id
+            fn ($n) => $n['id'] !== $id
         );
     }
 
