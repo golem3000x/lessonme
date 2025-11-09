@@ -10,15 +10,20 @@ use Livewire\Component;
 
 class VocabularyQuiz extends Component
 {
-    public $quiz = [];
+    /** @var array<int, array<string, mixed>> */
+    public array $quiz = [];
 
-    public $answers = [];
+    /** @var array<int, string> */
+    public array $answers = [];
 
-    public $checked = false;
+    public bool $checked = false;
 
-    public $score = 0;
+    public int $score = 0;
 
-    public function mount($quiz): void
+    /**
+     * @param array<int, array<string, mixed>> $quiz
+     */
+    public function mount(array $quiz): void
     {
         $this->quiz = $quiz;
     }

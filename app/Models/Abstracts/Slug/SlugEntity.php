@@ -12,8 +12,16 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property int $id
+ * @property int|null $user_id
+ * @property string $slug
+ * @property bool $is_system
+ * @property bool $is_approved
+ */
 abstract class SlugEntity extends BaseModel
 {
+    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory;
 
     protected $fillable = [
@@ -23,6 +31,7 @@ abstract class SlugEntity extends BaseModel
         'is_approved',
     ];
 
+    /** @var array<string, class-string> */
     protected $dispatchesEvents = [
         'created' => SlugEntityChanged::class,
         'updated' => SlugEntityChanged::class,
@@ -42,6 +51,8 @@ abstract class SlugEntity extends BaseModel
 
     /**
      * User relationship
+     *
+     * @return BelongsTo<User, $this>
      */
     public function user(): BelongsTo
     {
@@ -50,15 +61,24 @@ abstract class SlugEntity extends BaseModel
 
     /**
      * Get translation for specific language or fallback to first available
+     *
+     * @return SlugTranslation|null
      */
-    public function translation(?string $lang = null)
+    public function translation(?string $lang = null): ?SlugTranslation
     {
         $lang = $lang ?? app()->getLocale();
 
-        return $this->translations
+        /** @var SlugTranslation|null $translation */
+        $translation = $this->translations
             ->where('language_code', $lang)
-            ->first()
-            ?? $this->translations->first();
+            ->first();
+
+        if ($translation) {
+            return $translation;
+        }
+
+        /** @var SlugTranslation|null */
+        return $this->translations->first();
     }
 
     /**
@@ -69,11 +89,14 @@ abstract class SlugEntity extends BaseModel
         $translation = $this->translations
             ->firstWhere('language_code', $lang ?? app()->getLocale());
 
-        return $translation?->value ?? '—';
+        return $translation->value ?? '—';
     }
 
     /**
      * Scope to get entities visible for specific user
+     *
+     * @param Builder<static> $query
+     * @return Builder<static>
      */
     public function scopeVisibleForUser(Builder $query, int $userId): Builder
     {

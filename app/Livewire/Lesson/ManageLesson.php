@@ -12,6 +12,7 @@ use App\Models\Topic\Topic;
 use App\Notifications\Lesson\LessonCreationNotification;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -22,7 +23,8 @@ class ManageLesson extends Component
 
     public ?int $topic_id = null;
 
-    public $preloaded_topics;
+    /** @var Collection<int, Topic>|null */
+    public ?Collection $preloaded_topics = null;
 
     /** @var array<int,array{id:int,label:string}> */
     public array $topics = [];
@@ -38,6 +40,10 @@ class ManageLesson extends Component
     public function mount(): void
     {
         $user = Auth::user();
+        if (!$user) {
+            abort(401);
+        }
+
         $locale = app()->getLocale();
 
         $this->preloaded_topics = Topic::with([
@@ -108,6 +114,9 @@ class ManageLesson extends Component
         $this->is_generating = true;
 
         $user = Auth::user();
+        if (!$user) {
+            abort(401);
+        }
 
         $topic = Topic::find($this->topic_id);
         if (! $topic) {
@@ -138,7 +147,7 @@ class ManageLesson extends Component
             // Dispatch job for async lesson creation
             CreateLessonJob::dispatch(
                 $user->id,
-                $this->topic_id,
+                $this->topic_id ?? 0,
                 $lesson_dto
             );
 
@@ -183,6 +192,9 @@ class ManageLesson extends Component
         $this->js("console.log('Notification sent:', { id: '{$notification_id}', status: '{$status}', message: '{$message}' });");
     }
 
+    /**
+     * @param array<int, int> $ids
+     */
     #[On('keywords-selected')]
     public function setKeywordIds(array $ids): void
     {

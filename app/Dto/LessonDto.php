@@ -15,10 +15,13 @@ namespace App\Dto;
  * @property string $level The level of the lesson (e.g., 'beginner', 'intermediate', 'advanced')
  * @property string $native_lang The native language of the lesson
  * @property string $learning_lang The learning language of the lesson
- * @property array $keywords The keywords of the lesson
+ * @property array<int, string> $keywords The keywords of the lesson
  */
 class LessonDto
 {
+    /**
+     * @param array<int, string> $keywords
+     */
     public function __construct(
         public string $topic,
         public string $level,

@@ -20,8 +20,12 @@ class NotificationBell extends Component
 
     public function markAsRead(string $notification_id): void
     {
-        dd('asasa');
-        $notification = Auth::user()
+        $user = Auth::user();
+        if (!$user) {
+            return;
+        }
+
+        $notification = $user
             ->notifications()
             ->where('id', $notification_id)
             ->first();
@@ -34,15 +38,23 @@ class NotificationBell extends Component
 
     public function markAllAsRead(): void
     {
-        dd('aaaa');
-        Auth::user()->unreadNotifications->markAsRead();
+        $user = Auth::user();
+        if (!$user) {
+            return;
+        }
+
+        $user->unreadNotifications()->update(['read_at' => now()]);
         $this->updateUnreadCount();
     }
 
     public function deleteNotification(string $notification_id): void
     {
-        dd('oooooooo');
-        Auth::user()
+        $user = Auth::user();
+        if (!$user) {
+            return;
+        }
+
+        $user
             ->notifications()
             ->where('id', $notification_id)
             ->delete();
@@ -52,12 +64,25 @@ class NotificationBell extends Component
 
     protected function updateUnreadCount(): void
     {
-        $this->unread_count = Auth::user()->unreadNotifications()->count();
+        $user = Auth::user();
+        if (!$user) {
+            $this->unread_count = 0;
+            return;
+        }
+
+        $this->unread_count = $user->unreadNotifications()->count();
     }
 
     public function render(): Factory|View
     {
-        $notifications = Auth::user()
+        $user = Auth::user();
+        if (!$user) {
+            return view('livewire.notification-bell', [
+                'notifications' => collect(),
+            ]);
+        }
+
+        $notifications = $user
             ->notifications()
             ->orderBy('created_at', 'desc')
             ->limit(20)

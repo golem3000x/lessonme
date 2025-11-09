@@ -6,17 +6,40 @@ namespace Tests\Feature;
 
 use App\Models\Lesson;
 use App\Models\Topic\Topic;
+use App\Models\Topic\TopicTranslation;
 use App\Models\User;
 use App\Services\OpenAi\OpenAIService;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class LessonControllerTest extends TestCase
 {
+    use RefreshDatabase;
+
+    protected function createTopic(string $label): Topic
+    {
+        $topic = Topic::create([
+            'user_id' => null,
+            'slug' => str()->slug($label).'-'.uniqid(),
+            'is_system' => true,
+            'is_approved' => true,
+        ]);
+
+        TopicTranslation::create([
+            'topic_id' => $topic->id,
+            'language_code' => 'en',
+            'value' => $label,
+        ]);
+
+        return $topic;
+    }
+
     private function fakeOpenAI(): void
     {
-        $this->mock(OpenAIService::class, function ($mock) {
+        $this->mock(OpenAIService::class, function ($mock): void {
             $mock->shouldReceive('generateLesson')
                 ->andReturn([
+                    'lesson_name' => 'Test Lesson',
                     'lesson_text' => 'Generated lesson',
                     'grammar_highlights' => [],
                     'vocabulary' => [],
@@ -27,6 +50,7 @@ class LessonControllerTest extends TestCase
 
     public function test_store_with_topic_label_only_resolves_topic_id(): void
     {
+        $this->withoutMiddleware();
         $this->fakeOpenAI();
 
         $user = User::factory()->create([
@@ -35,7 +59,7 @@ class LessonControllerTest extends TestCase
         ]);
         $this->actingAs($user);
 
-        $topic = Topic::create(['name' => 'Business']);
+        $topic = $this->createTopic('Business');
 
         $response = $this->post(route('lessons.store'), [
             'topic' => 'Business',
@@ -51,6 +75,7 @@ class LessonControllerTest extends TestCase
 
     public function test_store_with_topic_id_only_persists_topic_id(): void
     {
+        $this->withoutMiddleware();
         $this->fakeOpenAI();
 
         $user = User::factory()->create([
@@ -59,7 +84,7 @@ class LessonControllerTest extends TestCase
         ]);
         $this->actingAs($user);
 
-        $topic = Topic::create(['name' => 'Travel']);
+        $topic = $this->createTopic('Travel');
 
         $response = $this->post(route('lessons.store'), [
             'topic_id' => $topic->id,
@@ -74,6 +99,7 @@ class LessonControllerTest extends TestCase
 
     public function test_store_without_topic_defaults_and_allows_null_topic_id(): void
     {
+        $this->withoutMiddleware();
         $this->fakeOpenAI();
 
         $user = User::factory()->create([

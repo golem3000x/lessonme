@@ -36,15 +36,22 @@ class TopicTranslation extends SlugTranslation
 {
     protected $table = TableNameEnum::TOPIC_TRANSLATIONS->value;
 
+    /** @var array<int, string> */
     protected array $extra_fillable = [
         'topic_id',
     ];
 
+    /**
+     * @return BelongsTo<Topic, $this>
+     */
     public function entity(): BelongsTo
     {
         return $this->topic();
     }
 
+    /**
+     * @return BelongsTo<Topic, $this>
+     */
     public function topic(): BelongsTo
     {
         return $this->belongsTo(Topic::class, 'topic_id', 'id');

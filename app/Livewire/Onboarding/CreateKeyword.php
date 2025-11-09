@@ -15,11 +15,11 @@ use Livewire\Component;
 
 class CreateKeyword extends Component
 {
-    public int $topic_id;
+    public int $topic_id = 0;
 
     public string $keyword_value = '';
 
-    public string $native_lang;
+    public string $native_lang = '';
 
     public function mount(int $topicId): void
     {

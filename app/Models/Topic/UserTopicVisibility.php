@@ -38,15 +38,22 @@ class UserTopicVisibility extends UserSlugVisibility
 {
     protected $table = TableNameEnum::USER_TOPIC_VISIBILITY->value;
 
+    /** @var array<int, string> */
     protected array $extra_fillable = [
         'topic_id',
     ];
 
+    /**
+     * @return BelongsTo<Topic, $this>
+     */
     public function entity(): BelongsTo
     {
         return $this->topic();
     }
 
+    /**
+     * @return BelongsTo<Topic, $this>
+     */
     public function topic(): BelongsTo
     {
         return $this->belongsTo(Topic::class);

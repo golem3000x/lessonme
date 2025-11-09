@@ -6,6 +6,9 @@ namespace App\Traits;
 
 use Illuminate\Support\Facades\Lang;
 
+/**
+ * @phpstan-ignore trait.unused
+ */
 trait HasTranslation
 {
     /**

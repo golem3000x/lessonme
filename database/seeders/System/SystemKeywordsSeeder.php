@@ -15,6 +15,7 @@ class SystemKeywordsSeeder extends Seeder
     public function run(): void
     {
         foreach (SystemKeywordEnum::cases() as $keyword_enum) {
+            /** @var object{id: int, slug: string}|null $topic */
             $topic = DB::table(TableNameEnum::TOPICS->value)
                 ->where('slug', '=', Str::slug($keyword_enum->topic()->value))
                 ->first();
@@ -25,6 +26,7 @@ class SystemKeywordsSeeder extends Seeder
 
             $slug = Str::slug($keyword_enum->value);
 
+            /** @var object{id: int, slug: string, topic_id: int}|null $keyword */
             $keyword = DB::table(TableNameEnum::KEYWORDS->value)
                 ->where('slug', '=', $slug)
                 ->where('topic_id', '=', $topic->id)

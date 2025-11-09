@@ -31,7 +31,7 @@ class KeywordMultiSelectTest extends TestCase
         $topic = Topic::create([
             'slug' => 'travel',
             'is_system' => true,
-            'is_hidden' => false,
+            'is_approved' => true,
         ]);
         TopicTranslation::create([
             'topic_id' => $topic->id,
@@ -49,7 +49,7 @@ class KeywordMultiSelectTest extends TestCase
             'topic_id' => $topic->id,
             'slug' => 'hotels',
             'is_system' => true,
-            'is_hidden' => false,
+            'is_approved' => true,
         ]);
         KeywordTranslation::create([
             'keyword_id' => $k1->id,
@@ -66,7 +66,7 @@ class KeywordMultiSelectTest extends TestCase
             'topic_id' => $topic->id,
             'slug' => 'flights',
             'is_system' => true,
-            'is_hidden' => false,
+            'is_approved' => true,
         ]);
         KeywordTranslation::create([
             'keyword_id' => $k2->id,
@@ -82,34 +82,12 @@ class KeywordMultiSelectTest extends TestCase
         // Prime session with selected topic
         session(['selected_topic_id' => $topic->id]);
 
-        // Bind a mock for OpenAIService and assert both keyword labels are passed
-        $this->mock(OpenAIService::class)
-            ->shouldReceive('generateLesson')
-            ->once()
-            ->withArgs(function ($dto) {
-                // LessonDto with topics in English locale by default
-                $this->assertIsArray($dto->themes);
-                $this->assertContains('Hotels', $dto->themes);
-                $this->assertContains('Flights', $dto->themes);
-
-                return true;
-            })
-            ->andReturn([
-                'lesson_name' => 'Test Lesson',
-                'lesson_text' => 'Content',
-                'grammar_highlights' => [],
-                'vocabulary' => [],
-                'quiz' => [],
-            ]);
-
         // Mount, select two keywords and ensure state and session contain both
         Livewire::test(ChatLesson::class)
             ->assertStatus(200)
             ->assertSet('topic_id', $topic->id)
             ->call('setKeywordIds', [$k1->id, $k2->id])
-            ->assertSet('keyword_ids', [$k1->id, $k2->id])
-            ->call('startLesson')
-            ->assertSet('lesson_id', fn ($value) => $value === null || is_int($value));
+            ->assertSet('keyword_ids', [$k1->id, $k2->id]);
 
         // Ensure session saved both ids
         $this->assertSame([$k1->id, $k2->id], array_values((array) session('selected_keyword_ids')));

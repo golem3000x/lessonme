@@ -40,6 +40,7 @@ class SystemTopicsSeeder extends Seeder
             foreach ($translations as $key => $value) {
                 $slug = Str::slug($key);
 
+                /** @var object{id: int, slug: string}|null $topic */
                 $topic = DB::table(TableNameEnum::TOPICS->value)
                     ->where('slug', '=', $slug)
                     ->first();

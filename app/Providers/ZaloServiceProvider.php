@@ -22,5 +22,5 @@ class ZaloServiceProvider extends ServiceProvider
         });
     }
 
-    public function boot() {}
+    public function boot(): void {}
 }

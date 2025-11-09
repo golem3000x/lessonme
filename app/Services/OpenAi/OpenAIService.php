@@ -14,13 +14,18 @@ class OpenAIService
 
     public const OMNI_MODERATION_LATEST = 'omni-moderation-latest';
 
+    /**
+     * @return array<string, mixed>
+     */
     public function generateLesson(LessonDto $lesson_dto): array
     {
         $keywords = count($lesson_dto->keywords) ? implode(', ', $lesson_dto->keywords) : '';
 
-        $learning_lang_name = SystemLanguageEnum::tryFrom($lesson_dto->learning_lang)->name;
+        $learning_lang_enum = SystemLanguageEnum::tryFrom($lesson_dto->learning_lang);
+        $learning_lang_name = $learning_lang_enum->name ?? 'English';
 
-        $native_lang_name = SystemLanguageEnum::tryFrom($lesson_dto->native_lang)->name;
+        $native_lang_enum = SystemLanguageEnum::tryFrom($lesson_dto->native_lang);
+        $native_lang_name = $native_lang_enum->name ?? 'English';
 
         $teacher_prompt = "You are an $learning_lang_name teacher.";
 
@@ -70,6 +75,8 @@ class OpenAIService
 
     /**
      * Translate slug to all language using OpenAI
+     *
+     * @return array<string, string>
      */
     public function translateSlugAllLanguages(string $slug): array
     {

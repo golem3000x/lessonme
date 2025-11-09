@@ -29,11 +29,17 @@ abstract class AbstractSlugEntityNotification extends Notification implements Sh
 
     abstract protected function getEventType(): string;
 
+    /**
+     * @return array<int, string>
+     */
     public function via(): array
     {
         return ['database', 'broadcast'];
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     protected function payload(): array
     {
         $status = $this->getStatusEnum()->value;
@@ -49,6 +55,9 @@ abstract class AbstractSlugEntityNotification extends Notification implements Sh
         ];
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function toArray(): array
     {
         return $this->payload();
@@ -59,9 +68,12 @@ abstract class AbstractSlugEntityNotification extends Notification implements Sh
         return new BroadcastMessage($this->payload());
     }
 
-    public function broadcastOn(): PrivateChannel
+    /**
+     * @return array<int, PrivateChannel>
+     */
+    public function broadcastOn(): array
     {
-        return new PrivateChannel('App.Models.User.'.$this->entity->user_id);
+        return [new PrivateChannel('App.Models.User.'.$this->entity->user_id)];
     }
 
     public function broadcastAs(): string

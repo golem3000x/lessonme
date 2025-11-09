@@ -52,6 +52,8 @@ class ModerateSlugEntityJob implements ShouldQueue
     {
         $user = $this->entity->user;
 
-        $user->notify(new SlugEntityModerationNotification($this->entity, $status));
+        if ($user) {
+            $user->notify(new SlugEntityModerationNotification($this->entity, $status));
+        }
     }
 }

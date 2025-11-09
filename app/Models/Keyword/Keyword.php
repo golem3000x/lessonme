@@ -50,20 +50,30 @@ class Keyword extends SlugEntity
 {
     protected $table = TableNameEnum::KEYWORDS->value;
 
+    /** @var array<int, string> */
     protected array $extra_fillable = [
         'topic_id',
     ];
 
+    /**
+     * @return HasMany<KeywordTranslation, $this>
+     */
     public function translations(): HasMany
     {
         return $this->hasMany(KeywordTranslation::class, 'keyword_id', 'id');
     }
 
+    /**
+     * @return BelongsTo<Topic, $this>
+     */
     public function topic(): BelongsTo
     {
         return $this->belongsTo(Topic::class);
     }
 
+    /**
+     * @return HasMany<UserKeywordVisibility, $this>
+     */
     public function visibility(): HasMany
     {
         return $this->hasMany(UserKeywordVisibility::class);

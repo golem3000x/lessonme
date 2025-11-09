@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 abstract class SlugTranslation extends BaseModel
 {
+    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory;
 
     protected $fillable = [

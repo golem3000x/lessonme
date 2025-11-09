@@ -14,10 +14,11 @@ return new class extends Migration
         Schema::create(TableNameEnum::KEYWORDS->value, function (Blueprint $table): void {
             $table->id();
             $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade');
-            $table->foreignId('topic_id')->nullable()
+            $table->foreignId('topic_id')
+                ->nullable()
+                ->after('user_id')
                 ->constrained(TableNameEnum::TOPICS->value)
-                ->nullOnDelete()
-                ->after('user_id');
+                ->nullOnDelete();
             $table->string('slug');
             $table->boolean('is_system')->default(false);
             $table->boolean('is_approved')->default(false);

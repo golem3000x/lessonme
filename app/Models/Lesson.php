@@ -63,11 +63,17 @@ class Lesson extends Model
         'quiz' => 'array',
     ];
 
+    /**
+     * @return BelongsTo<User, $this>
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
+    /**
+     * @return BelongsTo<Topic, $this>
+     */
     public function topicRelation(): BelongsTo
     {
         return $this->belongsTo(Topic::class, 'topic_id');

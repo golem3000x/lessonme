@@ -30,7 +30,7 @@ class KeywordSelectionPersistsAcrossLocaleTest extends TestCase
         $topic = Topic::create([
             'slug' => 'travel',
             'is_system' => true,
-            'is_hidden' => false,
+            'is_approved' => true,
         ]);
         TopicTranslation::create([
             'topic_id' => $topic->id,
@@ -48,7 +48,7 @@ class KeywordSelectionPersistsAcrossLocaleTest extends TestCase
             'topic_id' => $topic->id,
             'slug' => 'hotels',
             'is_system' => true,
-            'is_hidden' => false,
+            'is_approved' => true,
         ]);
         KeywordTranslation::create([
             'keyword_id' => $keyword->id,

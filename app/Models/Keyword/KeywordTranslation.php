@@ -36,15 +36,22 @@ class KeywordTranslation extends SlugTranslation
 {
     protected $table = TableNameEnum::KEYWORD_TRANSLATIONS->value;
 
+    /** @var array<int, string> */
     protected array $extra_fillable = [
         'keyword_id',
     ];
 
+    /**
+     * @return BelongsTo<Keyword, $this>
+     */
     public function entity(): BelongsTo
     {
         return $this->keyword();
     }
 
+    /**
+     * @return BelongsTo<Keyword, $this>
+     */
     public function keyword(): BelongsTo
     {
         return $this->belongsTo(Keyword::class, 'keyword_id', 'id');

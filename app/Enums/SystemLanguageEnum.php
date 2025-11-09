@@ -24,6 +24,9 @@ enum SystemLanguageEnum: string
         return Lang::get('languages.'.$this->key());
     }
 
+    /**
+     * @return array<int, self>
+     */
     public static function all(): array
     {
         return [
@@ -32,6 +35,9 @@ enum SystemLanguageEnum: string
         ];
     }
 
+    /**
+     * @return array<string, string>
+     */
     public static function toArray(): array
     {
         return [
@@ -40,6 +46,9 @@ enum SystemLanguageEnum: string
         ];
     }
 
+    /**
+     * @return array<int, string>
+     */
     public static function values(): array
     {
         return [

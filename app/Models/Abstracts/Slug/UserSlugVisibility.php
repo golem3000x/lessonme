@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 abstract class UserSlugVisibility extends BaseModel
 {
+    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory;
 
     protected $fillable = [
@@ -34,6 +35,8 @@ abstract class UserSlugVisibility extends BaseModel
 
     /**
      * User relationship
+     *
+     * @return BelongsTo<User, $this>
      */
     public function user(): BelongsTo
     {

@@ -6,11 +6,15 @@ namespace Tests\Unit;
 
 use App\Models\Lesson;
 use App\Models\Topic\Topic;
+use App\Models\Topic\TopicTranslation;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class LessonRelationTest extends TestCase
 {
+    use RefreshDatabase;
+
     public function test_lesson_belongs_to_topic_relation(): void
     {
         $user = User::factory()->create([
@@ -18,11 +22,22 @@ class LessonRelationTest extends TestCase
             'learning_lang' => 'vi',
         ]);
 
-        $topic = Topic::create(['name' => 'General']);
+        $topic = Topic::create([
+            'slug' => 'general-'.uniqid(),
+            'is_system' => true,
+            'is_approved' => true,
+        ]);
+
+        TopicTranslation::create([
+            'topic_id' => $topic->id,
+            'language_code' => 'en',
+            'value' => 'General',
+        ]);
 
         $lesson = Lesson::create([
             'user_id' => $user->id,
             'topic_id' => $topic->id,
+            'lesson_name' => 'Test Lesson',
             'lesson_text' => 'Sample',
             'grammar_data' => [],
             'vocabulary' => [],

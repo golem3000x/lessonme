@@ -1,19 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire;
 
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
 class NotificationsPanel extends Component
 {
+    /** @var array<int, array{id: string, entity: string, status: string, message: string, lesson_id: int|null, lesson_url: string|null, lesson_name: string|null}> */
     public array $notifications = [];
 
     #[On('slug-processing-updated')]
     #[On('slug-moderation-updated')]
     #[On('slug-translate-updated')]
     #[On('lesson-notification')]
-    public function addNotification($notification = null, $id = null, $entity = null, $status = null, $message = null, $lesson_id = null, $lesson_url = null, $lesson_name = null): void
+    public function addNotification(mixed $notification = null, mixed $id = null, mixed $entity = null, mixed $status = null, mixed $message = null, mixed $lesson_id = null, mixed $lesson_url = null, mixed $lesson_name = null): void
     {
         // Handle both old format (array) and new format (named parameters)
         if ($notification && is_array($notification)) {
@@ -58,7 +63,7 @@ class NotificationsPanel extends Component
         );
     }
 
-    public function render()
+    public function render(): Factory|View|\Illuminate\View\View
     {
         return view('livewire.notifications-panel');
     }

@@ -57,14 +57,24 @@ class ZaloController extends Controller
             return redirect('/login')->with('error', 'Zalo user not found.');
         }
 
-        $user = User::updateOrCreate(
-            ['zalo_user_id' => $zalo_id],
-            [
+        $user = User::where('zalo_user_id', $zalo_id)->first();
+
+        if ($user) {
+            $user->update([
                 'name' => $name,
                 'avatar' => $avatar,
+            ]);
+        } else {
+            $user = User::create([
+                'zalo_user_id' => $zalo_id,
+                'name' => $name,
+                'email' => 'zalo_'.$zalo_id.'@placeholder.local',
+                'avatar' => $avatar,
                 'password' => bcrypt(str()->random(12)),
-            ]
-        );
+                'native_lang' => 'vi',
+                'learning_lang' => 'en',
+            ]);
+        }
 
         Auth::login($user);
 

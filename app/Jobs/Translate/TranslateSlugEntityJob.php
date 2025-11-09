@@ -85,6 +85,8 @@ class TranslateSlugEntityJob implements ShouldQueue
     {
         $user = $this->entity->user;
 
-        $user->notify(new SlugEntityTranslateNotification($this->entity, $status));
+        if ($user) {
+            $user->notify(new SlugEntityTranslateNotification($this->entity, $status));
+        }
     }
 }

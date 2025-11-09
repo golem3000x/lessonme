@@ -6,12 +6,40 @@ namespace Tests\Feature\Onboarding;
 
 use App\Livewire\Onboarding\TopicSelector;
 use App\Models\Topic\Topic;
+use App\Models\Topic\TopicTranslation;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
 use Tests\TestCase;
 
 class TopicSelectorTest extends TestCase
 {
+    use RefreshDatabase;
+
+    protected function createTopic(string $label): Topic
+    {
+        $topic = Topic::create([
+            'user_id' => null,
+            'slug' => str()->slug($label).'-'.uniqid(),
+            'is_system' => true,
+            'is_approved' => true,
+        ]);
+
+        TopicTranslation::create([
+            'topic_id' => $topic->id,
+            'language_code' => 'en',
+            'value' => $label,
+        ]);
+        
+        TopicTranslation::create([
+            'topic_id' => $topic->id,
+            'language_code' => 'vi',
+            'value' => $label,
+        ]);
+
+        return $topic;
+    }
+
     public function test_component_renders_topics_and_saves_selection(): void
     {
         $user = User::factory()->create([
@@ -20,8 +48,8 @@ class TopicSelectorTest extends TestCase
         ]);
         $this->actingAs($user);
 
-        $t1 = Topic::create(['name' => 'Business']);
-        $t2 = Topic::create(['name' => 'Travel']);
+        $t1 = $this->createTopic('Business');
+        $t2 = $this->createTopic('Travel');
 
         $this->get(route('onboarding.topics'))
             ->assertOk()
@@ -33,8 +61,7 @@ class TopicSelectorTest extends TestCase
             ->call('save')
             ->assertRedirect(route('dashboard'));
 
-        $this->followRedirects(
-            $this->get(route('onboarding.topics'))
-        )->assertSee('Topics saved: Business, Travel');
+        // Check that the session has the flash message
+        $this->assertEquals('Topics saved: Business, Travel', session('message'));
     }
 }

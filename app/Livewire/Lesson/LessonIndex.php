@@ -7,15 +7,22 @@ namespace App\Livewire\Lesson;
 use App\Models\Lesson;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
 class LessonIndex extends Component
 {
-    public $lessons = [];
+    /** @var Collection<int, Lesson> */
+    public Collection $lessons;
 
     public bool $show_manage_modal = false;
+
+    public function __construct()
+    {
+        $this->lessons = new Collection();
+    }
 
     public function mount(): void
     {

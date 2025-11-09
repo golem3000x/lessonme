@@ -28,13 +28,17 @@ class KeywordSelect extends Component
     /** @var array<int,array{id:int,label:string}> */
     public array $keywords = [];
 
+    /**
+     * @param array<int, int>|null $keyword_ids
+     * @param array<int, array{id:int,label:string}>|null $keywords
+     */
     public function mount(?int $topic_id = null, ?array $keyword_ids = null, ?array $keywords = null): void
     {
         $this->topic_id = $topic_id;
         $this->keyword_ids = array_values(array_unique(array_map('intval', $keyword_ids ?? [])));
 
         // If keywords are preloaded from parent, use them
-        if ($keywords !== null && is_array($keywords)) {
+        if ($keywords !== null) {
             $this->keywords = $keywords;
         } else {
             // Fallback: if parent doesn't preload, fetch locally
@@ -98,6 +102,13 @@ class KeywordSelect extends Component
     protected function loadKeywords(bool $reset_selection = false): void
     {
         $user = Auth::user();
+        if (!$user) {
+            $this->keywords = [];
+            $this->keyword_ids = [];
+            $this->dispatch('keywords-selected', ids: []);
+            return;
+        }
+
         $locale = app()->getLocale();
 
         if (! $this->topic_id) {

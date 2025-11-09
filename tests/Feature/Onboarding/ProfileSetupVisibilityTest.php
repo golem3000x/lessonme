@@ -17,7 +17,7 @@ class ProfileSetupVisibilityTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected function create_system_topic(string $label): Topic
+    protected function createSystemTopic(string $label): Topic
     {
         $topic = Topic::create([
             'user_id' => null,
@@ -43,8 +43,8 @@ class ProfileSetupVisibilityTest extends TestCase
         ]);
         $this->actingAs($user);
 
-        $visible_topic = $this->create_system_topic('Business');
-        $hidden_topic = $this->create_system_topic('Travel');
+        $visible_topic = $this->createSystemTopic('Business');
+        $hidden_topic = $this->createSystemTopic('Travel');
 
         // Mark one topic as hidden for this user
         UserTopicVisibility::create([

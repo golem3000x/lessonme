@@ -22,11 +22,17 @@ class LessonCreationNotification extends Notification implements ShouldBroadcast
         protected string $message
     ) {}
 
+    /**
+     * @return array<int, string>
+     */
     public function via(): array
     {
         return ['database', 'broadcast'];
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     protected function payload(): array
     {
         $data = [
@@ -45,6 +51,9 @@ class LessonCreationNotification extends Notification implements ShouldBroadcast
         return $data;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function toArray(): array
     {
         return $this->payload();
@@ -55,11 +64,14 @@ class LessonCreationNotification extends Notification implements ShouldBroadcast
         return new BroadcastMessage($this->payload());
     }
 
-    public function broadcastOn(): PrivateChannel
+    /**
+     * @return array<int, PrivateChannel>
+     */
+    public function broadcastOn(): array
     {
-        $user_id = $this->lesson?->user_id ?? auth()->id();
+        $user_id = $this->lesson->user_id ?? auth()->id();
 
-        return new PrivateChannel('App.Models.User.'.$user_id);
+        return [new PrivateChannel('App.Models.User.'.$user_id)];
     }
 
     public function broadcastAs(): string

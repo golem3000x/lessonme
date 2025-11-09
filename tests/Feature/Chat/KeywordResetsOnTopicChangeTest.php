@@ -23,7 +23,7 @@ class KeywordResetsOnTopicChangeTest extends TestCase
         $topic = Topic::create([
             'slug' => $slug,
             'is_system' => true,
-            'is_hidden' => false,
+            'is_approved' => true,
         ]);
 
         TopicTranslation::create([
@@ -41,7 +41,7 @@ class KeywordResetsOnTopicChangeTest extends TestCase
             'topic_id' => $topic->id,
             'slug' => $slug,
             'is_system' => true,
-            'is_hidden' => false,
+            'is_approved' => true,
         ]);
 
         KeywordTranslation::create([

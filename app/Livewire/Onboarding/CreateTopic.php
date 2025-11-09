@@ -17,7 +17,7 @@ class CreateTopic extends Component
 {
     public string $topic_name = '';
 
-    public string $native_lang;
+    public string $native_lang = '';
 
     public function mount(): void
     {

@@ -57,21 +57,33 @@ class Topic extends SlugEntity
 {
     protected $table = TableNameEnum::TOPICS->value;
 
+    /**
+     * @return BelongsToMany<Lesson, $this>
+     */
     public function lessons(): BelongsToMany
     {
         return $this->belongsToMany(Lesson::class);
     }
 
+    /**
+     * @return HasMany<TopicTranslation, $this>
+     */
     public function translations(): HasMany
     {
         return $this->hasMany(TopicTranslation::class, 'topic_id', 'id');
     }
 
+    /**
+     * @return HasMany<Keyword, $this>
+     */
     public function keywords(): HasMany
     {
         return $this->hasMany(Keyword::class);
     }
 
+    /**
+     * @return HasMany<UserTopicVisibility, $this>
+     */
     public function visibility(): HasMany
     {
         return $this->hasMany(UserTopicVisibility::class);

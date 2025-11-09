@@ -46,5 +46,6 @@ Route::middleware('auth')->group(function () {
 
     // Lessons management
     Route::get('/lessons', LessonIndex::class)->name('lessons.index');
+    Route::post('/lessons', [LessonController::class, 'store'])->name('lessons.store');
     Route::get('/lessons/{lesson}', [LessonController::class, 'show'])->name('lessons.show');
 });

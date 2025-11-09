@@ -20,7 +20,7 @@ class ModerateKeywordJobTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected function create_user(): User
+    protected function createUser(): User
     {
         return User::factory()->create([
             'native_lang' => SystemLanguageEnum::ENGLISH->value,
@@ -28,7 +28,7 @@ class ModerateKeywordJobTest extends TestCase
         ]);
     }
 
-    protected function create_topic(?int $user_id = null): Topic
+    protected function createTopic(?int $user_id = null): Topic
     {
         $topic = Topic::create([
             'user_id' => $user_id,
@@ -46,7 +46,7 @@ class ModerateKeywordJobTest extends TestCase
         return $topic;
     }
 
-    protected function create_keyword(User $user, Topic $topic, string $value = 'Cafe'): Keyword
+    protected function createKeyword(User $user, Topic $topic, string $value = 'Cafe'): Keyword
     {
         $keyword = Keyword::create([
             'user_id' => $user->id,
@@ -66,13 +66,15 @@ class ModerateKeywordJobTest extends TestCase
 
     public function test_approved_keyword_gets_translated_into_learning_language(): void
     {
-        $user = $this->create_user();
-        $topic = $this->create_topic($user->id);
-        $keyword = $this->create_keyword($user, $topic, 'Cafe');
+        $user = $this->createUser();
+        $topic = $this->createTopic($user->id);
+        $keyword = $this->createKeyword($user, $topic, 'Cafe');
 
         $openAI = Mockery::mock(OpenAIService::class);
         $openAI->shouldReceive('moderateSlug')->once()->with('Cafe')->andReturn(true);
-        $openAI->shouldReceive('translateSlugAllLanguages')->once()->with('Cafe', SystemLanguageEnum::VIETNAMESE)->andReturn('Quán cà phê');
+        $openAI->shouldReceive('translateSlugAllLanguages')->once()->with('Cafe')->andReturn([
+            SystemLanguageEnum::VIETNAMESE->value => 'Quán cà phê',
+        ]);
 
         $job = new ModerateKeywordJob($keyword);
         $job->handle($openAI);
@@ -86,9 +88,9 @@ class ModerateKeywordJobTest extends TestCase
 
     public function test_rejected_keyword_does_not_get_translated(): void
     {
-        $user = $this->create_user();
-        $topic = $this->create_topic($user->id);
-        $keyword = $this->create_keyword($user, $topic, 'Restricted');
+        $user = $this->createUser();
+        $topic = $this->createTopic($user->id);
+        $keyword = $this->createKeyword($user, $topic, 'Restricted');
 
         $openAI = Mockery::mock(OpenAIService::class);
         $openAI->shouldReceive('moderateSlug')->once()->with('Restricted')->andReturn(false);

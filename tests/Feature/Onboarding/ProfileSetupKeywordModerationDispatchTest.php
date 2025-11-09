@@ -18,7 +18,7 @@ class ProfileSetupKeywordModerationDispatchTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected function create_system_topic(string $label): Topic
+    protected function createSystemTopic(string $label): Topic
     {
         $topic = Topic::create([
             'user_id' => null,
@@ -46,7 +46,7 @@ class ProfileSetupKeywordModerationDispatchTest extends TestCase
         ]);
         $this->actingAs($user);
 
-        $topic = $this->create_system_topic('Hobbies');
+        $topic = $this->createSystemTopic('Hobbies');
 
         Livewire::test(ProfileSetup::class)
             ->set('new_keyword_by_topic.'.$topic->id, 'Photography')

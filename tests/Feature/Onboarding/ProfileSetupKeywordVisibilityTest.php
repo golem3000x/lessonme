@@ -19,7 +19,7 @@ class ProfileSetupKeywordVisibilityTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected function create_system_topic(string $label): Topic
+    protected function createSystemTopic(string $label): Topic
     {
         $topic = Topic::create([
             'user_id' => null,
@@ -37,7 +37,7 @@ class ProfileSetupKeywordVisibilityTest extends TestCase
         return $topic;
     }
 
-    protected function create_keyword(Topic $topic, string $value): Keyword
+    protected function createKeyword(Topic $topic, string $value): Keyword
     {
         $keyword = Keyword::create([
             'topic_id' => $topic->id,
@@ -62,9 +62,9 @@ class ProfileSetupKeywordVisibilityTest extends TestCase
         ]);
         $this->actingAs($user);
 
-        $topic = $this->create_system_topic('Travel');
-        $visible_kw = $this->create_keyword($topic, 'Hotels');
-        $hidden_kw = $this->create_keyword($topic, 'Flights');
+        $topic = $this->createSystemTopic('Travel');
+        $visible_kw = $this->createKeyword($topic, 'Hotels');
+        $hidden_kw = $this->createKeyword($topic, 'Flights');
 
         // Mark one keyword as hidden for this user
         UserKeywordVisibilityModel::create([
@@ -97,9 +97,9 @@ class ProfileSetupKeywordVisibilityTest extends TestCase
         ]);
         $this->actingAs($user);
 
-        $topic = $this->create_system_topic('Business');
-        $k1 = $this->create_keyword($topic, 'Marketing');
-        $k2 = $this->create_keyword($topic, 'Finance');
+        $topic = $this->createSystemTopic('Business');
+        $k1 = $this->createKeyword($topic, 'Marketing');
+        $k2 = $this->createKeyword($topic, 'Finance');
 
         // Initially all visible (no records yet)
         Livewire::test(ProfileSetup::class)
@@ -127,7 +127,7 @@ class ProfileSetupKeywordVisibilityTest extends TestCase
         ]);
         $this->actingAs($user);
 
-        $topic = $this->create_system_topic('Culture');
+        $topic = $this->createSystemTopic('Culture');
 
         Livewire::test(ProfileSetup::class)
             ->set('new_keyword_by_topic.'.$topic->id, 'Museums')
