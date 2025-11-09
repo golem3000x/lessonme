@@ -12,18 +12,42 @@ class NotificationsPanel extends Component
     #[On('slug-processing-updated')]
     #[On('slug-moderation-updated')]
     #[On('slug-translate-updated')]
-    public function addNotification($notification): void
+    #[On('lesson-notification')]
+    public function addNotification($notification = null, $id = null, $entity = null, $status = null, $message = null, $lesson_id = null, $lesson_url = null, $lesson_name = null): void
     {
-        $data = $notification['notification'] ?? $notification;
+        // Handle both old format (array) and new format (named parameters)
+        if ($notification && is_array($notification)) {
+            $data = $notification['notification'] ?? $notification;
+            $id = $data['id'] ?? uniqid();
+            $entity = $data['entity'] ?? 'Entity';
+            $status = $data['status'] ?? '';
+            $message = $data['message'] ?? '...';
+            $lesson_id = $data['lesson_id'] ?? null;
+            $lesson_url = $data['lesson_url'] ?? null;
+            $lesson_name = $data['lesson_name'] ?? null;
+        }
 
-        $this->notifications[] = [
-            'id' => $data['id'] ?? uniqid(),
-            'entity' => $data['entity'] ?? 'Entity',
-            'status' => $data['status'] ?? '',
-            'message' => $data['message'] ?? '...',
+        $notification_data = [
+            'id' => $id ?? uniqid(),
+            'entity' => $entity ?? 'Entity',
+            'status' => $status ?? '',
+            'message' => $message ?? '...',
+            'lesson_id' => $lesson_id,
+            'lesson_url' => $lesson_url,
+            'lesson_name' => $lesson_name,
         ];
 
-        $this->dispatch('remove-notification', ['id' => end($this->notifications)['id']]);
+        // Check for duplicates to avoid spam
+        $exists = collect($this->notifications)->contains(function ($n) use ($notification_data) {
+            return $n['entity'] === $notification_data['entity'] &&
+                   $n['status'] === $notification_data['status'] &&
+                   $n['message'] === $notification_data['message'];
+        });
+
+        if (! $exists) {
+            $this->notifications[] = $notification_data;
+            $this->dispatch('remove-notification', ['id' => $notification_data['id']]);
+        }
     }
 
     public function removeNotification(string $id): void

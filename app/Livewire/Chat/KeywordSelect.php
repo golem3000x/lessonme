@@ -28,18 +28,49 @@ class KeywordSelect extends Component
     /** @var array<int,array{id:int,label:string}> */
     public array $keywords = [];
 
-    public function mount(?int $topic_id = null, ?array $keyword_ids = null): void
+    public function mount(?int $topic_id = null, ?array $keyword_ids = null, ?array $keywords = null): void
     {
         $this->topic_id = $topic_id;
         $this->keyword_ids = array_values(array_unique(array_map('intval', $keyword_ids ?? [])));
-        // Fallback: if parent doesn't preload, fetch locally
-        $this->loadKeywords(reset_selection: false);
+        
+        // If keywords are preloaded from parent, use them
+        if ($keywords !== null && is_array($keywords)) {
+            $this->keywords = $keywords;
+        } else {
+            // Fallback: if parent doesn't preload, fetch locally
+            $this->loadKeywords(reset_selection: false);
+        }
     }
 
     public function updatedTopicId(int|string|null $value): void
     {
         $this->topic_id = $value !== null && $value !== '' ? (int) $value : null;
         // Parent is responsible for preloading keywords and sending them via event.
+    }
+
+    /**
+     * Toggle a keyword in the selection.
+     */
+    public function toggleKeyword(int $keyword_id): void
+    {
+        $available = collect($this->keywords)->pluck('id');
+        
+        if (!$available->contains($keyword_id)) {
+            return;
+        }
+
+        $index = array_search($keyword_id, $this->keyword_ids, true);
+        
+        if ($index !== false) {
+            // Remove from selection
+            unset($this->keyword_ids[$index]);
+            $this->keyword_ids = array_values($this->keyword_ids);
+        } else {
+            // Add to selection
+            $this->keyword_ids[] = $keyword_id;
+        }
+        
+        $this->dispatch('keywords-selected', ids: $this->keyword_ids);
     }
 
     /**

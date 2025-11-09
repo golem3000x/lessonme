@@ -3,7 +3,6 @@
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\ZaloController;
 use App\Http\Controllers\Lesson\LessonController;
-use App\Livewire\Chat\ChatLesson;
 use App\Livewire\ManageTopics;
 use App\Livewire\Onboarding\ProfileSetup;
 use App\Livewire\Onboarding\TopicSelector;
@@ -44,7 +43,6 @@ Route::middleware('auth')->group(function () {
     // Manage topics and keywords
     Route::get('/manage-topics', ManageTopics::class)->name('manage-topics');
 
-    Route::get('/chat', ChatLesson::class)->name('chat');
-
-    Route::resource('lessons', LessonController::class)->only(['index', 'show', 'create', 'store']);
+    Route::get('/lessons', \App\Livewire\Lesson\LessonIndex::class)->name('lessons.index');
+    Route::get('/lessons/{lesson}', [LessonController::class, 'show'])->name('lessons.show');
 });

@@ -9,4 +9,5 @@ enum NotificationEventTypeEnum: string
     case MODERATION = 'moderation';
     case TRANSLATE = 'translate';
     case PROCESSING = 'processing';
+    case LESSON_CREATION = 'lesson_creation';
 }

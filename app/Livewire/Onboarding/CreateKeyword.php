@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Livewire\Onboarding;
 
-use App\Events\SlugEntityChanged;
 use App\Models\Keyword\Keyword;
 use App\Models\User;
 use App\Notifications\Processing\SlugEntityProcessingNotification;

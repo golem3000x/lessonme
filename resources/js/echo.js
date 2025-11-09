@@ -51,4 +51,38 @@ if (userId) {
         console.log('🔥 Translation invalid:', notification);
         Livewire.dispatch('slug-translate-updated', {notification});
     });
+
+    // Lesson creation notifications
+    channel.listen('.lesson.creation.processing', (notification) => {
+        console.log('🔥 Lesson creation processing:', notification);
+        Livewire.dispatch('lesson-notification', {
+            id: notification.id,
+            entity: notification.entity,
+            status: notification.status,
+            message: notification.message
+        });
+    });
+
+    channel.listen('.lesson.creation.success', (notification) => {
+        console.log('🔥 Lesson creation success:', notification);
+        Livewire.dispatch('lesson-notification', {
+            id: notification.id,
+            entity: notification.entity,
+            status: notification.status,
+            message: notification.message,
+            lesson_id: notification.lesson_id,
+            lesson_url: notification.lesson_url,
+            lesson_name: notification.lesson_name
+        });
+    });
+
+    channel.listen('.lesson.creation.error', (notification) => {
+        console.log('🔥 Lesson creation error:', notification);
+        Livewire.dispatch('lesson-notification', {
+            id: notification.id,
+            entity: notification.entity,
+            status: notification.status,
+            message: notification.message
+        });
+    });
 }

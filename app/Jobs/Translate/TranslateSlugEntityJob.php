@@ -6,10 +6,6 @@ namespace App\Jobs\Translate;
 
 use App\Enums\TranslateStatusEnum;
 use App\Models\Abstracts\Slug\SlugEntity;
-use App\Models\Keyword\Keyword;
-use App\Models\Keyword\UserKeywordVisibility;
-use App\Models\Topic\Topic;
-use App\Models\Topic\UserTopicVisibility;
 use App\Notifications\Translate\SlugEntityTranslateNotification;
 use App\Services\OpenAi\OpenAIService;
 use Exception;
@@ -24,9 +20,7 @@ class TranslateSlugEntityJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public function __construct(protected SlugEntity $entity)
-    {
-    }
+    public function __construct(protected SlugEntity $entity) {}
 
     public function handle(OpenAIService $openAI): void
     {
@@ -41,7 +35,7 @@ class TranslateSlugEntityJob implements ShouldQueue
             try {
                 $translations = $openAI->translateSlugAllLanguages($this->entity->slug);
 
-                if (empty($translations) || !is_array($translations)) {
+                if (empty($translations) || ! is_array($translations)) {
                     return TranslateStatusEnum::INVALID;
                 }
 
@@ -49,7 +43,7 @@ class TranslateSlugEntityJob implements ShouldQueue
                 $entity_id_column = $this->entity->translations()->getForeignKeyName();
 
                 $data = collect($translations)
-                    ->map(fn($value, $language_code) => [
+                    ->map(fn ($value, $language_code) => [
                         $entity_id_column => $this->entity->id,
                         'language_code' => $language_code,
                         'value' => $value,

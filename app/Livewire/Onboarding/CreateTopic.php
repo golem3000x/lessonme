@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace App\Livewire\Onboarding;
 
-use App\Events\SlugEntityChanged;
 use App\Models\Topic\Topic;
-use App\Models\Topic\UserTopicVisibility;
 use App\Models\User;
 use App\Notifications\Processing\SlugEntityProcessingNotification;
 use Illuminate\Contracts\View\Factory;

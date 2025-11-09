@@ -15,7 +15,7 @@ namespace App\Dto;
  * @property string $level The level of the lesson (e.g., 'beginner', 'intermediate', 'advanced')
  * @property string $native_lang The native language of the lesson
  * @property string $learning_lang The learning language of the lesson
- * @property array $themes The themes of the lesson
+ * @property array $keywords The keywords of the lesson
  */
 class LessonDto
 {
@@ -24,6 +24,6 @@ class LessonDto
         public string $level,
         public string $native_lang,
         public string $learning_lang,
-        public array $themes
+        public array $keywords
     ) {}
 }

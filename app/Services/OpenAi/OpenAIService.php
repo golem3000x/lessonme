@@ -16,11 +16,11 @@ class OpenAIService
 
     public function generateLesson(LessonDto $lesson_dto): array
     {
-        $interest = count($lesson_dto->themes) ? implode(', ', $lesson_dto->themes) : 'general';
+        $keywords = count($lesson_dto->keywords) ? implode(', ', $lesson_dto->keywords) : '';
 
-        $learning_lang_name = $lesson_dto->learning_lang;
+        $learning_lang_name = SystemLanguageEnum::tryFrom($lesson_dto->learning_lang)->name;
 
-        $native_lang_name = $lesson_dto->native_lang;
+        $native_lang_name = SystemLanguageEnum::tryFrom($lesson_dto->native_lang)->name;
 
         $teacher_prompt = "You are an $learning_lang_name teacher.";
 
@@ -29,14 +29,14 @@ class OpenAIService
         $topic = $lesson_dto->topic;
 
         $system = <<<PROMPT
-                    $teacher_prompt Generate a short lesson for a learner. Return JSON with keys:
+                    $teacher_prompt $explanation_prompt Generate a short lesson for a learner. Return JSON with keys:
                     - topic
                     - lesson_name (not longer than 100 characters)
                     - lesson_text
                     - grammar_highlights (array of {phrase,label,explanation,formula,example})
                     - vocabulary (array of {word,translation,example})
                     - quiz (array of {question,options,answer})
-                    Use themes: $interest. $explanation_prompt"
+                    Use keywords: $keywords."
                     PROMPT;
 
         $response = OpenAI::chat()

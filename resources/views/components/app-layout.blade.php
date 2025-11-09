@@ -21,7 +21,6 @@
         <div class="space-x-4 flex items-center">
             @auth
                 <a href="/dashboard" class="text-sm">{{ __('nav.dashboard') }}</a>
-                <a href="/chat" class="text-sm">{{ __('nav.chat') }}</a>
                 <a href="/lessons" class="text-sm">{{ __('nav.lessons') }}</a>
                 <a href="/onboarding" class="text-sm">{{ __('nav.profile') }}</a>
                 <span class="text-sm text-gray-600">{{ Auth::user()->name }}</span>
