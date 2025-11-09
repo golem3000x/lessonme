@@ -61,8 +61,6 @@ abstract class SlugEntity extends BaseModel
 
     /**
      * Get translation for specific language or fallback to first available
-     *
-     * @return SlugTranslation|null
      */
     public function translation(?string $lang = null): ?SlugTranslation
     {
@@ -95,7 +93,7 @@ abstract class SlugEntity extends BaseModel
     /**
      * Scope to get entities visible for specific user
      *
-     * @param Builder<static> $query
+     * @param  Builder<static>  $query
      * @return Builder<static>
      */
     public function scopeVisibleForUser(Builder $query, int $userId): Builder

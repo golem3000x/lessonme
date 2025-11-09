@@ -20,7 +20,7 @@ namespace App\Dto;
 class LessonDto
 {
     /**
-     * @param array<int, string> $keywords
+     * @param  array<int, string>  $keywords
      */
     public function __construct(
         public string $topic,

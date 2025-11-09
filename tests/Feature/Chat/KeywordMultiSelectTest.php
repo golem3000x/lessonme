@@ -10,7 +10,6 @@ use App\Models\Keyword\KeywordTranslation;
 use App\Models\Topic\Topic;
 use App\Models\Topic\TopicTranslation;
 use App\Models\User;
-use App\Services\OpenAi\OpenAIService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
 use Tests\TestCase;

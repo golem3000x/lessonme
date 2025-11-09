@@ -19,44 +19,43 @@ class ModerateKeywordJob implements ShouldQueue
 
     public function __construct(
         public Keyword $keyword
-    ) {
-    }
+    ) {}
 
     public function handle(OpenAIService $open_ai_service): void
     {
         $keyword = $this->keyword->load(['translations', 'user']);
-        
+
         $first_translation = $keyword->translations->first();
-        
+
         if (! $first_translation) {
             return;
         }
 
         $original_value = $first_translation->value;
-        
+
         // Moderate the keyword using OpenAI
         $is_appropriate = $open_ai_service->moderateSlug($original_value);
-        
+
         if (! $is_appropriate) {
             // If not appropriate, mark as not approved
             $keyword->update(['is_approved' => false]);
-            
+
             return;
         }
 
         // Approve the keyword
         $keyword->update(['is_approved' => true]);
-        
+
         // Get target language (user's learning language)
         if (! $keyword->user) {
             return;
         }
-        
+
         $learning_lang = $keyword->user->learning_lang;
-        
+
         // Translate to all languages
         $translations = $open_ai_service->translateSlugAllLanguages($original_value);
-        
+
         // Create translation for learning language if it doesn't exist
         if (isset($translations[$learning_lang])) {
             KeywordTranslation::updateOrCreate(

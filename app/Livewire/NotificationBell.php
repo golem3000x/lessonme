@@ -21,7 +21,7 @@ class NotificationBell extends Component
     public function markAsRead(string $notification_id): void
     {
         $user = Auth::user();
-        if (!$user) {
+        if (! $user) {
             return;
         }
 
@@ -39,7 +39,7 @@ class NotificationBell extends Component
     public function markAllAsRead(): void
     {
         $user = Auth::user();
-        if (!$user) {
+        if (! $user) {
             return;
         }
 
@@ -50,7 +50,7 @@ class NotificationBell extends Component
     public function deleteNotification(string $notification_id): void
     {
         $user = Auth::user();
-        if (!$user) {
+        if (! $user) {
             return;
         }
 
@@ -65,8 +65,9 @@ class NotificationBell extends Component
     protected function updateUnreadCount(): void
     {
         $user = Auth::user();
-        if (!$user) {
+        if (! $user) {
             $this->unread_count = 0;
+
             return;
         }
 
@@ -76,7 +77,7 @@ class NotificationBell extends Component
     public function render(): Factory|View
     {
         $user = Auth::user();
-        if (!$user) {
+        if (! $user) {
             return view('livewire.notification-bell', [
                 'notifications' => collect(),
             ]);

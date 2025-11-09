@@ -21,7 +21,7 @@ class VocabularyQuiz extends Component
     public int $score = 0;
 
     /**
-     * @param array<int, array<string, mixed>> $quiz
+     * @param  array<int, array<string, mixed>>  $quiz
      */
     public function mount(array $quiz): void
     {

@@ -40,7 +40,7 @@ class ManageLesson extends Component
     public function mount(): void
     {
         $user = Auth::user();
-        if (!$user) {
+        if (! $user) {
             abort(401);
         }
 
@@ -114,7 +114,7 @@ class ManageLesson extends Component
         $this->is_generating = true;
 
         $user = Auth::user();
-        if (!$user) {
+        if (! $user) {
             abort(401);
         }
 
@@ -193,7 +193,7 @@ class ManageLesson extends Component
     }
 
     /**
-     * @param array<int, int> $ids
+     * @param  array<int, int>  $ids
      */
     #[On('keywords-selected')]
     public function setKeywordIds(array $ids): void

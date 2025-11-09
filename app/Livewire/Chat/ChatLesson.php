@@ -29,14 +29,14 @@ class ChatLesson extends Component
     public function mount(): void
     {
         $user = Auth::user();
-        
+
         if (! $user) {
             $this->topics = [];
             $this->keywords = [];
-            
+
             return;
         }
-        
+
         $locale = app()->getLocale();
 
         // Load visible topics
@@ -59,7 +59,7 @@ class ChatLesson extends Component
             $this->loadTopicLabel();
             $this->loadKeywords();
         }
-        
+
         // Try to restore keyword selection from session
         $session_keyword_ids = session('selected_keyword_ids');
         if ($session_keyword_ids && is_array($session_keyword_ids)) {
@@ -84,7 +84,7 @@ class ChatLesson extends Component
     }
 
     /**
-     * @param array<int, int> $ids
+     * @param  array<int, int>  $ids
      */
     public function setKeywordIds(array $ids): void
     {
@@ -113,8 +113,9 @@ class ChatLesson extends Component
         }
 
         $user = Auth::user();
-        if (!$user) {
+        if (! $user) {
             $this->keywords = [];
+
             return;
         }
 

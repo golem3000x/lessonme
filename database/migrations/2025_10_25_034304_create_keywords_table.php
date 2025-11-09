@@ -16,7 +16,6 @@ return new class extends Migration
             $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade');
             $table->foreignId('topic_id')
                 ->nullable()
-                ->after('user_id')
                 ->constrained(TableNameEnum::TOPICS->value)
                 ->nullOnDelete();
             $table->string('slug');

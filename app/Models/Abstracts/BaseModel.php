@@ -15,7 +15,7 @@ abstract class BaseModel extends Model
     protected array $extra_fillable = [];
 
     /**
-     * @param array<string, mixed> $attributes
+     * @param  array<string, mixed>  $attributes
      */
     public function __construct(array $attributes = [])
     {

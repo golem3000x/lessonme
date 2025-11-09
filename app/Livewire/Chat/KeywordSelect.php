@@ -29,8 +29,8 @@ class KeywordSelect extends Component
     public array $keywords = [];
 
     /**
-     * @param array<int, int>|null $keyword_ids
-     * @param array<int, array{id:int,label:string}>|null $keywords
+     * @param  array<int, int>|null  $keyword_ids
+     * @param  array<int, array{id:int,label:string}>|null  $keywords
      */
     public function mount(?int $topic_id = null, ?array $keyword_ids = null, ?array $keywords = null): void
     {
@@ -102,10 +102,11 @@ class KeywordSelect extends Component
     protected function loadKeywords(bool $reset_selection = false): void
     {
         $user = Auth::user();
-        if (!$user) {
+        if (! $user) {
             $this->keywords = [];
             $this->keyword_ids = [];
             $this->dispatch('keywords-selected', ids: []);
+
             return;
         }
 

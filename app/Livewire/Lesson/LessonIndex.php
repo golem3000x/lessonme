@@ -21,7 +21,7 @@ class LessonIndex extends Component
 
     public function __construct()
     {
-        $this->lessons = new Collection();
+        $this->lessons = new Collection;
     }
 
     public function mount(): void

@@ -10,12 +10,10 @@ use App\Models\Keyword\Keyword;
 use App\Models\Keyword\KeywordTranslation;
 use App\Models\Keyword\UserKeywordVisibility as UserKeywordVisibilityModel;
 use App\Models\Topic\Topic;
-use App\Models\Topic\TopicTranslation;
 use App\Models\Topic\UserTopicVisibility;
 use App\Models\User;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Livewire\Component;
@@ -143,7 +141,7 @@ class ProfileSetup extends Component
         dispatch(new ModerateKeywordJob($keyword));
     }
 
-    public function save(): RedirectResponse
+    public function save()
     {
         $this->validate([
             'name' => 'required|string|max:255',

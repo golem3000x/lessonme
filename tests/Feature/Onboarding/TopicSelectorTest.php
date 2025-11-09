@@ -30,7 +30,7 @@ class TopicSelectorTest extends TestCase
             'language_code' => 'en',
             'value' => $label,
         ]);
-        
+
         TopicTranslation::create([
             'topic_id' => $topic->id,
             'language_code' => 'vi',

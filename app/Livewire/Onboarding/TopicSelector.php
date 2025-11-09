@@ -7,7 +7,6 @@ namespace App\Livewire\Onboarding;
 use App\Models\Topic\Topic;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
-use Illuminate\Http\RedirectResponse;
 use Livewire\Component;
 
 class TopicSelector extends Component
@@ -20,7 +19,7 @@ class TopicSelector extends Component
         $this->selected = [];
     }
 
-    public function save(): RedirectResponse
+    public function save()
     {
         $selected_topics = Topic::with('translations')
             ->whereIn('id', $this->selected)

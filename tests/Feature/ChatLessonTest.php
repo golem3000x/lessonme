@@ -48,7 +48,7 @@ class ChatLessonTest extends TestCase
 
         // Session prime with t1
         session(['selected_topic_id' => $t1->id]);
-        
+
         // Mount component - it should load t1 from session
         $component = Livewire::test(ChatLesson::class)
             ->assertSet('topic_id', $t1->id)
