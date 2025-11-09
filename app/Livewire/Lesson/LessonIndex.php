@@ -19,11 +19,11 @@ class LessonIndex extends Component
 
     public function mount(): void
     {
-        $this->load_lessons();
+        $this->loadLessons();
     }
 
     #[On('lesson-created')]
-    public function load_lessons(): void
+    public function loadLessons(): void
     {
         $this->lessons = Lesson::where('user_id', Auth::id())
             ->with(['topicRelation' => function ($query) {
@@ -40,12 +40,12 @@ class LessonIndex extends Component
         $this->dispatch('reset-manage-lesson-state');
     }
 
-    public function close_manage_modal(): void
+    public function closeManageModal(): void
     {
         $this->show_manage_modal = false;
     }
 
-    public function delete_lesson(int $lesson_id): void
+    public function deleteLesson(int $lesson_id): void
     {
         $lesson = Lesson::where('id', $lesson_id)
             ->where('user_id', Auth::id())
@@ -53,7 +53,7 @@ class LessonIndex extends Component
 
         if ($lesson) {
             $lesson->delete();
-            $this->load_lessons();
+            $this->loadLessons();
             session()->flash('message', __('lessons.lesson_deleted'));
         }
     }

@@ -35,12 +35,12 @@ class TopicIndex extends Component
 
     public function mount(): void
     {
-        $this->load_topics_and_keywords();
+        $this->loadTopicsAndKeywords();
     }
 
     #[On('topic-created')]
     #[On('keyword-created')]
-    public function load_topics_and_keywords(): void
+    public function loadTopicsAndKeywords(): void
     {
         /** @var User $user */
         $user = Auth::user();
@@ -96,7 +96,7 @@ class TopicIndex extends Component
         $this->visible_keyword_ids = array_values(array_unique(array_map('intval', $visible_keyword_ids)));
     }
 
-    public function delete_topic(int $topic_id): void
+    public function deleteTopic(int $topic_id): void
     {
         /** @var User $user */
         $user = Auth::user();
@@ -123,7 +123,7 @@ class TopicIndex extends Component
         session()->flash('message', __('topics.topic_deleted'));
     }
 
-    public function delete_keyword(int $keyword_id): void
+    public function deleteKeyword(int $keyword_id): void
     {
         /** @var User $user */
         $user = Auth::user();
@@ -150,7 +150,7 @@ class TopicIndex extends Component
         session()->flash('message', __('topics.keyword_deleted'));
     }
 
-    public function save_visibility(): void
+    public function saveVisibility(): void
     {
         /** @var User $user */
         $user = Auth::user();

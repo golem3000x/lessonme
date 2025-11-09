@@ -80,7 +80,7 @@ class ManageLesson extends Component
 
         session(['selected_topic_id' => $this->topic_id]);
 
-        $this->keywords = $this->build_keywords_for_topic($this->topic_id);
+        $this->keywords = $this->buildKeywordsForTopic($this->topic_id);
         $this->dispatch('keywords-preloaded', keywords: $this->keywords, reset: false, selectedIds: $this->keyword_ids);
     }
 
@@ -95,13 +95,13 @@ class ManageLesson extends Component
         $this->keyword_ids = [];
         session()->forget('selected_keyword_ids');
 
-        $this->keywords = $this->build_keywords_for_topic($this->topic_id);
+        $this->keywords = $this->buildKeywordsForTopic($this->topic_id);
         $this->dispatch('keywords-preloaded', keywords: $this->keywords, reset: true, selectedIds: []);
 
         $this->dispatch('topic-changed', id: $this->topic_id);
     }
 
-    public function create_lesson(): void
+    public function createLesson(): void
     {
         // Reset state
         $this->reset(['is_generating']);
@@ -111,7 +111,7 @@ class ManageLesson extends Component
 
         $topic = Topic::find($this->topic_id);
         if (! $topic) {
-            $this->notify_user('error', __('lessons.topic_not_found'));
+            $this->notifyUser('error', __('lessons.topic_not_found'));
             $this->is_generating = false;
 
             return;
@@ -153,7 +153,7 @@ class ManageLesson extends Component
             $this->is_generating = false;
 
             // Notify user via UI
-            $this->notify_user('processing', __('lessons.lesson_creation_in_progress'));
+            $this->notifyUser('processing', __('lessons.lesson_creation_in_progress'));
 
             // Dispatch events and close modal
             $this->dispatch('lesson-creation-queued');
@@ -161,14 +161,14 @@ class ManageLesson extends Component
 
         } catch (\Exception $e) {
             $this->is_generating = false;
-            $this->notify_user('error', __('lessons.generation_failed').': '.$e->getMessage());
+            $this->notifyUser('error', __('lessons.generation_failed').': '.$e->getMessage());
 
             // Log error for debugging
             $this->js('console.error("Lesson creation dispatch failed:", "'.addslashes($e->getMessage()).'");');
         }
     }
 
-    protected function notify_user(string $status, string $message): void
+    protected function notifyUser(string $status, string $message): void
     {
         $notification_id = uniqid('lesson_');
 
@@ -184,14 +184,14 @@ class ManageLesson extends Component
     }
 
     #[On('keywords-selected')]
-    public function set_keyword_ids(array $ids): void
+    public function setKeywordIds(array $ids): void
     {
         $this->keyword_ids = array_values(array_unique(array_map('intval', $ids)));
         session(['selected_keyword_ids' => $this->keyword_ids]);
     }
 
     #[On('reset-manage-lesson-state')]
-    public function reset_state(): void
+    public function resetState(): void
     {
         $this->reset(['is_generating']);
         $this->is_generating = false;
@@ -206,7 +206,7 @@ class ManageLesson extends Component
      *
      * @return array<int, array{id:int,label:string}>
      */
-    protected function build_keywords_for_topic(?int $topic_id): array
+    protected function buildKeywordsForTopic(?int $topic_id): array
     {
         if ($topic_id === null || $this->preloaded_topics === null) {
             return [];

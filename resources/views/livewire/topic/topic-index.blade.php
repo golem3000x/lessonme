@@ -22,7 +22,7 @@
                     <p class="text-sm text-gray-600 mt-1">{{ __('topics.visibility_description') }}</p>
                 </div>
                 <button
-                        wire:click="save_visibility"
+                        wire:click="saveVisibility"
                         class="px-4 py-2 bg-blue-600 text-white text-sm rounded hover:bg-blue-700"
                         wire:loading.attr="disabled"
                 >
@@ -44,7 +44,7 @@
                                     </span>
                                     <button
                                             type="button"
-                                            wire:click="delete_topic({{ $t['id'] }})"
+                                            wire:click="deleteTopic({{ $t['id'] }})"
                                             wire:confirm="{{ __('topics.confirm_delete_topic') }}"
                                             class="px-2 py-1 text-xs bg-red-600 text-white rounded hover:bg-red-700"
                                     >
@@ -81,7 +81,7 @@
                                                         </span>
                                                         <button
                                                                 type="button"
-                                                                wire:click="delete_keyword({{ $kw['id'] }})"
+                                                                wire:click="deleteKeyword({{ $kw['id'] }})"
                                                                 wire:confirm="{{ __('topics.confirm_delete_keyword') }}"
                                                                 class="px-2 py-0.5 text-xs bg-red-600 text-white rounded hover:bg-red-700"
                                                         >

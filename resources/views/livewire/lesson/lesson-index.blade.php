@@ -35,7 +35,7 @@
             <p class="mt-1 text-sm text-gray-500">{{ __('lessons.get_started_message') }}</p>
             <div class="mt-6">
                 <button 
-                    wire:click="open_manage_modal" 
+                    wire:click="openManageModal" 
                     class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                 >
                     <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
@@ -54,7 +54,7 @@
                             {{ $lesson->lesson_name ?? \Illuminate\Support\Str::limit($lesson->lesson_text, 50) }}
                         </h3>
                         <button 
-                            wire:click="delete_lesson({{ $lesson->id }})"
+                            wire:click="deleteLesson({{ $lesson->id }})"
                             wire:confirm="{{ __('lessons.confirm_delete') }}"
                             class="text-red-600 hover:text-red-800 transition"
                             title="{{ __('lessons.delete') }}"
@@ -97,7 +97,7 @@
             x-data="{ show: true }"
             x-show="show"
             x-init="$nextTick(() => show = true)"
-            @keydown.escape.window="$wire.close_manage_modal()"
+            @keydown.escape.window="$wire.closeManageModal()"
             x-cloak
             class="fixed inset-0 z-50 overflow-y-auto"
             style="display: none;"
@@ -112,7 +112,7 @@
                     x-transition:leave="ease-in duration-200"
                     x-transition:leave-start="opacity-100"
                     x-transition:leave-end="opacity-0"
-                    @click="$wire.close_manage_modal()"
+                    @click="$wire.closeManageModal()"
                     class="fixed inset-0 bg-gray-900 bg-opacity-50 backdrop-blur-sm transition-opacity"
                 ></div>
 
@@ -127,7 +127,7 @@
                     x-transition:leave="ease-in duration-200"
                     x-transition:leave-start="opacity-100 translate-y-0 scale-100"
                     x-transition:leave-end="opacity-0 translate-y-8 scale-95"
-                    @click.away="$wire.close_manage_modal()"
+                    @click.away="$wire.closeManageModal()"
                     class="inline-block align-bottom bg-white rounded-xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full"
                 >
                     <div class="bg-white px-6 pt-6 pb-6">
@@ -136,7 +136,7 @@
                                 {{ __('lessons.manage_lesson') }}
                             </h3>
                             <button 
-                                wire:click="close_manage_modal" 
+                                wire:click="closeManageModal" 
                                 class="text-gray-400 hover:text-gray-600 transition-colors rounded-lg p-1 hover:bg-gray-100"
                             >
                                 <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -156,7 +156,7 @@
 @script
 <script>
     $wire.on('close-manage-modal', () => {
-        $wire.close_manage_modal();
+        $wire.closeManageModal();
     });
 </script>
 @endscript
