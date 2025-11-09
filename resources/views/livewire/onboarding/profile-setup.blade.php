@@ -1,9 +1,6 @@
 <div class="max-w-3xl mx-auto p-6 bg-white rounded-lg shadow">
-    <div class="flex items-center justify-between mb-4">
+    <div class="mb-4">
         <h2 class="text-xl font-semibold">{{ __('onboarding.profile_setup') }}</h2>
-        <a href="{{ route('manage-topics') }}" class="px-4 py-2 bg-gray-800 text-white text-sm rounded hover:bg-gray-900">
-            {{ __('onboarding.manage_topics') }}
-        </a>
     </div>
 
     @if (session()->has('message'))

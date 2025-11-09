@@ -33,7 +33,7 @@ class LessonIndex extends Component
             ->get();
     }
 
-    public function open_manage_modal(): void
+    public function openManageModal(): void
     {
         $this->show_manage_modal = true;
         // Dispatch event to reset manage lesson component state

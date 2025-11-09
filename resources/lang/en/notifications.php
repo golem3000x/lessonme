@@ -35,4 +35,12 @@ return [
     // Translation notifications for keywords
     'keyword_translate_successfully' => 'Your keyword ":slug" has been successfully translated and is now visible!',
     'keyword_translate_invalid' => 'Translation error for your keyword ":slug"',
+
+    // Notification Bell
+    'title' => 'Notifications',
+    'notifications' => 'Notifications',
+    'mark_all_read' => 'Mark all as read',
+    'mark_read' => 'Mark as read',
+    'delete' => 'Delete',
+    'no_notifications' => 'No notifications yet',
 ];

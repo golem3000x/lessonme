@@ -9,7 +9,6 @@
     @endauth
     <title>{{ config('app.name', __('nav.app_name')) }}</title>
 
-    <script src="https://unpkg.com/alpinejs" defer></script>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     @livewireStyles
 </head>
@@ -17,23 +16,67 @@
 <body class="bg-gray-100 min-h-screen font-sans antialiased">
 <nav class="bg-white shadow p-4">
     <div class="max-w-5xl mx-auto flex justify-between items-center">
-        <a href="/" class="font-bold">{{ __('nav.app_name') }}</a>
-        <div class="space-x-4 flex items-center">
+        <!-- Левая часть: логотип + меню -->
+        <div class="flex items-center space-x-6">
+            <a href="/" class="font-bold text-gray-900">{{ __('nav.app_name') }}</a>
+
             @auth
-                <a href="/dashboard" class="text-sm">{{ __('nav.dashboard') }}</a>
-                <a href="/lessons" class="text-sm">{{ __('nav.lessons') }}</a>
-                <a href="/onboarding" class="text-sm">{{ __('nav.profile') }}</a>
-                <span class="text-sm text-gray-600">{{ Auth::user()->name }}</span>
-                <form method="POST" action="{{ route('logout') }}" class="inline">
-                    @csrf
-                    <button type="submit"
-                            class="text-sm text-red-600 hover:text-red-800">{{ __('nav.logout') }}</button>
-                </form>
+                <a href="/dashboard" class="text-sm text-gray-700 hover:text-gray-900">
+                    {{ __('nav.dashboard') }}
+                </a>
+                <a href="/lessons" class="text-sm text-gray-700 hover:text-gray-900">
+                    {{ __('nav.lessons') }}
+                </a>
+                <a href="/manage-topics" class="text-sm text-gray-700 hover:text-gray-900">
+                    {{ __('nav.topics') }}
+                </a>
+            @endauth
+        </div>
+
+        <!-- Правая часть: уведомления, профиль, язык -->
+        <div class="flex items-center space-x-4">
+            @auth
+                @livewire('notification-bell')
+
+                {{-- User Dropdown Menu --}}
+                <div x-data="{ open: false }" class="relative" @click.away="open = false">
+                    <button @click="open = !open" class="text-sm text-gray-600 hover:text-gray-800 flex items-center focus:outline-none">
+                        {{ Auth::user()->name }}
+                        <svg class="ml-1 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
+
+                    <div x-show="open"
+                         x-transition:enter="transition ease-out duration-200"
+                         x-transition:enter-start="opacity-0 transform scale-95"
+                         x-transition:enter-end="opacity-100 transform scale-100"
+                         x-transition:leave="transition ease-in duration-75"
+                         x-transition:leave-start="opacity-100 transform scale-100"
+                         x-transition:leave-end="opacity-0 transform scale-95"
+                         class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-200"
+                         style="display: none;">
+
+                        <a href="/onboarding" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                            {{ __('nav.profile') }}
+                        </a>
+
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="w-full text-left block px-4 py-2 text-sm text-red-600 hover:bg-gray-100">
+                                {{ __('nav.logout') }}
+                            </button>
+                        </form>
+                    </div>
+                </div>
             @else
                 <a href="{{ route('login') }}" class="text-sm">{{ __('nav.login') }}</a>
-                <a href="{{ route('register') }}"
-                   class="text-sm bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">{{ __('nav.register') }}</a>
+                <a href="{{ route('register') }}" class="text-sm bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">
+                    {{ __('nav.register') }}
+                </a>
             @endauth
+
+            {{-- Переключатель языка --}}
             @php($current_locale = app()->getLocale())
             @php($vi = SystemLanguageEnum::VIETNAMESE->value)
             @php($en = SystemLanguageEnum::ENGLISH->value)
@@ -53,6 +96,7 @@
     </div>
 </nav>
 
+
 @if (isset($header))
     <header class="bg-white shadow">
         <div class="max-w-5xl mx-auto py-6 px-4">
@@ -67,6 +111,7 @@
 </main>
 
 @livewireScripts
+<script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 @vite(['resources/js/app.js'])
 </body>
 </html>

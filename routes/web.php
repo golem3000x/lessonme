@@ -3,9 +3,10 @@
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\ZaloController;
 use App\Http\Controllers\Lesson\LessonController;
-use App\Livewire\ManageTopics;
+use App\Livewire\Lesson\LessonIndex;
 use App\Livewire\Onboarding\ProfileSetup;
 use App\Livewire\Onboarding\TopicSelector;
+use App\Livewire\Topic\TopicIndex;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 
@@ -40,9 +41,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/onboarding', ProfileSetup::class)->name('onboarding.profile');
     Route::get('/topics', TopicSelector::class)->name('onboarding.topics');
 
-    // Manage topics and keywords
-    Route::get('/manage-topics', ManageTopics::class)->name('manage-topics');
+    // Topics management
+    Route::get('/manage-topics', TopicIndex::class)->name('topics.index');
 
-    Route::get('/lessons', \App\Livewire\Lesson\LessonIndex::class)->name('lessons.index');
+    // Lessons management
+    Route::get('/lessons', LessonIndex::class)->name('lessons.index');
     Route::get('/lessons/{lesson}', [LessonController::class, 'show'])->name('lessons.show');
 });

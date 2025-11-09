@@ -69,14 +69,14 @@ class ManageLesson extends Component
         }
 
         // If no valid topic_id, use first available
-        if (!$this->topic_id && !empty($this->topics)) {
+        if (! $this->topic_id && ! empty($this->topics)) {
             $this->topic_id = $this->topics[0]['id'];
         }
 
         $selected = collect($this->topics)->firstWhere('id', $this->topic_id);
         $this->topic = $selected['label'] ?? '';
 
-        $this->keyword_ids = array_values(array_map('intval', (array)session('selected_keyword_ids', [])));
+        $this->keyword_ids = array_values(array_map('intval', (array) session('selected_keyword_ids', [])));
 
         session(['selected_topic_id' => $this->topic_id]);
 
@@ -86,7 +86,7 @@ class ManageLesson extends Component
 
     public function updatedTopicId(int|string $value): void
     {
-        $this->topic_id = (int)$value;
+        $this->topic_id = (int) $value;
         session(['selected_topic_id' => $this->topic_id]);
 
         $selected = collect($this->topics)->firstWhere('id', $this->topic_id);
@@ -110,7 +110,7 @@ class ManageLesson extends Component
         $user = Auth::user();
 
         $topic = Topic::find($this->topic_id);
-        if (!$topic) {
+        if (! $topic) {
             $this->notify_user('error', __('lessons.topic_not_found'));
             $this->is_generating = false;
 
@@ -120,13 +120,13 @@ class ManageLesson extends Component
         try {
             $selected_keyword_labels = [];
 
-            if (!empty($this->keyword_ids)) {
+            if (! empty($this->keyword_ids)) {
                 $keywords = Keyword::with('translations')->whereIn('id', $this->keyword_ids)->get();
                 $locale = app()->getLocale();
-                $selected_keyword_labels = $keywords->map(fn(Keyword $k) => $k->value($locale))->filter()->values()->all();
+                $selected_keyword_labels = $keywords->map(fn (Keyword $k) => $k->value($locale))->filter()->values()->all();
             }
 
-            $keywords = !empty($selected_keyword_labels) ? $selected_keyword_labels : [$this->topic];
+            $keywords = ! empty($selected_keyword_labels) ? $selected_keyword_labels : [$this->topic];
             $lesson_dto = new LessonDto(
                 $this->topic,
                 'beginner',
@@ -161,10 +161,10 @@ class ManageLesson extends Component
 
         } catch (\Exception $e) {
             $this->is_generating = false;
-            $this->notify_user('error', __('lessons.generation_failed') . ': ' . $e->getMessage());
+            $this->notify_user('error', __('lessons.generation_failed').': '.$e->getMessage());
 
             // Log error for debugging
-            $this->js('console.error("Lesson creation dispatch failed:", "' . addslashes($e->getMessage()) . '");');
+            $this->js('console.error("Lesson creation dispatch failed:", "'.addslashes($e->getMessage()).'");');
         }
     }
 
@@ -216,11 +216,11 @@ class ManageLesson extends Component
 
         $topic = $this->preloaded_topics->firstWhere('id', $topic_id);
 
-        if (!$topic) {
+        if (! $topic) {
             return [];
         }
 
-        if (!$topic->relationLoaded('keywords')) {
+        if (! $topic->relationLoaded('keywords')) {
             return [];
         }
 

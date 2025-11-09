@@ -2,9 +2,6 @@
     <div class="bg-white rounded-lg shadow p-6">
         <div class="flex items-center justify-between mb-6">
             <h2 class="text-2xl font-semibold">{{ __('topics.manage_topics') }}</h2>
-            <a href="{{ route('onboarding.profile') }}" class="text-sm text-gray-600 hover:text-gray-900">
-                ← {{ __('topics.back_to_profile') }}
-            </a>
         </div>
 
         @if (session()->has('message'))
@@ -24,31 +21,32 @@
                     <h3 class="text-lg font-medium">{{ __('topics.your_topics') }}</h3>
                     <p class="text-sm text-gray-600 mt-1">{{ __('topics.visibility_description') }}</p>
                 </div>
-                <button 
-                    wire:click="saveVisibility" 
-                    class="px-4 py-2 bg-blue-600 text-white text-sm rounded hover:bg-blue-700"
-                    wire:loading.attr="disabled"
+                <button
+                        wire:click="save_visibility"
+                        class="px-4 py-2 bg-blue-600 text-white text-sm rounded hover:bg-blue-700"
+                        wire:loading.attr="disabled"
                 >
                     {{ __('topics.save_visibility') }}
                 </button>
             </div>
-            
+
             @if(count($available_topics) > 0)
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     @foreach($available_topics as $t)
                         <div class="border rounded-lg">
                             <div class="flex items-center gap-2 p-4 border-b bg-gray-50">
-                                <input type="checkbox" class="h-4 w-4" value="{{ $t['id'] }}" wire:model="visible_topic_ids" title="{{ __('topics.visible_in_chat') }}">
+                                <input type="checkbox" class="h-4 w-4" value="{{ $t['id'] }}"
+                                       wire:model="visible_topic_ids" title="{{ __('topics.visible_in_chat') }}">
                                 <span class="font-medium flex-1">{{ $t['label'] }}</span>
                                 @if($t['user_id'] !== null)
                                     <span class="px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded">
                                         {{ __('topics.custom') }}
                                     </span>
-                                    <button 
-                                        type="button" 
-                                        wire:click="deleteTopic({{ $t['id'] }})"
-                                        wire:confirm="{{ __('topics.confirm_delete_topic') }}"
-                                        class="px-2 py-1 text-xs bg-red-600 text-white rounded hover:bg-red-700"
+                                    <button
+                                            type="button"
+                                            wire:click="delete_topic({{ $t['id'] }})"
+                                            wire:confirm="{{ __('topics.confirm_delete_topic') }}"
+                                            class="px-2 py-1 text-xs bg-red-600 text-white rounded hover:bg-red-700"
                                     >
                                         {{ __('topics.delete') }}
                                     </button>
@@ -62,7 +60,8 @@
                             <div class="p-4 space-y-3">
                                 <div>
                                     <h4 class="text-sm font-medium mb-2">{{ __('topics.add_keyword') }}</h4>
-                                    @livewire('onboarding.create-keyword', ['topicId' => $t['id']], key('create-keyword-'.$t['id']))
+                                    @livewire('onboarding.create-keyword', ['topicId' => $t['id']],
+                                    key('create-keyword-'.$t['id']))
                                 </div>
 
                                 @php($keywords = $topic_keywords[$t['id']] ?? [])
@@ -72,17 +71,19 @@
                                         <div class="space-y-1">
                                             @foreach($keywords as $kw)
                                                 <div class="flex items-center gap-2 px-3 py-2 rounded bg-gray-50 hover:bg-gray-100">
-                                                    <input type="checkbox" class="h-4 w-4" value="{{ $kw['id'] }}" wire:model="visible_keyword_ids" title="{{ __('topics.visible_in_chat') }}">
+                                                    <input type="checkbox" class="h-4 w-4" value="{{ $kw['id'] }}"
+                                                           wire:model="visible_keyword_ids"
+                                                           title="{{ __('topics.visible_in_chat') }}">
                                                     <span class="text-sm flex-1">{{ $kw['label'] }}</span>
                                                     @if($kw['user_id'] !== null)
                                                         <span class="px-2 py-0.5 text-xs bg-blue-100 text-blue-800 rounded">
                                                             {{ __('topics.custom') }}
                                                         </span>
-                                                        <button 
-                                                            type="button" 
-                                                            wire:click="deleteKeyword({{ $kw['id'] }})"
-                                                            wire:confirm="{{ __('topics.confirm_delete_keyword') }}"
-                                                            class="px-2 py-0.5 text-xs bg-red-600 text-white rounded hover:bg-red-700"
+                                                        <button
+                                                                type="button"
+                                                                wire:click="delete_keyword({{ $kw['id'] }})"
+                                                                wire:confirm="{{ __('topics.confirm_delete_keyword') }}"
+                                                                class="px-2 py-0.5 text-xs bg-red-600 text-white rounded hover:bg-red-700"
                                                         >
                                                             {{ __('topics.delete') }}
                                                         </button>

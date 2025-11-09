@@ -7,6 +7,7 @@ return [
     'dashboard' => 'Dashboard',
     'chat' => 'Chat',
     'lessons' => 'Lessons',
+    'topics' => 'Topics',
     'profile' => 'Profile',
     'login' => 'Login',
     'register' => 'Register',

@@ -32,7 +32,7 @@ class KeywordSelect extends Component
     {
         $this->topic_id = $topic_id;
         $this->keyword_ids = array_values(array_unique(array_map('intval', $keyword_ids ?? [])));
-        
+
         // If keywords are preloaded from parent, use them
         if ($keywords !== null && is_array($keywords)) {
             $this->keywords = $keywords;
@@ -54,13 +54,13 @@ class KeywordSelect extends Component
     public function toggleKeyword(int $keyword_id): void
     {
         $available = collect($this->keywords)->pluck('id');
-        
-        if (!$available->contains($keyword_id)) {
+
+        if (! $available->contains($keyword_id)) {
             return;
         }
 
         $index = array_search($keyword_id, $this->keyword_ids, true);
-        
+
         if ($index !== false) {
             // Remove from selection
             unset($this->keyword_ids[$index]);
@@ -69,7 +69,7 @@ class KeywordSelect extends Component
             // Add to selection
             $this->keyword_ids[] = $keyword_id;
         }
-        
+
         $this->dispatch('keywords-selected', ids: $this->keyword_ids);
     }
 

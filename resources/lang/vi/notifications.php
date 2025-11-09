@@ -35,4 +35,12 @@ return [
     // Translation notifications for keywords
     'keyword_translate_successfully' => 'Từ khóa ":slug" của bạn đã được dịch thành công và hiện đã hiển thị!',
     'keyword_translate_invalid' => 'Lỗi dịch từ khóa ":slug" của bạn',
+
+    // Notification Bell
+    'title' => 'Thông báo',
+    'notifications' => 'Thông báo',
+    'mark_all_read' => 'Đánh dấu tất cả đã đọc',
+    'mark_read' => 'Đánh dấu đã đọc',
+    'delete' => 'Xóa',
+    'no_notifications' => 'Chưa có thông báo',
 ];

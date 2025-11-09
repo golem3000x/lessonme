@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Livewire;
+namespace App\Livewire\Topic;
 
 use App\Models\Keyword\Keyword;
 use App\Models\Keyword\UserKeywordVisibility;
@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
-class ManageTopics extends Component
+class TopicIndex extends Component
 {
     /** @var array<int, array{id:int,label:string,user_id:?int}> */
     public array $available_topics = [];
@@ -35,12 +35,12 @@ class ManageTopics extends Component
 
     public function mount(): void
     {
-        $this->loadTopicsAndKeywords();
+        $this->load_topics_and_keywords();
     }
 
     #[On('topic-created')]
     #[On('keyword-created')]
-    public function loadTopicsAndKeywords(): void
+    public function load_topics_and_keywords(): void
     {
         /** @var User $user */
         $user = Auth::user();
@@ -96,7 +96,7 @@ class ManageTopics extends Component
         $this->visible_keyword_ids = array_values(array_unique(array_map('intval', $visible_keyword_ids)));
     }
 
-    public function deleteTopic(int $topic_id): void
+    public function delete_topic(int $topic_id): void
     {
         /** @var User $user */
         $user = Auth::user();
@@ -123,7 +123,7 @@ class ManageTopics extends Component
         session()->flash('message', __('topics.topic_deleted'));
     }
 
-    public function deleteKeyword(int $keyword_id): void
+    public function delete_keyword(int $keyword_id): void
     {
         /** @var User $user */
         $user = Auth::user();
@@ -150,7 +150,7 @@ class ManageTopics extends Component
         session()->flash('message', __('topics.keyword_deleted'));
     }
 
-    public function saveVisibility(): void
+    public function save_visibility(): void
     {
         /** @var User $user */
         $user = Auth::user();
@@ -188,8 +188,8 @@ class ManageTopics extends Component
         session()->flash('message', __('topics.visibility_saved'));
     }
 
-    public function render(): Factory|View|\Illuminate\View\View
+    public function render(): Factory|View
     {
-        return view('livewire.manage-topics');
+        return view('livewire.topic.topic-index');
     }
 }

@@ -7,6 +7,7 @@ return [
     'dashboard' => 'Bảng điều khiển',
     'chat' => 'Trò chuyện',
     'lessons' => 'Bài học',
+    'topics' => 'Chủ đề',
     'profile' => 'Hồ sơ',
     'login' => 'Đăng nhập',
     'register' => 'Đăng ký',
