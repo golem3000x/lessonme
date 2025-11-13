@@ -6,6 +6,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Enums\TableNameEnum;
+use App\Models\Lesson\Lesson;
 use Barryvdh\LaravelIdeHelper\Eloquent;
 use Database\Factories\UserFactory;
 use Illuminate\Contracts\Translation\HasLocalePreference;

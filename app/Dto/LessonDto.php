@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Dto;
 
+use App\Enums\LanguageLevelEnum;
+use LogicException;
+
 /**
  * Data Transfer Object (DTO) for Lesson entity.
  *
@@ -12,21 +15,39 @@ namespace App\Dto;
  * and provides a clear contract for the data structure.
  *
  * @property string $topic Topic of the lesson (e.g., 'programming', 'cooking', 'travel', 'art')
- * @property string $level The level of the lesson (e.g., 'beginner', 'intermediate', 'advanced')
+ * @property LanguageLevelEnum $level The level of the lesson
  * @property string $native_lang The native language of the lesson
  * @property string $learning_lang The learning language of the lesson
  * @property array<int, string> $keywords The keywords of the lesson
+ * @property string $keywords_str The keywords of the lesson as a string
  */
 class LessonDto
 {
     /**
-     * @param  array<int, string>  $keywords
+     * @param array<int, string> $keywords
      */
     public function __construct(
-        public string $topic,
-        public string $level,
-        public string $native_lang,
-        public string $learning_lang,
-        public array $keywords
-    ) {}
+        public string            $topic,
+        public LanguageLevelEnum $level,
+        public string            $native_lang,
+        public string            $learning_lang,
+        public array             $keywords
+    )
+    {
+    }
+
+    public function __get(string $name)
+    {
+        return match ($name) {
+            'keywords_str' => $this->getKeywordsAsString(),
+            default => throw new LogicException("Undefined property: $name"),
+        };
+    }
+
+    private function getKeywordsAsString(): string
+    {
+        return count($this->keywords)
+            ? implode(', ', $this->keywords)
+            : '';
+    }
 }

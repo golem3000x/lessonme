@@ -48,4 +48,5 @@ Route::middleware('auth')->group(function () {
     Route::get('/lessons', LessonIndex::class)->name('lessons.index');
     Route::post('/lessons', [LessonController::class, 'store'])->name('lessons.store');
     Route::get('/lessons/{lesson}', [LessonController::class, 'show'])->name('lessons.show');
+    Route::get('/lessons/{lesson}/history', [LessonController::class, 'show'])->name('lessons.history');
 });

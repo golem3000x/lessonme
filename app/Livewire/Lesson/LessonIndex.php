@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Livewire\Lesson;
 
-use App\Models\Lesson;
+use App\Models\Lesson\Lesson;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Collection;

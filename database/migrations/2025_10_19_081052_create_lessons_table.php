@@ -7,8 +7,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -22,6 +21,7 @@ return new class extends Migration
             $table->json('grammar_data')->nullable();
             $table->json('vocabulary')->nullable();
             $table->json('quiz')->nullable();
+            $table->vector('embedding', 1536)->nullable();
             $table->timestamps();
         });
     }

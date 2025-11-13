@@ -16,6 +16,7 @@ return [
     'grammar' => 'Ngữ pháp',
     'vocabulary' => 'Từ vựng',
     'example' => 'Ví dụ',
+    'show_translations' => 'Hiển thị bản dịch',
 
     // Welcome page
     'welcome' => 'Chào mừng',
@@ -50,4 +51,8 @@ return [
     'lesson_creation_in_progress' => 'Đang tạo bài học...',
     'lesson_created_successfully' => 'Bài học ":name" đã được tạo thành công!',
     'lesson_creation_failed' => 'Tạo bài học thất bại. Vui lòng thử lại.',
+    'confirm_regenerate' => 'Tạo lại bài học này? Phiên bản cũ sẽ được chuyển vào lịch sử.',
+    'lesson_regeneration_started' => 'Đang tạo lại bài học. Vui lòng kiểm tra lại sau.',
+    'regenerate_lesson' => 'Tạo lại bài học',
+    'history' => 'Lịch sử',
 ];

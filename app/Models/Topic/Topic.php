@@ -7,7 +7,7 @@ namespace App\Models\Topic;
 use App\Enums\TableNameEnum;
 use App\Models\Abstracts\Slug\SlugEntity;
 use App\Models\Keyword\Keyword;
-use App\Models\Lesson;
+use App\Models\Lesson\Lesson;
 use App\Models\User;
 use Barryvdh\LaravelIdeHelper\Eloquent;
 use Illuminate\Database\Eloquent\Builder;

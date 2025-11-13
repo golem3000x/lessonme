@@ -16,6 +16,7 @@ return [
     'grammar' => 'Grammar',
     'vocabulary' => 'Vocabulary',
     'example' => 'Example',
+    'show_translations' => 'Show translations',
 
     // Welcome page
     'welcome' => 'Welcome',
@@ -50,4 +51,8 @@ return [
     'lesson_creation_in_progress' => 'Lesson creation in progress...',
     'lesson_created_successfully' => 'Lesson ":name" has been created successfully!',
     'lesson_creation_failed' => 'Lesson creation failed. Please try again.',
+    'confirm_regenerate' => 'Regenerate this lesson? The old version will be moved to history.',
+    'lesson_regeneration_started' => 'Lesson regeneration has started. Please check back later.',
+    'regenerate_lesson' => 'Regenerate lesson',
+    'history' => 'History',
 ];

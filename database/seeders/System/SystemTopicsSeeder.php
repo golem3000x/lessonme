@@ -20,12 +20,12 @@ class SystemTopicsSeeder extends Seeder
     {
         foreach (SystemTopicEnum::cases() as $enum) {
             DB::table(TableNameEnum::TOPICS->value)->updateOrInsert(
-                ['slug' => $enum->value],
+                ['slug' => Str::slug($enum->value)],
                 ['is_system' => true, 'created_at' => now(), 'updated_at' => now()]
             );
         }
 
-        $lang_dirs = File::directories(lang_path());
+        $lang_dirs = File::directories(resource_path('lang'));
 
         foreach ($lang_dirs as $lang_dir) {
             $locale = basename($lang_dir);

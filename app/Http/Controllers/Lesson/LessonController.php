@@ -6,7 +6,7 @@ namespace App\Http\Controllers\Lesson;
 
 use App\Dto\LessonDto;
 use App\Http\Controllers\Controller;
-use App\Models\Lesson;
+use App\Models\Lesson\Lesson;
 use App\Models\Topic\Topic;
 use App\Models\User;
 use App\Services\OpenAi\OpenAIService;

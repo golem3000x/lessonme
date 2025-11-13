@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Notifications\Lesson;
 
-use App\Models\Lesson;
+use App\Models\Lesson\Lesson;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Bus\Queueable;

@@ -1,56 +1,99 @@
-<div class="max-w-3xl mx-auto p-6 bg-white rounded-lg shadow">
-    <div class="mb-4">
-        <h2 class="text-xl font-semibold">{{ __('onboarding.profile_setup') }}</h2>
+<div class="max-w-3xl mx-auto p-8 bg-white rounded-2xl shadow-lg">
+    <!-- Заголовок -->
+    <div class="flex items-center justify-between mb-6 border-b pb-3">
+        <h2 class="text-2xl font-semibold text-gray-800 flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 class="h-6 w-6 text-blue-600"
+                 fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M5.121 17.804A3 3 0 016 17h12a3 3 0 01.879.804M12 14a5 5 0 100-10 5 5 0 000 10z"/>
+            </svg>
+            {{ __('onboarding.profile_setup') }}
+        </h2>
     </div>
 
+    <!-- Flash messages -->
     @if (session()->has('message'))
-        <div class="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded">
+        <div class="mb-6 p-4 bg-green-50 border border-green-300 text-green-800 rounded-lg flex items-center gap-2">
+            <svg class="h-5 w-5 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none"
+                 viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M5 13l4 4L19 7" />
+            </svg>
             {{ session('message') }}
         </div>
     @endif
 
-    <div class="mb-3">
-        <label class="block">{{ __('onboarding.name') }}</label>
-        <input type="text" wire:model.live="name" class="w-full border rounded p-2" />
+    <!-- Name -->
+    <div class="mb-4">
+        <label class="block text-sm font-medium text-gray-700 mb-1">
+            {{ __('onboarding.name') }}
+        </label>
+        <input type="text"
+               wire:model.live="name"
+               placeholder="{{ __('onboarding.enter_name') }}"
+               class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none focus:border-blue-500 transition" />
         @error('name')
-            <span class="text-red-600 text-sm">{{ $message }}</span>
+        <span class="text-red-600 text-sm">{{ $message }}</span>
         @enderror
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div class="mb-3">
-            <label class="block">{{ __('onboarding.native_language') }}</label>
-            <select wire:model="native_lang" class="w-full border rounded p-2">
+    <!-- Language selectors -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+                {{ __('onboarding.native_language') }}
+            </label>
+            <select wire:model="native_lang"
+                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none focus:border-blue-500 transition">
                 @foreach($languages as $lang)
                     <option value="{{ $lang->value }}">{{ $lang->label() }}</option>
                 @endforeach
             </select>
             @error('native_lang')
-                <span class="text-red-600 text-sm">{{ $message }}</span>
+            <span class="text-red-600 text-sm">{{ $message }}</span>
             @enderror
         </div>
 
-        <div class="mb-3">
-            <label class="block">{{ __('onboarding.learning_language') }}</label>
-            <select wire:model="learning_lang" class="w-full border rounded p-2">
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+                {{ __('onboarding.learning_language') }}
+            </label>
+            <select wire:model="learning_lang"
+                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none focus:border-blue-500 transition">
                 @foreach($languages as $lang)
                     <option value="{{ $lang->value }}">{{ $lang->label() }}</option>
                 @endforeach
             </select>
             @error('learning_lang')
-                <span class="text-red-600 text-sm">{{ $message }}</span>
+            <span class="text-red-600 text-sm">{{ $message }}</span>
             @enderror
         </div>
     </div>
 
-    <div class="mb-6 p-4 bg-blue-50 border border-blue-200 rounded">
-        <p class="text-sm text-gray-700">
+    <!-- Info box -->
+    <div class="mb-8 p-5 bg-blue-50 border border-blue-200 rounded-xl flex items-start gap-3">
+        <svg xmlns="http://www.w3.org/2000/svg"
+             class="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0"
+             fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M13 16h-1v-4h-1m1-4h.01M12 20.5a8.38 8.38 0 100-16.76 8.38 8.38 0 000 16.76z"/>
+        </svg>
+        <p class="text-sm text-gray-700 leading-relaxed">
             {{ __('onboarding.next_step_message') }}
         </p>
     </div>
 
-    <div class="flex justify-end gap-3">
-        <button wire:click="save" class="bg-blue-600 text-white px-4 py-2 rounded">
+    <!-- Save button -->
+    <div class="flex justify-end">
+        <button wire:click="save"
+                class="inline-flex items-center gap-2 bg-blue-600 text-white px-5 py-2.5 rounded-lg hover:bg-blue-700 active:bg-blue-800 transition font-medium focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-1">
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 class="h-5 w-5"
+                 fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M5 13l4 4L19 7"/>
+            </svg>
             {{ __('onboarding.save') }}
         </button>
     </div>
