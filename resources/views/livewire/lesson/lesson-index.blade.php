@@ -73,9 +73,26 @@
                     <div class="absolute inset-0 bg-gradient-to-br from-blue-50/20 to-transparent opacity-0 group-hover:opacity-100 transition pointer-events-none"></div>
 
                     <div class="flex justify-between items-start mb-3">
-                        <h3 class="font-semibold text-lg text-gray-800 line-clamp-2">{{ $lesson->lesson_name }}</h3>
+                        <div class="flex-1">
+                            <h3 class="font-semibold text-lg text-gray-800 line-clamp-2 mb-2">{{ $lesson->lesson_name }}</h3>
+                            
+                            <div class="flex flex-wrap items-center gap-2">
+                                @if($lesson->language_level)
+                                    <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold {{ $lesson->level_badge_color }}">
+                                        {{ $lesson->language_level->value }}
+                                    </span>
+                                @endif
+                                
+                                <span class="text-xs text-gray-500 flex items-center gap-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    {{ $lesson->formatted_created_at }}
+                                </span>
+                            </div>
+                        </div>
 
-                        <div class="relative">
+                        <div class="relative ml-2">
                             <!-- Кнопка с тремя точками -->
                             <button wire:click="toggleDropdown({{ $lesson->id }})"
                                     class="text-gray-500 hover:text-gray-700 transition"

@@ -7,10 +7,18 @@
                 📘 {{ $lesson->lesson_name }}
             </h2>
             <div class="flex items-center gap-3 text-sm text-gray-500 mb-6">
-                <span class="px-2 py-1 bg-indigo-50 text-indigo-600 rounded-full font-medium">
-                    {{ strtoupper($lesson->level ?? 'A1') }}
-                </span>
+                @if($lesson->language_level)
+                    <span class="px-3 py-1 rounded-full text-sm font-semibold {{ $lesson->level_badge_color }}">
+                        {{ $lesson->language_level->value }}
+                    </span>
+                @endif
                 <span>{{ __('lessons.topic') }}: {{ $lesson->topic ?? '—' }}</span>
+                <span class="flex items-center gap-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    {{ $lesson->formatted_created_at }}
+                </span>
             </div>
 
             <div class="prose prose-indigo max-w-none leading-relaxed text-gray-800">

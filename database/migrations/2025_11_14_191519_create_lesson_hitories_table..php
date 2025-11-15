@@ -7,8 +7,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     public function up(): void
     {
         Schema::create(TableNameEnum::LESSON_HISTORIES->value, function (Blueprint $table): void {
@@ -20,12 +19,13 @@ return new class extends Migration
                 ->constrained()
                 ->cascadeOnDelete();
             $table->unsignedTinyInteger('topic_id');
-            $table->string('lesson_name')->nullable();
-            $table->text('lesson_text')->nullable();
-            $table->json('grammar_data')->nullable();
-            $table->json('vocabulary')->nullable();
-            $table->json('quiz')->nullable();
-            $table->vector('embedding', 1536)->nullable();
+            $table->string('lesson_name');
+            $table->text('lesson_text');
+            $table->string('language_level', 2);
+            $table->json('grammar_data');
+            $table->json('vocabulary');
+            $table->json('quiz');
+            $table->vector('embedding', 1536);
             $table->timestamps();
         });
     }

@@ -37,6 +37,7 @@ readonly class LessonService
             'topic_id' => $topic_id,
             'lesson_name' => $data['lesson_name'],
             'lesson_text' => $data['lesson_text'],
+            'language_level' => $dto->level,
             'grammar_data' => $data['grammar_highlights'],
             'vocabulary' => $data['vocabulary'],
             'quiz' => $data['quiz'],
@@ -63,6 +64,7 @@ readonly class LessonService
         $lesson->update([
             'lesson_name' => $new_data['lesson_name'],
             'lesson_text' => $new_data['lesson_text'],
+            'language_level' => $dto->level,
             'grammar_data' => $new_data['grammar_highlights'],
             'vocabulary' => $new_data['vocabulary'],
             'quiz' => $new_data['quiz'],

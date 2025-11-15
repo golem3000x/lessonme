@@ -56,4 +56,15 @@ return [
     'lesson_regeneration_started' => 'Đang tạo lại bài học. Vui lòng kiểm tra lại sau.',
     'regenerate_lesson' => 'Tạo lại bài học',
     'history' => 'Lịch sử',
+    
+    // Lesson history
+    'lesson_history' => 'Lịch sử Bài học',
+    'version_created' => 'Đã tạo',
+    'restore_version' => 'Khôi phục',
+    'current_version' => 'Phiên bản hiện tại',
+    'no_history' => 'Không có lịch sử cho bài học này.',
+    'version_restored' => 'Đã khôi phục phiên bản thành công!',
+    'view_history' => 'Xem Lịch sử',
+    'version' => 'Phiên bản',
+    'restore_confirm' => 'Bạn có chắc chắn muốn khôi phục phiên bản này? Phiên bản hiện tại sẽ được lưu vào lịch sử.',
 ];

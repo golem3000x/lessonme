@@ -7,8 +7,10 @@ namespace App\Http\Controllers\Lesson;
 use App\Dto\LessonDto;
 use App\Http\Controllers\Controller;
 use App\Models\Lesson\Lesson;
+use App\Models\Lesson\LessonHistory;
 use App\Models\Topic\Topic;
 use App\Models\User;
+use App\Services\Lesson\LessonHistoryService;
 use App\Services\Slug\SlugService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -65,6 +67,7 @@ class LessonController extends Controller
             'topic_id' => $topic_id,
             'lesson_name' => $lesson_data['lesson_name'] ?? 'Lesson',
             'lesson_text' => $lesson_data['lesson_text'] ?? '',
+            'language_level' => $validated['level'] ?? null,
             'grammar_data' => $lesson_data['grammar_highlights'] ?? [],
             'vocabulary' => $lesson_data['vocabulary'] ?? [],
             'quiz' => $lesson_data['quiz'] ?? [],
@@ -78,5 +81,32 @@ class LessonController extends Controller
         abort_if($lesson->user_id !== Auth::id(), 403);
 
         return view('lessons.show', compact('lesson'));
+    }
+
+    public function history(Lesson $lesson): Factory|View
+    {
+        abort_if($lesson->user_id !== Auth::id(), 403);
+
+        $histories = $lesson->histories()
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+
+        return view('lessons.history', compact('lesson', 'histories'));
+    }
+
+    public function restore(Lesson $lesson, LessonHistory $history, LessonHistoryService $history_service): RedirectResponse
+    {
+        abort_if($lesson->user_id !== Auth::id(), 403);
+        abort_if($history->lesson_id !== $lesson->id, 404);
+
+        // Сохраняем текущую версию в историю перед восстановлением
+        $history_service->snapshot($lesson);
+
+        // Восстанавливаем выбранную версию
+        $history_service->restore($history);
+
+        return redirect()
+            ->route('lessons.index')
+            ->with('success', __('lessons.version_restored'));
     }
 }

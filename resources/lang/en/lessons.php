@@ -56,4 +56,15 @@ return [
     'lesson_regeneration_started' => 'Lesson regeneration has started. Please check back later.',
     'regenerate_lesson' => 'Regenerate lesson',
     'history' => 'History',
+    
+    // Lesson history
+    'lesson_history' => 'Lesson History',
+    'version_created' => 'Created',
+    'restore_version' => 'Restore',
+    'current_version' => 'Current version',
+    'no_history' => 'No history available for this lesson.',
+    'version_restored' => 'Version restored successfully!',
+    'view_history' => 'View History',
+    'version' => 'Version',
+    'restore_confirm' => 'Are you sure you want to restore this version? Current version will be saved to history.',
 ];

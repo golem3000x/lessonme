@@ -18,7 +18,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->unsignedTinyInteger('topic_id')->nullable();
+            $table->string('lesson_name');
             $table->text('lesson_text')->nullable();
+            $table->string('language_level', 2);
             $table->json('grammar_data')->nullable();
             $table->json('vocabulary')->nullable();
             $table->json('quiz')->nullable();
