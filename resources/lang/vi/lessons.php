@@ -54,6 +54,9 @@ return [
     'lesson_creation_failed' => 'Tạo bài học thất bại. Vui lòng thử lại.',
     'confirm_regenerate' => 'Tạo lại bài học này? Phiên bản cũ sẽ được chuyển vào lịch sử.',
     'lesson_regeneration_started' => 'Đang tạo lại bài học. Vui lòng kiểm tra lại sau.',
+    'lesson_regeneration_in_progress' => 'Đang tạo lại bài học...',
+    'regeneration_failed' => 'Không thể tạo lại bài học',
+    'lesson_not_found' => 'Không tìm thấy bài học.',
     'regenerate_lesson' => 'Tạo lại bài học',
     'history' => 'Lịch sử',
     

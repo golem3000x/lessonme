@@ -74,6 +74,8 @@ if (userId) {
             lesson_url: notification.lesson_url,
             lesson_name: notification.lesson_name
         });
+        // Reload lessons list
+        Livewire.dispatch('lesson-regenerated');
     });
 
     channel.listen('.lesson.creation.exists', (notification) => {

@@ -54,6 +54,9 @@ return [
     'lesson_creation_failed' => 'Lesson creation failed. Please try again.',
     'confirm_regenerate' => 'Regenerate this lesson? The old version will be moved to history.',
     'lesson_regeneration_started' => 'Lesson regeneration has started. Please check back later.',
+    'lesson_regeneration_in_progress' => 'Lesson regeneration in progress...',
+    'regeneration_failed' => 'Failed to regenerate lesson',
+    'lesson_not_found' => 'Lesson not found.',
     'regenerate_lesson' => 'Regenerate lesson',
     'history' => 'History',
     

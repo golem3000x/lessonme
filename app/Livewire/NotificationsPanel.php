@@ -43,18 +43,27 @@ class NotificationsPanel extends Component
         ];
 
         // Check for duplicates to avoid spam
+        // For lessons, check by message and lesson_id to allow regeneration of the same lesson
         $exists = collect($this->notifications)->contains(function ($n) use ($notification_data) {
-            return $n['entity'] === $notification_data['entity'] &&
-                   $n['status'] === $notification_data['status'] &&
-                   $n['message'] === $notification_data['message'];
+            $basic_match = $n['entity'] === $notification_data['entity'] &&
+                          $n['status'] === $notification_data['status'] &&
+                          $n['message'] === $notification_data['message'];
+            
+            // For lesson entity with processing status, don't check as duplicate
+            // to allow multiple regenerations
+            if ($notification_data['entity'] === 'lesson' && $notification_data['status'] === 'processing') {
+                return false;
+            }
+            
+            return $basic_match;
         });
 
         if (! $exists) {
             $this->notifications[] = $notification_data;
-            $this->dispatch('remove-notification', ['id' => $notification_data['id']]);
         }
     }
 
+    #[On('removeNotification')]
     public function removeNotification(string $id): void
     {
         $this->notifications = array_filter(
