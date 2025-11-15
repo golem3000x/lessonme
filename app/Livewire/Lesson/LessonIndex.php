@@ -12,16 +12,15 @@ use App\Models\Lesson\Lesson;
 use App\Notifications\Lesson\LessonCreationNotification;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class LessonIndex extends Component
 {
-    /** @var Collection<int, Lesson> */
-    public Collection $lessons;
+    use WithPagination;
 
     public bool $show_manage_modal = false;
 
@@ -44,24 +43,23 @@ class LessonIndex extends Component
     public array $language_levels = [];
     public string $sort = 'newest';
 
-    public function __construct()
-    {
-        $this->lessons = new Collection;
-    }
-
     public function mount(): void
     {
         // Initialize temp filters with applied values
         $this->temp_search = $this->search;
         $this->temp_language_levels = $this->language_levels;
         $this->temp_sort = $this->sort;
-        
-        $this->loadLessons();
     }
 
     #[On('lesson-created')]
     #[On('lesson-regenerated')]
-    public function loadLessons(): void
+    public function refreshLessons(): void
+    {
+        // Just refresh the component - pagination will be handled automatically
+        $this->resetPage();
+    }
+
+    protected function getLessonsQuery()
     {
         $query = Lesson::where('user_id', Auth::id())
             ->with(['topicRelation' => function ($q) {
@@ -85,7 +83,7 @@ class LessonIndex extends Component
             $query->latest();
         }
 
-        $this->lessons = $query->get();
+        return $query;
     }
 
     public function openManageModal(): void
@@ -201,7 +199,7 @@ class LessonIndex extends Component
 
         if ($lesson) {
             $lesson->delete();
-            $this->loadLessons();
+            $this->resetPage();
             session()->flash('message', __('lessons.lesson_deleted'));
         }
     }
@@ -222,7 +220,7 @@ class LessonIndex extends Component
         $this->language_levels = $this->temp_language_levels;
         $this->sort = $this->temp_sort;
         
-        $this->loadLessons();
+        $this->resetPage();
         $this->show_filters = false;
         $this->show_level_dropdown = false;
     }
@@ -237,7 +235,7 @@ class LessonIndex extends Component
         $this->language_levels = [];
         $this->sort = 'newest';
         
-        $this->loadLessons();
+        $this->resetPage();
         $this->show_level_dropdown = false;
     }
 
@@ -283,6 +281,10 @@ class LessonIndex extends Component
 
     public function render(): Factory|View
     {
-        return view('livewire.lesson.lesson-index');
+        $lessons = $this->getLessonsQuery()->paginate(1);
+        
+        return view('livewire.lesson.lesson-index', [
+            'lessons' => $lessons,
+        ]);
     }
 }

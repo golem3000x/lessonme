@@ -304,6 +304,11 @@
                 </div>
             @endforeach
         </div>
+
+        {{-- Pagination --}}
+        <div class="mt-8">
+            {{ $lessons->links() }}
+        </div>
     @endif
 
     {{-- Modal --}}
