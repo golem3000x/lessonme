@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Dto;
 
 use App\Enums\LanguageLevelEnum;
-use LogicException;
 
 /**
  * Data Transfer Object (DTO) for Lesson entity.
@@ -19,7 +18,6 @@ use LogicException;
  * @property string $native_lang The native language of the lesson
  * @property string $learning_lang The learning language of the lesson
  * @property array<int, string> $keywords The keywords of the lesson
- * @property string $keywords_str The keywords of the lesson as a string
  */
 class LessonDto
 {
@@ -36,15 +34,12 @@ class LessonDto
     {
     }
 
-    public function __get(string $name)
+    public function levelValue(): string
     {
-        return match ($name) {
-            'keywords_str' => $this->getKeywordsAsString(),
-            default => throw new LogicException("Undefined property: $name"),
-        };
+        return $this->level->value;
     }
 
-    private function getKeywordsAsString(): string
+    public function getKeywordsAsString(): string
     {
         return count($this->keywords)
             ? implode(', ', $this->keywords)

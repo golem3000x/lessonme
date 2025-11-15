@@ -8,5 +8,6 @@ enum LessonCreationStatusEnum: string
 {
     case SUCCESSFULLY = 'successfully';
     case PROCESSING = 'processing';
+    case EXISTS = 'exists';
     case ERROR = 'error';
 }

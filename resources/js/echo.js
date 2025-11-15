@@ -63,8 +63,21 @@ if (userId) {
         });
     });
 
-    channel.listen('.lesson.creation.success', (notification) => {
+    channel.listen('.lesson.creation.successfully', (notification) => {
         console.log('🔥 Lesson creation success:', notification);
+        Livewire.dispatch('lesson-notification', {
+            id: notification.id,
+            entity: notification.entity,
+            status: notification.status,
+            message: notification.message,
+            lesson_id: notification.lesson_id,
+            lesson_url: notification.lesson_url,
+            lesson_name: notification.lesson_name
+        });
+    });
+
+    channel.listen('.lesson.creation.exists', (notification) => {
+        console.log('🔥 Lesson creation exists:', notification);
         Livewire.dispatch('lesson-notification', {
             id: notification.id,
             entity: notification.entity,

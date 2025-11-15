@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="user-id" content="{{ Auth::id() }}">
     <title>{{ config('app.name', __('nav.app_name')) }}</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
@@ -18,7 +19,6 @@
         }
     </script>
 
-    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     @livewireStyles
 </head>
 
@@ -83,7 +83,7 @@
                         </svg>
                     </button>
 
-                    <div x-show="open" @click.away="open=false" x-transition
+                    <div x-show="open" x-cloak @click.away="open=false" x-transition
                          class="absolute right-0 mt-2 w-52 bg-white border border-gray-100 rounded-lg shadow-lg py-2 z-50">
                         <a href="/onboarding"
                            class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition">
@@ -156,6 +156,13 @@
     {{ $slot }}
 </main>
 
+<!-- Real-time notifications panel -->
+@auth
+    <livewire:notifications-panel />
+@endauth
+
 @livewireScripts
+<script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+@vite(['resources/js/app.js'])
 </body>
 </html>

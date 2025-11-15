@@ -7,7 +7,7 @@ namespace App\Jobs\Translate;
 use App\Enums\TranslateStatusEnum;
 use App\Models\Abstracts\Slug\SlugEntity;
 use App\Notifications\Translate\SlugEntityTranslateNotification;
-use App\Services\OpenAi\OpenAIService;
+use App\Services\Slug\SlugService;
 use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -22,14 +22,14 @@ class TranslateSlugEntityJob implements ShouldQueue
 
     public function __construct(protected SlugEntity $entity) {}
 
-    public function handle(OpenAIService $openAI): void
+    public function handle(SlugService $openAI): void
     {
         $status = $this->processEntity($openAI);
 
         $this->notifyUser($status);
     }
 
-    private function processEntity(OpenAIService $openAI): TranslateStatusEnum
+    private function processEntity(SlugService $openAI): TranslateStatusEnum
     {
         if ($this->entity->is_approved) {
             try {

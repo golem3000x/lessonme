@@ -46,6 +46,7 @@ return [
     'generation_started' => 'Đang bắt đầu tạo bài học...',
     'topic_not_found' => 'Không tìm thấy chủ đề đã chọn.',
     'lesson_created_notification' => 'Bài học ":name" đã được tạo thành công!',
+    'lesson_exists' => 'Một bài học tương tự ":name" đã tồn tại.',
     'topic_label' => 'Chủ đề',
     'no_keywords' => 'Không có từ khóa nào',
     'lesson_creation_in_progress' => 'Đang tạo bài học...',

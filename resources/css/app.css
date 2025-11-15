@@ -10,3 +10,8 @@
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
 
+/* Скрывает элементы с x-cloak до инициализации Alpine.js */
+[x-cloak] {
+    display: none !important;
+}
+

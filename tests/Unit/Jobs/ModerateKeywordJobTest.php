@@ -11,7 +11,7 @@ use App\Models\Keyword\KeywordTranslation;
 use App\Models\Topic\Topic;
 use App\Models\Topic\TopicTranslation;
 use App\Models\User;
-use App\Services\OpenAi\OpenAIService;
+use App\Services\Slug\SlugService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Mockery;
 use Tests\TestCase;
@@ -70,7 +70,7 @@ class ModerateKeywordJobTest extends TestCase
         $topic = $this->createTopic($user->id);
         $keyword = $this->createKeyword($user, $topic, 'Cafe');
 
-        $openAI = Mockery::mock(OpenAIService::class);
+        $openAI = Mockery::mock(SlugService::class);
         $openAI->shouldReceive('moderateSlug')->once()->with('Cafe')->andReturn(true);
         $openAI->shouldReceive('translateSlugAllLanguages')->once()->with('Cafe')->andReturn([
             SystemLanguageEnum::VIETNAMESE->value => 'Quán cà phê',
@@ -92,7 +92,7 @@ class ModerateKeywordJobTest extends TestCase
         $topic = $this->createTopic($user->id);
         $keyword = $this->createKeyword($user, $topic, 'Restricted');
 
-        $openAI = Mockery::mock(OpenAIService::class);
+        $openAI = Mockery::mock(SlugService::class);
         $openAI->shouldReceive('moderateSlug')->once()->with('Restricted')->andReturn(false);
         $openAI->shouldNotReceive('translateText');
 

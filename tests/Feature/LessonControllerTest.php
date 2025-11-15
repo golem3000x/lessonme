@@ -8,7 +8,7 @@ use App\Models\Lesson\Lesson;
 use App\Models\Topic\Topic;
 use App\Models\Topic\TopicTranslation;
 use App\Models\User;
-use App\Services\OpenAi\OpenAIService;
+use App\Services\Slug\SlugService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -36,7 +36,7 @@ class LessonControllerTest extends TestCase
 
     private function fakeOpenAI(): void
     {
-        $this->mock(OpenAIService::class, function ($mock): void {
+        $this->mock(SlugService::class, function ($mock): void {
             $mock->shouldReceive('generateLesson')
                 ->andReturn([
                     'lesson_name' => 'Test Lesson',

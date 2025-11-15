@@ -1,8 +1,8 @@
-<div class="relative" x-data="{ open: false }">
+<div class="relative">
     <!-- Bell Button -->
     <button 
         type="button"
-        @click="open = !open"
+        wire:click="toggleDropdown"
         class="relative p-2 text-gray-600 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 rounded-lg transition"
         aria-label="{{ __('notifications.notifications') }}"
     >
@@ -19,23 +19,18 @@
     </button>
 
     <!-- Dropdown Panel -->
+    @if($is_open)
     <div 
-        x-show="open"
-        @click.outside="open = false"
-        x-transition:enter="transition ease-out duration-200"
-        x-transition:enter-start="opacity-0 scale-95"
-        x-transition:enter-end="opacity-100 scale-100"
-        x-transition:leave="transition ease-in duration-150"
-        x-transition:leave-start="opacity-100 scale-100"
-        x-transition:leave-end="opacity-0 scale-95"
+        x-data 
+        @click.outside="$wire.closeDropdown()"
         class="absolute right-0 mt-2 w-96 bg-white rounded-lg shadow-xl border border-gray-200 z-50"
-        style="display: none;"
     >
         <!-- Header -->
         <div class="px-4 py-3 border-b border-gray-200 flex justify-between items-center">
             <h3 class="text-lg font-semibold text-gray-900">{{ __('notifications.title') }}</h3>
             @if($unread_count > 0)
                 <button 
+                    type="button"
                     wire:click="markAllAsRead"
                     class="text-sm text-indigo-600 hover:text-indigo-800 font-medium"
                 >
@@ -49,6 +44,7 @@
             @forelse($notifications as $notification)
                 <div 
                     wire:key="notification-{{ $notification->id }}"
+                    data-notification-id="{{ $notification->id }}"
                     class="px-4 py-3 border-b border-gray-100 hover:bg-gray-50 transition {{ $notification->unread() ? 'bg-blue-50' : '' }}"
                 >
                     <div class="flex items-start space-x-3">
@@ -83,7 +79,7 @@
                                 <a 
                                     href="{{ $notification->data['lesson_url'] }}" 
                                     class="text-xs text-indigo-600 hover:text-indigo-800 underline mt-1 inline-block"
-                                    @click="open = false"
+                                    wire:click="closeDropdown"
                                 >
                                     {{ __('lessons.view_lesson') }}
                                 </a>
@@ -98,6 +94,7 @@
                         <div class="flex-shrink-0 flex space-x-1">
                             @if($notification->unread())
                                 <button
+                                    type="button"
                                     wire:click="markAsRead('{{ $notification->id }}')"
                                     class="text-indigo-600 hover:text-indigo-800 p-1"
                                     title="{{ __('notifications.mark_read') }}"
@@ -108,6 +105,7 @@
                                 </button>
                             @endif
                             <button
+                                type="button"
                                 wire:click="deleteNotification('{{ $notification->id }}')"
                                 class="text-red-600 hover:text-red-800 p-1"
                                 title="{{ __('notifications.delete') }}"
@@ -129,4 +127,5 @@
             @endforelse
         </div>
     </div>
+    @endif
 </div>

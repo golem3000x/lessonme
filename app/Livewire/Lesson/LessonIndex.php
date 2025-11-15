@@ -19,6 +19,9 @@ class LessonIndex extends Component
 
     public bool $show_manage_modal = false;
 
+    /** @var array<int, bool> */
+    public array $open_dropdowns = [];
+
     public function __construct()
     {
         $this->lessons = new Collection;
@@ -30,6 +33,7 @@ class LessonIndex extends Component
     }
 
     #[On('lesson-created')]
+    #[On('lesson-notification')]
     public function loadLessons(): void
     {
         $this->lessons = Lesson::where('user_id', Auth::id())
@@ -50,6 +54,29 @@ class LessonIndex extends Component
     public function closeManageModal(): void
     {
         $this->show_manage_modal = false;
+    }
+
+    public function toggleDropdown(int $lesson_id): void
+    {
+        if (isset($this->open_dropdowns[$lesson_id]) && $this->open_dropdowns[$lesson_id]) {
+            $this->open_dropdowns[$lesson_id] = false;
+        } else {
+            // Закрываем все остальные dropdown'ы
+            $this->open_dropdowns = [];
+            $this->open_dropdowns[$lesson_id] = true;
+        }
+    }
+
+    public function closeDropdown(int $lesson_id): void
+    {
+        $this->open_dropdowns[$lesson_id] = false;
+    }
+
+    public function regenerateLesson(int $lesson_id): void
+    {
+        // TODO: Implement lesson regeneration logic
+        $this->closeDropdown($lesson_id);
+        session()->flash('message', 'Regeneration feature coming soon!');
     }
 
     public function deleteLesson(int $lesson_id): void

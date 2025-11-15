@@ -6,123 +6,81 @@ namespace App\Jobs\Lesson;
 
 use App\Dto\LessonDto;
 use App\Enums\LessonCreationStatusEnum;
+use App\Exceptions\LessonExistsException;
 use App\Models\Lesson\Lesson;
 use App\Models\User;
 use App\Notifications\Lesson\LessonCreationNotification;
-use App\Services\OpenAi\EmbeddingService;
-use App\Services\OpenAi\OpenAIService;
-use Exception;
+use App\Services\Lesson\LessonService;
+use App\Services\Slug\SlugService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class CreateLessonJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private OpenAIService $open_ai_service;
+    private SlugService $open_ai_service;
 
     public function __construct(
         protected int       $user_id,
         protected int       $topic_id,
-        protected LessonDto $lesson_dto
+        protected LessonDto $lesson_dto,
+        protected string    $user_locale = 'en'
     )
     {
-        $this->open_ai_service = App::make(OpenAIService::class);
     }
 
-    public function handle(): void
+    /**
+     * @throws Throwable
+     * @throws LessonExistsException
+     */
+    public function handle(LessonService $service): void
     {
-        $user = User::find($this->user_id);
-
-        if (!$user) {
-            Log::error('User not found for lesson creation', ['user_id' => $this->user_id]);
-
-            return;
-        }
-
         try {
-            // Generate embedding
-            $embedding = $this->open_ai_service->createEmbedding($this->lesson_dto);
-            if (!$embedding) {
-                $user->notify(new LessonCreationNotification(
-                    null,
-                    LessonCreationStatusEnum::ERROR->value,
-                    __('lessons.lesson_creation_failed')
-                ));
-                return;
-            }
-            // Find similar lesson
-            $similar_lesson = $this->findSimilarLesson($embedding);
-            if ($similar_lesson) {
-                $user->notify(new LessonCreationNotification(
-                    $similar_lesson,
-                    LessonCreationStatusEnum::SUCCESSFULLY->value,
-                    __('lessons.lesson_created_successfully', ['name' => $similar_lesson->lesson_name])
-                ));
-                return;
-            }
-            // Generate lesson data via OpenAI
-            $data = $this->open_ai_service->generateLesson($this->lesson_dto);
-
-            // Create lesson
-            $lesson = Lesson::create([
+            $lesson = $service->createLesson($this->user_id, $this->topic_id, $this->lesson_dto);
+            $this->notify($lesson, LessonCreationStatusEnum::SUCCESSFULLY);
+        } catch (LessonExistsException $e) {
+            Log::error('Lesson already exists', [
                 'user_id' => $this->user_id,
                 'topic_id' => $this->topic_id,
-                'lesson_name' => $data['lesson_name'] ?? '',
-                'lesson_text' => $data['lesson_text'] ?? '',
-                'grammar_data' => $data['grammar_highlights'] ?? [],
-                'vocabulary' => $data['vocabulary'] ?? [],
-                'quiz' => $data['quiz'] ?? [],
-                'embedding' => $embedding,
+                'lesson_id' => $e->lesson->id,
             ]);
-
-            // Notify user of successful creation with link
-            $user->notify(new LessonCreationNotification(
-                $lesson,
-                LessonCreationStatusEnum::SUCCESSFULLY->value,
-                __('lessons.lesson_created_successfully', ['name' => $lesson->lesson_name])
-            ));
-
-        } catch (Exception $e) {
+            $this->notify($e->lesson, LessonCreationStatusEnum::EXISTS);
+        } catch (Throwable $e) {
             Log::error('Lesson creation failed', [
                 'user_id' => $this->user_id,
                 'topic_id' => $this->topic_id,
                 'error' => $e->getMessage(),
             ]);
-
-            // Notify user of failure
-            $user->notify(new LessonCreationNotification(
-                null,
-                LessonCreationStatusEnum::ERROR->value,
-                __('lessons.lesson_creation_failed')
-            ));
+            $this->notify(null, LessonCreationStatusEnum::ERROR);
+            throw $e;
         }
     }
 
-    private function findSimilarLesson(array $embedding): ?Lesson
+    private function notify(?Lesson $lesson, LessonCreationStatusEnum $status)
     {
-        // Преобразуем в строку вида '[0.123, 0.456, ...]'
-        $embedding_str = '[' . implode(',', $embedding) . ']';
-        $similarity_threshold = 0.9;
+        // Set the user's locale for translation
+        app()->setLocale($this->user_locale);
 
-        // Используем оператор косинусного расстояния <=> (работает с pgvector)
-        $similar_lesson = Lesson::selectRaw("*, 1 - (embedding <=> '$embedding_str') as similarity")
-            ->where('user_id', $this->user_id)
-            ->whereNotNull('embedding')
-            ->having('similarity', '>=', $similarity_threshold)
-            ->orderByDesc('similarity')
-            ->first();
+        // Get the translated message based on status
+        $message = match ($status) {
+            LessonCreationStatusEnum::ERROR => __('lessons.lesson_creation_failed'),
+            LessonCreationStatusEnum::EXISTS => __('lessons.lesson_exists', ['name' => $lesson?->lesson_name ?? '']),
+            LessonCreationStatusEnum::SUCCESSFULLY => __('lessons.lesson_created_successfully', ['name' => $lesson?->lesson_name ?? '']),
+            default => __('lessons.lesson_creation_in_progress')
+        };
 
-        if (!$similar_lesson) {
-            return null;
-        }
-
-        return $similar_lesson;
+        User::find($this->user_id)?->notify(
+            new LessonCreationNotification(
+                $lesson,
+                $status->value,
+                $message
+            )
+        );
     }
-
 }

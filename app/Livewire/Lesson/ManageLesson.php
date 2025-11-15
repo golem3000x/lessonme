@@ -43,7 +43,7 @@ class ManageLesson extends Component
     public function mount(): void
     {
         $user = Auth::user();
-        if (!$user) {
+        if (! $user) {
             abort(401);
         }
 
@@ -78,14 +78,14 @@ class ManageLesson extends Component
         }
 
         // If no valid topic_id, use first available
-        if (!$this->topic_id && !empty($this->topics)) {
+        if (! $this->topic_id && ! empty($this->topics)) {
             $this->topic_id = $this->topics[0]['id'];
         }
 
         $selected = collect($this->topics)->firstWhere('id', $this->topic_id);
         $this->topic = $selected['label'] ?? '';
 
-        $this->keyword_ids = array_values(array_map('intval', (array)session('selected_keyword_ids', [])));
+        $this->keyword_ids = array_values(array_map('intval', (array) session('selected_keyword_ids', [])));
 
         $this->language_level = session('selected_language_level', LanguageLevelEnum::A1->value);
 
@@ -97,7 +97,7 @@ class ManageLesson extends Component
 
     public function updatedTopicId(int|string $value): void
     {
-        $this->topic_id = (int)$value;
+        $this->topic_id = (int) $value;
         session(['selected_topic_id' => $this->topic_id]);
 
         $selected = collect($this->topics)->firstWhere('id', $this->topic_id);
@@ -119,12 +119,12 @@ class ManageLesson extends Component
         $this->is_generating = true;
 
         $user = Auth::user();
-        if (!$user) {
+        if (! $user) {
             abort(401);
         }
 
         $topic = Topic::find($this->topic_id);
-        if (!$topic) {
+        if (! $topic) {
             $this->notifyUser('error', __('lessons.topic_not_found'));
             $this->is_generating = false;
 
@@ -134,13 +134,13 @@ class ManageLesson extends Component
         try {
             $selected_keyword_labels = [];
 
-            if (!empty($this->keyword_ids)) {
+            if (! empty($this->keyword_ids)) {
                 $keywords = Keyword::with('translations')->whereIn('id', $this->keyword_ids)->get();
                 $locale = app()->getLocale();
-                $selected_keyword_labels = $keywords->map(fn(Keyword $k) => $k->value($locale))->filter()->values()->all();
+                $selected_keyword_labels = $keywords->map(fn (Keyword $k) => $k->value($locale))->filter()->values()->all();
             }
 
-            $keywords = !empty($selected_keyword_labels) ? $selected_keyword_labels : [$this->topic];
+            $keywords = ! empty($selected_keyword_labels) ? $selected_keyword_labels : [$this->topic];
             $level_enum = LanguageLevelEnum::from($this->language_level);
             $lesson_dto = new LessonDto(
                 $this->topic,
@@ -154,7 +154,8 @@ class ManageLesson extends Component
             CreateLessonJob::dispatch(
                 $user->id,
                 $this->topic_id,
-                $lesson_dto
+                $lesson_dto,
+                app()->getLocale()
             );
 
             // Send immediate notification that creation is in process
@@ -176,10 +177,10 @@ class ManageLesson extends Component
 
         } catch (\Exception $e) {
             $this->is_generating = false;
-            $this->notifyUser('error', __('lessons.generation_failed') . ': ' . $e->getMessage());
+            $this->notifyUser('error', __('lessons.generation_failed').': '.$e->getMessage());
 
             // Log error for debugging
-            $this->js('console.error("Lesson creation dispatch failed:", "' . addslashes($e->getMessage()) . '");');
+            $this->js('console.error("Lesson creation dispatch failed:", "'.addslashes($e->getMessage()).'");');
         }
     }
 
@@ -199,7 +200,7 @@ class ManageLesson extends Component
     }
 
     /**
-     * @param array<int, int> $ids
+     * @param  array<int, int>  $ids
      */
     #[On('keywords-selected')]
     public function setKeywordIds(array $ids): void
@@ -240,11 +241,11 @@ class ManageLesson extends Component
 
         $topic = $this->preloaded_topics->firstWhere('id', $topic_id);
 
-        if (!$topic) {
+        if (! $topic) {
             return [];
         }
 
-        if (!$topic->relationLoaded('keywords')) {
+        if (! $topic->relationLoaded('keywords')) {
             return [];
         }
 

@@ -31,7 +31,7 @@
             <div class="text-sm flex-1">
                 <div class="font-semibold">{{ ucfirst($n['entity']) }}</div>
                 <div>{{ $n['message'] }}</div>
-                @if(!empty($n['lesson_url']) && $n['status'] === 'success')
+                @if(!empty($n['lesson_url']) && (str_contains($n['status'], 'success') || $n['status'] === 'exists'))
                     <a href="{{ $n['lesson_url'] }}" 
                        class="text-blue-600 hover:text-blue-800 underline text-xs mt-1 inline-block"
                        @click.stop>

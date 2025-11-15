@@ -9,7 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Lesson\Lesson;
 use App\Models\Topic\Topic;
 use App\Models\User;
-use App\Services\OpenAi\OpenAIService;
+use App\Services\Slug\SlugService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
@@ -20,7 +20,7 @@ use Illuminate\View\View;
 class LessonController extends Controller
 {
     public function __construct(
-        protected OpenAIService $open_ai_service
+        protected SlugService $open_ai_service
     ) {}
 
     public function store(Request $request): Redirector|RedirectResponse

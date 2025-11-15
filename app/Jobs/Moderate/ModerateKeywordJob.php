@@ -6,7 +6,7 @@ namespace App\Jobs\Moderate;
 
 use App\Models\Keyword\Keyword;
 use App\Models\Keyword\KeywordTranslation;
-use App\Services\OpenAi\OpenAIService;
+use App\Services\Slug\SlugService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -21,7 +21,7 @@ class ModerateKeywordJob implements ShouldQueue
         public Keyword $keyword
     ) {}
 
-    public function handle(OpenAIService $open_ai_service): void
+    public function handle(SlugService $open_ai_service): void
     {
         $keyword = $this->keyword->load(['translations', 'user']);
 

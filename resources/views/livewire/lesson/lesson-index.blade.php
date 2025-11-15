@@ -75,9 +75,9 @@
                     <div class="flex justify-between items-start mb-3">
                         <h3 class="font-semibold text-lg text-gray-800 line-clamp-2">{{ $lesson->lesson_name }}</h3>
 
-                        <div class="relative" x-data="{ open: false }">
+                        <div class="relative">
                             <!-- Кнопка с тремя точками -->
-                            <button @click="open = !open"
+                            <button wire:click="toggleDropdown({{ $lesson->id }})"
                                     class="text-gray-500 hover:text-gray-700 transition"
                                     title="{{ __('lessons.actions') }}">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
@@ -88,10 +88,8 @@
                             </button>
 
                             <!-- Dropdown -->
-                            <div x-show="open"
-                                 @click.outside="open = false"
-                                 x-transition
-                                 class="absolute right-0 mt-2 w-44 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+                            @if(!empty($open_dropdowns[$lesson->id]))
+                            <div x-data @click.outside="$wire.closeDropdown({{ $lesson->id }})" class="absolute right-0 mt-2 w-44 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
 
                                 <button wire:click="regenerateLesson({{ $lesson->id }})"
                                         wire:confirm="{{ __('lessons.confirm_regenerate') }}"
@@ -122,6 +120,7 @@
                                     {{ __('lessons.delete') }}
                                 </button>
                             </div>
+                            @endif
                         </div>
                     </div>
 

@@ -50,6 +50,7 @@ return [
     'no_keywords' => 'No keywords available',
     'lesson_creation_in_progress' => 'Lesson creation in progress...',
     'lesson_created_successfully' => 'Lesson ":name" has been created successfully!',
+    'lesson_exists' => 'A similar lesson ":name" already exists.',
     'lesson_creation_failed' => 'Lesson creation failed. Please try again.',
     'confirm_regenerate' => 'Regenerate this lesson? The old version will be moved to history.',
     'lesson_regeneration_started' => 'Lesson regeneration has started. Please check back later.',

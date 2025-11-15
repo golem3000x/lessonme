@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models\Lesson;
 
+use App\Casts\EmbeddingCast;
 use App\Enums\TableNameEnum;
 use App\Models\Topic\Topic;
 use App\Models\User;
@@ -11,6 +12,7 @@ use Barryvdh\LaravelIdeHelper\Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 
 /**
@@ -26,6 +28,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $updated_at
  * @property-read Topic|null $topicRelation
  * @property-read User $user
+ *
  * @method static Builder<static>|Lesson newModelQuery()
  * @method static Builder<static>|Lesson newQuery()
  * @method static Builder<static>|Lesson query()
@@ -38,14 +41,20 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|Lesson whereUpdatedAt($value)
  * @method static Builder<static>|Lesson whereUserId($value)
  * @method static Builder<static>|Lesson whereVocabulary($value)
+ *
  * @mixin Eloquent
+ *
  * @method static Builder<static>|Lesson whereLessonName($value)
+ *
  * @property string|null $embedding
+ *
  * @method static Builder<static>|Lesson whereEmbedding($value)
  */
 class Lesson extends Model
 {
     protected $table = TableNameEnum::LESSONS->value;
+
+    public const float SIMILARITY_THRESHOLD = 0.9;
 
     protected $fillable = [
         'user_id',
@@ -55,13 +64,14 @@ class Lesson extends Model
         'grammar_data',
         'vocabulary',
         'quiz',
-        'embedding'
+        'embedding',
     ];
 
     protected $casts = [
         'grammar_data' => 'array',
         'vocabulary' => 'array',
         'quiz' => 'array',
+        'embedding' => EmbeddingCast::class,
     ];
 
     /**
@@ -78,5 +88,10 @@ class Lesson extends Model
     public function topicRelation(): BelongsTo
     {
         return $this->belongsTo(Topic::class, 'topic_id');
+    }
+
+    public function histories(): HasMany
+    {
+        return $this->hasMany(LessonHistory::class);
     }
 }

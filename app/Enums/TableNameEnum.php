@@ -21,4 +21,5 @@ enum TableNameEnum: string
     case KEYWORD_TRANSLATIONS = 'keyword_translations';
     case USER_TOPIC_VISIBILITY = 'user_topic_visibility';
     case USER_KEYWORD_VISIBILITY = 'user_keyword_visibility';
+    case LESSON_HISTORIES = 'lesson_histories';
 }
