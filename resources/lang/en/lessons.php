@@ -70,4 +70,19 @@ return [
     'view_history' => 'View History',
     'version' => 'Version',
     'restore_confirm' => 'Are you sure you want to restore this version? Current version will be saved to history.',
+    
+    // Filters
+    'filters' => 'Filters',
+    'apply_filters' => 'Apply filters',
+    'apply_filters_with_count' => 'Apply filters (:count lessons)',
+    'reset_filters' => 'Reset',
+    'search' => 'Search',
+    'search_placeholder' => 'Search by lesson name...',
+    'all_levels' => 'All levels',
+    'sort_by' => 'Sort by',
+    'newest_first' => 'Newest first',
+    'oldest_first' => 'Oldest first',
+    'actions' => 'Actions',
+    'no_results_found' => 'No results found',
+    'no_results_message' => 'Try adjusting your filters or reset them to see all lessons.',
 ];

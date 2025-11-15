@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Auth\SocialAuthController;
 use App\Http\Controllers\Auth\ZaloController;
 use App\Http\Controllers\Lesson\LessonController;
 use App\Livewire\Lesson\LessonIndex;
@@ -30,6 +31,9 @@ Route::middleware('guest')->group(function () {
 
     Route::get('/auth/zalo', [ZaloController::class, 'redirect'])->name('zalo.login');
     Route::get('/auth/zalo/callback', [ZaloController::class, 'callback']);
+
+    Route::get('/auth/facebook', [SocialAuthController::class, 'redirectToFacebook'])->name('facebook.login');
+    Route::get('/auth/facebook/callback', [SocialAuthController::class, 'handleFacebookCallback']);
 });
 
 Route::middleware('auth')->group(function () {

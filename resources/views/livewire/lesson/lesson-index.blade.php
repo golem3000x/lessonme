@@ -11,20 +11,153 @@
             {{ __('lessons.my_lessons') }}
         </h2>
 
-        @if(!$lessons->isEmpty())
-            <button
-                    wire:click="openManageModal"
-                    class="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 shadow transition"
-            >
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
-                     stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M12 4v16m8-8H4"/>
-                </svg>
-                {{ __('lessons.create_new_lesson') }}
-            </button>
-        @endif
+        <div class="flex items-center gap-2">
+            {{-- Show filter button if there are lessons OR if filters are active --}}
+            @if(!$lessons->isEmpty() || $this->hasActiveFilters())
+                {{-- Filter button --}}
+                <button
+                        wire:click="toggleFilters"
+                        class="flex items-center gap-2 px-4 py-2 {{ $show_filters ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' }} text-sm font-medium rounded-lg shadow transition"
+                        title="{{ __('lessons.filters') }}"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
+                    </svg>
+                    <span class="hidden sm:inline">{{ __('lessons.filters') }}</span>
+                    @if($search || !empty($language_levels) || $sort !== 'newest')
+                        <span class="inline-flex items-center justify-center w-5 h-5 text-xs font-bold bg-white text-blue-600 rounded-full">!</span>
+                    @endif
+                </button>
+            @endif
+
+            {{-- Create button always visible if lessons exist or no filters applied --}}
+            @if(!$lessons->isEmpty() || !$this->hasActiveFilters())
+                <button
+                        wire:click="openManageModal"
+                        class="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 shadow transition"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                         stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M12 4v16m8-8H4"/>
+                    </svg>
+                    <span class="hidden sm:inline">{{ __('lessons.create_new_lesson') }}</span>
+                </button>
+            @endif
+        </div>
     </div>
+
+    {{-- Filters Panel --}}
+    @if($show_filters)
+        <div class="bg-white border border-gray-200 rounded-xl shadow-sm p-6 space-y-4" wire:key="filters-panel">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {{-- Search --}}
+                <div>
+                    <label for="temp_search" class="block text-sm font-medium text-gray-700 mb-2">
+                        {{ __('lessons.search') }}
+                    </label>
+                    <input
+                            type="text"
+                            id="temp_search"
+                            wire:model.live="temp_search"
+                            placeholder="{{ __('lessons.search_placeholder') }}"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                    />
+                </div>
+
+                {{-- Language Level --}}
+                <div class="relative" x-data="{ open: @entangle('show_level_dropdown') }">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        {{ __('lessons.level') }}
+                        @if(!empty($temp_language_levels))
+                            <span class="text-xs text-blue-600 font-semibold">({{ count($temp_language_levels) }})</span>
+                        @endif
+                    </label>
+                    
+                    {{-- Dropdown Button --}}
+                    <button
+                            type="button"
+                            @click="open = !open"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition bg-white text-left flex items-center justify-between"
+                    >
+                        <span class="text-sm text-gray-700">
+                            @if(empty($temp_language_levels))
+                                {{ __('lessons.all_levels') }}
+                            @else
+                                {{ implode(', ', $temp_language_levels) }}
+                            @endif
+                        </span>
+                        <svg class="w-4 h-4 text-gray-500 transition-transform" :class="{'rotate-180': open}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </button>
+
+                    {{-- Dropdown Menu --}}
+                    <div
+                            x-show="open"
+                            @click.outside="open = false"
+                            x-transition:enter="transition ease-out duration-100"
+                            x-transition:enter-start="opacity-0 scale-95"
+                            x-transition:enter-end="opacity-100 scale-100"
+                            x-transition:leave="transition ease-in duration-75"
+                            x-transition:leave-start="opacity-100 scale-100"
+                            x-transition:leave-end="opacity-0 scale-95"
+                            class="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto"
+                            style="display: none;"
+                    >
+                        <div class="p-2 space-y-1">
+                            @foreach($this->getLanguageLevels() as $level)
+                                <label class="flex items-center gap-2 cursor-pointer hover:bg-gray-50 p-2 rounded transition">
+                                    <input
+                                            type="checkbox"
+                                            wire:model.live="temp_language_levels"
+                                            value="{{ $level['value'] }}"
+                                            class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-2 focus:ring-blue-500 cursor-pointer"
+                                    />
+                                    <span class="text-sm text-gray-700 font-medium">{{ $level['label'] }}</span>
+                                </label>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Sort --}}
+                <div>
+                    <label for="temp_sort" class="block text-sm font-medium text-gray-700 mb-2">
+                        {{ __('lessons.sort_by') }}
+                    </label>
+                    <select
+                            id="temp_sort"
+                            wire:model.live="temp_sort"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                    >
+                        <option value="newest">{{ __('lessons.newest_first') }}</option>
+                        <option value="oldest">{{ __('lessons.oldest_first') }}</option>
+                    </select>
+                </div>
+            </div>
+
+            {{-- Actions --}}
+            <div class="flex items-center justify-between pt-4 border-t border-gray-200">
+                <button
+                        wire:click="resetFilters"
+                        class="text-sm text-gray-600 hover:text-gray-800 font-medium transition"
+                >
+                    {{ __('lessons.reset_filters') }}
+                </button>
+
+                <button
+                        wire:click="applyFilters"
+                        class="flex items-center gap-2 px-6 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 shadow transition"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                    </svg>
+                    {{ __('lessons.apply_filters_with_count', ['count' => $this->filteredLessonsCount]) }}
+                </button>
+            </div>
+        </div>
+    @endif
 
     {{-- Flash messages --}}
     @if (session()->has('message'))
@@ -49,21 +182,38 @@
     {{-- Пустой список --}}
     @if($lessons->isEmpty())
         <div class="text-center py-16 space-y-4">
-            <svg class="mx-auto h-14 w-14 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
-            </svg>
-            <h3 class="text-xl font-medium text-gray-900">{{ __('lessons.no_lessons_yet') }}</h3>
-            <p class="text-sm text-gray-500">{{ __('lessons.get_started_message') }}</p>
-            <button wire:click="openManageModal"
-                    class="mt-4 inline-flex items-center gap-2 px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-                <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd"
-                          d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
-                          clip-rule="evenodd"/>
+            @if($this->hasActiveFilters())
+                {{-- No results from filters --}}
+                <svg class="mx-auto h-14 w-14 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                 </svg>
-                {{ __('lessons.create_new_lesson') }}
-            </button>
+                <h3 class="text-xl font-medium text-gray-900">{{ __('lessons.no_results_found') }}</h3>
+                <p class="text-sm text-gray-500">{{ __('lessons.no_results_message') }}</p>
+                <button wire:click="resetFilters"
+                        class="mt-4 inline-flex items-center gap-2 px-5 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition">
+                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                    </svg>
+                    {{ __('lessons.reset_filters') }}
+                </button>
+            @else
+                {{-- No lessons at all --}}
+                <svg class="mx-auto h-14 w-14 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                </svg>
+                <h3 class="text-xl font-medium text-gray-900">{{ __('lessons.no_lessons_yet') }}</h3>
+                <p class="text-sm text-gray-500">{{ __('lessons.get_started_message') }}</p>
+                <button wire:click="openManageModal"
+                        class="mt-4 inline-flex items-center gap-2 px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd"
+                              d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+                              clip-rule="evenodd"/>
+                    </svg>
+                    {{ __('lessons.create_new_lesson') }}
+                </button>
+            @endif
         </div>
     @else
         {{-- Список уроков --}}

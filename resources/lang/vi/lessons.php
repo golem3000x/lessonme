@@ -70,4 +70,19 @@ return [
     'view_history' => 'Xem Lịch sử',
     'version' => 'Phiên bản',
     'restore_confirm' => 'Bạn có chắc chắn muốn khôi phục phiên bản này? Phiên bản hiện tại sẽ được lưu vào lịch sử.',
+    
+    // Filters
+    'filters' => 'Bộ lọc',
+    'apply_filters' => 'Áp dụng bộ lọc',
+    'apply_filters_with_count' => 'Áp dụng bộ lọc (:count bài học)',
+    'reset_filters' => 'Đặt lại',
+    'search' => 'Tìm kiếm',
+    'search_placeholder' => 'Tìm kiếm theo tên bài học...',
+    'all_levels' => 'Tất cả trình độ',
+    'sort_by' => 'Sắp xếp theo',
+    'newest_first' => 'Mới nhất trước',
+    'oldest_first' => 'Cũ nhất trước',
+    'actions' => 'Hành động',
+    'no_results_found' => 'Không tìm thấy kết quả',
+    'no_results_message' => 'Thử điều chỉnh bộ lọc hoặc đặt lại chúng để xem tất cả bài học.',
 ];

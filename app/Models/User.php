@@ -30,6 +30,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property string|null $zalo_user_id
+ * @property string|null $facebook_id
  * @property string|null $avatar
  * @property string $native_lang
  * @property string $learning_lang
@@ -54,6 +55,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|User whereRememberToken($value)
  * @method static Builder<static>|User whereUpdatedAt($value)
  * @method static Builder<static>|User whereZaloUserId($value)
+ * @method static Builder<static>|User whereFacebookId($value)
  *
  * @mixin Eloquent
  *
@@ -77,9 +79,11 @@ class User extends Authenticatable implements HasLocalePreference
         'email',
         'password',
         'zalo_user_id',
+        'facebook_id',
         'avatar',
         'native_lang',
         'learning_lang',
+        'email_verified_at',
     ];
 
     /**
