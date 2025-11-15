@@ -39,12 +39,19 @@ class LessonIndex extends Component
 
     // Applied filter values
     public string $search = '';
+    
     /** @var array<int, string> */
     public array $language_levels = [];
+    
     public string $sort = 'newest';
 
     public function mount(): void
     {
+        // Restore filters from session
+        $this->search = session('lesson_filters.search', '');
+        $this->language_levels = session('lesson_filters.language_levels', []);
+        $this->sort = session('lesson_filters.sort', 'newest');
+        
         // Initialize temp filters with applied values
         $this->temp_search = $this->search;
         $this->temp_language_levels = $this->language_levels;
@@ -208,6 +215,13 @@ class LessonIndex extends Component
     {
         $this->show_filters = ! $this->show_filters;
         
+        // Sync temp filters with current applied filters when opening
+        if ($this->show_filters) {
+            $this->temp_search = $this->search;
+            $this->temp_language_levels = $this->language_levels;
+            $this->temp_sort = $this->sort;
+        }
+        
         // Close level dropdown when closing filters panel
         if (!$this->show_filters) {
             $this->show_level_dropdown = false;
@@ -219,6 +233,13 @@ class LessonIndex extends Component
         $this->search = $this->temp_search;
         $this->language_levels = $this->temp_language_levels;
         $this->sort = $this->temp_sort;
+        
+        // Save filters to session
+        session([
+            'lesson_filters.search' => $this->search,
+            'lesson_filters.language_levels' => $this->language_levels,
+            'lesson_filters.sort' => $this->sort,
+        ]);
         
         $this->resetPage();
         $this->show_filters = false;
@@ -234,6 +255,9 @@ class LessonIndex extends Component
         $this->search = '';
         $this->language_levels = [];
         $this->sort = 'newest';
+        
+        // Clear filters from session
+        session()->forget('lesson_filters');
         
         $this->resetPage();
         $this->show_level_dropdown = false;
