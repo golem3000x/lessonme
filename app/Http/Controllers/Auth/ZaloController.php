@@ -6,6 +6,9 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Notifications\Auth\RegistrationNotification;
+use App\Notifications\Auth\WelcomeNotification;
+use App\Services\GreetingService;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
@@ -14,6 +17,10 @@ use Illuminate\Support\Facades\Http;
 
 class ZaloController extends Controller
 {
+    public function __construct(
+        protected GreetingService $greeting_service
+    ) {}
+
     public function redirect(): Redirector|RedirectResponse
     {
         $zalo_app_id = config('services.zalo.app_id');
@@ -58,6 +65,7 @@ class ZaloController extends Controller
         }
 
         $user = User::where('zalo_user_id', $zalo_id)->first();
+        $is_new_user = false;
 
         if ($user) {
             $user->update([
@@ -74,9 +82,27 @@ class ZaloController extends Controller
                 'native_lang' => 'vi',
                 'learning_lang' => 'en',
             ]);
+            $is_new_user = true;
         }
 
         Auth::login($user);
+
+        // Отправляем уведомление
+        if ($is_new_user) {
+            $message = $this->greeting_service->getRegistrationMessage(
+                $user->name,
+                $user->timezone ?? 'UTC',
+                $user->native_lang ?? 'vi'
+            );
+            $user->notify(new RegistrationNotification($user, $message));
+        } else {
+            $message = $this->greeting_service->getWelcomeMessage(
+                $user->name,
+                $user->timezone ?? 'UTC',
+                $user->native_lang ?? 'vi'
+            );
+            $user->notify(new WelcomeNotification($user, $message));
+        }
 
         return redirect()->route('dashboard');
     }

@@ -100,4 +100,30 @@ if (userId) {
             message: notification.message
         });
     });
+
+    // User auth notifications (welcome & registration)
+    // Note: entity will be 'user' (from User class basename)
+    channel.listen('.auth.welcome', (notification) => {
+        console.log('🔥 User welcome:', notification);
+        Livewire.dispatch('user-notification', {
+            id: notification.id,
+            entity: notification.entity,
+            status: notification.status,
+            message: notification.message,
+            user_id: notification.user_id,
+            user_name: notification.user_name
+        });
+    });
+
+    channel.listen('.auth.registered', (notification) => {
+        console.log('🔥 User registered:', notification);
+        Livewire.dispatch('user-notification', {
+            id: notification.id,
+            entity: notification.entity,
+            status: notification.status,
+            message: notification.message,
+            user_id: notification.user_id,
+            user_name: notification.user_name
+        });
+    });
 }

@@ -38,4 +38,16 @@ return [
     'failed' => 'Thông tin đăng nhập không chính xác.',
     'password' => 'Mật khẩu không đúng.',
     'throttle' => 'Quá nhiều lần đăng nhập. Vui lòng thử lại sau :seconds giây.',
+
+    // Greetings by time of day
+    'greetings' => [
+        'morning' => 'Chào buổi sáng',
+        'afternoon' => 'Chào buổi chiều',
+        'evening' => 'Chào buổi tối',
+        'night' => 'Chúc ngủ ngon',
+    ],
+
+    // Welcome messages
+    'welcome_message' => ':greeting, :name! Chào mừng bạn trở lại!',
+    'registration_message' => ':greeting, :name! Chào mừng bạn đến với nền tảng của chúng tôi!',
 ];

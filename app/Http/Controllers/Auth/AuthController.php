@@ -6,6 +6,9 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Notifications\Auth\RegistrationNotification;
+use App\Notifications\Auth\WelcomeNotification;
+use App\Services\GreetingService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,6 +19,10 @@ use Illuminate\View\View;
 
 class AuthController extends Controller
 {
+    public function __construct(
+        protected GreetingService $greeting_service
+    ) {}
+
     public function showLogin(): Factory|View
     {
         return view('auth.login');
@@ -39,6 +46,25 @@ class AuthController extends Controller
         if (Auth::attempt($request->only('email', 'password'), $request->filled('remember'))) {
             $request->session()->regenerate();
 
+            $user = Auth::user();
+            
+            // Получаем timezone из запроса (если отправлен из браузера)
+            $timezone = $request->input('timezone', $user->timezone ?? 'UTC');
+            
+            // Обновляем timezone пользователя если он изменился
+            if ($user->timezone !== $timezone) {
+                $user->update(['timezone' => $timezone]);
+            }
+            
+            // Отправляем приветственное уведомление
+            $message = $this->greeting_service->getWelcomeMessage(
+                $user->name,
+                $timezone,
+                $user->native_lang ?? 'en'
+            );
+            
+            $user->notify(new WelcomeNotification($user, $message));
+
             return redirect()->intended('/dashboard');
         }
 
@@ -55,14 +81,27 @@ class AuthController extends Controller
             'password' => 'required|string|min:8|confirmed',
         ]);
 
+        // Получаем timezone из запроса (если отправлен из браузера)
+        $timezone = $request->input('timezone', 'UTC');
+
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'timezone' => $timezone,
         ]);
 
         Auth::login($user);
         $request->session()->regenerate();
+
+        // Отправляем приветственное уведомление для нового пользователя
+        $message = $this->greeting_service->getRegistrationMessage(
+            $user->name,
+            $timezone,
+            app()->getLocale()
+        );
+        
+        $user->notify(new RegistrationNotification($user, $message));
 
         return redirect('/dashboard');
     }

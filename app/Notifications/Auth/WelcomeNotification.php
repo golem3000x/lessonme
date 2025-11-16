@@ -2,25 +2,30 @@
 
 declare(strict_types=1);
 
-namespace App\Notifications\Lesson;
+namespace App\Notifications\Auth;
 
-use App\Models\Lesson\Lesson;
+use App\Enums\AuthNotificationStatusEnum;
+use App\Models\User;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Str;
 
-class LessonNotification extends Notification implements ShouldBroadcast
+class WelcomeNotification extends Notification implements ShouldBroadcast
 {
     use InteractsWithSockets, Queueable;
 
+    protected string $entity_name;
+
     public function __construct(
-        protected Lesson $lesson,
-        protected string $status,
+        protected User $user,
         protected string $message
-    ) {}
+    ) {
+        $this->entity_name = Str::lcfirst(class_basename($user));
+    }
 
     /**
      * @return array<int, string>
@@ -36,11 +41,12 @@ class LessonNotification extends Notification implements ShouldBroadcast
     protected function payload(): array
     {
         return [
-            'id' => uniqid('lesson_'),
-            'status' => $this->status,
-            'entity' => 'lesson',
+            'id' => uniqid('auth_welcome_'),
+            'status' => AuthNotificationStatusEnum::WELCOME->value,
+            'entity' => $this->entity_name,
             'message' => $this->message,
-            'lesson_id' => $this->lesson->id,
+            'user_id' => $this->user->id,
+            'user_name' => $this->user->name,
         ];
     }
 
@@ -62,11 +68,11 @@ class LessonNotification extends Notification implements ShouldBroadcast
      */
     public function broadcastOn(): array
     {
-        return [new PrivateChannel('App.Models.User.'.$this->lesson->user_id)];
+        return [new PrivateChannel('App.Models.User.'.$this->user->id)];
     }
 
     public function broadcastAs(): string
     {
-        return 'lesson.'.$this->status;
+        return 'auth.'.AuthNotificationStatusEnum::WELCOME->value;
     }
 }

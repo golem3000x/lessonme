@@ -6,6 +6,9 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Notifications\Auth\RegistrationNotification;
+use App\Notifications\Auth\WelcomeNotification;
+use App\Services\GreetingService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -15,6 +18,10 @@ use Exception;
 
 class SocialAuthController extends Controller
 {
+    public function __construct(
+        protected GreetingService $greeting_service
+    ) {}
+
     /**
      * Redirect to Facebook for authentication
      */
@@ -32,6 +39,7 @@ class SocialAuthController extends Controller
             $facebook_user = Socialite::driver('facebook')->user();
 
             $user = User::where('facebook_id', $facebook_user->getId())->first();
+            $is_new_user = false;
 
             if (!$user) {
                 // Check if user with this email already exists
@@ -53,6 +61,7 @@ class SocialAuthController extends Controller
                         'password' => Hash::make(Str::random(24)),
                         'email_verified_at' => now(),
                     ]);
+                    $is_new_user = true;
                 }
             } else {
                 // Update avatar if changed
@@ -64,6 +73,23 @@ class SocialAuthController extends Controller
             }
 
             Auth::login($user, true);
+
+            // Отправляем уведомление
+            if ($is_new_user) {
+                $message = $this->greeting_service->getRegistrationMessage(
+                    $user->name,
+                    $user->timezone ?? 'UTC',
+                    $user->native_lang ?? 'en'
+                );
+                $user->notify(new RegistrationNotification($user, $message));
+            } else {
+                $message = $this->greeting_service->getWelcomeMessage(
+                    $user->name,
+                    $user->timezone ?? 'UTC',
+                    $user->native_lang ?? 'en'
+                );
+                $user->notify(new WelcomeNotification($user, $message));
+            }
 
             return redirect()->intended('/');
         } catch (Exception $e) {

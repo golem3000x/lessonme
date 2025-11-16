@@ -38,4 +38,16 @@ return [
     'failed' => 'These credentials do not match our records.',
     'password' => 'The provided password is incorrect.',
     'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
+
+    // Greetings by time of day
+    'greetings' => [
+        'morning' => 'Good morning',
+        'afternoon' => 'Good afternoon',
+        'evening' => 'Good evening',
+        'night' => 'Good night',
+    ],
+
+    // Welcome messages
+    'welcome_message' => ':greeting, :name! Welcome back!',
+    'registration_message' => ':greeting, :name! Welcome to our platform!',
 ];

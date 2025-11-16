@@ -23,6 +23,10 @@
                     ⏳
                 @elseif(str_contains($n['status'], 'error'))
                     ❌
+                @elseif($n['status'] === 'welcome')
+                    👋
+                @elseif($n['status'] === 'registered')
+                    🎉
                 @else
                     🔔
                 @endif

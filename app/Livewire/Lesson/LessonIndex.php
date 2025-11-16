@@ -305,7 +305,7 @@ class LessonIndex extends Component
 
     public function render(): Factory|View
     {
-        $lessons = $this->getLessonsQuery()->paginate(1);
+        $lessons = $this->getLessonsQuery()->paginate(12);
         
         return view('livewire.lesson.lesson-index', [
             'lessons' => $lessons,
