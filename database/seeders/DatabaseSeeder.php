@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             SystemTopicsSeeder::class,
             SystemKeywordsSeeder::class,
+            AdminUserSeeder::class,
         ]);
     }
 }

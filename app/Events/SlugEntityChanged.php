@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Events;
 
-use App\Models\Abstracts\Slug\SlugEntity;
+use App\Models\Abstracts\Slug\Slug;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
@@ -18,7 +18,7 @@ class SlugEntityChanged
     /**
      * Create a new event instance.
      */
-    public function __construct(public readonly SlugEntity $entity) {}
+    public function __construct(public readonly Slug $entity) {}
 
     /**
      * Get the channels the event should broadcast on.

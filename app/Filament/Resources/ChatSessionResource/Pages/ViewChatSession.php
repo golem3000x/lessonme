@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\ChatSessionResource\Pages;
 
+use App\Enums\ChatSessionStatusEnum;
 use App\Events\MessageSent;
 use App\Filament\Resources\ChatSessionResource;
 use App\Models\Message;
 use Filament\Actions;
-use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Infolists;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Pages\ViewRecord;
@@ -30,18 +29,18 @@ class ViewChatSession extends ViewRecord
                 ->icon('heroicon-o-x-circle')
                 ->color('danger')
                 ->requiresConfirmation()
-                ->visible(fn () => $this->record->status === 'open')
+                ->visible(fn () => $this->record->status === ChatSessionStatusEnum::OPEN)
                 ->action(function (): void {
-                    $this->record->update(['status' => 'closed']);
+                    $this->record->update(['status' => ChatSessionStatusEnum::CLOSED]);
                     $this->redirect(ChatSessionResource::getUrl('index'));
                 }),
             Actions\Action::make('reopen_chat')
                 ->label(__('admin.action_reopen_chat'))
                 ->icon('heroicon-o-check-circle')
                 ->color('success')
-                ->visible(fn () => $this->record->status === 'closed')
+                ->visible(fn () => $this->record->status === ChatSessionStatusEnum::CLOSED)
                 ->action(function (): void {
-                    $this->record->update(['status' => 'open']);
+                    $this->record->update(['status' => ChatSessionStatusEnum::OPEN]);
                 }),
         ];
     }
@@ -64,15 +63,13 @@ class ViewChatSession extends ViewRecord
                         Infolists\Components\TextEntry::make('status')
                             ->label(__('admin.chat_status'))
                             ->badge()
-                            ->color(fn (string $state): string => match ($state) {
-                                'open' => 'success',
-                                'closed' => 'gray',
-                                default => 'warning',
+                            ->color(fn (ChatSessionStatusEnum $state): string => match ($state) {
+                                ChatSessionStatusEnum::OPEN => 'success',
+                                ChatSessionStatusEnum::CLOSED => 'gray',
                             })
-                            ->formatStateUsing(fn (string $state): string => match ($state) {
-                                'open' => __('admin.status_open'),
-                                'closed' => __('admin.status_closed'),
-                                default => $state,
+                            ->formatStateUsing(fn (ChatSessionStatusEnum $state): string => match ($state) {
+                                ChatSessionStatusEnum::OPEN => __('admin.status_open'),
+                                ChatSessionStatusEnum::CLOSED => __('admin.status_closed'),
                             }),
                         Infolists\Components\TextEntry::make('created_at')
                             ->label(__('admin.created_at'))
@@ -83,7 +80,7 @@ class ViewChatSession extends ViewRecord
                             ->default(__('admin.no_messages')),
                     ])
                     ->columns(3),
-                
+
                 Infolists\Components\Section::make(__('admin.message_history'))
                     ->schema([
                         Infolists\Components\RepeatableEntry::make('messages')
@@ -93,19 +90,19 @@ class ViewChatSession extends ViewRecord
                                     ->label('')
                                     ->color(fn (Message $record) => $record->is_from_admin ? 'info' : 'success')
                                     ->weight(FontWeight::Medium)
-                                    ->suffix(fn (Message $record) => ' — ' . $record->created_at->format('d.m.Y H:i'))
+                                    ->suffix(fn (Message $record) => ' — '.$record->created_at->format('d.m.Y H:i'))
                                     ->icon(fn (Message $record) => $record->is_from_admin ? 'heroicon-o-user-circle' : 'heroicon-o-chat-bubble-left')
                                     ->iconColor(fn (Message $record) => $record->is_from_admin ? 'info' : 'success'),
                             ])
                             ->contained(false),
                     ]),
-                
+
                 Infolists\Components\Section::make(__('admin.send_message'))
                     ->schema([
                         Infolists\Components\ViewEntry::make('send_message_form')
                             ->view('filament.resources.chat-session.send-message-form'),
                     ])
-                    ->visible(fn () => $this->record->status === 'open'),
+                    ->visible(fn () => $this->record->status === ChatSessionStatusEnum::OPEN),
             ]);
     }
 

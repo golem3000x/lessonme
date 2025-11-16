@@ -6,7 +6,7 @@ namespace App\Livewire\Onboarding;
 
 use App\Models\Topic\Topic;
 use App\Models\User;
-use App\Notifications\Processing\SlugEntityProcessingNotification;
+use App\Notifications\Slug\Processing\SlugProcessingNotification;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
@@ -63,7 +63,7 @@ class CreateTopic extends Component
             'is_approved' => false,
         ]);
 
-        $user->notify(new SlugEntityProcessingNotification($topic));
+        $user->notify(new SlugProcessingNotification($topic));
 
         session()->flash('message', __('onboarding.topic_processing'));
 

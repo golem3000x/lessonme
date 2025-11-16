@@ -6,7 +6,7 @@ namespace App\Livewire\Onboarding;
 
 use App\Models\Keyword\Keyword;
 use App\Models\User;
-use App\Notifications\Processing\SlugEntityProcessingNotification;
+use App\Notifications\Slug\Processing\SlugProcessingNotification;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
@@ -68,7 +68,7 @@ class CreateKeyword extends Component
             'is_system' => false,
         ]);
 
-        $user->notify(new SlugEntityProcessingNotification($keyword));
+        $user->notify(new SlugProcessingNotification($keyword));
 
         session()->flash('message', __('onboarding.keyword_processing'));
 

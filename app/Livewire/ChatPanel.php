@@ -4,22 +4,22 @@ declare(strict_types=1);
 
 namespace App\Livewire;
 
+use App\Enums\ChatSessionStatusEnum;
 use App\Events\MessageSent;
 use App\Models\ChatSession;
 use App\Models\Message;
-use Illuminate\Support\Collection;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
 class ChatPanel extends Component
 {
     public bool $is_open = false;
-    
+
     public string $new_message = '';
-    
+
     /** @var array<int, array> */
     public array $messages = [];
-    
+
     public ?ChatSession $chat_session = null;
 
     public function mount(): void
@@ -30,15 +30,15 @@ class ChatPanel extends Component
     protected function loadChatSession(): void
     {
         $user = auth()->user();
-        
-        if (!$user) {
+
+        if (! $user) {
             return;
         }
 
         // Получаем или создаем сессию чата для текущего пользователя
         $this->chat_session = ChatSession::firstOrCreate(
             ['user_id' => $user->id],
-            ['status' => 'open']
+            ['status' => ChatSessionStatusEnum::OPEN]
         );
 
         // Загружаем последние 50 сообщений
@@ -57,11 +57,11 @@ class ChatPanel extends Component
     public function toggleChat(bool $is_open): void
     {
         $this->is_open = $is_open;
-        
+
         if ($is_open) {
             // Загружаем сообщения при открытии
             $this->loadChatSession();
-            
+
             // Отмечаем все сообщения как прочитанные
             $this->markMessagesAsRead();
         }
@@ -73,7 +73,7 @@ class ChatPanel extends Component
             'new_message' => 'required|string|max:1000',
         ]);
 
-        if (!$this->chat_session) {
+        if (! $this->chat_session) {
             $this->loadChatSession();
         }
 
@@ -111,19 +111,19 @@ class ChatPanel extends Component
     {
         // Добавляем новое сообщение в массив
         $message = Message::with('user')->find($message_data['id']);
-        
+
         if ($message) {
             // Проверяем, есть ли уже это сообщение
             $message_ids = array_column($this->messages, 'id');
-            
-            if (!in_array($message->id, $message_ids)) {
+
+            if (! in_array($message->id, $message_ids)) {
                 $this->messages[] = $message->toArray();
-                
+
                 // Если чат открыт, отмечаем сообщение как прочитанное
                 if ($this->is_open) {
                     $message->update(['is_read' => true]);
                 }
-                
+
                 $this->dispatch('message-received');
             }
         }
@@ -131,7 +131,7 @@ class ChatPanel extends Component
 
     protected function markMessagesAsRead(): void
     {
-        if (!$this->chat_session) {
+        if (! $this->chat_session) {
             return;
         }
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\ChatSessionStatusEnum;
 use App\Enums\TableNameEnum;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -15,12 +16,23 @@ use Illuminate\Support\Carbon;
  * @property int $user_id
  * @property Carbon|null $last_message_at
  * @property int $unread_count
- * @property string $status
+ * @property ChatSessionStatusEnum $status
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read User $user
  * @property-read \Illuminate\Database\Eloquent\Collection<int, Message> $messages
  * @property-read int|null $messages_count
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ChatSession newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ChatSession newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ChatSession query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ChatSession whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ChatSession whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ChatSession whereLastMessageAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ChatSession whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ChatSession whereUnreadCount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ChatSession whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ChatSession whereUserId($value)
+ * @mixin \Eloquent
  */
 class ChatSession extends Model
 {
@@ -44,6 +56,7 @@ class ChatSession extends Model
         return [
             'last_message_at' => 'datetime',
             'unread_count' => 'integer',
+            'status' => ChatSessionStatusEnum::class,
         ];
     }
 

@@ -19,7 +19,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property bool $is_system
  * @property bool $is_approved
  */
-abstract class SlugEntity extends BaseModel
+abstract class Slug extends BaseModel
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory;
@@ -38,6 +38,17 @@ abstract class SlugEntity extends BaseModel
     ];
 
     public $timestamps = true;
+
+    /**
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'is_system' => 'boolean',
+            'is_approved' => 'boolean',
+        ];
+    }
 
     /**
      * Relation to translations table

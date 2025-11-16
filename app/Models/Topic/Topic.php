@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Models\Topic;
 
 use App\Enums\TableNameEnum;
-use App\Models\Abstracts\Slug\SlugEntity;
+use App\Models\Abstracts\Slug\Slug;
 use App\Models\Keyword\Keyword;
 use App\Models\Lesson\Lesson;
 use App\Models\User;
@@ -23,7 +23,6 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $updated_at
  * @property-read Collection<int, Lesson> $lessons
  * @property-read int|null $lessons_count
- *
  * @method static Builder<static>|Topic newModelQuery()
  * @method static Builder<static>|Topic newQuery()
  * @method static Builder<static>|Topic query()
@@ -31,12 +30,10 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|Topic whereId($value)
  * @method static Builder<static>|Topic whereNameId($value)
  * @method static Builder<static>|Topic whereUpdatedAt($value)
- *
  * @mixin Eloquent
- *
  * @property int|null $user_id
- * @property int $is_system
- * @property int $is_approved
+ * @property bool $is_system
+ * @property bool $is_approved
  * @property-read Collection<int, Keyword> $keywords
  * @property-read int|null $keywords_count
  * @property-read Collection<int, TopicTranslation> $translations
@@ -44,16 +41,15 @@ use Illuminate\Support\Carbon;
  * @property-read User|null $user
  * @property-read Collection<int, UserTopicVisibility> $visibility
  * @property-read int|null $visibility_count
- *
  * @method static Builder<static>|Topic visibleForUser(int $userId)
  * @method static Builder<static>|Topic whereIsApproved($value)
  * @method static Builder<static>|Topic whereIsSystem($value)
  * @method static Builder<static>|Topic whereSlug($value)
  * @method static Builder<static>|Topic whereUserId($value)
- *
  * @mixin Eloquent
+ * @mixin \Eloquent
  */
-class Topic extends SlugEntity
+class Topic extends Slug
 {
     protected $table = TableNameEnum::TOPICS->value;
 

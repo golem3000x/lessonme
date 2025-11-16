@@ -36,6 +36,12 @@ return [
     'keyword_translate_successfully' => 'Từ khóa ":slug" của bạn đã được dịch thành công và hiện đã hiển thị!',
     'keyword_translate_invalid' => 'Lỗi dịch từ khóa ":slug" của bạn',
 
+    // Lesson creation notifications
+    'lesson_creation_processing' => 'Đang tạo bài học...',
+    'lesson_creation_successfully' => 'Bài học ":name" đã được tạo thành công!',
+    'lesson_creation_error' => 'Tạo bài học thất bại. Vui lòng thử lại.',
+    'lesson_creation_exists' => 'Bài học tương tự ":name" đã tồn tại.',
+
     // Notification Bell
     'title' => 'Thông báo',
     'notifications' => 'Thông báo',

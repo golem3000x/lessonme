@@ -17,7 +17,7 @@ return [
     'switch_to' => 'Switch to :lang',
     'english' => 'English',
     'vietnamese' => 'Vietnamese',
-    
+
     // About page
     'about_title' => 'About the Project',
     'about_subtitle' => 'Language Learning Tool',
@@ -32,7 +32,7 @@ return [
     'about_contact_title' => 'Contact Us',
     'about_contact_text' => 'If you want to contact me, there is a chat in the lower right corner. I will be happy to answer your questions and hear your suggestions!',
     'about_back' => 'Go Back',
-    
+
     // Chat
     'chat_no_messages' => 'No messages',
     'chat_start_conversation' => 'Start a conversation!',

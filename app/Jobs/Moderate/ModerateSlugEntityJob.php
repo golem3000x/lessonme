@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Jobs\Moderate;
 
 use App\Enums\ModerationStatusEnum;
-use App\Models\Abstracts\Slug\SlugEntity;
-use App\Notifications\Moderation\SlugEntityModerationNotification;
+use App\Models\Abstracts\Slug\Slug;
+use App\Notifications\Slug\Moderation\SlugModerationNotification;
 use App\Services\Slug\SlugService;
 use Exception;
 use Illuminate\Bus\Queueable;
@@ -20,7 +20,7 @@ class ModerateSlugEntityJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public function __construct(protected SlugEntity $entity) {}
+    public function __construct(protected Slug $entity) {}
 
     public function handle(SlugService $openAI): void
     {
@@ -53,7 +53,7 @@ class ModerateSlugEntityJob implements ShouldQueue
         $user = $this->entity->user;
 
         if ($user) {
-            $user->notify(new SlugEntityModerationNotification($this->entity, $status));
+            $user->notify(new SlugModerationNotification($this->entity, $status));
         }
     }
 }

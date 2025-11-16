@@ -36,6 +36,12 @@ return [
     'keyword_translate_successfully' => 'Your keyword ":slug" has been successfully translated and is now visible!',
     'keyword_translate_invalid' => 'Translation error for your keyword ":slug"',
 
+    // Lesson creation notifications
+    'lesson_creation_processing' => 'Lesson creation in progress...',
+    'lesson_creation_successfully' => 'Lesson ":name" has been created successfully!',
+    'lesson_creation_error' => 'Lesson creation failed. Please try again.',
+    'lesson_creation_exists' => 'A similar lesson ":name" already exists.',
+
     // Notification Bell
     'title' => 'Notifications',
     'notifications' => 'Notifications',

@@ -22,7 +22,7 @@ return new class extends Migration
             $table->boolean('is_from_admin')->default(false);
             $table->boolean('is_read')->default(false);
             $table->timestamps();
-            
+
             $table->index('chat_session_id');
             $table->index('user_id');
             $table->index(['is_from_admin', 'is_read']);

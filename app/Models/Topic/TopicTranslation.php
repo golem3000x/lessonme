@@ -19,7 +19,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string|null $updated_at
  * @property-read Topic $entity
  * @property-read Topic $topic
- *
  * @method static Builder<static>|TopicTranslation newModelQuery()
  * @method static Builder<static>|TopicTranslation newQuery()
  * @method static Builder<static>|TopicTranslation query()
@@ -29,8 +28,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static Builder<static>|TopicTranslation whereTopicId($value)
  * @method static Builder<static>|TopicTranslation whereUpdatedAt($value)
  * @method static Builder<static>|TopicTranslation whereValue($value)
- *
  * @mixin Eloquent
+ * @mixin \Eloquent
  */
 class TopicTranslation extends SlugTranslation
 {

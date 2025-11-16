@@ -17,7 +17,7 @@ return [
     'switch_to' => 'Chuyển sang :lang',
     'english' => 'Tiếng Anh',
     'vietnamese' => 'Tiếng Việt',
-    
+
     // About page
     'about_title' => 'Về Dự Án',
     'about_subtitle' => 'Công cụ học ngôn ngữ',
@@ -32,7 +32,7 @@ return [
     'about_contact_title' => 'Liên hệ với chúng tôi',
     'about_contact_text' => 'Nếu bạn muốn liên hệ với tôi, có một trò chuyện ở góc dưới bên phải. Tôi sẽ rất vui lòng trả lời câu hỏi của bạn và lắng nghe đề xuất của bạn!',
     'about_back' => 'Quay lại',
-    
+
     // Chat
     'chat_no_messages' => 'Không có tin nhắn',
     'chat_start_conversation' => 'Bắt đầu cuộc trò chuyện!',

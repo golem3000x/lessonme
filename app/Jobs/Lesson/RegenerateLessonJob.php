@@ -66,19 +66,10 @@ class RegenerateLessonJob implements ShouldQueue
         // Set the user's locale for translation
         app()->setLocale($this->user_locale);
 
-        // Get the translated message based on status
-        $message = match ($status) {
-            LessonCreationStatusEnum::ERROR => __('lessons.lesson_creation_failed'),
-            LessonCreationStatusEnum::EXISTS => __('lessons.lesson_exists', ['name' => $lesson?->lesson_name ?? '']),
-            LessonCreationStatusEnum::SUCCESSFULLY => __('lessons.lesson_created_successfully', ['name' => $lesson?->lesson_name ?? '']),
-            default => __('lessons.lesson_regeneration_in_progress')
-        };
-
         $user->notify(
             new LessonCreationNotification(
                 $lesson,
-                $status->value,
-                $message
+                $status
             )
         );
     }

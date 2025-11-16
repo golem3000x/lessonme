@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace App\Notifications\Moderation;
+namespace App\Notifications\Slug\Moderation;
 
 use App\Enums\ModerationStatusEnum;
 use App\Enums\NotificationEventTypeEnum;
-use App\Models\Abstracts\Slug\SlugEntity;
-use App\Notifications\Abstracts\AbstractSlugEntityNotification;
+use App\Models\Abstracts\Slug\Slug;
+use App\Notifications\Abstracts\AbstractSlugNotification;
 
-class SlugEntityModerationNotification extends AbstractSlugEntityNotification
+class SlugModerationNotification extends AbstractSlugNotification
 {
     public function __construct(
-        SlugEntity $entity,
+        Slug                         $entity,
         private ModerationStatusEnum $moderation_status_enum
     ) {
         parent::__construct($entity);

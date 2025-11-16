@@ -80,6 +80,8 @@ class LessonController extends Controller
     {
         abort_if($lesson->user_id !== Auth::id(), 403);
 
+        $lesson->load('topic.translations');
+
         return view('lessons.show', compact('lesson'));
     }
 

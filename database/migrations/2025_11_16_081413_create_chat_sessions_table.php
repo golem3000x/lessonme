@@ -21,7 +21,7 @@ return new class extends Migration
             $table->unsignedInteger('unread_count')->default(0);
             $table->enum('status', ['open', 'closed'])->default('open');
             $table->timestamps();
-            
+
             $table->index('user_id');
             $table->index('status');
         });

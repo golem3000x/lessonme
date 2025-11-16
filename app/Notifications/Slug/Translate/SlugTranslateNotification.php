@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace App\Notifications\Translate;
+namespace App\Notifications\Slug\Translate;
 
 use App\Enums\NotificationEventTypeEnum;
 use App\Enums\TranslateStatusEnum;
-use App\Models\Abstracts\Slug\SlugEntity;
-use App\Notifications\Abstracts\AbstractSlugEntityNotification;
+use App\Models\Abstracts\Slug\Slug;
+use App\Notifications\Abstracts\AbstractSlugNotification;
 
-class SlugEntityTranslateNotification extends AbstractSlugEntityNotification
+class SlugTranslateNotification extends AbstractSlugNotification
 {
     public function __construct(
-        SlugEntity $entity,
+        Slug                                 $entity,
         private readonly TranslateStatusEnum $translate_status_enum
     ) {
         parent::__construct($entity);

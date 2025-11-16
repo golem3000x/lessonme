@@ -6,27 +6,27 @@ return [
     // Navigation
     'chats' => 'Trò chuyện',
     'chat' => 'Cuộc trò chuyện',
-    
+
     // Table columns
     'user' => 'Người dùng',
     'last_message' => 'Tin nhắn cuối',
     'unread' => 'Chưa đọc',
     'status' => 'Trạng thái',
     'created' => 'Đã tạo',
-    
+
     // Status values
     'status_open' => 'Mở',
     'status_closed' => 'Đã đóng',
-    
+
     // Filters
     'filter_status' => 'Trạng thái',
     'filter_unread' => 'Có tin nhắn chưa đọc',
-    
+
     // Actions
     'action_view' => 'Xem',
     'action_close_chat' => 'Đóng trò chuyện',
     'action_reopen_chat' => 'Mở lại trò chuyện',
-    
+
     // Chat view
     'chat_with' => 'Trò chuyện với :name',
     'user_info' => 'Thông tin người dùng',
@@ -36,14 +36,14 @@ return [
     'created_at' => 'Ngày tạo',
     'last_message_at' => 'Tin nhắn cuối',
     'no_messages' => 'Chưa có tin nhắn',
-    
+
     // Messages
     'message_history' => 'Lịch sử tin nhắn',
     'send_message' => 'Gửi tin nhắn',
     'enter_message' => 'Nhập tin nhắn...',
     'send_button' => 'Gửi',
     'sending' => 'Đang gửi...',
-    
+
     // Validation
     'validation_required' => 'Trường này là bắt buộc',
     'validation_max' => 'Tối đa :max ký tự',

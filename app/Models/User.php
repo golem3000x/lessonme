@@ -45,7 +45,6 @@ use Illuminate\Support\Carbon;
  * @property-read int|null $chat_sessions_count
  * @property-read Collection<int, Message> $messages
  * @property-read int|null $messages_count
- *
  * @method static UserFactory factory($count = null, $state = [])
  * @method static Builder<static>|User newModelQuery()
  * @method static Builder<static>|User newQuery()
@@ -63,13 +62,15 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|User whereUpdatedAt($value)
  * @method static Builder<static>|User whereZaloUserId($value)
  * @method static Builder<static>|User whereFacebookId($value)
- *
  * @mixin Eloquent
- *
  * @method static Builder<static>|User whereLearningLang($value)
  * @method static Builder<static>|User whereNativeLang($value)
+ * @property string $timezone
+ * @method static Builder<static>|User whereIsAdmin($value)
+ * @method static Builder<static>|User whereTimezone($value)
+ * @mixin \Eloquent
  */
-class User extends Authenticatable implements HasLocalePreference, FilamentUser
+class User extends Authenticatable implements FilamentUser, HasLocalePreference
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;

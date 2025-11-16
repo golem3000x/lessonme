@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Notifications\Processing;
+namespace App\Notifications\Slug\Processing;
 
 use App\Enums\ModerationStatusEnum;
 use App\Enums\NotificationEventTypeEnum;
-use App\Models\Abstracts\Slug\SlugEntity;
-use App\Notifications\Abstracts\AbstractSlugEntityNotification;
+use App\Models\Abstracts\Slug\Slug;
+use App\Notifications\Abstracts\AbstractSlugNotification;
 
-class SlugEntityProcessingNotification extends AbstractSlugEntityNotification
+class SlugProcessingNotification extends AbstractSlugNotification
 {
-    public function __construct(SlugEntity $entity)
+    public function __construct(Slug $entity)
     {
         parent::__construct($entity);
     }

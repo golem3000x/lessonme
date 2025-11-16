@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Jobs\Translate;
 
 use App\Enums\TranslateStatusEnum;
-use App\Models\Abstracts\Slug\SlugEntity;
-use App\Notifications\Translate\SlugEntityTranslateNotification;
+use App\Models\Abstracts\Slug\Slug;
+use App\Notifications\Slug\Translate\SlugTranslateNotification;
 use App\Services\Slug\SlugService;
 use Exception;
 use Illuminate\Bus\Queueable;
@@ -20,7 +20,7 @@ class TranslateSlugEntityJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public function __construct(protected SlugEntity $entity) {}
+    public function __construct(protected Slug $entity) {}
 
     public function handle(SlugService $openAI): void
     {
@@ -86,7 +86,7 @@ class TranslateSlugEntityJob implements ShouldQueue
         $user = $this->entity->user;
 
         if ($user) {
-            $user->notify(new SlugEntityTranslateNotification($this->entity, $status));
+            $user->notify(new SlugTranslateNotification($this->entity, $status));
         }
     }
 }

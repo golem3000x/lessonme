@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Livewire\Lesson;
 
+use App\Enums\EntityTypeEnum;
 use App\Dto\LessonDto;
 use App\Enums\LanguageLevelEnum;
 use App\Enums\LessonCreationStatusEnum;
@@ -72,7 +73,7 @@ class LessonIndex extends Component
     protected function getLessonsQuery()
     {
         $query = Lesson::where('user_id', Auth::id())
-            ->with(['topicRelation' => function ($q) {
+            ->with(['topic' => function ($q) {
                 $q->with('translations');
             }]);
 
@@ -133,7 +134,7 @@ class LessonIndex extends Component
 
         $lesson = Lesson::where('id', $lesson_id)
             ->where('user_id', $user->id)
-            ->with(['topicRelation.translations', 'topicRelation.keywords.translations'])
+            ->with(['topic.translations', 'topic.keywords.translations'])
             ->first();
 
         if (! $lesson) {
@@ -145,12 +146,12 @@ class LessonIndex extends Component
 
         try {
             $locale = app()->getLocale();
-            $topic_name = $lesson->topicRelation?->title($locale) ?? '';
+            $topic_name = $lesson->topic?->title($locale) ?? '';
 
             // Get keywords from topic
             $keywords = [];
-            if ($lesson->topicRelation && $lesson->topicRelation->relationLoaded('keywords')) {
-                $keywords = $lesson->topicRelation->keywords
+            if ($lesson->topic && $lesson->topic->relationLoaded('keywords')) {
+                $keywords = $lesson->topic->keywords
                     ->map(fn ($keyword) => $keyword->value($locale))
                     ->filter()
                     ->values()
@@ -180,8 +181,7 @@ class LessonIndex extends Component
             // Send immediate notification that regeneration is in process
             $user->notify(new LessonCreationNotification(
                 null,
-                LessonCreationStatusEnum::PROCESSING->value,
-                __('lessons.lesson_regeneration_in_progress')
+                LessonCreationStatusEnum::PROCESSING
             ));
 
             // Close dropdown
@@ -190,7 +190,7 @@ class LessonIndex extends Component
             // Notify user via Livewire dispatch
             $this->dispatch('lesson-notification',
                 id: uniqid('lesson_regenerate_'),
-                entity: 'lesson',
+                entity: EntityTypeEnum::LESSON->value,
                 status: LessonCreationStatusEnum::PROCESSING->value,
                 message: __('lessons.lesson_regeneration_in_progress')
             );

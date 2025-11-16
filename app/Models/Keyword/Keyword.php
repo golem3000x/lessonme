@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Models\Keyword;
 
 use App\Enums\TableNameEnum;
-use App\Models\Abstracts\Slug\SlugEntity;
+use App\Models\Abstracts\Slug\Slug;
 use App\Models\Topic\Topic;
 use App\Models\User;
 use Barryvdh\LaravelIdeHelper\Eloquent;
@@ -20,8 +20,8 @@ use Illuminate\Support\Carbon;
  * @property int|null $user_id
  * @property int|null $topic_id
  * @property string $slug
- * @property int $is_system
- * @property int $is_approved
+ * @property bool $is_system
+ * @property bool $is_approved
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read Topic|null $topic
@@ -30,7 +30,6 @@ use Illuminate\Support\Carbon;
  * @property-read User|null $user
  * @property-read Collection<int, UserKeywordVisibility> $visibility
  * @property-read int|null $visibility_count
- *
  * @method static Builder<static>|Keyword newModelQuery()
  * @method static Builder<static>|Keyword newQuery()
  * @method static Builder<static>|Keyword query()
@@ -43,10 +42,10 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|Keyword whereTopicId($value)
  * @method static Builder<static>|Keyword whereUpdatedAt($value)
  * @method static Builder<static>|Keyword whereUserId($value)
- *
  * @mixin Eloquent
+ * @mixin \Eloquent
  */
-class Keyword extends SlugEntity
+class Keyword extends Slug
 {
     protected $table = TableNameEnum::KEYWORDS->value;
 

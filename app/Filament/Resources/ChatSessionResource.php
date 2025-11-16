@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ChatSessionResource\Pages;
-use App\Filament\Resources\ChatSessionResource\RelationManagers;
 use App\Models\ChatSession;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -13,7 +12,6 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class ChatSessionResource extends Resource
 {
@@ -136,7 +134,7 @@ class ChatSessionResource extends Resource
     public static function getNavigationBadge(): ?string
     {
         $unread_count = ChatSession::where('unread_count', '>', 0)->count();
-        
+
         return $unread_count > 0 ? (string) $unread_count : null;
     }
 

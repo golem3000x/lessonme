@@ -26,8 +26,7 @@ use Illuminate\Support\Carbon;
  * @property array<array-key, mixed>|null $quiz
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read Topic|null $topicRelation
- *
+ * @property-read Topic|null $topic
  * @method static Builder<static>|Lesson newModelQuery()
  * @method static Builder<static>|Lesson newQuery()
  * @method static Builder<static>|Lesson query()
@@ -40,14 +39,17 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|Lesson whereUpdatedAt($value)
  * @method static Builder<static>|Lesson whereUserId($value)
  * @method static Builder<static>|Lesson whereVocabulary($value)
- *
  * @mixin Eloquent
- *
  * @method static Builder<static>|Lesson whereLessonName($value)
- *
  * @property string|null $embedding
- *
  * @method static Builder<static>|Lesson whereEmbedding($value)
+ * @property-read string $formatted_created_at
+ * @property-read string $level_badge_color
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Lesson\LessonHistory> $histories
+ * @property-read int|null $histories_count
+ * @property-read \App\Models\User $user
+ * @method static Builder<static>|Lesson whereLanguageLevel($value)
+ * @mixin \Eloquent
  */
 class Lesson extends BaseLesson
 {
@@ -60,7 +62,7 @@ class Lesson extends BaseLesson
     /**
      * @return BelongsTo<Topic, $this>
      */
-    public function topicRelation(): BelongsTo
+    public function topic(): BelongsTo
     {
         return $this->belongsTo(Topic::class, 'topic_id');
     }

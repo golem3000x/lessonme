@@ -20,6 +20,18 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $updated_at
  * @property-read ChatSession $chatSession
  * @property-read User $user
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Message newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Message newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Message query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Message whereChatSessionId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Message whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Message whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Message whereIsFromAdmin($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Message whereIsRead($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Message whereMessage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Message whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Message whereUserId($value)
+ * @mixin \Eloquent
  */
 class Message extends Model
 {

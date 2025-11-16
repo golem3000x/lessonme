@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Livewire;
 
+use App\Enums\EntityTypeEnum;
+use App\Enums\LessonCreationStatusEnum;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Livewire\Attributes\On;
@@ -56,7 +58,7 @@ class NotificationsPanel extends Component
 
             // For lesson entity with processing status, don't check as duplicate
             // to allow multiple regenerations
-            if ($notification_data['entity'] === 'lesson' && $notification_data['status'] === 'processing') {
+            if ($notification_data['entity'] === EntityTypeEnum::LESSON->value && $notification_data['status'] === LessonCreationStatusEnum::PROCESSING->value) {
                 return false;
             }
 

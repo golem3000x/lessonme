@@ -19,36 +19,69 @@ const userId = userIdMeta ? userIdMeta.getAttribute('content') : null;
 if (userId) {
     const channel = window.Echo.private(`App.Models.User.${userId}`);
 
-    // Processing notifications
-    channel.listen('.processing.pending', (notification) => {
-        console.log('🔥 Processing notification:', notification);
+    // Processing notifications for Topics
+    channel.listen('.topic.processing.pending', (notification) => {
+        console.log('🔥 Topic processing:', notification);
         Livewire.dispatch('slug-processing-updated', {notification});
     });
 
-    // Moderation notifications
-    channel.listen('.moderation.approved', (notification) => {
-        console.log('🔥 Moderation approved:', notification);
+    // Processing notifications for Keywords
+    channel.listen('.keyword.processing.pending', (notification) => {
+        console.log('🔥 Keyword processing:', notification);
+        Livewire.dispatch('slug-processing-updated', {notification});
+    });
+
+    // Moderation notifications for Topics
+    channel.listen('.topic.moderation.approved', (notification) => {
+        console.log('🔥 Topic moderation approved:', notification);
         Livewire.dispatch('slug-moderation-updated', {notification});
     });
 
-    channel.listen('.moderation.rejected', (notification) => {
-        console.log('🔥 Moderation rejected:', notification);
+    channel.listen('.topic.moderation.rejected', (notification) => {
+        console.log('🔥 Topic moderation rejected:', notification);
         Livewire.dispatch('slug-moderation-updated', {notification});
     });
 
-    channel.listen('.moderation.invalid', (notification) => {
-        console.log('🔥 Moderation invalid:', notification);
+    channel.listen('.topic.moderation.invalid', (notification) => {
+        console.log('🔥 Topic moderation invalid:', notification);
         Livewire.dispatch('slug-moderation-updated', {notification});
     });
 
-    // Translation notifications
-    channel.listen('.translate.successfully', (notification) => {
-        console.log('🔥 Translation successful:', notification);
+    // Moderation notifications for Keywords
+    channel.listen('.keyword.moderation.approved', (notification) => {
+        console.log('🔥 Keyword moderation approved:', notification);
+        Livewire.dispatch('slug-moderation-updated', {notification});
+    });
+
+    channel.listen('.keyword.moderation.rejected', (notification) => {
+        console.log('🔥 Keyword moderation rejected:', notification);
+        Livewire.dispatch('slug-moderation-updated', {notification});
+    });
+
+    channel.listen('.keyword.moderation.invalid', (notification) => {
+        console.log('🔥 Keyword moderation invalid:', notification);
+        Livewire.dispatch('slug-moderation-updated', {notification});
+    });
+
+    // Translation notifications for Topics
+    channel.listen('.topic.translate.successfully', (notification) => {
+        console.log('🔥 Topic translation successful:', notification);
         Livewire.dispatch('slug-translate-updated', {notification});
     });
 
-    channel.listen('.translate.invalid', (notification) => {
-        console.log('🔥 Translation invalid:', notification);
+    channel.listen('.topic.translate.invalid', (notification) => {
+        console.log('🔥 Topic translation invalid:', notification);
+        Livewire.dispatch('slug-translate-updated', {notification});
+    });
+
+    // Translation notifications for Keywords
+    channel.listen('.keyword.translate.successfully', (notification) => {
+        console.log('🔥 Keyword translation successful:', notification);
+        Livewire.dispatch('slug-translate-updated', {notification});
+    });
+
+    channel.listen('.keyword.translate.invalid', (notification) => {
+        console.log('🔥 Keyword translation invalid:', notification);
         Livewire.dispatch('slug-translate-updated', {notification});
     });
 
@@ -102,8 +135,8 @@ if (userId) {
     });
 
     // User auth notifications (welcome & registration)
-    // Note: entity will be 'user' (from User class basename)
-    channel.listen('.auth.welcome', (notification) => {
+    // Format: user.auth.status
+    channel.listen('.user.auth.welcome', (notification) => {
         console.log('🔥 User welcome:', notification);
         Livewire.dispatch('user-notification', {
             id: notification.id,
@@ -115,7 +148,7 @@ if (userId) {
         });
     });
 
-    channel.listen('.auth.registered', (notification) => {
+    channel.listen('.user.auth.registered', (notification) => {
         console.log('🔥 User registered:', notification);
         Livewire.dispatch('user-notification', {
             id: notification.id,

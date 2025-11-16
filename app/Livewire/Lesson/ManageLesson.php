@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Livewire\Lesson;
 
+use App\Enums\EntityTypeEnum;
 use App\Dto\LessonDto;
 use App\Enums\LanguageLevelEnum;
 use App\Enums\LessonCreationStatusEnum;
@@ -161,8 +162,7 @@ class ManageLesson extends Component
             // Send immediate notification that creation is in process
             $user->notify(new LessonCreationNotification(
                 null,
-                LessonCreationStatusEnum::PROCESSING->value,
-                __('lessons.lesson_creation_in_progress')
+                LessonCreationStatusEnum::PROCESSING
             ));
 
             // Reset generating state
@@ -190,7 +190,7 @@ class ManageLesson extends Component
 
         $this->dispatch('lesson-notification',
             id: $notification_id,
-            entity: 'lesson',
+            entity: EntityTypeEnum::LESSON->value,
             status: $status,
             message: $message
         );

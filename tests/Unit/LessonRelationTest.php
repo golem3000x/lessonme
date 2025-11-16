@@ -44,7 +44,7 @@ class LessonRelationTest extends TestCase
             'quiz' => [],
         ]);
 
-        $this->assertNotNull($lesson->topicRelation);
-        $this->assertTrue($lesson->topicRelation->is($topic));
+        $this->assertNotNull($lesson->topic);
+        $this->assertTrue($lesson->topic->is($topic));
     }
 }
