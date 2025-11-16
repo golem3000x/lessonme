@@ -4,17 +4,18 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Auth;
 
+use App\Enums\SystemLanguageEnum;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Notifications\Auth\RegistrationNotification;
 use App\Notifications\Auth\WelcomeNotification;
 use App\Services\GreetingService;
+use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
-use Exception;
 
 class SocialAuthController extends Controller
 {
@@ -41,7 +42,7 @@ class SocialAuthController extends Controller
             $user = User::where('facebook_id', $facebook_user->getId())->first();
             $is_new_user = false;
 
-            if (!$user) {
+            if (! $user) {
                 // Check if user with this email already exists
                 $user = User::where('email', $facebook_user->getEmail())->first();
 
@@ -79,14 +80,14 @@ class SocialAuthController extends Controller
                 $message = $this->greeting_service->getRegistrationMessage(
                     $user->name,
                     $user->timezone ?? 'UTC',
-                    $user->native_lang ?? 'en'
+                    $user->native_lang ?? SystemLanguageEnum::ENGLISH->value
                 );
                 $user->notify(new RegistrationNotification($user, $message));
             } else {
                 $message = $this->greeting_service->getWelcomeMessage(
                     $user->name,
                     $user->timezone ?? 'UTC',
-                    $user->native_lang ?? 'en'
+                    $user->native_lang ?? SystemLanguageEnum::ENGLISH->value
                 );
                 $user->notify(new WelcomeNotification($user, $message));
             }

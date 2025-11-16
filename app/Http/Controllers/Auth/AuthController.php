@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Auth;
 
+use App\Enums\SystemLanguageEnum;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Notifications\Auth\RegistrationNotification;
@@ -47,22 +48,22 @@ class AuthController extends Controller
             $request->session()->regenerate();
 
             $user = Auth::user();
-            
+
             // Получаем timezone из запроса (если отправлен из браузера)
             $timezone = $request->input('timezone', $user->timezone ?? 'UTC');
-            
+
             // Обновляем timezone пользователя если он изменился
             if ($user->timezone !== $timezone) {
                 $user->update(['timezone' => $timezone]);
             }
-            
+
             // Отправляем приветственное уведомление
             $message = $this->greeting_service->getWelcomeMessage(
                 $user->name,
                 $timezone,
-                $user->native_lang ?? 'en'
+                $user->native_lang ?? SystemLanguageEnum::ENGLISH->value
             );
-            
+
             $user->notify(new WelcomeNotification($user, $message));
 
             return redirect()->intended('/dashboard');
@@ -100,7 +101,7 @@ class AuthController extends Controller
             $timezone,
             app()->getLocale()
         );
-        
+
         $user->notify(new RegistrationNotification($user, $message));
 
         return redirect('/dashboard');

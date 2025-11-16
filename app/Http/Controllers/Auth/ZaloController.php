@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Auth;
 
+use App\Enums\SystemLanguageEnum;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Notifications\Auth\RegistrationNotification;
@@ -79,8 +80,8 @@ class ZaloController extends Controller
                 'email' => 'zalo_'.$zalo_id.'@placeholder.local',
                 'avatar' => $avatar,
                 'password' => bcrypt(str()->random(12)),
-                'native_lang' => 'vi',
-                'learning_lang' => 'en',
+                'native_lang' => SystemLanguageEnum::VIETNAMESE->value,
+                'learning_lang' => SystemLanguageEnum::ENGLISH->value,
             ]);
             $is_new_user = true;
         }
@@ -92,14 +93,14 @@ class ZaloController extends Controller
             $message = $this->greeting_service->getRegistrationMessage(
                 $user->name,
                 $user->timezone ?? 'UTC',
-                $user->native_lang ?? 'vi'
+                $user->native_lang ?? SystemLanguageEnum::VIETNAMESE->value
             );
             $user->notify(new RegistrationNotification($user, $message));
         } else {
             $message = $this->greeting_service->getWelcomeMessage(
                 $user->name,
                 $user->timezone ?? 'UTC',
-                $user->native_lang ?? 'vi'
+                $user->native_lang ?? SystemLanguageEnum::VIETNAMESE->value
             );
             $user->notify(new WelcomeNotification($user, $message));
         }

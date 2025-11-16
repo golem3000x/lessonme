@@ -59,7 +59,7 @@ return [
     'lesson_not_found' => 'Không tìm thấy bài học.',
     'regenerate_lesson' => 'Tạo lại bài học',
     'history' => 'Lịch sử',
-    
+
     // Lesson history
     'lesson_history' => 'Lịch sử Bài học',
     'version_created' => 'Đã tạo',
@@ -70,7 +70,7 @@ return [
     'view_history' => 'Xem Lịch sử',
     'version' => 'Phiên bản',
     'restore_confirm' => 'Bạn có chắc chắn muốn khôi phục phiên bản này? Phiên bản hiện tại sẽ được lưu vào lịch sử.',
-    
+
     // Filters
     'filters' => 'Bộ lọc',
     'apply_filters' => 'Áp dụng bộ lọc',

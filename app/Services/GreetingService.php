@@ -14,7 +14,7 @@ class GreetingService
     public function getGreeting(?string $timezone = null, string $locale = 'en'): string
     {
         $timezone = $timezone ?? config('app.timezone');
-        
+
         try {
             $hour = Carbon::now($timezone)->hour;
         } catch (\Exception $e) {
@@ -37,7 +37,7 @@ class GreetingService
     public function getWelcomeMessage(string $name, ?string $timezone = null, string $locale = 'en'): string
     {
         $greeting = $this->getGreeting($timezone, $locale);
-        
+
         return __('auth.welcome_message', [
             'greeting' => $greeting,
             'name' => $name,
@@ -50,7 +50,7 @@ class GreetingService
     public function getRegistrationMessage(string $name, ?string $timezone = null, string $locale = 'en'): string
     {
         $greeting = $this->getGreeting($timezone, $locale);
-        
+
         return __('auth.registration_message', [
             'greeting' => $greeting,
             'name' => $name,

@@ -22,17 +22,15 @@ use App\Enums\LanguageLevelEnum;
 class LessonDto
 {
     /**
-     * @param array<int, string> $keywords
+     * @param  array<int, string>  $keywords
      */
     public function __construct(
-        public string            $topic,
+        public string $topic,
         public LanguageLevelEnum $level,
-        public string            $native_lang,
-        public string            $learning_lang,
-        public array             $keywords
-    )
-    {
-    }
+        public string $native_lang,
+        public string $learning_lang,
+        public array $keywords
+    ) {}
 
     public function levelValue(): string
     {

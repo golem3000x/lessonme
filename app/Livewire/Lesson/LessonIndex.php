@@ -29,20 +29,23 @@ class LessonIndex extends Component
 
     // Filters UI state
     public bool $show_filters = false;
+
     public bool $show_level_dropdown = false;
 
     // Filter values (temporary, not applied yet)
     public string $temp_search = '';
+
     /** @var array<int, string> */
     public array $temp_language_levels = [];
+
     public string $temp_sort = 'newest';
 
     // Applied filter values
     public string $search = '';
-    
+
     /** @var array<int, string> */
     public array $language_levels = [];
-    
+
     public string $sort = 'newest';
 
     public function mount(): void
@@ -51,7 +54,7 @@ class LessonIndex extends Component
         $this->search = session('lesson_filters.search', '');
         $this->language_levels = session('lesson_filters.language_levels', []);
         $this->sort = session('lesson_filters.sort', 'newest');
-        
+
         // Initialize temp filters with applied values
         $this->temp_search = $this->search;
         $this->temp_language_levels = $this->language_levels;
@@ -79,7 +82,7 @@ class LessonIndex extends Component
         }
 
         // Apply language level filter
-        if (!empty($this->language_levels)) {
+        if (! empty($this->language_levels)) {
             $query->whereIn('language_level', $this->language_levels);
         }
 
@@ -214,16 +217,16 @@ class LessonIndex extends Component
     public function toggleFilters(): void
     {
         $this->show_filters = ! $this->show_filters;
-        
+
         // Sync temp filters with current applied filters when opening
         if ($this->show_filters) {
             $this->temp_search = $this->search;
             $this->temp_language_levels = $this->language_levels;
             $this->temp_sort = $this->sort;
         }
-        
+
         // Close level dropdown when closing filters panel
-        if (!$this->show_filters) {
+        if (! $this->show_filters) {
             $this->show_level_dropdown = false;
         }
     }
@@ -233,14 +236,14 @@ class LessonIndex extends Component
         $this->search = $this->temp_search;
         $this->language_levels = $this->temp_language_levels;
         $this->sort = $this->temp_sort;
-        
+
         // Save filters to session
         session([
             'lesson_filters.search' => $this->search,
             'lesson_filters.language_levels' => $this->language_levels,
             'lesson_filters.sort' => $this->sort,
         ]);
-        
+
         $this->resetPage();
         $this->show_filters = false;
         $this->show_level_dropdown = false;
@@ -251,14 +254,14 @@ class LessonIndex extends Component
         $this->temp_search = '';
         $this->temp_language_levels = [];
         $this->temp_sort = 'newest';
-        
+
         $this->search = '';
         $this->language_levels = [];
         $this->sort = 'newest';
-        
+
         // Clear filters from session
         session()->forget('lesson_filters');
-        
+
         $this->resetPage();
         $this->show_level_dropdown = false;
     }
@@ -274,7 +277,7 @@ class LessonIndex extends Component
         }
 
         // Apply temporary language level filter
-        if (!empty($this->temp_language_levels)) {
+        if (! empty($this->temp_language_levels)) {
             $query->whereIn('language_level', $this->temp_language_levels);
         }
 
@@ -283,7 +286,7 @@ class LessonIndex extends Component
 
     public function hasActiveFilters(): bool
     {
-        return $this->search !== '' || !empty($this->language_levels) || $this->sort !== 'newest';
+        return $this->search !== '' || ! empty($this->language_levels) || $this->sort !== 'newest';
     }
 
     /**
@@ -292,21 +295,21 @@ class LessonIndex extends Component
     public function getLanguageLevels(): array
     {
         $levels = [];
-        
+
         foreach (LanguageLevelEnum::cases() as $level) {
             $levels[] = [
                 'value' => $level->value,
                 'label' => $level->value,
             ];
         }
-        
+
         return $levels;
     }
 
     public function render(): Factory|View
     {
         $lessons = $this->getLessonsQuery()->paginate(12);
-        
+
         return view('livewire.lesson.lesson-index', [
             'lessons' => $lessons,
         ]);

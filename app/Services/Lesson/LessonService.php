@@ -13,10 +13,8 @@ readonly class LessonService
     public function __construct(
         private LessonGenerationService $generator,
         private LessonSimilarityService $similarity,
-        private LessonHistoryService    $history,
-    )
-    {
-    }
+        private LessonHistoryService $history,
+    ) {}
 
     /**
      * @throws LessonExistsException

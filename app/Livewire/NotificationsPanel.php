@@ -53,13 +53,13 @@ class NotificationsPanel extends Component
             $basic_match = $n['entity'] === $notification_data['entity'] &&
                           $n['status'] === $notification_data['status'] &&
                           $n['message'] === $notification_data['message'];
-            
+
             // For lesson entity with processing status, don't check as duplicate
             // to allow multiple regenerations
             if ($notification_data['entity'] === 'lesson' && $notification_data['status'] === 'processing') {
                 return false;
             }
-            
+
             return $basic_match;
         });
 

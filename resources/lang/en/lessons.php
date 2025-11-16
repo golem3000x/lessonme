@@ -59,7 +59,7 @@ return [
     'lesson_not_found' => 'Lesson not found.',
     'regenerate_lesson' => 'Regenerate lesson',
     'history' => 'History',
-    
+
     // Lesson history
     'lesson_history' => 'Lesson History',
     'version_created' => 'Created',
@@ -70,7 +70,7 @@ return [
     'view_history' => 'View History',
     'version' => 'Version',
     'restore_confirm' => 'Are you sure you want to restore this version? Current version will be saved to history.',
-    
+
     // Filters
     'filters' => 'Filters',
     'apply_filters' => 'Apply filters',

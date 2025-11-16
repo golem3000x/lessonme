@@ -13,6 +13,7 @@ use Livewire\Component;
 class NotificationBell extends Component
 {
     public int $unread_count = 0;
+
     public bool $is_open = false;
 
     public function mount(): void
@@ -22,7 +23,7 @@ class NotificationBell extends Component
 
     public function toggleDropdown(): void
     {
-        $this->is_open = !$this->is_open;
+        $this->is_open = ! $this->is_open;
         Log::info('Toggle dropdown', ['is_open' => $this->is_open]);
     }
 
@@ -36,6 +37,7 @@ class NotificationBell extends Component
         $user = Auth::user();
         if (! $user) {
             $this->unread_count = 0;
+
             return;
         }
 
@@ -45,7 +47,7 @@ class NotificationBell extends Component
     public function markAsRead(string $notification_id): void
     {
         Log::info('NotificationBell::markAsRead called', ['notification_id' => $notification_id]);
-        
+
         $user = Auth::user();
         if (! $user) {
             return;
@@ -68,7 +70,7 @@ class NotificationBell extends Component
     public function markAllAsRead(): void
     {
         Log::info('NotificationBell::markAllAsRead called');
-        
+
         $user = Auth::user();
         if (! $user) {
             return;
@@ -83,7 +85,7 @@ class NotificationBell extends Component
     public function deleteNotification(string $notification_id): void
     {
         Log::info('NotificationBell::deleteNotification called', ['notification_id' => $notification_id]);
-        
+
         $user = Auth::user();
         if (! $user) {
             return;

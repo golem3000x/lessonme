@@ -27,13 +27,11 @@ class CreateLessonJob implements ShouldQueue
     private SlugService $open_ai_service;
 
     public function __construct(
-        protected int       $user_id,
-        protected int       $topic_id,
+        protected int $user_id,
+        protected int $topic_id,
         protected LessonDto $lesson_dto,
-        protected string    $user_locale = 'en'
-    )
-    {
-    }
+        protected string $user_locale = 'en'
+    ) {}
 
     /**
      * @throws Throwable
