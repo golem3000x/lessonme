@@ -49,10 +49,17 @@ class MessageSent implements ShouldBroadcast
      */
     public function broadcastOn(): array
     {
-        // Отправляем в канал пользователя
-        return [
+        $channels = [
+            // Отправляем в канал пользователя
             new PrivateChannel('chat.'.$this->message->user_id),
         ];
+        
+        // Если сообщение от пользователя, отправляем также админам
+        if (!$this->message->is_from_admin) {
+            $channels[] = new PrivateChannel('admin-chat');
+        }
+        
+        return $channels;
     }
 
     /**
