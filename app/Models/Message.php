@@ -1,0 +1,65 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Models;
+
+use App\Enums\TableNameEnum;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
+
+/**
+ * @property int $id
+ * @property int $chat_session_id
+ * @property int $user_id
+ * @property string $message
+ * @property bool $is_from_admin
+ * @property bool $is_read
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read ChatSession $chatSession
+ * @property-read User $user
+ */
+class Message extends Model
+{
+    protected $table = TableNameEnum::MESSAGES->value;
+
+    /**
+     * @var list<string>
+     */
+    protected $fillable = [
+        'chat_session_id',
+        'user_id',
+        'message',
+        'is_from_admin',
+        'is_read',
+    ];
+
+    /**
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'is_from_admin' => 'boolean',
+            'is_read' => 'boolean',
+        ];
+    }
+
+    /**
+     * @return BelongsTo<ChatSession, $this>
+     */
+    public function chatSession(): BelongsTo
+    {
+        return $this->belongsTo(ChatSession::class);
+    }
+
+    /**
+     * @return BelongsTo<User, $this>
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+}

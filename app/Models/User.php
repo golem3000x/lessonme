@@ -38,6 +38,10 @@ use Illuminate\Support\Carbon;
  * @property-read int|null $lessons_count
  * @property-read DatabaseNotificationCollection<int, DatabaseNotification> $notifications
  * @property-read int|null $notifications_count
+ * @property-read Collection<int, ChatSession> $chatSessions
+ * @property-read int|null $chat_sessions_count
+ * @property-read Collection<int, Message> $messages
+ * @property-read int|null $messages_count
  *
  * @method static UserFactory factory($count = null, $state = [])
  * @method static Builder<static>|User newModelQuery()
@@ -123,5 +127,21 @@ class User extends Authenticatable implements HasLocalePreference
     public function preferredLocale(): string
     {
         return $this->native_lang;
+    }
+
+    /**
+     * @return HasMany<ChatSession, $this>
+     */
+    public function chatSessions(): HasMany
+    {
+        return $this->hasMany(ChatSession::class);
+    }
+
+    /**
+     * @return HasMany<Message, $this>
+     */
+    public function messages(): HasMany
+    {
+        return $this->hasMany(Message::class);
     }
 }

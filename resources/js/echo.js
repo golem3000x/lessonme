@@ -126,4 +126,22 @@ if (userId) {
             user_name: notification.user_name
         });
     });
+
+    // Chat channel
+    const chatChannel = window.Echo.private(`chat.${userId}`);
+    
+    chatChannel.listen('.message.sent', (message) => {
+        console.log('🔥 Chat message received:', message);
+        Livewire.dispatch('message-received', {
+            id: message.id,
+            chat_session_id: message.chat_session_id,
+            user_id: message.user_id,
+            message: message.message,
+            is_from_admin: message.is_from_admin,
+            is_read: message.is_read,
+            created_at: message.created_at,
+            user_name: message.user_name,
+            user_avatar: message.user_avatar
+        });
+    });
 }

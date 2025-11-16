@@ -15,6 +15,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/about', function () {
+    return view('about');
+})->name('about');
+
 Route::get('/locale/{locale}', function (string $locale) {
     if (in_array($locale, ['en', 'vi'], true)) {
         Session::put('locale', $locale);

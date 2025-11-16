@@ -19,6 +19,11 @@
         }
     </script>
 
+    <!-- Alpine.js x-cloak -->
+    <style>
+        [x-cloak] { display: none !important; }
+    </style>
+
     @livewireStyles
 </head>
 
@@ -64,6 +69,15 @@
                     {{ __('nav.topics') }}
                 </a>
             @endauth
+
+            <a href="{{ route('about') }}" class="group text-sm text-gray-600 hover:text-primary transition flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 drop-shadow-sm transition-transform group-hover:scale-110" fill="none" viewBox="0 0 24 24"
+                     stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                          d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                {{ __('nav.about') }}
+            </a>
         </div>
 
         <!-- Правая часть -->
@@ -161,8 +175,15 @@
     <livewire:notifications-panel />
 @endauth
 
+<!-- Chat button - только на странице About -->
+@auth
+    @if(request()->routeIs('about'))
+        <livewire:chat-button />
+        <livewire:chat-panel />
+    @endif
+@endauth
+
 @livewireScripts
-<script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 @vite(['resources/js/app.js'])
 </body>
 </html>
