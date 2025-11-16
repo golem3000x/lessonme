@@ -57,8 +57,6 @@ class Lesson extends BaseLesson
 
     public const float SIMILARITY_THRESHOLD = 0.9;
 
-    // Fillable and casts inherited from BaseLesson
-
     /**
      * @return BelongsTo<Topic, $this>
      */

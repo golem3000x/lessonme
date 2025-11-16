@@ -8,8 +8,10 @@ use App\Casts\EmbeddingCast;
 use App\Enums\LanguageLevelEnum;
 use App\Models\Abstracts\BaseModel;
 use App\Models\User;
+use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
@@ -22,13 +24,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property array<array-key, mixed>|null $vocabulary
  * @property array<array-key, mixed>|null $quiz
  * @property string|null $embedding
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  * @property-read User $user
  */
 abstract class BaseLesson extends BaseModel
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
+    /** @use HasFactory<UserFactory> */
     use HasFactory;
 
     protected $fillable = [

@@ -47,7 +47,6 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|Topic whereSlug($value)
  * @method static Builder<static>|Topic whereUserId($value)
  * @mixin Eloquent
- * @mixin \Eloquent
  */
 class Topic extends Slug
 {
