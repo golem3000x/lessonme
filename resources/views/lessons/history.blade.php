@@ -1,43 +1,58 @@
 <x-app-layout>
-    <div class="max-w-4xl mx-auto p-6 space-y-6">
+    <div class="max-w-5xl mx-auto p-6 space-y-6">
 
         {{-- Header --}}
-        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+        <div class="bg-gradient-to-br from-white to-gray-50 p-8 rounded-2xl shadow-lg border border-gray-100">
             <div class="flex items-center justify-between">
-                <div>
-                    <h2 class="text-3xl font-bold text-indigo-700 mb-2">
-                        📚 {{ __('lessons.lesson_history') }}
-                    </h2>
-                    <p class="text-gray-600">{{ $lesson->lesson_name }}</p>
+                <div class="flex items-center gap-4">
+                    <div class="p-3 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl shadow-md">
+                        <svg class="h-7 w-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 class="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent mb-1">
+                            {{ __('lessons.lesson_history') }}
+                        </h2>
+                        <p class="text-gray-600 font-medium">{{ $lesson->lesson_name }}</p>
+                    </div>
                 </div>
                 <a href="{{ route('lessons.index') }}" 
-                   class="btn btn-outline btn-primary btn-sm">
-                    ← {{ __('lessons.my_lessons') }}
+                   class="group inline-flex items-center gap-2 px-5 py-2.5 bg-white border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 hover:border-gray-400 font-medium transition-all duration-200 shadow-sm">
+                    <svg class="h-4 w-4 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    {{ __('lessons.my_lessons') }}
                 </a>
             </div>
         </div>
 
         {{-- Success message --}}
         @if(session('success'))
-            <div class="alert alert-success shadow-sm">
-                <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+            <div class="p-4 bg-gradient-to-r from-green-50 to-emerald-50 border-l-4 border-green-500 text-green-800 rounded-lg shadow-sm flex items-center gap-3">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                <span>{{ session('success') }}</span>
+                <span class="font-medium">{{ session('success') }}</span>
             </div>
         @endif
 
         {{-- History list --}}
         @if($histories->isEmpty())
-            <div class="bg-gray-50 rounded-2xl p-12 text-center border border-gray-200">
-                <div class="text-6xl mb-4">📜</div>
-                <p class="text-gray-600 text-lg">{{ __('lessons.no_history') }}</p>
+            <div class="text-center py-16">
+                <div class="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full mb-4">
+                    <svg class="h-10 w-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <p class="text-lg font-medium text-gray-700">{{ __('lessons.no_history') }}</p>
+                <p class="text-sm text-gray-500 mt-2">{{ __('lessons.no_history_description') }}</p>
             </div>
         @else
             <div class="space-y-4">
                 @foreach($histories as $history)
-                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow">
-                        <div class="p-6">
+                    <div class="group bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg hover:border-blue-200 transition-all duration-200">
+                        <div class="p-6 bg-gradient-to-r from-white to-gray-50">
                             <div class="flex items-start justify-between">
                                 <div class="flex-1">
                                     <h3 class="text-xl font-semibold text-gray-800 mb-2">
@@ -73,7 +88,7 @@
                                     @endif
 
                                     {{-- Statistics --}}
-                                    <div class="flex flex-wrap gap-4 text-xs text-gray-500">
+                                    <div class="flex flex-wrap gap-2">
                                         @php
                                             $grammar_count = is_array($history->grammar_data) ? count($history->grammar_data) : 0;
                                             $vocab_count = is_array($history->vocabulary) ? count($history->vocabulary) : 0;
@@ -86,38 +101,54 @@
                                         @endphp
                                         
                                         @if($grammar_count > 0)
-                                            <span>📝 {{ $grammar_count }} {{ __('lessons.grammar') }}</span>
+                                            <span class="px-3 py-1.5 bg-blue-50 text-blue-700 rounded-lg text-xs font-medium border border-blue-200">
+                                                📝 {{ $grammar_count }} {{ __('lessons.grammar') }}
+                                            </span>
                                         @endif
                                         @if($vocab_count > 0)
-                                            <span>💬 {{ $vocab_count }} {{ __('lessons.vocabulary') }}</span>
+                                            <span class="px-3 py-1.5 bg-purple-50 text-purple-700 rounded-lg text-xs font-medium border border-purple-200">
+                                                💬 {{ $vocab_count }} {{ __('lessons.vocabulary') }}
+                                            </span>
                                         @endif
                                         @if($dialogue_count > 0)
-                                            <span>💬 {{ $dialogue_count }} Dialogue</span>
+                                            <span class="px-3 py-1.5 bg-green-50 text-green-700 rounded-lg text-xs font-medium border border-green-200">
+                                                💬 {{ $dialogue_count }} Dialogue
+                                            </span>
                                         @endif
                                         @if($exercises_count > 0)
-                                            <span>📝 {{ $exercises_count }} Exercises</span>
+                                            <span class="px-3 py-1.5 bg-orange-50 text-orange-700 rounded-lg text-xs font-medium border border-orange-200">
+                                                📝 {{ $exercises_count }} Exercises
+                                            </span>
                                         @endif
                                         @if($has_homework)
-                                            <span>📚 Homework</span>
+                                            <span class="px-3 py-1.5 bg-indigo-50 text-indigo-700 rounded-lg text-xs font-medium border border-indigo-200">
+                                                📚 Homework
+                                            </span>
                                         @endif
                                         @if($mistakes_count > 0)
-                                            <span>⚠️ {{ $mistakes_count }} Mistakes</span>
+                                            <span class="px-3 py-1.5 bg-red-50 text-red-700 rounded-lg text-xs font-medium border border-red-200">
+                                                ⚠️ {{ $mistakes_count }} Mistakes
+                                            </span>
                                         @endif
                                         @if($has_culture)
-                                            <span>🌍 Culture</span>
+                                            <span class="px-3 py-1.5 bg-teal-50 text-teal-700 rounded-lg text-xs font-medium border border-teal-200">
+                                                🌍 Culture
+                                            </span>
                                         @endif
                                         @if($quiz_count > 0)
-                                            <span>🎯 {{ $quiz_count }} Quiz</span>
+                                            <span class="px-3 py-1.5 bg-pink-50 text-pink-700 rounded-lg text-xs font-medium border border-pink-200">
+                                                🎯 {{ $quiz_count }} Quiz
+                                            </span>
                                         @endif
                                     </div>
                                 </div>
 
-                                <div class="ml-4">
+                                <div class="ml-4 flex-shrink-0">
                                     <form method="POST" action="{{ route('lessons.history.restore', [$lesson, $history]) }}" 
                                           onsubmit="return confirm('{{ __('lessons.restore_confirm') }}')">
                                         @csrf
-                                        <button type="submit" class="btn btn-primary btn-sm">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <button type="submit" class="group inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-lg hover:from-green-700 hover:to-emerald-700 font-medium shadow-md hover:shadow-lg transition-all duration-200 whitespace-nowrap">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                                             </svg>
                                             {{ __('lessons.restore_version') }}

@@ -66,6 +66,7 @@ return [
     'restore_version' => 'Khôi phục',
     'current_version' => 'Phiên bản hiện tại',
     'no_history' => 'Không có lịch sử cho bài học này.',
+    'no_history_description' => 'Các phiên bản trước sẽ xuất hiện ở đây sau khi tạo lại bài học.',
     'version_restored' => 'Đã khôi phục phiên bản thành công!',
     'view_history' => 'Xem Lịch sử',
     'version' => 'Phiên bản',

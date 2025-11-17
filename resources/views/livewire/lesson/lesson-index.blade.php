@@ -236,46 +236,67 @@
                         <div class="relative ml-2">
                             <!-- Кнопка с тремя точками -->
                             <button wire:click="toggleDropdown({{ $lesson->id }})"
-                                    class="text-gray-500 hover:text-gray-700 transition hover:scale-110"
+                                    class="group p-2 rounded-lg text-gray-500 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200 {{ !empty($open_dropdowns[$lesson->id]) ? 'bg-blue-50 text-blue-600' : '' }}"
                                     title="{{ __('lessons.actions') }}">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 drop-shadow-sm" fill="none"
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transition-transform group-hover:scale-110" fill="none"
                                      viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                                          d="M6 12a1 1 0 110-2 1 1 0 010 2zm6 0a1 1 0 110-2 1 1 0 010 2zm6 0a1 1 0 110-2 1 1 0 010 2z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                          d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"/>
                                 </svg>
                             </button>
 
                             <!-- Dropdown -->
                             @if(!empty($open_dropdowns[$lesson->id]))
-                            <div x-data @click.outside="$wire.closeDropdown({{ $lesson->id }})" class="absolute right-0 mt-2 w-44 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
-
+                            <div 
+                                x-data="{ show: true }"
+                                x-show="show"
+                                x-init="$nextTick(() => show = true)"
+                                @click.outside="$wire.closeDropdown({{ $lesson->id }})"
+                                x-transition:enter="transition ease-out duration-200"
+                                x-transition:enter-start="opacity-0 scale-95 translate-y-1"
+                                x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+                                x-transition:leave="transition ease-in duration-150"
+                                x-transition:leave-start="opacity-100 scale-100"
+                                x-transition:leave-end="opacity-0 scale-95"
+                                class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-xl shadow-2xl z-50 overflow-hidden"
+                            >
                                 <button wire:click="regenerateLesson({{ $lesson->id }})"
                                         wire:confirm="{{ __('lessons.confirm_regenerate') }}"
-                                        class="flex items-center gap-2 w-full px-4 py-2 text-sm text-yellow-600 hover:bg-yellow-50 whitespace-nowrap transition">
-                                    <svg class="h-4 w-4 drop-shadow-sm" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                                              d="M4 4v6h6M20 20v-6h-6M4 10a9 9 0 0115.9-4.9M20 14a9 9 0 01-15.9 4.9"/>
-                                    </svg>
-                                    {{ __('lessons.regenerate_lesson') }}
+                                        class="group flex items-center gap-3 w-full px-4 py-3 text-sm text-yellow-600 hover:bg-yellow-50 transition-all whitespace-nowrap">
+                                    <div class="p-1.5 rounded-lg bg-yellow-50 group-hover:bg-yellow-100 transition-colors">
+                                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                  d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                                        </svg>
+                                    </div>
+                                    <span class="font-medium">{{ __('lessons.regenerate_lesson') }}</span>
                                 </button>
 
+                                <div class="border-t border-gray-100"></div>
+
                                 <a href="{{ route('lessons.history', $lesson->id) }}"
-                                   class="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition">
-                                    <svg class="h-4 w-4 drop-shadow-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                                              d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                    </svg>
-                                    {{ __('lessons.history') }}
+                                   class="group flex items-center gap-3 w-full px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-all">
+                                    <div class="p-1.5 rounded-lg bg-gray-100 group-hover:bg-blue-100 transition-colors">
+                                        <svg class="h-4 w-4 group-hover:text-blue-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                        </svg>
+                                    </div>
+                                    <span class="font-medium">{{ __('lessons.history') }}</span>
                                 </a>
+
+                                <div class="border-t border-gray-100"></div>
 
                                 <button wire:click="deleteLesson({{ $lesson->id }})"
                                         wire:confirm="{{ __('lessons.confirm_delete') }}"
-                                        class="flex items-center gap-2 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition">
-                                    <svg class="h-4 w-4 drop-shadow-sm" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                                              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                                    </svg>
-                                    {{ __('lessons.delete') }}
+                                        class="group flex items-center gap-3 w-full px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition-all">
+                                    <div class="p-1.5 rounded-lg bg-red-50 group-hover:bg-red-100 transition-colors">
+                                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                        </svg>
+                                    </div>
+                                    <span class="font-medium">{{ __('lessons.delete') }}</span>
                                 </button>
                             </div>
                             @endif

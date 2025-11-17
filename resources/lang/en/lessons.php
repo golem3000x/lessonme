@@ -66,6 +66,7 @@ return [
     'restore_version' => 'Restore',
     'current_version' => 'Current version',
     'no_history' => 'No history available for this lesson.',
+    'no_history_description' => 'Previous versions will appear here after regenerating the lesson.',
     'version_restored' => 'Version restored successfully!',
     'view_history' => 'View History',
     'version' => 'Version',
