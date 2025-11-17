@@ -39,4 +39,8 @@ return [
     'chat_enter_message' => 'Enter message...',
     'chat_support' => 'Support',
     'chat_online' => 'We are online',
+
+    // Profile dropdown
+    'signed_in_as' => 'Signed in as',
+    'switch_language' => 'Switch language',
 ];

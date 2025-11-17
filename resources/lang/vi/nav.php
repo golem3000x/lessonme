@@ -39,4 +39,8 @@ return [
     'chat_enter_message' => 'Nhập tin nhắn...',
     'chat_support' => 'Hỗ trợ',
     'chat_online' => 'Chúng tôi trực tuyến',
+
+    // Profile dropdown
+    'signed_in_as' => 'Đã đăng nhập với',
+    'switch_language' => 'Chuyển đổi ngôn ngữ',
 ];

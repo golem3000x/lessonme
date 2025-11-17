@@ -14,18 +14,11 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\On;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class TopicIndex extends Component
 {
-    /** @var array<int, array{id:int,label:string,user_id:?int}> */
-    public array $available_topics = [];
-
-    /**
-     * topic_id => list of keywords [ [id,label,user_id], ... ]
-     *
-     * @var array<int, array<int, array{id:int,label:string,user_id:?int}>>
-     */
-    public array $topic_keywords = [];
+    use WithPagination;
 
     /** @var array<int,int> */
     public array $visible_topic_ids = [];
@@ -33,67 +26,63 @@ class TopicIndex extends Component
     /** @var array<int,int> */
     public array $visible_keyword_ids = [];
 
+    /** @var array<int,int> */
+    public array $expanded_topics = [];
+
     public function mount(): void
     {
-        $this->loadTopicsAndKeywords();
+        $this->loadVisibilityState();
     }
 
     #[On('topic-created')]
     #[On('keyword-created')]
-    public function loadTopicsAndKeywords(): void
+    public function loadVisibilityState(): void
     {
         /** @var User $user */
         $user = Auth::user();
 
-        $locale = app()->getLocale();
-        $topics = Topic::with([
-            'translations',
-            'visibility' => function ($q) use ($user): void {
-                $q->where('user_id', '=', $user->id);
-            },
-            'keywords.translations',
-            'keywords.visibility' => function ($q) use ($user): void {
-                $q->where('user_id', '=', $user->id);
-            },
-        ])
-            ->where(function ($q) use ($user): void {
+        // Load all topic visibility states
+        $topic_visibility = UserTopicVisibility::where('user_id', $user->id)
+            ->where('is_hidden', false)
+            ->pluck('topic_id')
+            ->toArray();
+
+        // Also include topics without explicit visibility record (default visible)
+        $topics_with_visibility = UserTopicVisibility::where('user_id', $user->id)
+            ->pluck('topic_id')
+            ->toArray();
+
+        $all_topic_ids = Topic::where(function ($q) use ($user): void {
                 $q->whereNull('user_id')->orWhere('user_id', '=', $user->id);
             })
-            ->get();
+            ->pluck('id')
+            ->toArray();
 
-        $this->available_topics = $topics->map(function (Topic $topic) use ($locale) {
-            return [
-                'id' => $topic->id,
-                'label' => $topic->title($locale),
-                'user_id' => $topic->user_id,
-            ];
-        })->values()->toArray();
+        $topics_without_record = array_diff($all_topic_ids, $topics_with_visibility);
 
-        $this->visible_topic_ids = $topics->filter(function (Topic $topic) {
-            $record = $topic->visibility->first();
+        $this->visible_topic_ids = array_values(array_merge($topic_visibility, $topics_without_record));
 
-            return ! ($record && $record->is_hidden === true);
-        })->pluck('id')->values()->all();
+        // Load all keyword visibility states
+        $keyword_visibility = UserKeywordVisibility::where('user_id', $user->id)
+            ->where('is_hidden', false)
+            ->pluck('keyword_id')
+            ->toArray();
 
-        $this->topic_keywords = [];
-        $visible_keyword_ids = [];
-        foreach ($topics as $topic) {
-            $this->topic_keywords[$topic->id] = $topic->keywords->map(function (Keyword $kw) use ($locale) {
-                return [
-                    'id' => $kw->id,
-                    'label' => $kw->value($locale),
-                    'user_id' => $kw->user_id,
-                ];
-            })->values()->toArray();
+        $keywords_with_visibility = UserKeywordVisibility::where('user_id', $user->id)
+            ->pluck('keyword_id')
+            ->toArray();
 
-            foreach ($topic->keywords as $kw) {
-                $record = $kw->visibility->first();
-                if (! ($record && $record->is_hidden === true)) {
-                    $visible_keyword_ids[] = $kw->id;
-                }
-            }
-        }
-        $this->visible_keyword_ids = array_values(array_unique(array_map('intval', $visible_keyword_ids)));
+        $all_keyword_ids = Keyword::whereHas('topic', function ($q) use ($user) {
+                $q->where(function ($q2) use ($user): void {
+                    $q2->whereNull('user_id')->orWhere('user_id', '=', $user->id);
+                });
+            })
+            ->pluck('id')
+            ->toArray();
+
+        $keywords_without_record = array_diff($all_keyword_ids, $keywords_with_visibility);
+
+        $this->visible_keyword_ids = array_values(array_merge($keyword_visibility, $keywords_without_record));
     }
 
     public function deleteTopic(int $topic_id): void
@@ -111,15 +100,6 @@ class TopicIndex extends Component
 
         $topic->delete();
 
-        // Remove from available topics
-        $this->available_topics = array_values(array_filter(
-            $this->available_topics,
-            fn ($t) => $t['id'] !== $topic_id
-        ));
-
-        // Remove topic keywords
-        unset($this->topic_keywords[$topic_id]);
-
         session()->flash('message', __('topics.topic_deleted'));
     }
 
@@ -136,60 +116,92 @@ class TopicIndex extends Component
             return;
         }
 
-        $topic_id = $keyword->topic_id;
         $keyword->delete();
-
-        // Remove from topic_keywords
-        if (isset($this->topic_keywords[$topic_id])) {
-            $this->topic_keywords[$topic_id] = array_values(array_filter(
-                $this->topic_keywords[$topic_id],
-                fn ($k) => $k['id'] !== $keyword_id
-            ));
-        }
 
         session()->flash('message', __('topics.keyword_deleted'));
     }
 
-    public function saveVisibility(): void
+    public function toggleTopicVisibility(int $topic_id): void
     {
         /** @var User $user */
         $user = Auth::user();
 
-        // Persist topic visibility preferences
-        $selected_topic_ids = array_values(array_unique(array_map('intval', $this->visible_topic_ids)));
-        $all_topic_ids = array_values(array_unique(array_map(fn ($t) => (int) $t['id'], $this->available_topics)));
+        $is_currently_visible = in_array($topic_id, $this->visible_topic_ids, true);
+        $new_visibility = ! $is_currently_visible;
 
-        foreach ($all_topic_ids as $topic_id) {
-            $is_visible = in_array($topic_id, $selected_topic_ids, true);
-            UserTopicVisibility::updateOrCreate(
-                ['user_id' => $user->id, 'topic_id' => $topic_id],
-                ['is_hidden' => ! $is_visible]
-            );
+        // Update local state
+        if ($new_visibility) {
+            $this->visible_topic_ids[] = $topic_id;
+        } else {
+            $this->visible_topic_ids = array_values(array_filter(
+                $this->visible_topic_ids,
+                fn ($id) => $id !== $topic_id
+            ));
         }
 
-        // Persist keyword visibility preferences
-        $selected_keyword_ids = array_values(array_unique(array_map('intval', $this->visible_keyword_ids)));
-        $all_keyword_ids = [];
-        foreach ($this->topic_keywords as $topic_id => $keywords) {
-            foreach ($keywords as $k) {
-                $all_keyword_ids[] = (int) $k['id'];
-            }
-        }
-        $all_keyword_ids = array_values(array_unique($all_keyword_ids));
+        // Persist immediately
+        UserTopicVisibility::updateOrCreate(
+            ['user_id' => $user->id, 'topic_id' => $topic_id],
+            ['is_hidden' => ! $new_visibility]
+        );
+    }
 
-        foreach ($all_keyword_ids as $kid) {
-            $is_visible = in_array($kid, $selected_keyword_ids, true);
-            UserKeywordVisibility::updateOrCreate(
-                ['user_id' => $user->id, 'keyword_id' => $kid],
-                ['is_hidden' => ! $is_visible]
-            );
+    public function toggleKeywordVisibility(int $keyword_id): void
+    {
+        /** @var User $user */
+        $user = Auth::user();
+
+        $is_currently_visible = in_array($keyword_id, $this->visible_keyword_ids, true);
+        $new_visibility = ! $is_currently_visible;
+
+        // Update local state
+        if ($new_visibility) {
+            $this->visible_keyword_ids[] = $keyword_id;
+        } else {
+            $this->visible_keyword_ids = array_values(array_filter(
+                $this->visible_keyword_ids,
+                fn ($id) => $id !== $keyword_id
+            ));
         }
 
-        session()->flash('message', __('topics.visibility_saved'));
+        // Persist immediately
+        UserKeywordVisibility::updateOrCreate(
+            ['user_id' => $user->id, 'keyword_id' => $keyword_id],
+            ['is_hidden' => ! $new_visibility]
+        );
+    }
+
+    public function toggleAccordion(int $topic_id): void
+    {
+        $index = array_search($topic_id, $this->expanded_topics, true);
+
+        if ($index !== false) {
+            // Collapse
+            unset($this->expanded_topics[$index]);
+            $this->expanded_topics = array_values($this->expanded_topics);
+        } else {
+            // Expand
+            $this->expanded_topics[] = $topic_id;
+        }
     }
 
     public function render(): Factory|View
     {
-        return view('livewire.topic.topic-index');
+        /** @var User $user */
+        $user = Auth::user();
+        
+        $locale = app()->getLocale();
+        $topics = Topic::with([
+            'translations',
+            'keywords.translations',
+        ])
+            ->where(function ($q) use ($user): void {
+                $q->whereNull('user_id')->orWhere('user_id', '=', $user->id);
+            })
+            ->paginate(12);
+
+        return view('livewire.topic.topic-index', [
+            'topics' => $topics,
+        ]);
     }
 }

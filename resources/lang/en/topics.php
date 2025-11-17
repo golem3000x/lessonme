@@ -20,7 +20,8 @@ return [
     'no_topics_yet' => 'No topics yet.',
     'create_first_topic' => 'Create your first topic to get started!',
     'visible_in_chat' => 'Visible in chat',
-    'visibility_description' => 'Check topics and keywords to make them visible in chat.',
+    'hidden_in_chat' => 'Hidden from chat',
+    'visibility_description' => 'Click the eye icon to toggle visibility in chat.',
     'save_visibility' => 'Save Visibility',
     'visibility_saved' => 'Visibility settings saved successfully.',
 ];

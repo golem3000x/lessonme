@@ -20,7 +20,8 @@ return [
     'no_topics_yet' => 'Chưa có chủ đề nào.',
     'create_first_topic' => 'Tạo chủ đề đầu tiên của bạn để bắt đầu!',
     'visible_in_chat' => 'Hiển thị trong trò chuyện',
-    'visibility_description' => 'Đánh dấu các chủ đề và từ khóa để hiển thị trong trò chuyện.',
+    'hidden_in_chat' => 'Ẩn khỏi trò chuyện',
+    'visibility_description' => 'Nhấp vào biểu tượng mắt để chuyển đổi hiển thị trong trò chuyện.',
     'save_visibility' => 'Lưu Hiển thị',
     'visibility_saved' => 'Đã lưu cài đặt hiển thị thành công.',
 ];
