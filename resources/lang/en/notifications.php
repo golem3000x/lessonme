@@ -53,4 +53,5 @@ return [
     'mark_read' => 'Mark as read',
     'delete' => 'Delete',
     'no_notifications' => 'No notifications yet',
+    'all_caught_up' => 'You\'re all caught up!',
 ];

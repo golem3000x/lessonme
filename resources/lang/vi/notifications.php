@@ -53,4 +53,5 @@ return [
     'mark_read' => 'Đánh dấu đã đọc',
     'delete' => 'Xóa',
     'no_notifications' => 'Chưa có thông báo',
+    'all_caught_up' => 'Bạn đã xem hết tất cả!',
 ];
