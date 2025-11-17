@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ChatSessionResource\Pages;
-use App\Models\ChatSession;
+use App\Models\Support\ChatSession;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;

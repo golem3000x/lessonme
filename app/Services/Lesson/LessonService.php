@@ -38,6 +38,11 @@ readonly class LessonService
             'language_level' => $dto->level,
             'grammar_data' => $data['grammar_highlights'],
             'vocabulary' => $data['vocabulary'],
+            'dialogue' => $data['dialogue'] ?? [],
+            'exercises' => $data['exercises'] ?? [],
+            'homework' => $data['homework'] ?? null,
+            'common_mistakes' => $data['common_mistakes'] ?? [],
+            'culture_notes' => $data['culture_notes'] ?? null,
             'quiz' => $data['quiz'],
             'embedding' => $embedding,
         ]);
@@ -65,6 +70,11 @@ readonly class LessonService
             'language_level' => $dto->level,
             'grammar_data' => $new_data['grammar_highlights'],
             'vocabulary' => $new_data['vocabulary'],
+            'dialogue' => $new_data['dialogue'] ?? [],
+            'exercises' => $new_data['exercises'] ?? [],
+            'homework' => $new_data['homework'] ?? null,
+            'common_mistakes' => $new_data['common_mistakes'] ?? [],
+            'culture_notes' => $new_data['culture_notes'] ?? null,
             'quiz' => $new_data['quiz'],
             'embedding' => $new_embedding,
         ]);

@@ -5,54 +5,79 @@ declare(strict_types=1);
 namespace App\Notifications\Abstracts;
 
 use App\Models\Abstracts\Slug\Slug;
+use BackedEnum;
+use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Broadcasting\PrivateChannel;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Notifications\Messages\BroadcastMessage;
+use Illuminate\Notifications\Notification;
+use Illuminate\Support\Str;
 
-/**
- * @property Slug $entity
- */
-abstract class AbstractSlugNotification extends AbstractEntityNotification
+abstract class AbstractSlugNotification extends Notification implements ShouldBroadcast
 {
-    public function __construct(Slug $entity)
+    use InteractsWithSockets, Queueable;
+
+    protected string $entity_name;
+
+    public function __construct(protected Slug $entity)
     {
-        parent::__construct($entity);
+        $this->entity_name = Str::lcfirst(class_basename($entity));
     }
 
-    protected function getDefaultEntityName(): string
-    {
-        // Slug entities always have entity instance
-        return '';
-    }
+    abstract protected function getStatusEnum(): BackedEnum;
 
-    protected function generateId(): string|int
+    abstract protected function getEventType(): string;
+
+    /**
+     * @return array<int, string>
+     */
+    public function via(): array
     {
-        /** @var Slug $entity */
-        $entity = $this->entity;
-        
-        return $entity->id;
+        return ['database', 'broadcast'];
     }
 
     /**
      * @return array<string, mixed>
      */
-    protected function getTranslationParams(): array
+    protected function payload(): array
     {
-        /** @var Slug $entity */
-        $entity = $this->entity;
-        
+        $status = $this->getStatusEnum()->value;
+
         return [
-            'slug' => $entity->slug,
+            'id' => $this->entity->id,
+            'status' => $status,
+            'entity' => $this->entity_name,
+            'slug' => $this->entity->slug,
+            'message' => __("notifications.{$this->entity_name}_{$this->getEventType()}_$status", [
+                'slug' => $this->entity->slug,
+            ]),
         ];
     }
 
     /**
      * @return array<string, mixed>
      */
-    protected function getCustomPayloadData(): array
+    public function toArray(): array
     {
-        /** @var Slug $entity */
-        $entity = $this->entity;
-        
-        return [
-            'slug' => $entity->slug,
-        ];
+        return $this->payload();
+    }
+
+    public function toBroadcast(): BroadcastMessage
+    {
+        return new BroadcastMessage($this->payload());
+    }
+
+    /**
+     * @return array<int, PrivateChannel>
+     */
+    public function broadcastOn(): array
+    {
+        return [new PrivateChannel('App.Models.User.'.$this->entity->user_id)];
+    }
+
+    public function broadcastAs(): string
+    {
+        return sprintf('%s.%s.%s', $this->entity_name, $this->getEventType(), $this->getStatusEnum()->value);
     }
 }

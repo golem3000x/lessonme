@@ -12,7 +12,7 @@ use BackedEnum;
 class LessonCreationNotification extends AbstractLessonNotification
 {
     public function __construct(
-        ?Lesson $entity,
+        protected ?Lesson $entity,
         protected LessonCreationStatusEnum $status
     )
     {

@@ -18,6 +18,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property \App\Enums\LanguageLevelEnum $language_level
  * @property array<array-key, mixed> $grammar_data
  * @property array<array-key, mixed> $vocabulary
+ * @property array<array-key, mixed>|null $dialogue
+ * @property array<array-key, mixed>|null $exercises
+ * @property string|null $homework
+ * @property array<array-key, mixed>|null $common_mistakes
+ * @property string|null $culture_notes
  * @property array<array-key, mixed> $quiz
  * @property array $embedding
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -37,6 +42,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonHistory whereLessonId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonHistory whereLessonName($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonHistory whereLessonText($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonHistory whereDialogue($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonHistory whereExercises($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonHistory whereHomework($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonHistory whereCommonMistakes($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonHistory whereCultureNotes($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonHistory whereQuiz($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonHistory whereTopicId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonHistory whereUpdatedAt($value)

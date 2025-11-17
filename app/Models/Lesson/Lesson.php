@@ -23,32 +23,42 @@ use Illuminate\Support\Carbon;
  * @property string $lesson_text
  * @property array<array-key, mixed>|null $grammar_data
  * @property array<array-key, mixed>|null $vocabulary
+ * @property array<array-key, mixed>|null $dialogue
+ * @property array<array-key, mixed>|null $exercises
+ * @property string|null $homework
+ * @property array<array-key, mixed>|null $common_mistakes
+ * @property string|null $culture_notes
  * @property array<array-key, mixed>|null $quiz
+ * @property string|null $embedding
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+ * @property-read string $formatted_created_at
+ * @property-read string $level_badge_color
  * @property-read Topic|null $topic
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Lesson\LessonHistory> $histories
+ * @property-read int|null $histories_count
+ * @property-read \App\Models\User $user
  * @method static Builder<static>|Lesson newModelQuery()
  * @method static Builder<static>|Lesson newQuery()
  * @method static Builder<static>|Lesson query()
  * @method static Builder<static>|Lesson whereCreatedAt($value)
  * @method static Builder<static>|Lesson whereGrammarData($value)
- * @method static Builder<static>|Lesson whereId($value)
- * @method static Builder<static>|Lesson whereLessonText($value)
- * @method static Builder<static>|Lesson whereQuiz($value)
- * @method static Builder<static>|Lesson whereTopicId($value)
- * @method static Builder<static>|Lesson whereUpdatedAt($value)
- * @method static Builder<static>|Lesson whereUserId($value)
  * @method static Builder<static>|Lesson whereVocabulary($value)
- * @mixin Eloquent
+ * @method static Builder<static>|Lesson whereDialogue($value)
+ * @method static Builder<static>|Lesson whereExercises($value)
+ * @method static Builder<static>|Lesson whereHomework($value)
+ * @method static Builder<static>|Lesson whereCommonMistakes($value)
+ * @method static Builder<static>|Lesson whereCultureNotes($value)
+ * @method static Builder<static>|Lesson whereQuiz($value)
+ * @method static Builder<static>|Lesson whereId($value)
  * @method static Builder<static>|Lesson whereLessonName($value)
- * @property string|null $embedding
- * @method static Builder<static>|Lesson whereEmbedding($value)
- * @property-read string $formatted_created_at
- * @property-read string $level_badge_color
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Lesson\LessonHistory> $histories
- * @property-read int|null $histories_count
- * @property-read \App\Models\User $user
+ * @method static Builder<static>|Lesson whereLessonText($value)
  * @method static Builder<static>|Lesson whereLanguageLevel($value)
+ * @method static Builder<static>|Lesson whereTopicId($value)
+ * @method static Builder<static>|Lesson whereUserId($value)
+ * @method static Builder<static>|Lesson whereEmbedding($value)
+ * @method static Builder<static>|Lesson whereUpdatedAt($value)
+ * @mixin Eloquent
  * @mixin \Eloquent
  */
 class Lesson extends BaseLesson

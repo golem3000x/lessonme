@@ -43,6 +43,11 @@ class LessonControllerTest extends TestCase
                     'lesson_text' => 'Generated lesson',
                     'grammar_highlights' => [],
                     'vocabulary' => [],
+                    'dialogue' => [],
+                    'exercises' => [],
+                    'homework' => null,
+                    'common_mistakes' => [],
+                    'culture_notes' => null,
                     'quiz' => [],
                 ]);
         });

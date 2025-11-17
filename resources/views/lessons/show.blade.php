@@ -54,9 +54,19 @@
                             </button>
 
                             {{-- Содержание карточки --}}
-                            <div x-show="open" x-transition class="p-4 border-t border-gray-100 text-sm text-gray-700 space-y-2">
+                            <div x-show="open" x-transition class="p-4 border-t border-gray-100 text-sm text-gray-700 space-y-3">
+                                {{-- Схема грамматической конструкции --}}
+                                @if(!empty($g['phrase']))
+                                    <div class="bg-indigo-100 border-l-4 border-indigo-500 p-3 rounded">
+                                        <p class="text-xs uppercase text-indigo-600 font-semibold mb-1">Grammar Pattern:</p>
+                                        <p class="text-lg font-bold text-indigo-900">{{ $g['phrase'] }}</p>
+                                    </div>
+                                @endif
+
                                 {{-- Объяснение --}}
-                                <p>{{ $g['explanation'] ?? '' }}</p>
+                                @if(!empty($g['explanation']))
+                                    <p class="text-gray-700">{{ $g['explanation'] }}</p>
+                                @endif
 
                                 {{-- Формулы --}}
                                 @if(!empty($g['formula']))
@@ -121,6 +131,75 @@
                         </li>
                     @endforeach
                 </ul>
+            </section>
+        @endif
+
+
+        {{-- ===== DIALOGUE SECTION ===== --}}
+        @php $dialogue = is_array($lesson->dialogue) ? $lesson->dialogue : []; @endphp
+        @if(!empty($dialogue))
+            <section class="bg-purple-50 rounded-2xl p-6 border-l-4 border-purple-400 shadow-sm">
+                <h3 class="text-2xl font-semibold text-purple-700 mb-4">💬 Dialogue</h3>
+
+                <div class="space-y-4">
+                    @foreach($dialogue as $line)
+                        <div class="flex gap-3">
+                            <span class="font-semibold text-purple-700">{{ $line['speaker'] ?? '—' }}:</span>
+                            <span class="text-gray-800">{{ $line['line'] ?? '' }}</span>
+                        </div>
+                    @endforeach
+                </div>
+            </section>
+        @endif
+
+
+        {{-- ===== EXERCISES SECTION ===== --}}
+        @php $ex = is_array($lesson->exercises) ? $lesson->exercises : []; @endphp
+        @if(!empty($ex))
+            <section class="bg-blue-50 rounded-2xl p-6 border-l-4 border-blue-400 shadow-sm">
+                <h3 class="text-2xl font-semibold text-blue-700 mb-6">📝 Exercises</h3>
+                <livewire:lesson.lesson-exercises :exercises="$ex"/>
+            </section>
+        @endif
+
+
+        {{-- ===== HOMEWORK SECTION ===== --}}
+        @if(!empty($lesson->homework))
+            <section class="bg-orange-50 rounded-2xl p-6 border-l-4 border-orange-400 shadow-sm">
+                <h3 class="text-2xl font-semibold text-orange-700 mb-3">📚 Homework</h3>
+                <p class="text-gray-800 leading-relaxed">
+                    {!! nl2br(e($lesson->homework)) !!}
+                </p>
+            </section>
+        @endif
+
+
+        {{-- ===== COMMON MISTAKES SECTION ===== --}}
+        @php $mistakes = is_array($lesson->common_mistakes) ? $lesson->common_mistakes : []; @endphp
+        @if(!empty($mistakes))
+            <section class="bg-red-50 rounded-2xl p-6 border-l-4 border-red-400 shadow-sm">
+                <h3 class="text-2xl font-semibold text-red-700 mb-4">⚠️ Common Mistakes</h3>
+
+                <div class="space-y-4">
+                    @foreach($mistakes as $m)
+                        <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                            <p class="text-red-600 font-semibold">❌ {{ $m['mistake'] ?? '' }}</p>
+                            <p class="text-green-700 font-semibold">✔ {{ $m['correction'] ?? '' }}</p>
+                            <p class="text-gray-700 mt-1">{{ $m['explanation'] ?? '' }}</p>
+                        </div>
+                    @endforeach
+                </div>
+            </section>
+        @endif
+
+
+        {{-- ===== CULTURE NOTES SECTION ===== --}}
+        @if(!empty($lesson->culture_notes))
+            <section class="bg-indigo-50 rounded-2xl p-6 border-l-4 border-indigo-400 shadow-sm">
+                <h3 class="text-2xl font-semibold text-indigo-700 mb-3">🌍 Culture Notes</h3>
+                <p class="text-gray-800 leading-relaxed">
+                    {!! nl2br(e($lesson->culture_notes)) !!}
+                </p>
             </section>
         @endif
 

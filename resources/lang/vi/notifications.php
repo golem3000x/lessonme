@@ -36,6 +36,10 @@ return [
     'keyword_translate_successfully' => 'Từ khóa ":slug" của bạn đã được dịch thành công và hiện đã hiển thị!',
     'keyword_translate_invalid' => 'Lỗi dịch từ khóa ":slug" của bạn',
 
+    // Auth notifications
+    'user_auth_welcome' => 'Chào mừng trở lại, :name!',
+    'user_auth_registered' => 'Chào mừng bạn đến với nền tảng của chúng tôi, :name!',
+
     // Lesson creation notifications
     'lesson_creation_processing' => 'Đang tạo bài học...',
     'lesson_creation_successfully' => 'Bài học ":name" đã được tạo thành công!',

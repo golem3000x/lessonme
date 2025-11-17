@@ -73,10 +73,15 @@
                                     @endif
 
                                     {{-- Statistics --}}
-                                    <div class="flex gap-4 text-xs text-gray-500">
+                                    <div class="flex flex-wrap gap-4 text-xs text-gray-500">
                                         @php
                                             $grammar_count = is_array($history->grammar_data) ? count($history->grammar_data) : 0;
                                             $vocab_count = is_array($history->vocabulary) ? count($history->vocabulary) : 0;
+                                            $dialogue_count = is_array($history->dialogue) ? count($history->dialogue) : 0;
+                                            $exercises_count = is_array($history->exercises) ? array_sum(array_map('count', $history->exercises)) : 0;
+                                            $has_homework = !empty($history->homework);
+                                            $mistakes_count = is_array($history->common_mistakes) ? count($history->common_mistakes) : 0;
+                                            $has_culture = !empty($history->culture_notes);
                                             $quiz_count = is_array($history->quiz) ? count($history->quiz) : 0;
                                         @endphp
                                         
@@ -85,6 +90,21 @@
                                         @endif
                                         @if($vocab_count > 0)
                                             <span>💬 {{ $vocab_count }} {{ __('lessons.vocabulary') }}</span>
+                                        @endif
+                                        @if($dialogue_count > 0)
+                                            <span>💬 {{ $dialogue_count }} Dialogue</span>
+                                        @endif
+                                        @if($exercises_count > 0)
+                                            <span>📝 {{ $exercises_count }} Exercises</span>
+                                        @endif
+                                        @if($has_homework)
+                                            <span>📚 Homework</span>
+                                        @endif
+                                        @if($mistakes_count > 0)
+                                            <span>⚠️ {{ $mistakes_count }} Mistakes</span>
+                                        @endif
+                                        @if($has_culture)
+                                            <span>🌍 Culture</span>
                                         @endif
                                         @if($quiz_count > 0)
                                             <span>🎯 {{ $quiz_count }} Quiz</span>

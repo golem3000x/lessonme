@@ -20,6 +20,11 @@ class LessonHistoryService
             'language_level' => $lesson->language_level,
             'grammar_data' => $lesson->grammar_data,
             'vocabulary' => $lesson->vocabulary,
+            'dialogue' => $lesson->dialogue,
+            'exercises' => $lesson->exercises,
+            'homework' => $lesson->homework,
+            'common_mistakes' => $lesson->common_mistakes,
+            'culture_notes' => $lesson->culture_notes,
             'quiz' => $lesson->quiz,
             'embedding' => $lesson->embedding,
         ]);
@@ -36,6 +41,11 @@ class LessonHistoryService
             'language_level' => $history->language_level,
             'grammar_data' => $history->grammar_data,
             'vocabulary' => $history->vocabulary,
+            'dialogue' => $history->dialogue,
+            'exercises' => $history->exercises,
+            'homework' => $history->homework,
+            'common_mistakes' => $history->common_mistakes,
+            'culture_notes' => $history->culture_notes,
             'quiz' => $history->quiz,
             'embedding' => $history->embedding,
         ]);

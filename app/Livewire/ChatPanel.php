@@ -6,8 +6,8 @@ namespace App\Livewire;
 
 use App\Enums\ChatSessionStatusEnum;
 use App\Events\MessageSent;
-use App\Models\ChatSession;
-use App\Models\Message;
+use App\Models\Support\ChatSession;
+use App\Models\Support\Message;
 use Livewire\Attributes\On;
 use Livewire\Component;
 

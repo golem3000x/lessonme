@@ -36,6 +36,10 @@ return [
     'keyword_translate_successfully' => 'Your keyword ":slug" has been successfully translated and is now visible!',
     'keyword_translate_invalid' => 'Translation error for your keyword ":slug"',
 
+    // Auth notifications
+    'user_auth_welcome' => 'Welcome back, :name!',
+    'user_auth_registered' => 'Welcome to our platform, :name!',
+
     // Lesson creation notifications
     'lesson_creation_processing' => 'Lesson creation in progress...',
     'lesson_creation_successfully' => 'Lesson ":name" has been created successfully!',

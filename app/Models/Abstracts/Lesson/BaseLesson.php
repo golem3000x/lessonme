@@ -22,6 +22,11 @@ use Illuminate\Support\Carbon;
  * @property LanguageLevelEnum|null $language_level
  * @property array<array-key, mixed>|null $grammar_data
  * @property array<array-key, mixed>|null $vocabulary
+ * @property array<array-key, mixed>|null $dialogue
+ * @property array<array-key, mixed>|null $exercises
+ * @property string|null $homework
+ * @property array<array-key, mixed>|null $common_mistakes
+ * @property string|null $culture_notes
  * @property array<array-key, mixed>|null $quiz
  * @property string|null $embedding
  * @property Carbon|null $created_at
@@ -41,6 +46,11 @@ abstract class BaseLesson extends BaseModel
         'language_level',
         'grammar_data',
         'vocabulary',
+        'dialogue',
+        'exercises',
+        'homework',
+        'common_mistakes',
+        'culture_notes',
         'quiz',
         'embedding',
     ];
@@ -49,6 +59,9 @@ abstract class BaseLesson extends BaseModel
         'language_level' => LanguageLevelEnum::class,
         'grammar_data' => 'array',
         'vocabulary' => 'array',
+        'dialogue' => 'array',
+        'exercises' => 'array',
+        'common_mistakes' => 'array',
         'quiz' => 'array',
         'embedding' => EmbeddingCast::class,
     ];

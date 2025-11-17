@@ -23,9 +23,14 @@ return new class extends Migration
             $table->string('lesson_name');
             $table->text('lesson_text');
             $table->string('language_level', 2);
-            $table->json('grammar_data');
-            $table->json('vocabulary');
-            $table->json('quiz');
+            $table->json('grammar_data')->nullable();
+            $table->json('vocabulary')->nullable();
+            $table->json('dialogue')->nullable();
+            $table->json('exercises')->nullable();
+            $table->text('homework')->nullable();
+            $table->json('common_mistakes')->nullable();
+            $table->text('culture_notes')->nullable();
+            $table->json('quiz')->nullable();
             $table->vector('embedding', 1536);
             $table->timestamps();
         });

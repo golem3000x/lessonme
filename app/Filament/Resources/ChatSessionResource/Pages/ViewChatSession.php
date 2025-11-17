@@ -7,7 +7,7 @@ namespace App\Filament\Resources\ChatSessionResource\Pages;
 use App\Enums\ChatSessionStatusEnum;
 use App\Events\MessageSent;
 use App\Filament\Resources\ChatSessionResource;
-use App\Models\Message;
+use App\Models\Support\Message;
 use Filament\Actions;
 use Filament\Infolists;
 use Filament\Infolists\Infolist;

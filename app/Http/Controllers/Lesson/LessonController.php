@@ -70,6 +70,11 @@ class LessonController extends Controller
             'language_level' => $validated['level'] ?? null,
             'grammar_data' => $lesson_data['grammar_highlights'] ?? [],
             'vocabulary' => $lesson_data['vocabulary'] ?? [],
+            'dialogue' => $lesson_data['dialogue'] ?? [],
+            'exercises' => $lesson_data['exercises'] ?? [],
+            'homework' => $lesson_data['homework'] ?? null,
+            'common_mistakes' => $lesson_data['common_mistakes'] ?? [],
+            'culture_notes' => $lesson_data['culture_notes'] ?? null,
             'quiz' => $lesson_data['quiz'] ?? [],
         ]);
 

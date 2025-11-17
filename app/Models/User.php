@@ -5,8 +5,11 @@ declare(strict_types=1);
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\SystemLanguageEnum;
 use App\Enums\TableNameEnum;
 use App\Models\Lesson\Lesson;
+use App\Models\Support\ChatSession;
+use App\Models\Support\Message;
 use Barryvdh\LaravelIdeHelper\Eloquent;
 use Database\Factories\UserFactory;
 use Filament\Models\Contracts\FilamentUser;
@@ -91,6 +94,7 @@ class User extends Authenticatable implements FilamentUser, HasLocalePreference
         'avatar',
         'native_lang',
         'learning_lang',
+        'timezone',
         'email_verified_at',
     ];
 
@@ -139,7 +143,7 @@ class User extends Authenticatable implements FilamentUser, HasLocalePreference
      */
     public function preferredLocale(): string
     {
-        return $this->native_lang;
+        return $this->native_lang ?? SystemLanguageEnum::VIETNAMESE->value;
     }
 
     /**

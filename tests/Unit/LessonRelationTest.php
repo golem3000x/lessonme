@@ -41,6 +41,11 @@ class LessonRelationTest extends TestCase
             'lesson_text' => 'Sample',
             'grammar_data' => [],
             'vocabulary' => [],
+            'dialogue' => [],
+            'exercises' => [],
+            'homework' => null,
+            'common_mistakes' => [],
+            'culture_notes' => null,
             'quiz' => [],
         ]);
 
