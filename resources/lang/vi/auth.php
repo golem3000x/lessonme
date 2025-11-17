@@ -14,6 +14,7 @@ return [
         'password_placeholder' => 'Mật khẩu',
         'remember_me' => 'Ghi nhớ đăng nhập',
         'submit' => 'Đăng nhập',
+        'or_continue_with' => 'Hoặc tiếp tục với',
         'sign_in_with_zalo' => 'Đăng nhập với Zalo',
         'sign_in_with_facebook' => 'Đăng nhập với Facebook',
     ],
@@ -41,6 +42,7 @@ return [
         'native_lang_label' => 'Ngôn ngữ mẹ đẻ',
         'select_language' => 'Chọn ngôn ngữ...',
         'submit' => 'Hoàn Tất Đăng Ký',
+        'info_text' => 'Bạn có thể thay đổi tùy chọn ngôn ngữ bất cứ lúc nào trong cài đặt hồ sơ.',
     ],
 
     // Common

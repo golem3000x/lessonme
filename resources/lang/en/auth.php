@@ -14,6 +14,7 @@ return [
         'password_placeholder' => 'Password',
         'remember_me' => 'Remember me',
         'submit' => 'Sign in',
+        'or_continue_with' => 'Or continue with',
         'sign_in_with_zalo' => 'Sign in with Zalo',
         'sign_in_with_facebook' => 'Sign in with Facebook',
     ],
@@ -41,6 +42,7 @@ return [
         'native_lang_label' => 'Native Language',
         'select_language' => 'Select a language...',
         'submit' => 'Complete Registration',
+        'info_text' => 'You can change your language preference anytime in your profile settings.',
     ],
 
     // Common

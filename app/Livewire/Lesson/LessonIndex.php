@@ -28,6 +28,14 @@ class LessonIndex extends Component
     /** @var array<int, bool> */
     public array $open_dropdowns = [];
 
+    public bool $show_delete_confirm = false;
+
+    public ?int $lesson_to_delete = null;
+
+    public bool $show_regenerate_confirm = false;
+
+    public ?int $lesson_to_regenerate = null;
+
     // Filters UI state
     public bool $show_filters = false;
 
@@ -125,21 +133,38 @@ class LessonIndex extends Component
         $this->open_dropdowns[$lesson_id] = false;
     }
 
-    public function regenerateLesson(int $lesson_id): void
+    public function confirmRegenerate(int $lesson_id): void
     {
+        $this->lesson_to_regenerate = $lesson_id;
+        $this->show_regenerate_confirm = true;
+        $this->closeDropdown($lesson_id);
+    }
+
+    public function cancelRegenerate(): void
+    {
+        $this->show_regenerate_confirm = false;
+        $this->lesson_to_regenerate = null;
+    }
+
+    public function regenerateLesson(): void
+    {
+        if ($this->lesson_to_regenerate === null) {
+            return;
+        }
+
         $user = Auth::user();
         if (! $user) {
             abort(401);
         }
 
-        $lesson = Lesson::where('id', $lesson_id)
+        $lesson = Lesson::where('id', $this->lesson_to_regenerate)
             ->where('user_id', $user->id)
             ->with(['topic.translations', 'topic.keywords.translations'])
             ->first();
 
         if (! $lesson) {
-            $this->closeDropdown($lesson_id);
             session()->flash('error', __('lessons.lesson_not_found'));
+            $this->cancelRegenerate();
 
             return;
         }
@@ -173,7 +198,7 @@ class LessonIndex extends Component
 
             // Dispatch job for async lesson regeneration
             RegenerateLessonJob::dispatch(
-                $lesson_id,
+                $this->lesson_to_regenerate,
                 $lesson_dto,
                 app()->getLocale()
             );
@@ -184,9 +209,6 @@ class LessonIndex extends Component
                 LessonCreationStatusEnum::PROCESSING
             ));
 
-            // Close dropdown
-            $this->closeDropdown($lesson_id);
-
             // Notify user via Livewire dispatch
             $this->dispatch('lesson-notification',
                 id: uniqid('lesson_regenerate_'),
@@ -196,14 +218,32 @@ class LessonIndex extends Component
             );
 
         } catch (\Exception $e) {
-            $this->closeDropdown($lesson_id);
             session()->flash('error', __('lessons.regeneration_failed').': '.$e->getMessage());
         }
+
+        $this->cancelRegenerate();
     }
 
-    public function deleteLesson(int $lesson_id): void
+    public function confirmDelete(int $lesson_id): void
     {
-        $lesson = Lesson::where('id', $lesson_id)
+        $this->lesson_to_delete = $lesson_id;
+        $this->show_delete_confirm = true;
+        $this->closeDropdown($lesson_id);
+    }
+
+    public function cancelDelete(): void
+    {
+        $this->show_delete_confirm = false;
+        $this->lesson_to_delete = null;
+    }
+
+    public function deleteLesson(): void
+    {
+        if ($this->lesson_to_delete === null) {
+            return;
+        }
+
+        $lesson = Lesson::where('id', $this->lesson_to_delete)
             ->where('user_id', Auth::id())
             ->first();
 
@@ -212,6 +252,8 @@ class LessonIndex extends Component
             $this->resetPage();
             session()->flash('message', __('lessons.lesson_deleted'));
         }
+
+        $this->cancelDelete();
     }
 
     public function toggleFilters(): void

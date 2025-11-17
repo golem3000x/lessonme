@@ -250,19 +250,12 @@
                             <div 
                                 x-data="{ show: true }"
                                 x-show="show"
-                                x-init="$nextTick(() => show = true)"
                                 @click.outside="$wire.closeDropdown({{ $lesson->id }})"
-                                x-transition:enter="transition ease-out duration-200"
-                                x-transition:enter-start="opacity-0 scale-95 translate-y-1"
-                                x-transition:enter-end="opacity-100 scale-100 translate-y-0"
-                                x-transition:leave="transition ease-in duration-150"
-                                x-transition:leave-start="opacity-100 scale-100"
-                                x-transition:leave-end="opacity-0 scale-95"
+                                x-transition
                                 class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-xl shadow-2xl z-50 overflow-hidden"
                             >
-                                <button wire:click="regenerateLesson({{ $lesson->id }})"
-                                        wire:confirm="{{ __('lessons.confirm_regenerate') }}"
-                                        class="group flex items-center gap-3 w-full px-4 py-3 text-sm text-yellow-600 hover:bg-yellow-50 transition-all whitespace-nowrap">
+                                <button wire:click="confirmRegenerate({{ $lesson->id }})"
+                                        class="group flex items-center gap-3 w-full px-4 py-3 text-sm text-yellow-600 hover:bg-yellow-50 transition-all duration-200 whitespace-nowrap">
                                     <div class="p-1.5 rounded-lg bg-yellow-50 group-hover:bg-yellow-100 transition-colors">
                                         <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -275,7 +268,7 @@
                                 <div class="border-t border-gray-100"></div>
 
                                 <a href="{{ route('lessons.history', $lesson->id) }}"
-                                   class="group flex items-center gap-3 w-full px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-all">
+                                   class="group flex items-center gap-3 w-full px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-all duration-200">
                                     <div class="p-1.5 rounded-lg bg-gray-100 group-hover:bg-blue-100 transition-colors">
                                         <svg class="h-4 w-4 group-hover:text-blue-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -287,9 +280,8 @@
 
                                 <div class="border-t border-gray-100"></div>
 
-                                <button wire:click="deleteLesson({{ $lesson->id }})"
-                                        wire:confirm="{{ __('lessons.confirm_delete') }}"
-                                        class="group flex items-center gap-3 w-full px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition-all">
+                                <button wire:click="confirmDelete({{ $lesson->id }})"
+                                        class="group flex items-center gap-3 w-full px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition-all duration-200">
                                     <div class="p-1.5 rounded-lg bg-red-50 group-hover:bg-red-100 transition-colors">
                                         <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -332,13 +324,17 @@
                 @click.self="$wire.closeManageModal()"
         >
             {{-- Фон с размытием --}}
-            <div class="fixed inset-0 bg-black/50 backdrop-blur-sm"></div>
+            <div class="fixed inset-0 bg-black/50 backdrop-blur-sm"
+                 x-show="open"
+                 x-transition
+            ></div>
 
             {{-- Центрируем модальное окно --}}
             <div class="flex items-center justify-center min-h-screen p-4">
                 <div
-                        class="relative bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden transform transition-all border border-gray-100"
-                        x-transition.scale
+                        class="relative bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden border border-gray-100"
+                        x-show="open"
+                        x-transition
                         @click.stop
                 >
                     <div class="p-6 bg-gradient-to-r from-blue-600 to-indigo-600 flex justify-between items-center">
@@ -358,6 +354,128 @@
                     </div>
                     <div class="p-6 max-h-[calc(90vh-80px)] overflow-y-auto">
                         <livewire:lesson.manage-lesson :key="'manage-lesson-'.now()->timestamp"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
+
+    {{-- Delete Confirmation Modal --}}
+    @if($show_delete_confirm)
+        <div
+                x-data="{ open: true }"
+                x-show="open"
+                class="fixed inset-0 z-50 overflow-y-auto"
+                @click.self="$wire.cancelDelete()"
+        >
+            {{-- Фон с размытием --}}
+            <div class="fixed inset-0 bg-black/50 backdrop-blur-sm"
+                 x-show="open"
+                 x-transition
+            ></div>
+
+            {{-- Центрируем модальное окно --}}
+            <div class="flex items-center justify-center min-h-screen p-4">
+                <div
+                        class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden border border-gray-100"
+                        x-show="open"
+                        x-transition
+                        @click.stop
+                >
+                    {{-- Иконка предупреждения --}}
+                    <div class="flex justify-center pt-8 pb-4">
+                        <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-red-100 to-pink-100 rounded-full">
+                            <svg class="h-8 w-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    {{-- Содержимое --}}
+                    <div class="px-6 pb-6 text-center">
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">
+                            {{ __('lessons.delete_lesson_title') }}
+                        </h3>
+                        <p class="text-sm text-gray-600 mb-6">
+                            {{ __('lessons.delete_lesson_message') }}
+                        </p>
+
+                        {{-- Кнопки --}}
+                        <div class="flex gap-3">
+                            <button
+                                    wire:click="cancelDelete"
+                                    class="flex-1 px-4 py-2.5 bg-gray-100 text-gray-700 font-semibold rounded-lg hover:bg-gray-200 transition-all duration-200"
+                            >
+                                {{ __('lessons.cancel') }}
+                            </button>
+                            <button
+                                    wire:click="deleteLesson"
+                                    class="flex-1 px-4 py-2.5 bg-gradient-to-r from-red-600 to-pink-600 text-white font-semibold rounded-lg hover:from-red-700 hover:to-pink-700 shadow-md hover:shadow-lg transition-all duration-200"
+                            >
+                                {{ __('lessons.delete') }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
+
+    {{-- Regenerate Confirmation Modal --}}
+    @if($show_regenerate_confirm)
+        <div
+                x-data="{ open: true }"
+                x-show="open"
+                class="fixed inset-0 z-50 overflow-y-auto"
+                @click.self="$wire.cancelRegenerate()"
+        >
+            {{-- Фон с размытием --}}
+            <div class="fixed inset-0 bg-black/50 backdrop-blur-sm"
+                 x-show="open"
+                 x-transition
+            ></div>
+
+            {{-- Центрируем модальное окно --}}
+            <div class="flex items-center justify-center min-h-screen p-4">
+                <div
+                        class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden border border-gray-100"
+                        x-show="open"
+                        x-transition
+                        @click.stop
+                >
+                    {{-- Иконка предупреждения --}}
+                    <div class="flex justify-center pt-8 pb-4">
+                        <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-yellow-100 to-orange-100 rounded-full">
+                            <svg class="h-8 w-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    {{-- Содержимое --}}
+                    <div class="px-6 pb-6 text-center">
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">
+                            {{ __('lessons.regenerate_lesson_title') }}
+                        </h3>
+                        <p class="text-sm text-gray-600 mb-6">
+                            {{ __('lessons.regenerate_lesson_message') }}
+                        </p>
+
+                        {{-- Кнопки --}}
+                        <div class="flex gap-3">
+                            <button
+                                    wire:click="cancelRegenerate"
+                                    class="flex-1 px-4 py-2.5 bg-gray-100 text-gray-700 font-semibold rounded-lg hover:bg-gray-200 transition-all duration-200"
+                            >
+                                {{ __('lessons.cancel') }}
+                            </button>
+                            <button
+                                    wire:click="regenerateLesson"
+                                    class="flex-1 px-4 py-2.5 bg-gradient-to-r from-yellow-600 to-orange-600 text-white font-semibold rounded-lg hover:from-yellow-700 hover:to-orange-700 shadow-md hover:shadow-lg transition-all duration-200"
+                            >
+                                {{ __('lessons.regenerate') }}
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
