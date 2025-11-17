@@ -14,6 +14,7 @@ use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 
 class ZaloController extends Controller
@@ -66,45 +67,37 @@ class ZaloController extends Controller
         }
 
         $user = User::where('zalo_user_id', $zalo_id)->first();
-        $is_new_user = false;
 
         if ($user) {
             $user->update([
                 'name' => $name,
                 'avatar' => $avatar,
             ]);
-        } else {
-            $user = User::create([
-                'zalo_user_id' => $zalo_id,
-                'name' => $name,
-                'email' => 'zalo_'.$zalo_id.'@placeholder.local',
-                'avatar' => $avatar,
-                'password' => bcrypt(str()->random(12)),
-                'native_lang' => SystemLanguageEnum::VIETNAMESE->value,
-                'learning_lang' => SystemLanguageEnum::ENGLISH->value,
-            ]);
-            $is_new_user = true;
-        }
-
-        Auth::login($user);
-
-        // Отправляем уведомление
-        if ($is_new_user) {
-            $message = $this->greeting_service->getRegistrationMessage(
-                $user->name,
-                $user->timezone ?? 'UTC',
-                $user->native_lang ?? SystemLanguageEnum::VIETNAMESE->value
-            );
-            $user->notify(new RegistrationNotification($user, $message));
-        } else {
+            
+            Auth::login($user);
+            
+            // Отправляем приветственное уведомление для существующего пользователя
             $message = $this->greeting_service->getWelcomeMessage(
                 $user->name,
                 $user->timezone ?? 'UTC',
                 $user->native_lang ?? SystemLanguageEnum::VIETNAMESE->value
             );
             $user->notify(new WelcomeNotification($user, $message));
+            
+            return redirect()->route('dashboard');
+        } else {
+            // Новый пользователь - сохраняем данные в сессию и редиректим на выбор языка
+            session()->put('registration_data', [
+                'zalo_user_id' => $zalo_id,
+                'name' => $name,
+                'email' => 'zalo_'.$zalo_id.'@placeholder.local',
+                'avatar' => $avatar,
+                'password' => Hash::make(str()->random(12)),
+                'email_verified_at' => now(),
+                'timezone' => 'UTC',
+            ]);
+            
+            return redirect()->route('auth.language');
         }
-
-        return redirect()->route('dashboard');
     }
 }

@@ -34,6 +34,15 @@ return [
         'submit' => 'Create account',
     ],
 
+    // Language selection page
+    'language_selection' => [
+        'title' => 'Choose Your Native Language',
+        'description' => 'Please select your native language to personalize your experience.',
+        'native_lang_label' => 'Native Language',
+        'select_language' => 'Select a language...',
+        'submit' => 'Complete Registration',
+    ],
+
     // Common
     'failed' => 'These credentials do not match our records.',
     'password' => 'The provided password is incorrect.',

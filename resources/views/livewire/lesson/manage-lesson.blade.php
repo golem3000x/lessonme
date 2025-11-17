@@ -1,14 +1,17 @@
 @php use App\Enums\LanguageLevelEnum; @endphp
-<div class="space-y-4">
-    <div class="flex flex-col space-y-4">
-        <div>
-            <label for="language-level-select" class="block text-sm font-medium text-gray-700 mb-1">
+<div class="space-y-5">
+    <div class="flex flex-col space-y-5">
+        <div class="group">
+            <label for="language-level-select" class="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-2">
+                <svg class="h-4 w-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
                 {{ __('lessons.level') }}
             </label>
             <select
                     id="language-level-select"
                     wire:model.live="language_level"
-                    class="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-blue-500 focus:border-blue-500"
+                    class="w-full border-2 border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-white hover:border-blue-400"
             >
                 @foreach(LanguageLevelEnum::cases() as $level)
                     <option value="{{ $level->value }}">{{ $level->value }}</option>
@@ -16,14 +19,17 @@
             </select>
         </div>
 
-        <div>
-            <label for="topic-select" class="block text-sm font-medium text-gray-700 mb-1">
+        <div class="group">
+            <label for="topic-select" class="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-2">
+                <svg class="h-4 w-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                </svg>
                 {{ __('lessons.topic_label') }}
             </label>
             <select
                     id="topic-select"
                     wire:model.live="topic_id"
-                    class="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-blue-500 focus:border-blue-500"
+                    class="w-full border-2 border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 bg-white hover:border-indigo-400"
             >
                 @foreach($topics as $t)
                     <option value="{{ $t['id'] }}">{{ $t['label'] }}</option>
@@ -31,35 +37,51 @@
             </select>
         </div>
 
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">
+        <div class="group">
+            <label class="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-2">
+                <svg class="h-4 w-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                </svg>
                 {{ __('lessons.keywords_label') }}
             </label>
             <livewire:chat.keyword-select :topic_id="$topic_id" :keyword_ids="$keyword_ids" :keywords="$keywords"
                                           :key="'keyword-select-'.$topic_id"/>
         </div>
 
-        <div class="bg-blue-50 border border-blue-200 rounded p-4">
-            <p class="text-sm text-gray-700">
-                {{ __('lessons.generation_info') }}
-            </p>
+        <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border-l-4 border-blue-500 rounded-lg p-4 shadow-sm">
+            <div class="flex items-start gap-3">
+                <svg class="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <p class="text-sm text-gray-700 leading-relaxed">
+                    {{ __('lessons.generation_info') }}
+                </p>
+            </div>
         </div>
 
-        <div class="flex justify-end gap-3 pt-4">
+        <div class="flex justify-end gap-3 pt-6 border-t border-gray-200">
             <button
                     wire:click="$parent.closeManageModal"
-                    class="px-4 py-2 border border-gray-300 rounded text-gray-700 hover:bg-gray-50 transition"
+                    class="group px-5 py-2.5 border-2 border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 font-medium flex items-center gap-2"
                     wire:loading.attr="disabled"
             >
+                <svg class="h-4 w-4 transition-transform group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
                 {{ __('lessons.cancel') }}
             </button>
             <button
                     wire:click="createLesson"
                     wire:loading.attr="disabled"
                     wire:target="createLesson"
-                    class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 min-w-[140px] justify-center"
+                    class="group bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 py-2.5 rounded-lg hover:from-green-700 hover:to-emerald-700 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 min-w-[160px] justify-center font-medium shadow-md hover:shadow-lg"
             >
-                <span wire:loading.remove wire:target="createLesson">{{ __('lessons.create_lesson') }}</span>
+                <span wire:loading.remove wire:target="createLesson" class="flex items-center gap-2">
+                    <svg class="h-4 w-4 transition-transform group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                    {{ __('lessons.create_lesson') }}
+                </span>
                 <span wire:loading wire:target="createLesson" class="flex items-center gap-2">
                     <svg class="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none"
                          viewBox="0 0 24 24">

@@ -23,8 +23,8 @@ class SlugModerationNotification extends AbstractSlugNotification
         return $this->moderation_status_enum;
     }
 
-    protected function getEventType(): string
+    protected function getEventType(): \BackedEnum
     {
-        return NotificationEventTypeEnum::MODERATION->value;
+        return NotificationEventTypeEnum::MODERATION;
     }
 }

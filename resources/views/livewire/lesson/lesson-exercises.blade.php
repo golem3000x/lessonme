@@ -7,16 +7,28 @@
                 @foreach($exercises['gap_fill'] as $index => $item)
                     <div class="p-4 bg-blue-50 rounded-lg">
                         <div class="flex flex-col gap-2">
-                            <p class="text-gray-800">{{ $item['sentence'] ?? '' }}</p>
-                            <input
-                                type="text"
-                                wire:model="user_answers.gap_fill.{{ $index }}"
-                                placeholder="Your answer..."
-                                class="input input-bordered w-full max-w-md transition-all duration-200 
-                                       @if(!$checked) focus:ring-2 focus:ring-blue-400 focus:border-blue-400 hover:border-blue-300 @endif
-                                       @if($checked) {{ isset($user_answers['gap_fill'][$index]) && strcasecmp(trim($user_answers['gap_fill'][$index]), trim($item['answer'] ?? '')) === 0 ? 'input-success' : 'input-error' }} @endif"
-                                @if($checked) disabled @endif
-                            >
+                            @php
+                                $sentence = $item['sentence'] ?? '';
+                                $parts = explode('___', $sentence);
+                            @endphp
+                            
+                            <div class="text-gray-800 text-lg leading-relaxed flex flex-wrap items-center gap-1">
+                                @foreach($parts as $part_index => $part)
+                                    <span>{{ $part }}</span>
+                                    @if($part_index < count($parts) - 1)
+                                        <input
+                                            type="text"
+                                            wire:model="user_answers.gap_fill.{{ $index }}"
+                                            placeholder="..."
+                                            class="inline-block px-3 py-1 border-b-2 border-blue-400 bg-transparent text-center min-w-[120px] max-w-[200px] transition-all duration-200
+                                                   @if(!$checked) focus:border-blue-600 focus:bg-blue-50 hover:border-blue-500 @endif
+                                                   @if($checked) {{ isset($user_answers['gap_fill'][$index]) && strcasecmp(trim($user_answers['gap_fill'][$index]), trim($item['answer'] ?? '')) === 0 ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50' }} @endif"
+                                            @if($checked) disabled @endif
+                                        >
+                                    @endif
+                                @endforeach
+                            </div>
+
                             @if($checked)
                                 <div class="text-sm mt-2">
                                     @if(isset($user_answers['gap_fill'][$index]) && strcasecmp(trim($user_answers['gap_fill'][$index]), trim($item['answer'] ?? '')) === 0)

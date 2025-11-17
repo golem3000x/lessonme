@@ -34,6 +34,15 @@ return [
         'submit' => 'Tạo tài khoản',
     ],
 
+    // Language selection page
+    'language_selection' => [
+        'title' => 'Chọn Ngôn Ngữ Mẹ Đẻ',
+        'description' => 'Vui lòng chọn ngôn ngữ mẹ đẻ của bạn để cá nhân hóa trải nghiệm.',
+        'native_lang_label' => 'Ngôn ngữ mẹ đẻ',
+        'select_language' => 'Chọn ngôn ngữ...',
+        'submit' => 'Hoàn Tất Đăng Ký',
+    ],
+
     // Common
     'failed' => 'Thông tin đăng nhập không chính xác.',
     'password' => 'Mật khẩu không đúng.',

@@ -23,8 +23,8 @@ class SlugTranslateNotification extends AbstractSlugNotification
         return $this->translate_status_enum;
     }
 
-    protected function getEventType(): string
+    protected function getEventType(): \BackedEnum
     {
-        return NotificationEventTypeEnum::TRANSLATE->value;
+        return NotificationEventTypeEnum::TRANSLATE;
     }
 }

@@ -24,6 +24,14 @@ enum SystemLanguageEnum: string
         return Lang::get('languages.'.$this->key());
     }
 
+    public function flag(): string
+    {
+        return match ($this) {
+            self::VIETNAMESE => '🇻🇳',
+            self::ENGLISH => '🇬🇧',
+        };
+    }
+
     /**
      * @return array<int, self>
      */

@@ -10,4 +10,5 @@ enum EntityTypeEnum: string
     case LESSON = 'lesson';
     case TOPIC = 'topic';
     case KEYWORD = 'keyword';
+    case USER = 'user';
 }

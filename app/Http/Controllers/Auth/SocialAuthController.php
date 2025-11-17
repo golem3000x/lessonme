@@ -53,16 +53,18 @@ class SocialAuthController extends Controller
                         'avatar' => $facebook_user->getAvatar(),
                     ]);
                 } else {
-                    // Create new user
-                    $user = User::create([
+                    // Новый пользователь - сохраняем данные в сессию и редиректим на выбор языка
+                    session()->put('registration_data', [
                         'name' => $facebook_user->getName(),
                         'email' => $facebook_user->getEmail(),
                         'facebook_id' => $facebook_user->getId(),
                         'avatar' => $facebook_user->getAvatar(),
                         'password' => Hash::make(Str::random(24)),
                         'email_verified_at' => now(),
+                        'timezone' => 'UTC',
                     ]);
-                    $is_new_user = true;
+
+                    return redirect()->route('auth.language');
                 }
             } else {
                 // Update avatar if changed
@@ -75,22 +77,13 @@ class SocialAuthController extends Controller
 
             Auth::login($user, true);
 
-            // Отправляем уведомление
-            if ($is_new_user) {
-                $message = $this->greeting_service->getRegistrationMessage(
-                    $user->name,
-                    $user->timezone ?? 'UTC',
-                    $user->native_lang ?? SystemLanguageEnum::ENGLISH->value
-                );
-                $user->notify(new RegistrationNotification($user, $message));
-            } else {
-                $message = $this->greeting_service->getWelcomeMessage(
-                    $user->name,
-                    $user->timezone ?? 'UTC',
-                    $user->native_lang ?? SystemLanguageEnum::ENGLISH->value
-                );
-                $user->notify(new WelcomeNotification($user, $message));
-            }
+            // Отправляем приветственное уведомление для существующего пользователя
+            $message = $this->greeting_service->getWelcomeMessage(
+                $user->name,
+                $user->timezone ?? 'UTC',
+                $user->native_lang ?? SystemLanguageEnum::ENGLISH->value
+            );
+            $user->notify(new WelcomeNotification($user, $message));
 
             return redirect()->intended('/');
         } catch (Exception $e) {

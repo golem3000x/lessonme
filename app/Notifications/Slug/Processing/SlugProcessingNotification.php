@@ -21,8 +21,8 @@ class SlugProcessingNotification extends AbstractSlugNotification
         return ModerationStatusEnum::PENDING;
     }
 
-    protected function getEventType(): string
+    protected function getEventType(): \BackedEnum
     {
-        return NotificationEventTypeEnum::PROCESSING->value;
+        return NotificationEventTypeEnum::PROCESSING;
     }
 }

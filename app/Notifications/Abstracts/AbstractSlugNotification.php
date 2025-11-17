@@ -27,7 +27,7 @@ abstract class AbstractSlugNotification extends Notification implements ShouldBr
 
     abstract protected function getStatusEnum(): BackedEnum;
 
-    abstract protected function getEventType(): string;
+    abstract protected function getEventType(): BackedEnum;
 
     /**
      * @return array<int, string>
@@ -49,7 +49,7 @@ abstract class AbstractSlugNotification extends Notification implements ShouldBr
             'status' => $status,
             'entity' => $this->entity_name,
             'slug' => $this->entity->slug,
-            'message' => __("notifications.{$this->entity_name}_{$this->getEventType()}_$status", [
+            'message' => __("notifications.{$this->entity_name}_{$this->getEventType()->value}_$status", [
                 'slug' => $this->entity->slug,
             ]),
         ];
@@ -73,11 +73,11 @@ abstract class AbstractSlugNotification extends Notification implements ShouldBr
      */
     public function broadcastOn(): array
     {
-        return [new PrivateChannel('App.Models.User.'.$this->entity->user_id)];
+        return [new PrivateChannel('App.Models.User.' . $this->entity->user_id)];
     }
 
     public function broadcastAs(): string
     {
-        return sprintf('%s.%s.%s', $this->entity_name, $this->getEventType(), $this->getStatusEnum()->value);
+        return sprintf('%s.%s.%s', $this->entity_name, $this->getEventType()->value, $this->getStatusEnum()->value);
     }
 }

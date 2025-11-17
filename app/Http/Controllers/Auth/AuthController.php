@@ -85,26 +85,16 @@ class AuthController extends Controller
         // Получаем timezone из запроса (если отправлен из браузера)
         $timezone = $request->input('timezone', 'UTC');
 
-        $user = User::create([
+        // Сохраняем данные регистрации в сессию (с хешированным паролем)
+        $request->session()->put('registration_data', [
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'timezone' => $timezone,
         ]);
 
-        Auth::login($user);
-        $request->session()->regenerate();
-
-        // Отправляем приветственное уведомление для нового пользователя
-        $message = $this->greeting_service->getRegistrationMessage(
-            $user->name,
-            $timezone,
-            app()->getLocale()
-        );
-
-        $user->notify(new RegistrationNotification($user, $message));
-
-        return redirect('/dashboard');
+        // Редиректим на выбор родного языка
+        return redirect()->route('auth.language');
     }
 
     public function logout(Request $request): RedirectResponse

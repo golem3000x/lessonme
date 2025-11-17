@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\SocialAuthController;
 use App\Http\Controllers\Auth\ZaloController;
 use App\Http\Controllers\Lesson\LessonController;
+use App\Livewire\Auth\LanguageSelection;
 use App\Livewire\Lesson\LessonIndex;
 use App\Livewire\Onboarding\ProfileSetup;
 use App\Livewire\Onboarding\TopicSelector;
@@ -32,6 +33,8 @@ Route::middleware('guest')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
     Route::post('/register', [AuthController::class, 'register']);
+
+    Route::get('/auth/language', LanguageSelection::class)->name('auth.language');
 
     Route::get('/auth/zalo', [ZaloController::class, 'redirect'])->name('zalo.login');
     Route::get('/auth/zalo/callback', [ZaloController::class, 'callback']);

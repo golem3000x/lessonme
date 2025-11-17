@@ -204,15 +204,6 @@
                 </svg>
                 <h3 class="text-xl font-medium text-gray-900">{{ __('lessons.no_lessons_yet') }}</h3>
                 <p class="text-sm text-gray-500">{{ __('lessons.get_started_message') }}</p>
-                <button wire:click="openManageModal"
-                        class="mt-4 inline-flex items-center gap-2 px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-                    <svg class="h-5 w-5 drop-shadow-sm" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd"
-                              d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
-                              clip-rule="evenodd"/>
-                    </svg>
-                    {{ __('lessons.create_new_lesson') }}
-                </button>
             @endif
         </div>
     @else
@@ -325,20 +316,26 @@
             {{-- Центрируем модальное окно --}}
             <div class="flex items-center justify-center min-h-screen p-4">
                 <div
-                        class="relative bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto transform transition-all"
+                        class="relative bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden transform transition-all border border-gray-100"
                         x-transition.scale
                         @click.stop
                 >
-                    <div class="p-6 border-b flex justify-between items-center">
-                        <h3 class="text-xl font-semibold text-gray-900">{{ __('lessons.manage_lesson') }}</h3>
-                        <button wire:click="closeManageModal" class="text-gray-400 hover:text-gray-600 transition hover:scale-110">
-                            <svg class="w-6 h-6 drop-shadow-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                                      d="M6 18L18 6M6 6l12 12"/>
+                    <div class="p-6 bg-gradient-to-r from-blue-600 to-indigo-600 flex justify-between items-center">
+                        <div class="flex items-center gap-3">
+                            <div class="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                                </svg>
+                            </div>
+                            <h3 class="text-xl font-bold text-white">{{ __('lessons.manage_lesson') }}</h3>
+                        </div>
+                        <button wire:click="closeManageModal" class="p-2 text-white/80 hover:text-white hover:bg-white/20 rounded-lg transition-all duration-200">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                             </svg>
                         </button>
                     </div>
-                    <div class="p-6">
+                    <div class="p-6 max-h-[calc(90vh-80px)] overflow-y-auto">
                         <livewire:lesson.manage-lesson :key="'manage-lesson-'.now()->timestamp"/>
                     </div>
                 </div>
