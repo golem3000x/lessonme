@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Console\Commands;
 
+use App\Enums\UserRoleEnum;
 use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Hash;
@@ -52,22 +53,22 @@ class CreateAdminCommand extends Command
             'email' => $email,
             'name' => $name,
             'password' => Hash::make($password),
-            'is_admin' => true,
             'email_verified_at' => now(),
             'native_lang' => $native_lang,
             'learning_lang' => $learning_lang,
+            'role' => UserRoleEnum::ADMIN->value,
         ]);
 
         $this->newLine();
         $this->info('✅ Admin user created successfully!');
         $this->newLine();
         $this->table(
-            ['ID', 'Name', 'Email', 'Is Admin', 'Native Lang', 'Learning Lang'],
+            ['ID', 'Name', 'Email', 'Role', 'Native Lang', 'Learning Lang'],
             [[
                 $user->id,
                 $user->name,
                 $user->email,
-                $user->is_admin ? 'Yes' : 'No',
+                $user->role->value,
                 $user->native_lang,
                 $user->learning_lang,
             ]]

@@ -11,5 +11,5 @@ Broadcast::channel('chat.{userId}', function ($user, $userId) {
 });
 
 Broadcast::channel('admin-chat', function ($user) {
-    return $user->is_admin;
+    return $user->isAdmin();
 });

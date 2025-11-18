@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
+use App\Enums\UserRoleEnum;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -28,10 +29,10 @@ class AdminUserSeeder extends Seeder
             'name' => 'Admin',
             'email' => $admin_email,
             'password' => Hash::make('password'),
-            'is_admin' => true,
             'email_verified_at' => now(),
             'native_lang' => 'vi',
             'learning_lang' => 'en',
+            'role' => UserRoleEnum::ADMIN->value,
         ]);
 
         $this->command->info('✅ Admin user created successfully!');

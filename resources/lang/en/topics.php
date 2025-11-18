@@ -24,4 +24,20 @@ return [
     'visibility_description' => 'Click the eye icon to toggle visibility in chat.',
     'save_visibility' => 'Save Visibility',
     'visibility_saved' => 'Visibility settings saved successfully.',
+    
+    // Filters
+    'filters' => 'Filters',
+    'search' => 'Search',
+    'search_placeholder' => 'Search by topic name...',
+    'status' => 'Status',
+    'all_statuses' => 'All Statuses',
+    'sort_by' => 'Sort By',
+    'newest_first' => 'Newest First',
+    'oldest_first' => 'Oldest First',
+    'apply_filters_with_count' => 'Apply (:count)',
+    'reset_filters' => 'Reset Filters',
+    'no_results_found' => 'No topics found',
+    'no_results_message' => 'Try adjusting your filters to find what you\'re looking for.',
+    'system_topics' => 'System Topics',
+    'user_topics' => 'Your Topics',
 ];

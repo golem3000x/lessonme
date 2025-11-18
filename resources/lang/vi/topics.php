@@ -24,4 +24,20 @@ return [
     'visibility_description' => 'Nhấp vào biểu tượng mắt để chuyển đổi hiển thị trong trò chuyện.',
     'save_visibility' => 'Lưu Hiển thị',
     'visibility_saved' => 'Đã lưu cài đặt hiển thị thành công.',
+    
+    // Filters
+    'filters' => 'Bộ lọc',
+    'search' => 'Tìm kiếm',
+    'search_placeholder' => 'Tìm kiếm theo tên chủ đề...',
+    'status' => 'Trạng thái',
+    'all_statuses' => 'Tất cả Trạng thái',
+    'sort_by' => 'Sắp xếp theo',
+    'newest_first' => 'Mới nhất trước',
+    'oldest_first' => 'Cũ nhất trước',
+    'apply_filters_with_count' => 'Áp dụng (:count)',
+    'reset_filters' => 'Đặt lại Bộ lọc',
+    'no_results_found' => 'Không tìm thấy chủ đề',
+    'no_results_message' => 'Thử điều chỉnh bộ lọc của bạn để tìm những gì bạn đang tìm kiếm.',
+    'system_topics' => 'Chủ đề Hệ thống',
+    'user_topics' => 'Chủ đề của Bạn',
 ];

@@ -7,6 +7,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Enums\SystemLanguageEnum;
 use App\Enums\TableNameEnum;
+use App\Enums\UserRoleEnum;
 use App\Models\Lesson\Lesson;
 use App\Models\Support\ChatSession;
 use App\Models\Support\Message;
@@ -34,7 +35,7 @@ use Illuminate\Support\Carbon;
  * @property string|null $remember_token
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property bool $is_admin
+ * @property UserRoleEnum $role
  * @property string|null $zalo_user_id
  * @property string|null $facebook_id
  * @property string|null $avatar
@@ -69,7 +70,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|User whereLearningLang($value)
  * @method static Builder<static>|User whereNativeLang($value)
  * @property string $timezone
- * @method static Builder<static>|User whereIsAdmin($value)
+ * @method static Builder<static>|User whereRole($value)
  * @method static Builder<static>|User whereTimezone($value)
  * @mixin \Eloquent
  */
@@ -99,6 +100,16 @@ class User extends Authenticatable implements FilamentUser, HasLocalePreference
     ];
 
     /**
+     * The attributes that should be guarded from mass assignment.
+     * Защита критичных полей от случайной перезаписи.
+     *
+     * @var list<string>
+     */
+    protected $guarded = [
+        'role',
+    ];
+
+    /**
      * The attributes that should be hidden for serialization.
      *
      * @var list<string>
@@ -118,7 +129,7 @@ class User extends Authenticatable implements FilamentUser, HasLocalePreference
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
-            'is_admin' => 'boolean',
+            'role' => UserRoleEnum::class,
         ];
     }
 
@@ -127,7 +138,7 @@ class User extends Authenticatable implements FilamentUser, HasLocalePreference
      */
     public function canAccessPanel(Panel $panel): bool
     {
-        return $this->is_admin;
+        return $this->isAdmin();
     }
 
     /**
@@ -160,5 +171,87 @@ class User extends Authenticatable implements FilamentUser, HasLocalePreference
     public function messages(): HasMany
     {
         return $this->hasMany(Message::class);
+    }
+
+    /**
+     * Проверить, является ли пользователь администратором.
+     */
+    public function isAdmin(): bool
+    {
+        return $this->role === UserRoleEnum::ADMIN;
+    }
+
+    /**
+     * Проверить, является ли пользователь учителем.
+     */
+    public function isTeacher(): bool
+    {
+        return $this->role === UserRoleEnum::TEACHER;
+    }
+
+    /**
+     * Проверить, является ли пользователь учеником.
+     */
+    public function isStudent(): bool
+    {
+        return $this->role === UserRoleEnum::STUDENT;
+    }
+
+    /**
+     * Назначить роль пользователю.
+     * Только для явных административных операций.
+     *
+     * @param UserRoleEnum $role Новая роль
+     * @param User|null $actor Пользователь, выполняющий операцию (для аудита)
+     */
+    public function assignRole(UserRoleEnum $role, ?User $actor = null): void
+    {
+        $old_role = $this->role;
+
+        // Опционально: логирование для аудита
+        if ($actor) {
+            \Log::info('User role changed', [
+                'user_id' => $this->id,
+                'user_email' => $this->email,
+                'old_role' => $old_role?->value,
+                'new_role' => $role->value,
+                'changed_by' => $actor->id,
+                'changed_by_email' => $actor->email,
+            ]);
+        }
+
+        $this->role = $role;
+        $this->save();
+    }
+
+    /**
+     * Назначить пользователя администратором.
+     * Алиас для assignRole(UserRoleEnum::ADMIN).
+     *
+     * @param User|null $actor Пользователь, выполняющий операцию (для аудита)
+     */
+    public function makeAdmin(?User $actor = null): void
+    {
+        $this->assignRole(UserRoleEnum::ADMIN, $actor);
+    }
+
+    /**
+     * Назначить пользователя учителем.
+     *
+     * @param User|null $actor Пользователь, выполняющий операцию (для аудита)
+     */
+    public function makeTeacher(?User $actor = null): void
+    {
+        $this->assignRole(UserRoleEnum::TEACHER, $actor);
+    }
+
+    /**
+     * Назначить пользователя учеником.
+     *
+     * @param User|null $actor Пользователь, выполняющий операцию (для аудита)
+     */
+    public function makeStudent(?User $actor = null): void
+    {
+        $this->assignRole(UserRoleEnum::STUDENT, $actor);
     }
 }
