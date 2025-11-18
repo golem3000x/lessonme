@@ -143,17 +143,25 @@
                                     </div>
                                 </div>
 
-                                <div class="ml-4 flex-shrink-0">
-                                    <form method="POST" action="{{ route('lessons.history.restore', [$lesson, $history]) }}" 
-                                          onsubmit="return confirm('{{ __('lessons.restore_confirm') }}')">
-                                        @csrf
-                                        <button type="submit" class="group inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-lg hover:from-green-700 hover:to-emerald-700 font-medium shadow-md hover:shadow-lg transition-all duration-200 whitespace-nowrap">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                                            </svg>
-                                            {{ __('lessons.restore_version') }}
-                                        </button>
-                                    </form>
+                                <div class="ml-4 flex-shrink-0" x-data="{ showRestoreModal_{{ $history->id }}: false }">
+                                    <button 
+                                        @click="showRestoreModal_{{ $history->id }} = true"
+                                        class="group inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-lg hover:from-green-700 hover:to-emerald-700 font-medium shadow-md hover:shadow-lg transition-all duration-200 whitespace-nowrap">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                        </svg>
+                                        {{ __('lessons.restore_version') }}
+                                    </button>
+
+                                    <x-confirm-modal
+                                        icon="warning"
+                                        :title="__('lessons.restore_version') . '?'"
+                                        :message="__('lessons.restore_confirm')"
+                                        :confirmText="__('lessons.restore_version')"
+                                        :cancelText="__('lessons.cancel')"
+                                        :confirmRoute="route('lessons.history.restore', [$lesson, $history])"
+                                        showVariable="showRestoreModal_{{ $history->id }}"
+                                    />
                                 </div>
                             </div>
                         </div>

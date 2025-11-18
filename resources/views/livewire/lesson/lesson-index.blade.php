@@ -414,124 +414,28 @@
 
     {{-- Delete Confirmation Modal --}}
     @if($show_delete_confirm)
-        <div
-                x-data="{ open: true }"
-                x-show="open"
-                class="fixed inset-0 z-50 overflow-y-auto"
-                @click.self="$wire.cancelDelete()"
-        >
-            {{-- Фон с размытием --}}
-            <div class="fixed inset-0 bg-black/50 backdrop-blur-sm"
-                 x-show="open"
-                 x-transition
-            ></div>
-
-            {{-- Центрируем модальное окно --}}
-            <div class="flex items-center justify-center min-h-screen p-4">
-                <div
-                        class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden border border-gray-100"
-                        x-show="open"
-                        x-transition
-                        @click.stop
-                >
-                    {{-- Иконка предупреждения --}}
-                    <div class="flex justify-center pt-8 pb-4">
-                        <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-red-100 to-pink-100 rounded-full">
-                            <svg class="h-8 w-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                            </svg>
-                        </div>
-                    </div>
-
-                    {{-- Содержимое --}}
-                    <div class="px-6 pb-6 text-center">
-                        <h3 class="text-xl font-bold text-gray-900 mb-2">
-                            {{ __('lessons.delete_lesson_title') }}
-                        </h3>
-                        <p class="text-sm text-gray-600 mb-6">
-                            {{ __('lessons.delete_lesson_message') }}
-                        </p>
-
-                        {{-- Кнопки --}}
-                        <div class="flex gap-3">
-                            <button
-                                    wire:click="cancelDelete"
-                                    class="flex-1 px-4 py-2.5 bg-gray-100 text-gray-700 font-semibold rounded-lg hover:bg-gray-200 transition-all duration-200"
-                            >
-                                {{ __('lessons.cancel') }}
-                            </button>
-                            <button
-                                    wire:click="deleteLesson"
-                                    class="flex-1 px-4 py-2.5 bg-gradient-to-r from-red-600 to-pink-600 text-white font-semibold rounded-lg hover:from-red-700 hover:to-pink-700 shadow-md hover:shadow-lg transition-all duration-200"
-                            >
-                                {{ __('lessons.delete') }}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <x-confirm-modal-livewire
+            icon="danger"
+            :title="__('lessons.delete_lesson_title')"
+            :message="__('lessons.delete_lesson_message')"
+            :confirmText="__('lessons.delete')"
+            :cancelText="__('lessons.cancel')"
+            confirmMethod="deleteLesson"
+            cancelMethod="cancelDelete"
+        />
     @endif
 
     {{-- Regenerate Confirmation Modal --}}
     @if($show_regenerate_confirm)
-        <div
-                x-data="{ open: true }"
-                x-show="open"
-                class="fixed inset-0 z-50 overflow-y-auto"
-                @click.self="$wire.cancelRegenerate()"
-        >
-            {{-- Фон с размытием --}}
-            <div class="fixed inset-0 bg-black/50 backdrop-blur-sm"
-                 x-show="open"
-                 x-transition
-            ></div>
-
-            {{-- Центрируем модальное окно --}}
-            <div class="flex items-center justify-center min-h-screen p-4">
-                <div
-                        class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden border border-gray-100"
-                        x-show="open"
-                        x-transition
-                        @click.stop
-                >
-                    {{-- Иконка предупреждения --}}
-                    <div class="flex justify-center pt-8 pb-4">
-                        <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-yellow-100 to-orange-100 rounded-full">
-                            <svg class="h-8 w-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                            </svg>
-                        </div>
-                    </div>
-
-                    {{-- Содержимое --}}
-                    <div class="px-6 pb-6 text-center">
-                        <h3 class="text-xl font-bold text-gray-900 mb-2">
-                            {{ __('lessons.regenerate_lesson_title') }}
-                        </h3>
-                        <p class="text-sm text-gray-600 mb-6">
-                            {{ __('lessons.regenerate_lesson_message') }}
-                        </p>
-
-                        {{-- Кнопки --}}
-                        <div class="flex gap-3">
-                            <button
-                                    wire:click="cancelRegenerate"
-                                    class="flex-1 px-4 py-2.5 bg-gray-100 text-gray-700 font-semibold rounded-lg hover:bg-gray-200 transition-all duration-200"
-                            >
-                                {{ __('lessons.cancel') }}
-                            </button>
-                            <button
-                                    wire:click="regenerateLesson"
-                                    class="flex-1 px-4 py-2.5 bg-gradient-to-r from-yellow-600 to-orange-600 text-white font-semibold rounded-lg hover:from-yellow-700 hover:to-orange-700 shadow-md hover:shadow-lg transition-all duration-200"
-                            >
-                                {{ __('lessons.regenerate') }}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <x-confirm-modal-livewire
+            icon="warning"
+            :title="__('lessons.regenerate_lesson_title')"
+            :message="__('lessons.regenerate_lesson_message')"
+            :confirmText="__('lessons.regenerate')"
+            :cancelText="__('lessons.cancel')"
+            confirmMethod="regenerateLesson"
+            cancelMethod="cancelRegenerate"
+        />
     @endif
 </div>
 
