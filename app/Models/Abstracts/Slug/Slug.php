@@ -95,10 +95,25 @@ abstract class Slug extends BaseModel
      */
     public function translatedValue(?string $lang = null): string
     {
+        $lang = $lang ?? app()->getLocale();
+        
+        // Try to get translation for requested language
         $translation = $this->translations
-            ->firstWhere('language_code', $lang ?? app()->getLocale());
+            ->firstWhere('language_code', $lang);
 
-        return $translation->value ?? '—';
+        if ($translation) {
+            return $translation->value;
+        }
+
+        // Fallback to first available translation
+        $firstTranslation = $this->translations->first();
+        
+        if ($firstTranslation) {
+            return $firstTranslation->value;
+        }
+
+        // Last resort: return slug
+        return $this->slug;
     }
 
     /**

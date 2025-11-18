@@ -61,11 +61,20 @@ class CreateKeyword extends Component
             ],
         ]);
 
+        // Dispatch event to show loading placeholder
+        $this->dispatch('keyword-creating', topicId: $this->topic_id);
+
         $keyword = Keyword::create([
             'user_id' => $user->id,
             'topic_id' => $this->topic_id,
             'slug' => $slug,
             'is_system' => false,
+        ]);
+
+        // Create temporary translation with original name (will be replaced by AI)
+        $keyword->translations()->create([
+            'language_code' => $this->native_lang,
+            'value' => $value,
         ]);
 
         $user->notify(new SlugProcessingNotification($keyword));

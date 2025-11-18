@@ -45,13 +45,13 @@ class LessonIndex extends Component
 
     public bool $show_level_dropdown = false;
 
+    public bool $show_sort_dropdown = false;
+
     // Filter values (temporary, not applied yet)
     public string $temp_search = '';
 
     /** @var array<int, string> */
     public array $temp_language_levels = [];
-
-    public string $temp_sort = 'newest';
 
     // Applied filter values
     public string $search = '';
@@ -71,7 +71,22 @@ class LessonIndex extends Component
         // Initialize temp filters with applied values
         $this->temp_search = $this->search;
         $this->temp_language_levels = $this->language_levels;
-        $this->temp_sort = $this->sort;
+    }
+
+    public function updated(string $property): void
+    {
+        // Save sort to session when it changes
+        if ($property === 'sort') {
+            session(['lesson_filters.sort' => $this->sort]);
+            $this->resetPage();
+        }
+    }
+
+    public function setSort(string $sort_value): void
+    {
+        $this->sort = $sort_value;
+        session(['lesson_filters.sort' => $this->sort]);
+        $this->resetPage();
     }
 
     #[On('lesson-creation-queued')]
@@ -279,7 +294,6 @@ class LessonIndex extends Component
         if ($this->show_filters) {
             $this->temp_search = $this->search;
             $this->temp_language_levels = $this->language_levels;
-            $this->temp_sort = $this->sort;
         }
 
         // Close level dropdown when closing filters panel
@@ -292,13 +306,11 @@ class LessonIndex extends Component
     {
         $this->search = $this->temp_search;
         $this->language_levels = $this->temp_language_levels;
-        $this->sort = $this->temp_sort;
 
         // Save filters to session
         session([
             'lesson_filters.search' => $this->search,
             'lesson_filters.language_levels' => $this->language_levels,
-            'lesson_filters.sort' => $this->sort,
         ]);
 
         $this->resetPage();
@@ -310,14 +322,12 @@ class LessonIndex extends Component
     {
         $this->temp_search = '';
         $this->temp_language_levels = [];
-        $this->temp_sort = 'newest';
 
         $this->search = '';
         $this->language_levels = [];
-        $this->sort = 'newest';
 
-        // Clear filters from session
-        session()->forget('lesson_filters');
+        // Clear filters from session (keep sort)
+        session()->forget(['lesson_filters.search', 'lesson_filters.language_levels']);
 
         $this->resetPage();
         $this->show_level_dropdown = false;

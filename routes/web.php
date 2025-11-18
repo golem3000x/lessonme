@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\SystemLanguageEnum;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\SocialAuthController;
 use App\Http\Controllers\Auth\ZaloController;
@@ -21,7 +22,7 @@ Route::get('/about', function () {
 })->name('about');
 
 Route::get('/locale/{locale}', function (string $locale) {
-    if (in_array($locale, ['en', 'vi'], true)) {
+    if (in_array($locale, SystemLanguageEnum::toArray(), true)) {
         Session::put('locale', $locale);
     }
 

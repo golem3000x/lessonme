@@ -30,24 +30,36 @@ class TopicIndex extends Component
     /** @var array<int,int> */
     public array $expanded_topics = [];
 
+    // Placeholders for topics being created
+    /** @var array<int, string> */
+    public array $creating_topics_placeholders = [];
+
+    // Placeholders for keywords being created per topic
+    /** @var array<int, array<int, string>> */
+    public array $creating_keywords_placeholders = [];
+
+    // Active tab: 'system' or 'custom'
+    public string $active_tab = 'custom';
+
     // Filters UI state
     public bool $show_filters = false;
 
-    public bool $show_status_dropdown = false;
+    public bool $show_sort_dropdown = false;
+
+    // Confirmation modals
+    public bool $show_delete_topic_confirm = false;
+
+    public ?int $topic_to_delete = null;
+
+    public bool $show_delete_keyword_confirm = false;
+
+    public ?int $keyword_to_delete = null;
 
     // Filter values (temporary, not applied yet)
     public string $temp_search = '';
 
-    /** @var array<int, string> */
-    public array $temp_statuses = [];
-
-    public string $temp_sort = 'newest';
-
     // Applied filter values
     public string $search = '';
-
-    /** @var array<int, string> */
-    public array $statuses = [];
 
     public string $sort = 'newest';
 
@@ -55,15 +67,50 @@ class TopicIndex extends Component
     {
         $this->loadVisibilityState();
 
-        // Restore filters from session
+        // Restore filters and tab from session
+        $this->active_tab = session('topic_filters.active_tab', 'custom');
         $this->search = session('topic_filters.search', '');
-        $this->statuses = session('topic_filters.statuses', []);
         $this->sort = session('topic_filters.sort', 'newest');
 
         // Initialize temp filters with applied values
         $this->temp_search = $this->search;
-        $this->temp_statuses = $this->statuses;
-        $this->temp_sort = $this->sort;
+    }
+
+    public function updated(string $property): void
+    {
+        // Save sort to session when it changes
+        if ($property === 'sort') {
+            session(['topic_filters.sort' => $this->sort]);
+            $this->resetPage();
+        }
+    }
+
+    public function setSort(string $sort_value): void
+    {
+        $this->sort = $sort_value;
+        session(['topic_filters.sort' => $this->sort]);
+        $this->resetPage();
+    }
+
+    #[On('topic-creating')]
+    public function addTopicPlaceholder(): void
+    {
+        // Generate unique ID for the placeholder
+        $placeholder_id = uniqid('placeholder_', true);
+        $this->creating_topics_placeholders[] = $placeholder_id;
+    }
+
+    #[On('keyword-creating')]
+    public function addKeywordPlaceholder(int $topicId): void
+    {
+        // Generate unique ID for the placeholder
+        $placeholder_id = uniqid('placeholder_', true);
+        
+        if (!isset($this->creating_keywords_placeholders[$topicId])) {
+            $this->creating_keywords_placeholders[$topicId] = [];
+        }
+        
+        $this->creating_keywords_placeholders[$topicId][] = $placeholder_id;
     }
 
     #[On('topic-created')]
@@ -72,6 +119,10 @@ class TopicIndex extends Component
     {
         /** @var User $user */
         $user = Auth::user();
+
+        // Clear all placeholders when topic/keyword is created
+        $this->creating_topics_placeholders = [];
+        $this->creating_keywords_placeholders = [];
 
         // Load all topic visibility states
         $topic_visibility = UserTopicVisibility::where('user_id', $user->id)
@@ -130,7 +181,21 @@ class TopicIndex extends Component
             return;
         }
 
+        // Remove from visible topics and expanded arrays if present
+        $this->visible_topic_ids = array_values(array_filter(
+            $this->visible_topic_ids,
+            fn ($id) => $id !== $topic_id
+        ));
+
+        $this->expanded_topics = array_values(array_filter(
+            $this->expanded_topics,
+            fn ($id) => $id !== $topic_id
+        ));
+
         $topic->delete();
+
+        // Reset pagination to avoid issues
+        $this->resetPage();
 
         session()->flash('message', __('topics.topic_deleted'));
     }
@@ -148,9 +213,59 @@ class TopicIndex extends Component
             return;
         }
 
+        // Remove from visible keywords array if present
+        $this->visible_keyword_ids = array_values(array_filter(
+            $this->visible_keyword_ids,
+            fn ($id) => $id !== $keyword_id
+        ));
+
         $keyword->delete();
 
         session()->flash('message', __('topics.keyword_deleted'));
+    }
+
+    // Modal methods for topic deletion
+    public function requestDeleteTopic(int $topic_id): void
+    {
+        $this->topic_to_delete = $topic_id;
+        $this->show_delete_topic_confirm = true;
+    }
+
+    public function confirmDeleteTopic(): void
+    {
+        if ($this->topic_to_delete) {
+            $this->deleteTopic($this->topic_to_delete);
+        }
+
+        $this->cancelDeleteTopic();
+    }
+
+    public function cancelDeleteTopic(): void
+    {
+        $this->show_delete_topic_confirm = false;
+        $this->topic_to_delete = null;
+    }
+
+    // Modal methods for keyword deletion
+    public function requestDeleteKeyword(int $keyword_id): void
+    {
+        $this->keyword_to_delete = $keyword_id;
+        $this->show_delete_keyword_confirm = true;
+    }
+
+    public function confirmDeleteKeyword(): void
+    {
+        if ($this->keyword_to_delete) {
+            $this->deleteKeyword($this->keyword_to_delete);
+        }
+
+        $this->cancelDeleteKeyword();
+    }
+
+    public function cancelDeleteKeyword(): void
+    {
+        $this->show_delete_keyword_confirm = false;
+        $this->keyword_to_delete = null;
     }
 
     public function toggleTopicVisibility(int $topic_id): void
@@ -203,6 +318,21 @@ class TopicIndex extends Component
         );
     }
 
+    public function switchTab(string $tab): void
+    {
+        $this->active_tab = $tab;
+        
+        // Close filters panel and sort dropdown when switching tabs
+        $this->show_filters = false;
+        $this->show_sort_dropdown = false;
+        
+        // Save tab to session
+        session(['topic_filters.active_tab' => $tab]);
+        
+        // Reset pagination when switching tabs
+        $this->resetPage();
+    }
+
     public function toggleAccordion(int $topic_id): void
     {
         $index = array_search($topic_id, $this->expanded_topics, true);
@@ -224,49 +354,31 @@ class TopicIndex extends Component
         // Sync temp filters with current applied filters when opening
         if ($this->show_filters) {
             $this->temp_search = $this->search;
-            $this->temp_statuses = $this->statuses;
-            $this->temp_sort = $this->sort;
-        }
-
-        // Close status dropdown when closing filters panel
-        if (! $this->show_filters) {
-            $this->show_status_dropdown = false;
         }
     }
 
     public function applyFilters(): void
     {
         $this->search = $this->temp_search;
-        $this->statuses = $this->temp_statuses;
-        $this->sort = $this->temp_sort;
 
         // Save filters to session
         session([
             'topic_filters.search' => $this->search,
-            'topic_filters.statuses' => $this->statuses,
-            'topic_filters.sort' => $this->sort,
         ]);
 
         $this->resetPage();
         $this->show_filters = false;
-        $this->show_status_dropdown = false;
     }
 
     public function resetFilters(): void
     {
         $this->temp_search = '';
-        $this->temp_statuses = [];
-        $this->temp_sort = 'newest';
-
         $this->search = '';
-        $this->statuses = [];
-        $this->sort = 'newest';
 
-        // Clear filters from session
-        session()->forget('topic_filters');
+        // Clear filters from session (keep active_tab)
+        session()->forget(['topic_filters.search']);
 
         $this->resetPage();
-        $this->show_status_dropdown = false;
     }
 
     #[Computed]
@@ -275,9 +387,8 @@ class TopicIndex extends Component
         /** @var User $user */
         $user = Auth::user();
         
-        $query = Topic::where(function ($q) use ($user): void {
-            $q->whereNull('user_id')->orWhere('user_id', '=', $user->id);
-        });
+        // Only count custom topics for filters
+        $query = Topic::where('user_id', '=', $user->id);
 
         // Apply temporary search filter
         if ($this->temp_search) {
@@ -286,83 +397,62 @@ class TopicIndex extends Component
             });
         }
 
-        // Apply temporary status filter
-        if (! empty($this->temp_statuses)) {
-            $query->where(function ($q) use ($user) {
-                foreach ($this->temp_statuses as $status) {
-                    if ($status === 'system') {
-                        $q->orWhereNull('user_id');
-                    } elseif ($status === 'user') {
-                        $q->orWhere('user_id', '=', $user->id);
-                    }
-                }
-            });
-        }
-
         return $query->count();
     }
 
     public function hasActiveFilters(): bool
     {
-        return $this->search !== '' || ! empty($this->statuses) || $this->sort !== 'newest';
+        return $this->search !== '' || $this->sort !== 'newest';
     }
 
-    /**
-     * @return array<int, array{value: string, label: string}>
-     */
-    public function getStatusOptions(): array
-    {
-        return [
-            ['value' => 'system', 'label' => __('topics.system')],
-            ['value' => 'user', 'label' => __('topics.custom')],
-        ];
-    }
 
     public function render(): Factory|View
     {
         /** @var User $user */
         $user = Auth::user();
         
-        $locale = app()->getLocale();
-        $query = Topic::with([
-            'translations',
-            'keywords.translations',
-        ])
-            ->where(function ($q) use ($user): void {
-                $q->whereNull('user_id')->orWhere('user_id', '=', $user->id);
-            });
+        if ($this->active_tab === 'system') {
+            // System topics - no filters, no pagination
+            $system_topics = Topic::with([
+                'translations',
+                'keywords.translations',
+            ])
+                ->whereNull('user_id')
+                ->latest()
+                ->get();
 
-        // Apply search filter
-        if ($this->search) {
-            $query->whereHas('translations', function ($q) {
-                $q->where('value', 'like', '%'.$this->search.'%');
-            });
-        }
-
-        // Apply status filter
-        if (! empty($this->statuses)) {
-            $query->where(function ($q) use ($user) {
-                foreach ($this->statuses as $status) {
-                    if ($status === 'system') {
-                        $q->orWhereNull('user_id');
-                    } elseif ($status === 'user') {
-                        $q->orWhere('user_id', '=', $user->id);
-                    }
-                }
-            });
-        }
-
-        // Apply sorting
-        if ($this->sort === 'oldest') {
-            $query->oldest();
+            return view('livewire.topic.topic-index', [
+                'system_topics' => $system_topics,
+                'custom_topics' => collect(),
+            ]);
         } else {
-            $query->latest();
+            // Custom topics - with filters and pagination
+            $query = Topic::with([
+                'translations',
+                'keywords.translations',
+            ])
+                ->where('user_id', '=', $user->id);
+
+            // Apply search filter
+            if ($this->search) {
+                $query->whereHas('translations', function ($q) {
+                    $q->where('value', 'like', '%'.$this->search.'%');
+                });
+            }
+
+            // Apply sorting
+            if ($this->sort === 'oldest') {
+                $query->oldest();
+            } else {
+                $query->latest();
+            }
+
+            $custom_topics = $query->paginate(12);
+
+            return view('livewire.topic.topic-index', [
+                'system_topics' => collect(),
+                'custom_topics' => $custom_topics,
+            ]);
         }
-
-        $topics = $query->paginate(12);
-
-        return view('livewire.topic.topic-index', [
-            'topics' => $topics,
-        ]);
     }
 }

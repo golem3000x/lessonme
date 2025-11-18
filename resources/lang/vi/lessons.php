@@ -80,8 +80,10 @@ return [
 
     // Filters
     'filters' => 'Bộ lọc',
+    'sort' => 'Sắp xếp',
     'apply_filters' => 'Áp dụng bộ lọc',
     'apply_filters_with_count' => 'Áp dụng bộ lọc (:count bài học)',
+    'reset' => 'Đặt lại',
     'reset_filters' => 'Đặt lại',
     'search' => 'Tìm kiếm',
     'search_placeholder' => 'Tìm kiếm theo tên bài học...',

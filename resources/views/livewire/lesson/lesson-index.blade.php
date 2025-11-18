@@ -12,8 +12,57 @@
         </h2>
 
         <div class="flex items-center gap-2">
-            {{-- Show filter button if there are lessons OR if filters are active --}}
+            {{-- Show filter and sort buttons if there are lessons OR if filters are active --}}
             @if(!$lessons->isEmpty() || $this->hasActiveFilters())
+                {{-- Sort dropdown --}}
+                <div class="relative" x-data="{ open: @entangle('show_sort_dropdown') }">
+                    <button
+                        type="button"
+                        @click="open = !open"
+                        class="group flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 hover:bg-gray-200 text-sm font-medium rounded-lg shadow transition"
+                        title="{{ __('lessons.sort_by') }}"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"/>
+                        </svg>
+                        <span class="hidden sm:inline">{{ __('lessons.sort') }}</span>
+                        <svg class="w-4 h-4 text-gray-500 transition-transform" :class="{'rotate-180': open}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </button>
+
+                    {{-- Dropdown Menu --}}
+                    <div
+                        x-show="open"
+                        @click.outside="open = false"
+                        x-transition:enter="transition ease-out duration-100"
+                        x-transition:enter-start="opacity-0 scale-95"
+                        x-transition:enter-end="opacity-100 scale-100"
+                        x-transition:leave="transition ease-in duration-75"
+                        x-transition:leave-start="opacity-100 scale-100"
+                        x-transition:leave-end="opacity-0 scale-95"
+                        class="absolute z-50 right-0 mt-1 w-48 bg-white border border-gray-300 rounded-lg shadow-lg"
+                        style="display: none;"
+                    >
+                        <div class="p-2">
+                            <button
+                                wire:click="setSort('newest')"
+                                @click="open = false"
+                                class="w-full text-left px-3 py-2 text-sm rounded hover:bg-gray-50 transition {{ $sort === 'newest' ? 'bg-blue-50 text-blue-700 font-medium' : 'text-gray-700' }}"
+                            >
+                                {{ __('lessons.newest_first') }}
+                            </button>
+                            <button
+                                wire:click="setSort('oldest')"
+                                @click="open = false"
+                                class="w-full text-left px-3 py-2 text-sm rounded hover:bg-gray-50 transition {{ $sort === 'oldest' ? 'bg-blue-50 text-blue-700 font-medium' : 'text-gray-700' }}"
+                            >
+                                {{ __('lessons.oldest_first') }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
                 {{-- Filter button --}}
                 <button
                         wire:click="toggleFilters"
@@ -24,7 +73,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
                     </svg>
                     <span class="hidden sm:inline">{{ __('lessons.filters') }}</span>
-                    @if($search || !empty($language_levels) || $sort !== 'newest')
+                    @if($search || !empty($language_levels))
                         <span class="inline-flex items-center justify-center w-5 h-5 text-xs font-bold bg-white text-blue-600 rounded-full">!</span>
                     @endif
                 </button>
@@ -50,7 +99,7 @@
     {{-- Filters Panel --}}
     @if($show_filters)
         <div class="bg-white border border-gray-200 rounded-xl shadow-sm p-6 space-y-4" wire:key="filters-panel">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {{-- Search --}}
                 <div>
                     <label for="temp_search" class="block text-sm font-medium text-gray-700 mb-2">
@@ -59,7 +108,7 @@
                     <input
                             type="text"
                             id="temp_search"
-                            wire:model.live="temp_search"
+                            wire:model.live.debounce.300ms="temp_search"
                             placeholder="{{ __('lessons.search_placeholder') }}"
                             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
                     />
@@ -120,30 +169,18 @@
                         </div>
                     </div>
                 </div>
-
-                {{-- Sort --}}
-                <div>
-                    <label for="temp_sort" class="block text-sm font-medium text-gray-700 mb-2">
-                        {{ __('lessons.sort_by') }}
-                    </label>
-                    <select
-                            id="temp_sort"
-                            wire:model.live="temp_sort"
-                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
-                    >
-                        <option value="newest">{{ __('lessons.newest_first') }}</option>
-                        <option value="oldest">{{ __('lessons.oldest_first') }}</option>
-                    </select>
-                </div>
             </div>
 
             {{-- Actions --}}
             <div class="flex items-center justify-between pt-4 border-t border-gray-200">
                 <button
                         wire:click="resetFilters"
-                        class="text-sm text-gray-600 hover:text-gray-800 font-medium transition"
+                        class="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-200 transition"
                 >
-                    {{ __('lessons.reset_filters') }}
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                    </svg>
+                    {{ __('lessons.reset') }}
                 </button>
 
                 <button

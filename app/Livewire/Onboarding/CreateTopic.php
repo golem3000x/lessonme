@@ -56,11 +56,20 @@ class CreateTopic extends Component
             ],
         ]);
 
+        // Dispatch event to show loading placeholder BEFORE creating topic
+        $this->dispatch('topic-creating');
+
         $topic = Topic::create([
             'user_id' => $user->id,
             'slug' => $slug,
             'is_system' => false,
             'is_approved' => false,
+        ]);
+
+        // Create temporary translation with original name (will be replaced by AI)
+        $topic->translations()->create([
+            'language_code' => $this->native_lang,
+            'value' => $value,
         ]);
 
         $user->notify(new SlugProcessingNotification($topic));

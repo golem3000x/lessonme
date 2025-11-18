@@ -80,8 +80,10 @@ return [
 
     // Filters
     'filters' => 'Filters',
+    'sort' => 'Sort',
     'apply_filters' => 'Apply filters',
     'apply_filters_with_count' => 'Apply filters (:count lessons)',
+    'reset' => 'Reset',
     'reset_filters' => 'Reset',
     'search' => 'Search',
     'search_placeholder' => 'Search by lesson name...',
