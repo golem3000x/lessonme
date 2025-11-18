@@ -107,8 +107,8 @@ if (userId) {
             lesson_url: notification.lesson_url,
             lesson_name: notification.lesson_name
         });
-        // Reload lessons list
-        Livewire.dispatch('lesson-regenerated');
+        // Reload lessons list and clear placeholders
+        Livewire.dispatch('lesson-created');
     });
 
     channel.listen('.lesson.creation.exists', (notification) => {
@@ -122,6 +122,8 @@ if (userId) {
             lesson_url: notification.lesson_url,
             lesson_name: notification.lesson_name
         });
+        // Clear placeholders when lesson already exists
+        Livewire.dispatch('lesson-created');
     });
 
     channel.listen('.lesson.creation.error', (notification) => {
@@ -132,6 +134,8 @@ if (userId) {
             status: notification.status,
             message: notification.message
         });
+        // Clear placeholders on error
+        Livewire.dispatch('lesson-created');
     });
 
     // User auth notifications (welcome & registration)

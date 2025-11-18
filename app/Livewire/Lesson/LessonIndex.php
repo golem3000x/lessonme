@@ -36,6 +36,10 @@ class LessonIndex extends Component
 
     public ?int $lesson_to_regenerate = null;
 
+    // Placeholders for lessons being created
+    /** @var array<int, string> */
+    public array $creating_lessons_placeholders = [];
+
     // Filters UI state
     public bool $show_filters = false;
 
@@ -70,10 +74,21 @@ class LessonIndex extends Component
         $this->temp_sort = $this->sort;
     }
 
+    #[On('lesson-creation-queued')]
+    public function addPlaceholder(): void
+    {
+        // Generate unique ID for the placeholder
+        $placeholder_id = uniqid('placeholder_', true);
+        $this->creating_lessons_placeholders[] = $placeholder_id;
+    }
+
     #[On('lesson-created')]
     #[On('lesson-regenerated')]
     public function refreshLessons(): void
     {
+        // Clear all placeholders when lesson is created
+        $this->creating_lessons_placeholders = [];
+        
         // Just refresh the component - pagination will be handled automatically
         $this->resetPage();
     }

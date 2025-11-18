@@ -15,3 +15,19 @@
     display: none !important;
 }
 
+/* Shimmer animation for loading placeholders */
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+@layer utilities {
+    .animate-shimmer {
+        animation: shimmer 2s infinite;
+    }
+}
+

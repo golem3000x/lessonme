@@ -51,6 +51,7 @@ return [
     'lesson_exists' => 'Một bài học tương tự ":name" đã tồn tại.',
     'topic_label' => 'Chủ đề',
     'no_keywords' => 'Không có từ khóa nào',
+    'creating_lesson' => 'Đang tạo bài học...',
     'lesson_creation_in_progress' => 'Đang tạo bài học...',
     'lesson_created_successfully' => 'Bài học ":name" đã được tạo thành công!',
     'lesson_creation_failed' => 'Tạo bài học thất bại. Vui lòng thử lại.',
