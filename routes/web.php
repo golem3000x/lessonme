@@ -51,7 +51,7 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('/onboarding', ProfileSetup::class)->name('onboarding.profile');
-    Route::get('/topics', TopicSelector::class)->name('onboarding.topics');
+    // Route::get('/topics', TopicSelector::class)->name('onboarding.topics'); // Disabled - not needed
 
     // Topics management
     Route::get('/manage-topics', TopicIndex::class)->name('topics.index');

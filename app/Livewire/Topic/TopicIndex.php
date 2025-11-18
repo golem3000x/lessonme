@@ -447,7 +447,7 @@ class TopicIndex extends Component
                 $query->latest();
             }
 
-            $custom_topics = $query->paginate(12);
+            $custom_topics = $query->paginate(6);
 
             return view('livewire.topic.topic-index', [
                 'system_topics' => collect(),

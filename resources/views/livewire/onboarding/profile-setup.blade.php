@@ -71,19 +71,6 @@
         </div>
     </div>
 
-    <!-- Info box -->
-    <div class="mb-8 p-5 bg-blue-50 border border-blue-200 rounded-xl flex items-start gap-3">
-        <svg xmlns="http://www.w3.org/2000/svg"
-             class="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0"
-             fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M13 16h-1v-4h-1m1-4h.01M12 20.5a8.38 8.38 0 100-16.76 8.38 8.38 0 000 16.76z"/>
-        </svg>
-        <p class="text-sm text-gray-700 leading-relaxed">
-            {{ __('onboarding.next_step_message') }}
-        </p>
-    </div>
-
     <!-- Save button -->
     <div class="flex justify-end">
         <button wire:click="save"

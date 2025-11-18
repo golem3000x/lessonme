@@ -166,7 +166,7 @@ class ProfileSetup extends Component
 
         session()->flash('message', __('onboarding.profile_saved'));
 
-        return redirect()->route('onboarding.topics');
+        // Stay on the same page after saving
     }
 
     protected function saveTopicVisibility(User $user): void
