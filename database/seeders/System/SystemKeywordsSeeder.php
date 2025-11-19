@@ -37,6 +37,7 @@ class SystemKeywordsSeeder extends Seeder
                 : DB::table(TableNameEnum::KEYWORDS->value)->insertGetId([
                     'topic_id' => $topic->id,
                     'is_system' => true,
+                    'is_approved' => true,
                     'slug' => $slug,
                     'created_at' => now(),
                     'updated_at' => now(),

@@ -47,6 +47,7 @@ return [
     'generation_failed' => 'Không thể tạo bài học. Vui lòng thử lại.',
     'generation_started' => 'Đang bắt đầu tạo bài học...',
     'topic_not_found' => 'Không tìm thấy chủ đề đã chọn.',
+    'languages_must_be_different' => 'Ngôn ngữ mẹ đẻ và ngôn ngữ học phải khác nhau.',
     'lesson_created_notification' => 'Bài học ":name" đã được tạo thành công!',
     'lesson_exists' => 'Một bài học tương tự ":name" đã tồn tại.',
     'topic_label' => 'Chủ đề',
@@ -94,4 +95,8 @@ return [
     'actions' => 'Hành động',
     'no_results_found' => 'Không tìm thấy kết quả',
     'no_results_message' => 'Thử điều chỉnh bộ lọc hoặc đặt lại chúng để xem tất cả bài học.',
+    'native_language' => 'Ngôn ngữ mẹ đẻ',
+    'learning_language' => 'Ngôn ngữ học',
+    'language_level' => 'Trình độ ngôn ngữ',
+    'optional' => 'Tùy chọn',
 ];

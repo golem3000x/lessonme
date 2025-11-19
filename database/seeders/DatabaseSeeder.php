@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             SystemTopicsSeeder::class,
             SystemKeywordsSeeder::class,
             AdminUserSeeder::class,
+            GuestUserSeeder::class,
         ]);
     }
 }

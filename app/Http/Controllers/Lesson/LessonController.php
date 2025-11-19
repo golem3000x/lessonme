@@ -12,6 +12,7 @@ use App\Models\Topic\Topic;
 use App\Models\User;
 use App\Services\Lesson\LessonHistoryService;
 use App\Services\Slug\SlugService;
+use Database\Seeders\GuestUserSeeder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
@@ -83,7 +84,14 @@ class LessonController extends Controller
 
     public function show(Lesson $lesson): Factory|View
     {
-        abort_if($lesson->user_id !== Auth::id(), 403);
+        // Allow viewing demo lessons (guest user lessons) without authentication
+        $guest_user = User::where('email', GuestUserSeeder::GUEST_EMAIL)->first();
+        $is_demo_lesson = $guest_user && $lesson->user_id === $guest_user->id;
+
+        // Check authorization only for non-demo lessons
+        if (! $is_demo_lesson) {
+            abort_if($lesson->user_id !== Auth::id(), 403);
+        }
 
         $lesson->load('topic.translations');
 

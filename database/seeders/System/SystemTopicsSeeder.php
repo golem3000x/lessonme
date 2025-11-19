@@ -21,7 +21,12 @@ class SystemTopicsSeeder extends Seeder
         foreach (SystemTopicEnum::cases() as $enum) {
             DB::table(TableNameEnum::TOPICS->value)->updateOrInsert(
                 ['slug' => Str::slug($enum->value)],
-                ['is_system' => true, 'created_at' => now(), 'updated_at' => now()]
+                [
+                    'is_system' => true,
+                    'is_approved' => true,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]
             );
         }
 

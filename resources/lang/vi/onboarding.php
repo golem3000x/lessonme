@@ -4,7 +4,16 @@ declare(strict_types=1);
 
 return [
     'choose_interests' => 'Chọn sở thích của bạn',
+    'profile_setup' => 'Thiết lập hồ sơ',
     'name' => 'Tên',
+    'avatar' => 'Ảnh đại diện',
+    'upload_avatar' => 'Tải Ảnh Lên',
+    'remove_avatar' => 'Xóa Ảnh',
+    'avatar_removed' => 'Đã xóa ảnh đại diện thành công.',
+    'avatar_must_be_image' => 'Ảnh đại diện phải là tệp hình ảnh.',
+    'avatar_max_size' => 'Kích thước ảnh đại diện không được vượt quá 2MB.',
+    'uploading' => 'Đang tải lên',
+    'enter_name' => 'Nhập tên của bạn',
     'native_language' => 'Ngôn ngữ mẹ đẻ',
     'learning_language' => 'Ngôn ngữ đang học',
     'save' => 'Lưu',

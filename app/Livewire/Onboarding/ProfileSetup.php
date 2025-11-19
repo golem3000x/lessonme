@@ -15,16 +15,22 @@ use App\Models\User;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 
 class ProfileSetup extends Component
 {
+    use WithFileUploads;
+
     public string $name = '';
 
     public string $native_lang = '';
 
     public string $learning_lang = '';
+
+    public $avatar;
 
     /** @var SystemLanguageEnum[] */
     public array $languages = [];
@@ -141,32 +147,71 @@ class ProfileSetup extends Component
         dispatch(new ModerateKeywordJob($keyword));
     }
 
+    public function removeAvatar()
+    {
+        /** @var User $user */
+        $user = Auth::user();
+
+        if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
+            Storage::disk('public')->delete($user->avatar);
+        }
+
+        $user->update(['avatar' => null]);
+        
+        session()->flash('message', __('onboarding.avatar_removed'));
+        
+        return redirect()->route('onboarding.profile');
+    }
+
     public function save()
     {
         $this->validate([
             'name' => 'required|string|max:255',
             'native_lang' => 'required|string|different:learning_lang',
             'learning_lang' => 'required|string|different:native_lang',
+            'avatar' => 'nullable|image|max:2048', // 2MB max
         ], [
             'native_lang.different' => __('onboarding.languages_must_be_different'),
             'learning_lang.different' => __('onboarding.languages_must_be_different'),
+            'avatar.image' => __('onboarding.avatar_must_be_image'),
+            'avatar.max' => __('onboarding.avatar_max_size'),
         ]);
 
         /** @var User $user */
         $user = Auth::user();
 
-        $user->update([
+        $data = [
             'name' => $this->name,
             'native_lang' => $this->native_lang,
             'learning_lang' => $this->learning_lang,
-        ]);
+        ];
+
+        // Handle avatar upload
+        if ($this->avatar) {
+            // Delete old avatar if exists
+            if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
+                Storage::disk('public')->delete($user->avatar);
+            }
+
+            // Generate unique filename and store
+            $filename = uniqid('avatar_') . '.' . $this->avatar->getClientOriginalExtension();
+            $path = $this->avatar->storeAs('avatars', $filename, 'public');
+            $data['avatar'] = $path;
+        }
+
+        $user->update($data);
+
+        // Refresh auth user data in session
+        $user = $user->fresh();
+        Auth::login($user);
 
         $this->saveTopicVisibility($user);
         $this->saveKeywordVisibility($user);
 
         session()->flash('message', __('onboarding.profile_saved'));
 
-        // Stay on the same page after saving
+        // Redirect to refresh the page and show updated avatar
+        return redirect()->route('onboarding.profile');
     }
 
     protected function saveTopicVisibility(User $user): void

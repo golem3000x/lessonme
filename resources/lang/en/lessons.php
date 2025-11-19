@@ -47,6 +47,7 @@ return [
     'generation_failed' => 'Failed to generate lesson. Please try again.',
     'generation_started' => 'Lesson generation started...',
     'topic_not_found' => 'Selected topic was not found.',
+    'languages_must_be_different' => 'Native language and learning language must be different.',
     'lesson_created_notification' => 'Lesson ":name" has been created successfully!',
     'topic_label' => 'Topic',
     'no_keywords' => 'No keywords available',
@@ -94,4 +95,8 @@ return [
     'actions' => 'Actions',
     'no_results_found' => 'No results found',
     'no_results_message' => 'Try adjusting your filters or reset them to see all lessons.',
+    'native_language' => 'Native Language',
+    'learning_language' => 'Learning Language',
+    'language_level' => 'Language Level',
+    'optional' => 'Optional',
 ];

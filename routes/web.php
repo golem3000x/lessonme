@@ -44,6 +44,9 @@ Route::middleware('guest')->group(function () {
     Route::get('/auth/facebook/callback', [SocialAuthController::class, 'handleFacebookCallback']);
 });
 
+// Lesson show route - accessible without auth for demo lessons
+Route::get('/lessons/{lesson}', [LessonController::class, 'show'])->name('lessons.show');
+
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', function () {
         return view('dashboard');
@@ -59,7 +62,6 @@ Route::middleware('auth')->group(function () {
     // Lessons management
     Route::get('/lessons', LessonIndex::class)->name('lessons.index');
     Route::post('/lessons', [LessonController::class, 'store'])->name('lessons.store');
-    Route::get('/lessons/{lesson}', [LessonController::class, 'show'])->name('lessons.show');
     Route::get('/lessons/{lesson}/history', [LessonController::class, 'history'])->name('lessons.history');
     Route::post('/lessons/{lesson}/history/{history}/restore', [LessonController::class, 'restore'])->name('lessons.history.restore');
 });
