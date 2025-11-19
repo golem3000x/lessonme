@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property-read Topic $entity
  * @property-read Topic $topic
  * @property-read User $user
+ *
  * @method static Builder<static>|UserTopicVisibility newModelQuery()
  * @method static Builder<static>|UserTopicVisibility newQuery()
  * @method static Builder<static>|UserTopicVisibility query()
@@ -30,6 +31,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static Builder<static>|UserTopicVisibility whereTopicId($value)
  * @method static Builder<static>|UserTopicVisibility whereUpdatedAt($value)
  * @method static Builder<static>|UserTopicVisibility whereUserId($value)
+ *
  * @mixin Eloquent
  * @mixin \Eloquent
  */

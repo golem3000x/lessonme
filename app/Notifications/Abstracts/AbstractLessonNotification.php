@@ -22,8 +22,7 @@ abstract class AbstractLessonNotification extends Notification implements Should
 
     public function __construct(
         protected ?Lesson $entity
-    )
-    {
+    ) {
         if ($entity) {
             $this->entity_name = Str::lcfirst(class_basename($entity));
         } else {

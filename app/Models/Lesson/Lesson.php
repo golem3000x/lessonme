@@ -38,6 +38,7 @@ use Illuminate\Support\Carbon;
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Lesson\LessonHistory> $histories
  * @property-read int|null $histories_count
  * @property-read \App\Models\User $user
+ *
  * @method static Builder<static>|Lesson newModelQuery()
  * @method static Builder<static>|Lesson newQuery()
  * @method static Builder<static>|Lesson query()
@@ -58,6 +59,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|Lesson whereUserId($value)
  * @method static Builder<static>|Lesson whereEmbedding($value)
  * @method static Builder<static>|Lesson whereUpdatedAt($value)
+ *
  * @mixin Eloquent
  * @mixin \Eloquent
  */

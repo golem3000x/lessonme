@@ -30,7 +30,7 @@ class CreateLessonJob implements ShouldQueue
         protected int $user_id,
         protected int $topic_id,
         protected LessonDto $lesson_dto,
-        protected string $user_locale = 'en'
+        protected string $user_locale
     ) {}
 
     /**

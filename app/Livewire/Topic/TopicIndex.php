@@ -105,11 +105,11 @@ class TopicIndex extends Component
     {
         // Generate unique ID for the placeholder
         $placeholder_id = uniqid('placeholder_', true);
-        
-        if (!isset($this->creating_keywords_placeholders[$topicId])) {
+
+        if (! isset($this->creating_keywords_placeholders[$topicId])) {
             $this->creating_keywords_placeholders[$topicId] = [];
         }
-        
+
         $this->creating_keywords_placeholders[$topicId][] = $placeholder_id;
     }
 
@@ -136,8 +136,8 @@ class TopicIndex extends Component
             ->toArray();
 
         $all_topic_ids = Topic::where(function ($q) use ($user): void {
-                $q->whereNull('user_id')->orWhere('user_id', '=', $user->id);
-            })
+            $q->whereNull('user_id')->orWhere('user_id', '=', $user->id);
+        })
             ->pluck('id')
             ->toArray();
 
@@ -156,10 +156,10 @@ class TopicIndex extends Component
             ->toArray();
 
         $all_keyword_ids = Keyword::whereHas('topic', function ($q) use ($user) {
-                $q->where(function ($q2) use ($user): void {
-                    $q2->whereNull('user_id')->orWhere('user_id', '=', $user->id);
-                });
-            })
+            $q->where(function ($q2) use ($user): void {
+                $q2->whereNull('user_id')->orWhere('user_id', '=', $user->id);
+            });
+        })
             ->pluck('id')
             ->toArray();
 
@@ -321,14 +321,14 @@ class TopicIndex extends Component
     public function switchTab(string $tab): void
     {
         $this->active_tab = $tab;
-        
+
         // Close filters panel and sort dropdown when switching tabs
         $this->show_filters = false;
         $this->show_sort_dropdown = false;
-        
+
         // Save tab to session
         session(['topic_filters.active_tab' => $tab]);
-        
+
         // Reset pagination when switching tabs
         $this->resetPage();
     }
@@ -386,7 +386,7 @@ class TopicIndex extends Component
     {
         /** @var User $user */
         $user = Auth::user();
-        
+
         // Only count custom topics for filters
         $query = Topic::where('user_id', '=', $user->id);
 
@@ -405,12 +405,11 @@ class TopicIndex extends Component
         return $this->search !== '' || $this->sort !== 'newest';
     }
 
-
     public function render(): Factory|View
     {
         /** @var User $user */
         $user = Auth::user();
-        
+
         if ($this->active_tab === 'system') {
             // System topics - no filters, no pagination
             $system_topics = Topic::with([

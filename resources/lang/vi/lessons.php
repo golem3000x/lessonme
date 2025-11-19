@@ -99,4 +99,7 @@ return [
     'learning_language' => 'Ngôn ngữ học',
     'language_level' => 'Trình độ ngôn ngữ',
     'optional' => 'Tùy chọn',
+    'creation_timeout' => 'Việc tạo bài học mất nhiều thời gian hơn dự kiến. Vui lòng thử lại.',
+    'creation_failed' => 'Tạo Bài Học Thất Bại',
+    'try_again' => 'Thử Lại',
 ];

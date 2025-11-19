@@ -7,7 +7,6 @@ namespace App\Http\Controllers\Auth;
 use App\Enums\SystemLanguageEnum;
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Notifications\Auth\RegistrationNotification;
 use App\Notifications\Auth\WelcomeNotification;
 use App\Services\GreetingService;
 use Exception;

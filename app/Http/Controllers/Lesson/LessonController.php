@@ -84,14 +84,38 @@ class LessonController extends Controller
 
     public function show(Lesson $lesson): Factory|View
     {
-        // Allow viewing demo lessons (guest user lessons) without authentication
-        $guest_user = User::where('email', GuestUserSeeder::GUEST_EMAIL)->first();
-        $is_demo_lesson = $guest_user && $lesson->user_id === $guest_user->id;
+        $is_authorized = false;
 
-        // Check authorization only for non-demo lessons
-        if (! $is_demo_lesson) {
-            abort_if($lesson->user_id !== Auth::id(), 403);
+        // 1. Check if authenticated user owns the lesson
+        if (Auth::check() && $lesson->user_id === Auth::id()) {
+            $is_authorized = true;
         }
+
+        // 2. Check for temporary guest users (new system)
+        if (! $is_authorized) {
+            $temp_guest_user_id = session('temp_guest_user_id');
+            if ($temp_guest_user_id) {
+                $is_temp_guest_lesson = User::where('id', '=', $lesson->user_id)
+                    ->where('id', '=', $temp_guest_user_id)
+                    ->where('is_temp_guest', '=', true)
+                    ->where('temp_guest_expires_at', '>', now())
+                    ->exists();
+
+                if ($is_temp_guest_lesson) {
+                    $is_authorized = true;
+                }
+            }
+        }
+
+        // 3. Check for legacy guest user system (backwards compatibility)
+        if (! $is_authorized) {
+            $guest_user = User::where('email', '=', GuestUserSeeder::GUEST_EMAIL)->first();
+            if ($guest_user && $lesson->user_id === $guest_user->id) {
+                $is_authorized = true;
+            }
+        }
+
+        abort_unless($is_authorized, 403);
 
         $lesson->load('topic.translations');
 

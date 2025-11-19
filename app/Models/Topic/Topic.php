@@ -23,6 +23,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $updated_at
  * @property-read Collection<int, Lesson> $lessons
  * @property-read int|null $lessons_count
+ *
  * @method static Builder<static>|Topic newModelQuery()
  * @method static Builder<static>|Topic newQuery()
  * @method static Builder<static>|Topic query()
@@ -30,7 +31,9 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|Topic whereId($value)
  * @method static Builder<static>|Topic whereNameId($value)
  * @method static Builder<static>|Topic whereUpdatedAt($value)
+ *
  * @mixin Eloquent
+ *
  * @property int|null $user_id
  * @property bool $is_system
  * @property bool $is_approved
@@ -41,11 +44,13 @@ use Illuminate\Support\Carbon;
  * @property-read User|null $user
  * @property-read Collection<int, UserTopicVisibility> $visibility
  * @property-read int|null $visibility_count
+ *
  * @method static Builder<static>|Topic visibleForUser(int $userId)
  * @method static Builder<static>|Topic whereIsApproved($value)
  * @method static Builder<static>|Topic whereIsSystem($value)
  * @method static Builder<static>|Topic whereSlug($value)
  * @method static Builder<static>|Topic whereUserId($value)
+ *
  * @mixin Eloquent
  */
 class Topic extends Slug

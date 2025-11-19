@@ -26,7 +26,7 @@ class RegenerateLessonJob implements ShouldQueue
     public function __construct(
         protected int $lesson_id,
         protected LessonDto $lesson_dto,
-        protected string $user_locale = 'en',
+        protected string $user_locale,
     ) {}
 
     public function handle(LessonService $lessonService): void

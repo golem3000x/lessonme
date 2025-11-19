@@ -14,8 +14,7 @@ class LessonCreationNotification extends AbstractLessonNotification
     public function __construct(
         protected ?Lesson $entity,
         protected LessonCreationStatusEnum $status
-    )
-    {
+    ) {
         parent::__construct($entity);
     }
 

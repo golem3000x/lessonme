@@ -157,9 +157,9 @@ class ProfileSetup extends Component
         }
 
         $user->update(['avatar' => null]);
-        
+
         session()->flash('message', __('onboarding.avatar_removed'));
-        
+
         return redirect()->route('onboarding.profile');
     }
 
@@ -194,7 +194,7 @@ class ProfileSetup extends Component
             }
 
             // Generate unique filename and store
-            $filename = uniqid('avatar_') . '.' . $this->avatar->getClientOriginalExtension();
+            $filename = uniqid('avatar_').'.'.$this->avatar->getClientOriginalExtension();
             $path = $this->avatar->storeAs('avatars', $filename, 'public');
             $data['avatar'] = $path;
         }

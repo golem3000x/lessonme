@@ -99,4 +99,7 @@ return [
     'learning_language' => 'Learning Language',
     'language_level' => 'Language Level',
     'optional' => 'Optional',
+    'creation_timeout' => 'Lesson creation is taking longer than expected. Please try again.',
+    'creation_failed' => 'Lesson Creation Failed',
+    'try_again' => 'Try Again',
 ];

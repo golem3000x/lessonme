@@ -12,7 +12,7 @@ use App\Notifications\Abstracts\AbstractSlugNotification;
 class SlugTranslateNotification extends AbstractSlugNotification
 {
     public function __construct(
-        Slug                                 $entity,
+        Slug $entity,
         private readonly TranslateStatusEnum $translate_status_enum
     ) {
         parent::__construct($entity);

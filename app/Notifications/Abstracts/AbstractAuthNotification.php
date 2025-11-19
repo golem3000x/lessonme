@@ -46,28 +46,28 @@ abstract class AbstractAuthNotification extends Notification implements ShouldBr
     protected function payload(): array
     {
         $status = $this->getStatusEnum()->value;
-        
+
         $data = [
             'id' => uniqid("auth_{$status}_"),
             'status' => $status,
             'entity' => $this->entity_name,
         ];
-        
+
         if ($this->entity) {
             $data['user_id'] = $this->entity->id;
             $data['user_name'] = $this->entity->name;
         }
-        
+
         // Always override message with custom greeting-based message
         // Auth notifications always use time-based greetings from GreetingService
-        if (!empty($this->message)) {
+        if (! empty($this->message)) {
             $data['message'] = $this->message;
         } else {
             $data['message'] = __("notifications.{$this->entity_name}_{$this->getEventType()}_$status", [
                 'name' => $this->entity?->name ?? '',
             ]);
         }
-        
+
         return $data;
     }
 

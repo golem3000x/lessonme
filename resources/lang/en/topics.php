@@ -29,7 +29,7 @@ return [
     'visibility_description' => 'Click the eye icon to toggle visibility in chat.',
     'save_visibility' => 'Save Visibility',
     'visibility_saved' => 'Visibility settings saved successfully.',
-    
+
     // Filters
     'filters' => 'Filters',
     'search' => 'Search',

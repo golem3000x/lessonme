@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Session;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->middleware(['guest', \App\Http\Middleware\EnsureTempGuestUser::class]);
 
 Route::get('/about', function () {
     return view('about');

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Enums;
 
-//TODO уведомления пока все как полная чушь.
+// TODO уведомления пока все как полная чушь.
 enum EntityTypeEnum: string
 {
     case LESSON = 'lesson';

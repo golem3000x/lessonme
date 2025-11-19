@@ -29,7 +29,7 @@ return [
     'visibility_description' => 'Nhấp vào biểu tượng mắt để chuyển đổi hiển thị trong trò chuyện.',
     'save_visibility' => 'Lưu Hiển thị',
     'visibility_saved' => 'Đã lưu cài đặt hiển thị thành công.',
-    
+
     // Filters
     'filters' => 'Bộ lọc',
     'search' => 'Tìm kiếm',

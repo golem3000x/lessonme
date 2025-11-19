@@ -1,0 +1,63 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Http\Middleware;
+
+use App\Enums\SystemLanguageEnum;
+use App\Models\User;
+use Closure;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Symfony\Component\HttpFoundation\Response;
+
+class EnsureTempGuestUser
+{
+    /**
+     * Handle an incoming request.
+     * Creates a temporary guest user if not authenticated and no temp guest exists in session.
+     *
+     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     */
+    public function handle(Request $request, Closure $next): Response
+    {
+        // Skip if user is already authenticated
+        if (auth()->check()) {
+            return $next($request);
+        }
+
+        // Check if we already have a temp guest user in session
+        $temp_guest_user_id = $request->session()->get('temp_guest_user_id');
+
+        if ($temp_guest_user_id) {
+            // Verify the user still exists and is valid
+            $temp_guest_exists = User::where('id', '=', $temp_guest_user_id)
+                ->where('is_temp_guest', '=', true)
+                ->where('temp_guest_expires_at', '>', now())
+                ->exists();
+
+            if ($temp_guest_exists) {
+                return $next($request);
+            }
+        }
+
+        // Create a new temporary guest user
+        $unique_id = uniqid('guest_', true);
+        $temp_guest_user = User::create([
+            'name' => 'Demo Guest',
+            'email' => 'demo_'.$unique_id.'@temp.local',
+            'password' => Hash::make(bin2hex(random_bytes(32))),
+            'email_verified_at' => now(),
+            'native_lang' => SystemLanguageEnum::VIETNAMESE->value,
+            'learning_lang' => SystemLanguageEnum::ENGLISH->value,
+            'is_temp_guest' => true,
+            'temp_guest_expires_at' => now()->addHours(24),
+        ]);
+
+        // Store in session
+        $request->session()->put('temp_guest_user_id', $temp_guest_user->id);
+        $request->session()->save();
+
+        return $next($request);
+    }
+}

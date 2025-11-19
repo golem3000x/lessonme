@@ -30,6 +30,7 @@ use Illuminate\Support\Carbon;
  * @property-read User|null $user
  * @property-read Collection<int, UserKeywordVisibility> $visibility
  * @property-read int|null $visibility_count
+ *
  * @method static Builder<static>|Keyword newModelQuery()
  * @method static Builder<static>|Keyword newQuery()
  * @method static Builder<static>|Keyword query()
@@ -42,6 +43,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|Keyword whereTopicId($value)
  * @method static Builder<static>|Keyword whereUpdatedAt($value)
  * @method static Builder<static>|Keyword whereUserId($value)
+ *
  * @mixin Eloquent
  * @mixin \Eloquent
  */

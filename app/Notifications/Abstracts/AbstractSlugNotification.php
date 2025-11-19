@@ -73,7 +73,7 @@ abstract class AbstractSlugNotification extends Notification implements ShouldBr
      */
     public function broadcastOn(): array
     {
-        return [new PrivateChannel('App.Models.User.' . $this->entity->user_id)];
+        return [new PrivateChannel('App.Models.User.'.$this->entity->user_id)];
     }
 
     public function broadcastAs(): string

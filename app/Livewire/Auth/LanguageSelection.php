@@ -11,7 +11,6 @@ use App\Services\GreetingService;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Livewire\Component;
 
 class LanguageSelection extends Component
@@ -24,36 +23,38 @@ class LanguageSelection extends Component
     public function mount(): void
     {
         // Проверяем, есть ли данные регистрации в сессии
-        if (!session()->has('registration_data')) {
+        if (! session()->has('registration_data')) {
             redirect()->route('register');
+
             return;
         }
 
         $this->languages = SystemLanguageEnum::all();
-        
+
         // Устанавливаем язык по умолчанию на основе локали
         $locale = app()->getLocale();
-        $this->native_lang = $locale === 'vi' 
-            ? SystemLanguageEnum::VIETNAMESE->value 
+        $this->native_lang = $locale === 'vi'
+            ? SystemLanguageEnum::VIETNAMESE->value
             : SystemLanguageEnum::ENGLISH->value;
     }
 
     public function completeRegistration(): void
     {
         $this->validate([
-            'native_lang' => 'required|string|in:' . implode(',', SystemLanguageEnum::values()),
+            'native_lang' => 'required|string|in:'.implode(',', SystemLanguageEnum::values()),
         ]);
 
         $registration_data = session()->get('registration_data');
-        
-        if (!$registration_data) {
+
+        if (! $registration_data) {
             redirect()->route('register');
+
             return;
         }
 
         // Определяем learning_lang (противоположный язык от native_lang)
-        $learning_lang = $this->native_lang === SystemLanguageEnum::ENGLISH->value 
-            ? SystemLanguageEnum::VIETNAMESE->value 
+        $learning_lang = $this->native_lang === SystemLanguageEnum::ENGLISH->value
+            ? SystemLanguageEnum::VIETNAMESE->value
             : SystemLanguageEnum::ENGLISH->value;
 
         // Создаем пользователя с выбранным языком

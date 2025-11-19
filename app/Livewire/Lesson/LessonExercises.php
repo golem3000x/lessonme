@@ -46,7 +46,7 @@ class LessonExercises extends Component
         $this->exercises = $exercises;
 
         // Initialize ordered_words for sentence_ordering exercises
-        if (!empty($exercises['sentence_ordering'])) {
+        if (! empty($exercises['sentence_ordering'])) {
             foreach ($exercises['sentence_ordering'] as $index => $item) {
                 if (isset($item['words']) && is_array($item['words'])) {
                     $this->ordered_words[$index] = $item['words'];
@@ -63,7 +63,7 @@ class LessonExercises extends Component
 
     public function moveWord(int $exercise_index, int $from_index, string $direction): void
     {
-        if (!isset($this->ordered_words[$exercise_index])) {
+        if (! isset($this->ordered_words[$exercise_index])) {
             return;
         }
 
@@ -88,7 +88,7 @@ class LessonExercises extends Component
         $this->total_score = 0;
 
         // Check gap_fill
-        if (!empty($this->exercises['gap_fill'])) {
+        if (! empty($this->exercises['gap_fill'])) {
             $this->scores['gap_fill'] = 0;
             foreach ($this->exercises['gap_fill'] as $i => $item) {
                 $user_answer = trim($this->user_answers['gap_fill'][$i] ?? '');
@@ -101,7 +101,7 @@ class LessonExercises extends Component
         }
 
         // Check sentence_ordering
-        if (!empty($this->exercises['sentence_ordering'])) {
+        if (! empty($this->exercises['sentence_ordering'])) {
             $this->scores['sentence_ordering'] = 0;
             foreach ($this->exercises['sentence_ordering'] as $i => $item) {
                 $user_answer = implode(' ', $this->ordered_words[$i] ?? []);
@@ -114,7 +114,7 @@ class LessonExercises extends Component
         }
 
         // Check true_false
-        if (!empty($this->exercises['true_false'])) {
+        if (! empty($this->exercises['true_false'])) {
             $this->scores['true_false'] = 0;
             foreach ($this->exercises['true_false'] as $i => $item) {
                 $user_answer = $this->user_answers['true_false'][$i] ?? '';
@@ -127,7 +127,7 @@ class LessonExercises extends Component
         }
 
         // Check matching
-        if (!empty($this->exercises['matching'])) {
+        if (! empty($this->exercises['matching'])) {
             $this->scores['matching'] = 0;
             foreach ($this->exercises['matching'] as $i => $item) {
                 $user_answer = trim($this->user_answers['matching'][$i] ?? '');
@@ -158,7 +158,7 @@ class LessonExercises extends Component
         $this->total_score = 0;
 
         // Reset ordered_words
-        if (!empty($this->exercises['sentence_ordering'])) {
+        if (! empty($this->exercises['sentence_ordering'])) {
             foreach ($this->exercises['sentence_ordering'] as $index => $item) {
                 if (isset($item['words']) && is_array($item['words'])) {
                     $this->ordered_words[$index] = $item['words'];

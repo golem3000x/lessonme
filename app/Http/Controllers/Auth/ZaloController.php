@@ -7,7 +7,6 @@ namespace App\Http\Controllers\Auth;
 use App\Enums\SystemLanguageEnum;
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Notifications\Auth\RegistrationNotification;
 use App\Notifications\Auth\WelcomeNotification;
 use App\Services\GreetingService;
 use Illuminate\Http\Client\ConnectionException;
@@ -73,9 +72,9 @@ class ZaloController extends Controller
                 'name' => $name,
                 'avatar' => $avatar,
             ]);
-            
+
             Auth::login($user);
-            
+
             // Отправляем приветственное уведомление для существующего пользователя
             $message = $this->greeting_service->getWelcomeMessage(
                 $user->name,
@@ -83,7 +82,7 @@ class ZaloController extends Controller
                 $user->native_lang ?? SystemLanguageEnum::VIETNAMESE->value
             );
             $user->notify(new WelcomeNotification($user, $message));
-            
+
             return redirect()->route('dashboard');
         } else {
             // Новый пользователь - сохраняем данные в сессию и редиректим на выбор языка
@@ -96,7 +95,7 @@ class ZaloController extends Controller
                 'email_verified_at' => now(),
                 'timezone' => 'UTC',
             ]);
-            
+
             return redirect()->route('auth.language');
         }
     }

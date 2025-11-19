@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Livewire\Lesson;
 
-use App\Enums\EntityTypeEnum;
 use App\Dto\LessonDto;
+use App\Enums\EntityTypeEnum;
 use App\Enums\LanguageLevelEnum;
 use App\Enums\LessonCreationStatusEnum;
 use App\Jobs\Lesson\RegenerateLessonJob;
@@ -103,7 +103,7 @@ class LessonIndex extends Component
     {
         // Clear all placeholders when lesson is created
         $this->creating_lessons_placeholders = [];
-        
+
         // Just refresh the component - pagination will be handled automatically
         $this->resetPage();
     }

@@ -11,10 +11,11 @@ use App\Jobs\Lesson\CreateLessonJob;
 use App\Models\Keyword\Keyword;
 use App\Models\Lesson\Lesson;
 use App\Models\Topic\Topic;
-use Database\Seeders\GuestUserSeeder;
+use App\Models\User;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
@@ -52,14 +53,12 @@ class DemoLessonCreator extends Component
 
     public bool $show_success_message = false;
 
+    public bool $show_error_message = false;
+
+    public ?string $error_message = null;
+
     public function mount(): void
     {
-        // Check if there's a pending lesson from previous session
-        if (session('pending_demo_guest_user_id') && session('pending_demo_topic_id')) {
-            $this->pending_lesson_id = -1; // Mark as pending
-            $this->checkLessonStatus();
-        }
-
         $locale = app()->getLocale();
 
         // Load system topics and keywords
@@ -91,6 +90,20 @@ class DemoLessonCreator extends Component
 
         $this->keywords = $this->buildKeywordsForTopic($this->topic_id);
         $this->dispatch('keywords-preloaded', keywords: $this->keywords, reset: false, selectedIds: $this->keyword_ids);
+
+        // Check if temp guest already has a lesson
+        $temp_guest_user_id = session('temp_guest_user_id');
+        if ($temp_guest_user_id) {
+            $existing_lesson = Lesson::where('user_id', '=', $temp_guest_user_id)
+                ->first();
+
+            if ($existing_lesson) {
+                // Show existing lesson button immediately
+                $this->demo_lesson_url = route('lessons.show', $existing_lesson->id);
+                $this->demo_lesson_name = $existing_lesson->lesson_name;
+                $this->show_success_message = true;
+            }
+        }
     }
 
     public function updatedTopicId(int|string $value): void
@@ -108,27 +121,32 @@ class DemoLessonCreator extends Component
 
     public function createDemoLesson(): void
     {
-        // Validate input
+        // Validate input with comprehensive rules
+        $valid_levels = implode(',', LanguageLevelEnum::values());
+
         $this->validate([
-            'native_lang' => 'required|string|different:learning_lang',
-            'learning_lang' => 'required|string|different:native_lang',
-            'topic_id' => 'required|integer',
-            'language_level' => 'required|string',
+            'native_lang' => 'required|string|in:en,vi|different:learning_lang',
+            'learning_lang' => 'required|string|in:en,vi|different:native_lang',
+            'topic_id' => 'required|integer|exists:topics,id',
+            'language_level' => 'required|string|in:'.$valid_levels,
+            'keyword_ids' => 'nullable|array',
+            'keyword_ids.*' => 'integer|exists:keywords,id',
         ], [
+            'native_lang.required' => __('validation.required', ['attribute' => __('lessons.native_language')]),
+            'native_lang.in' => __('validation.in', ['attribute' => __('lessons.native_language')]),
             'native_lang.different' => __('lessons.languages_must_be_different'),
+            'learning_lang.required' => __('validation.required', ['attribute' => __('lessons.target_language')]),
+            'learning_lang.in' => __('validation.in', ['attribute' => __('lessons.target_language')]),
             'learning_lang.different' => __('lessons.languages_must_be_different'),
+            'topic_id.required' => __('validation.required', ['attribute' => __('lessons.topic')]),
+            'topic_id.exists' => __('lessons.topic_not_found'),
+            'language_level.required' => __('validation.required', ['attribute' => __('lessons.level')]),
+            'language_level.in' => __('validation.in', ['attribute' => __('lessons.level')]),
+            'keyword_ids.*.exists' => __('lessons.keyword_not_found'),
         ]);
 
         $this->reset(['is_generating', 'demo_lesson_url']);
         $this->is_generating = true;
-
-        $topic = Topic::find($this->topic_id);
-        if (! $topic) {
-            $this->is_generating = false;
-            $this->dispatch('show-error', message: __('lessons.topic_not_found'));
-
-            return;
-        }
 
         try {
             $selected_keyword_labels = [];
@@ -150,27 +168,33 @@ class DemoLessonCreator extends Component
                 $keywords
             );
 
-            // Get guest user ID
-            $guest_user = \App\Models\User::where('email', GuestUserSeeder::GUEST_EMAIL)->firstOrFail();
+            // Get or create temporary guest user for this session
+            $temp_guest_user_id = $this->ensureTempGuestUser();
+
+            // Use microsecond precision timestamp as unique identifier for this creation request
+            $creation_timestamp = microtime(true);
 
             // Store tracking info in session to find the lesson later
             session([
-                'pending_demo_guest_user_id' => $guest_user->id,
+                'pending_demo_guest_user_id' => $temp_guest_user_id,
                 'pending_demo_topic_id' => $this->topic_id,
-                'pending_demo_started_at' => now()->timestamp,
+                'pending_demo_started_at' => $creation_timestamp,
             ]);
+
+            // Reset error state
+            $this->reset(['show_error_message', 'error_message', 'show_success_message']);
 
             // Mark that we're waiting for a lesson
             $this->pending_lesson_id = -1; // Placeholder to show spinner
 
             // Dispatch job for async lesson generation
             CreateLessonJob::dispatch(
-                $guest_user->id,
+                $temp_guest_user_id,
                 $this->topic_id,
                 $lesson_dto,
                 app()->getLocale()
             );
-            
+
             $this->is_generating = false;
 
         } catch (\Exception $e) {
@@ -226,43 +250,127 @@ class DemoLessonCreator extends Component
     }
 
     /**
-     * Check if the pending lesson has been generated
+     * Handle lesson creation notification from WebSocket
+     * Called when Echo.js receives lesson creation event
+     */
+    #[On('lesson-notification')]
+    public function handleLessonNotification(array $notification): void
+    {
+        Log::info('DemoLessonCreator received notification', $notification);
+
+        $status = $notification['status'] ?? null;
+
+        if ($status === 'successfully') {
+            // Lesson created successfully
+            $this->demo_lesson_url = $notification['lesson_url'] ?? null;
+            $this->demo_lesson_name = $notification['lesson_name'] ?? null;
+            $this->show_success_message = true;
+            $this->pending_lesson_id = null;
+            $this->is_generating = false;
+
+            // Clear error state
+            $this->reset(['show_error_message', 'error_message']);
+
+            // Clear session data
+            session()->forget(['pending_demo_guest_user_id', 'pending_demo_topic_id', 'pending_demo_started_at']);
+        } elseif ($status === 'exists') {
+            // Lesson already exists
+            $this->demo_lesson_url = $notification['lesson_url'] ?? null;
+            $this->demo_lesson_name = $notification['lesson_name'] ?? null;
+            $this->show_success_message = true;
+            $this->pending_lesson_id = null;
+            $this->is_generating = false;
+
+            // Clear session data
+            session()->forget(['pending_demo_guest_user_id', 'pending_demo_topic_id', 'pending_demo_started_at']);
+        } elseif ($status === 'error') {
+            // Lesson creation failed
+            $this->pending_lesson_id = null;
+            $this->show_error_message = true;
+            $this->error_message = $notification['message'] ?? __('lessons.creation_failed');
+            $this->is_generating = false;
+
+            // Clear session data
+            session()->forget(['pending_demo_guest_user_id', 'pending_demo_topic_id', 'pending_demo_started_at']);
+        }
+    }
+
+    /**
+     * Retry lesson creation after error
+     */
+    public function retryCreation(): void
+    {
+        $this->reset(['show_error_message', 'error_message', 'show_success_message', 'pending_lesson_id']);
+        $this->createDemoLesson();
+    }
+
+    /**
+     * Check if lesson has been created (polling method)
+     * Called every 3 seconds when lesson is being created
      */
     public function checkLessonStatus(): void
     {
+        // Only check if we're waiting for a lesson
         if (! $this->pending_lesson_id) {
             return;
         }
 
-        $guest_user_id = session('pending_demo_guest_user_id');
-        $topic_id = session('pending_demo_topic_id');
-        $started_at = session('pending_demo_started_at');
-
-        if (! $guest_user_id || ! $topic_id) {
+        $temp_guest_user_id = session('temp_guest_user_id');
+        if (! $temp_guest_user_id) {
             return;
         }
 
-        // Find the most recent lesson created by guest user for this topic since we started
-        $lesson = Lesson::where('user_id', $guest_user_id)
-            ->where('topic_id', $topic_id)
-            ->when($started_at, function ($query) use ($started_at) {
-                $query->where('created_at', '>=', \Carbon\Carbon::createFromTimestamp($started_at));
-            })
-            ->whereNotNull('lesson_text')
-            ->whereNotNull('lesson_name')
-            ->where('lesson_name', '!=', 'Generating...')
+        // Check timeout: if more than 3 minutes passed, show error
+        $started_at = session('pending_demo_started_at');
+        if ($started_at && (microtime(true) - $started_at) > 180) {
+            // Timeout: 3 minutes
+            $this->pending_lesson_id = null;
+            $this->show_error_message = true;
+            $this->error_message = __('lessons.creation_timeout');
+            $this->is_generating = false;
+
+            // Clear session data
+            session()->forget(['pending_demo_guest_user_id', 'pending_demo_topic_id', 'pending_demo_started_at']);
+
+            return;
+        }
+
+        // Check if lesson has been created
+        $lesson = Lesson::where('user_id', '=', $temp_guest_user_id)
             ->latest()
             ->first();
 
         if ($lesson) {
+            // Lesson created successfully!
             $this->demo_lesson_url = route('lessons.show', $lesson->id);
             $this->demo_lesson_name = $lesson->lesson_name;
             $this->show_success_message = true;
             $this->pending_lesson_id = null;
-            
+            $this->is_generating = false;
+
+            // Clear error state
+            $this->reset(['show_error_message', 'error_message']);
+
             // Clear session data
             session()->forget(['pending_demo_guest_user_id', 'pending_demo_topic_id', 'pending_demo_started_at']);
         }
+    }
+
+    /**
+     * Get temporary guest user ID from session
+     * Middleware already created it before page render
+     *
+     * @return int User ID of the temp guest user
+     */
+    private function ensureTempGuestUser(): int
+    {
+        $temp_guest_user_id = session('temp_guest_user_id');
+
+        if (! $temp_guest_user_id) {
+            throw new \RuntimeException('Temp guest user not found in session. Middleware should have created it.');
+        }
+
+        return $temp_guest_user_id;
     }
 
     public function render(): Factory|View

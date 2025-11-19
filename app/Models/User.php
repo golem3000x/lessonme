@@ -49,6 +49,7 @@ use Illuminate\Support\Carbon;
  * @property-read int|null $chat_sessions_count
  * @property-read Collection<int, Message> $messages
  * @property-read int|null $messages_count
+ *
  * @method static UserFactory factory($count = null, $state = [])
  * @method static Builder<static>|User newModelQuery()
  * @method static Builder<static>|User newQuery()
@@ -66,12 +67,21 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|User whereUpdatedAt($value)
  * @method static Builder<static>|User whereZaloUserId($value)
  * @method static Builder<static>|User whereFacebookId($value)
+ *
  * @mixin Eloquent
+ *
  * @method static Builder<static>|User whereLearningLang($value)
  * @method static Builder<static>|User whereNativeLang($value)
+ *
  * @property string $timezone
+ * @property bool $is_temp_guest
+ * @property Carbon|null $temp_guest_expires_at
+ *
  * @method static Builder<static>|User whereRole($value)
  * @method static Builder<static>|User whereTimezone($value)
+ * @method static Builder<static>|User whereIsTempGuest($value)
+ * @method static Builder<static>|User whereTempGuestExpiresAt($value)
+ *
  * @mixin \Eloquent
  */
 class User extends Authenticatable implements FilamentUser, HasLocalePreference
@@ -97,6 +107,9 @@ class User extends Authenticatable implements FilamentUser, HasLocalePreference
         'learning_lang',
         'timezone',
         'email_verified_at',
+        'role',
+        'is_temp_guest',
+        'temp_guest_expires_at',
     ];
 
     /**
@@ -105,9 +118,7 @@ class User extends Authenticatable implements FilamentUser, HasLocalePreference
      *
      * @var list<string>
      */
-    protected $guarded = [
-        'role',
-    ];
+    protected $guarded = [];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -130,6 +141,8 @@ class User extends Authenticatable implements FilamentUser, HasLocalePreference
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'role' => UserRoleEnum::class,
+            'is_temp_guest' => 'boolean',
+            'temp_guest_expires_at' => 'datetime',
         ];
     }
 
@@ -201,8 +214,8 @@ class User extends Authenticatable implements FilamentUser, HasLocalePreference
      * Назначить роль пользователю.
      * Только для явных административных операций.
      *
-     * @param UserRoleEnum $role Новая роль
-     * @param User|null $actor Пользователь, выполняющий операцию (для аудита)
+     * @param  UserRoleEnum  $role  Новая роль
+     * @param  User|null  $actor  Пользователь, выполняющий операцию (для аудита)
      */
     public function assignRole(UserRoleEnum $role, ?User $actor = null): void
     {
@@ -228,7 +241,7 @@ class User extends Authenticatable implements FilamentUser, HasLocalePreference
      * Назначить пользователя администратором.
      * Алиас для assignRole(UserRoleEnum::ADMIN).
      *
-     * @param User|null $actor Пользователь, выполняющий операцию (для аудита)
+     * @param  User|null  $actor  Пользователь, выполняющий операцию (для аудита)
      */
     public function makeAdmin(?User $actor = null): void
     {
@@ -238,7 +251,7 @@ class User extends Authenticatable implements FilamentUser, HasLocalePreference
     /**
      * Назначить пользователя учителем.
      *
-     * @param User|null $actor Пользователь, выполняющий операцию (для аудита)
+     * @param  User|null  $actor  Пользователь, выполняющий операцию (для аудита)
      */
     public function makeTeacher(?User $actor = null): void
     {
@@ -248,7 +261,7 @@ class User extends Authenticatable implements FilamentUser, HasLocalePreference
     /**
      * Назначить пользователя учеником.
      *
-     * @param User|null $actor Пользователь, выполняющий операцию (для аудита)
+     * @param  User|null  $actor  Пользователь, выполняющий операцию (для аудита)
      */
     public function makeStudent(?User $actor = null): void
     {

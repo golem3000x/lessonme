@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property-read Keyword $entity
  * @property-read Keyword $keyword
  * @property-read User $user
+ *
  * @method static Builder<static>|UserKeywordVisibility newModelQuery()
  * @method static Builder<static>|UserKeywordVisibility newQuery()
  * @method static Builder<static>|UserKeywordVisibility query()
@@ -30,6 +31,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static Builder<static>|UserKeywordVisibility whereKeywordId($value)
  * @method static Builder<static>|UserKeywordVisibility whereUpdatedAt($value)
  * @method static Builder<static>|UserKeywordVisibility whereUserId($value)
+ *
  * @mixin Eloquent
  * @mixin \Eloquent
  */
