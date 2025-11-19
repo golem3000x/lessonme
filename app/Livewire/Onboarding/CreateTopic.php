@@ -45,8 +45,8 @@ class CreateTopic extends Component
                 'string',
                 'max:255',
                 function ($attribute, $value, $fail) use ($slug, $user) {
-                    $exists = Topic::where('slug', $slug)
-                        ->where('user_id', $user->id)
+                    $exists = Topic::where('slug', '=', $slug)
+                        ->where('user_id', '=', $user->id)
                         ->exists();
 
                     if ($exists) {

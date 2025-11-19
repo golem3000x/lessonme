@@ -19,7 +19,7 @@ class AdminUserSeeder extends Seeder
         $admin_email = 'admin@example.com';
 
         // Check if admin already exists
-        if (User::where('email', $admin_email)->exists()) {
+        if (User::where('email', '=', $admin_email)->exists()) {
             $this->command->warn('⚠️  Admin user already exists!');
 
             return;

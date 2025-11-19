@@ -50,8 +50,8 @@ class CreateKeyword extends Component
                 'max:255',
                 function ($attribute, $value, $fail) use ($slug) {
                     // Check if keyword with same slug already exists in this topic
-                    $exists = Keyword::where('slug', $slug)
-                        ->where('topic_id', $this->topic_id)
+                    $exists = Keyword::where('slug', '=', $slug)
+                        ->where('topic_id', '=', $this->topic_id)
                         ->exists();
 
                     if ($exists) {

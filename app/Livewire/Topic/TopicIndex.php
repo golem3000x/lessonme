@@ -125,13 +125,13 @@ class TopicIndex extends Component
         $this->creating_keywords_placeholders = [];
 
         // Load all topic visibility states
-        $topic_visibility = UserTopicVisibility::where('user_id', $user->id)
-            ->where('is_hidden', false)
+        $topic_visibility = UserTopicVisibility::where('user_id', '=', $user->id)
+            ->where('is_hidden', '=', false)
             ->pluck('topic_id')
             ->toArray();
 
         // Also include topics without explicit visibility record (default visible)
-        $topics_with_visibility = UserTopicVisibility::where('user_id', $user->id)
+        $topics_with_visibility = UserTopicVisibility::where('user_id', '=', $user->id)
             ->pluck('topic_id')
             ->toArray();
 
@@ -146,12 +146,12 @@ class TopicIndex extends Component
         $this->visible_topic_ids = array_values(array_merge($topic_visibility, $topics_without_record));
 
         // Load all keyword visibility states
-        $keyword_visibility = UserKeywordVisibility::where('user_id', $user->id)
-            ->where('is_hidden', false)
+        $keyword_visibility = UserKeywordVisibility::where('user_id', '=', $user->id)
+            ->where('is_hidden', '=', false)
             ->pluck('keyword_id')
             ->toArray();
 
-        $keywords_with_visibility = UserKeywordVisibility::where('user_id', $user->id)
+        $keywords_with_visibility = UserKeywordVisibility::where('user_id', '=', $user->id)
             ->pluck('keyword_id')
             ->toArray();
 
@@ -173,8 +173,8 @@ class TopicIndex extends Component
         /** @var User $user */
         $user = Auth::user();
 
-        $topic = Topic::where('id', $topic_id)
-            ->where('user_id', $user->id)
+        $topic = Topic::where('id', '=', $topic_id)
+            ->where('user_id', '=', $user->id)
             ->first();
 
         if (! $topic) {
@@ -205,8 +205,8 @@ class TopicIndex extends Component
         /** @var User $user */
         $user = Auth::user();
 
-        $keyword = Keyword::where('id', $keyword_id)
-            ->where('user_id', $user->id)
+        $keyword = Keyword::where('id', '=', $keyword_id)
+            ->where('user_id', '=', $user->id)
             ->first();
 
         if (! $keyword) {

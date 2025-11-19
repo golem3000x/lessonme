@@ -70,7 +70,7 @@ class ProfileSetup extends Component
         $user = Auth::user();
 
         $topics = Topic::with(['translations', 'keywords.translations', 'visibility', 'keywords.visibility'])
-            ->where('is_system', true)
+            ->where('is_system', '=', true)
             ->get();
 
         $this->available_topics = $topics->map(function (Topic $topic): array {
@@ -81,7 +81,7 @@ class ProfileSetup extends Component
         })->toArray();
 
         $this->visible_topic_ids = $topics->filter(function (Topic $topic) use ($user): bool {
-            $visibility = $topic->visibility()->where('user_id', $user->id)->first();
+            $visibility = $topic->visibility()->where('user_id', '=', $user->id)->first();
 
             return ! $visibility || ! $visibility->is_hidden;
         })->pluck('id')->toArray();
@@ -96,7 +96,7 @@ class ProfileSetup extends Component
             })->toArray();
 
             foreach ($keywords as $keyword) {
-                $visibility = $keyword->visibility()->where('user_id', $user->id)->first();
+                $visibility = $keyword->visibility()->where('user_id', '=', $user->id)->first();
                 if (! $visibility || ! $visibility->is_hidden) {
                     $this->visible_keyword_ids[] = $keyword->id;
                 }
@@ -216,7 +216,7 @@ class ProfileSetup extends Component
 
     protected function saveTopicVisibility(User $user): void
     {
-        $topics = Topic::where('is_system', true)->get();
+        $topics = Topic::where('is_system', '=', true)->get();
 
         foreach ($topics as $topic) {
             $is_visible = in_array($topic->id, $this->visible_topic_ids, true);

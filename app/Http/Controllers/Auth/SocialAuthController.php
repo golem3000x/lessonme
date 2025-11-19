@@ -38,12 +38,12 @@ class SocialAuthController extends Controller
         try {
             $facebook_user = Socialite::driver('facebook')->user();
 
-            $user = User::where('facebook_id', $facebook_user->getId())->first();
+            $user = User::where('facebook_id', '=', $facebook_user->getId())->first();
             $is_new_user = false;
 
             if (! $user) {
                 // Check if user with this email already exists
-                $user = User::where('email', $facebook_user->getEmail())->first();
+                $user = User::where('email', '=', $facebook_user->getEmail())->first();
 
                 if ($user) {
                     // Update existing user with Facebook ID

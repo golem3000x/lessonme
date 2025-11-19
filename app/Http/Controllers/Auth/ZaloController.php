@@ -65,7 +65,7 @@ class ZaloController extends Controller
             return redirect('/login')->with('error', 'Zalo user not found.');
         }
 
-        $user = User::where('zalo_user_id', $zalo_id)->first();
+        $user = User::where('zalo_user_id', '=', $zalo_id)->first();
 
         if ($user) {
             $user->update([

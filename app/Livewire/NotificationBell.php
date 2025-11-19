@@ -55,7 +55,7 @@ class NotificationBell extends Component
 
         $notification = $user
             ->notifications()
-            ->where('id', $notification_id)
+            ->where('id', '=', $notification_id)
             ->first();
 
         if ($notification && $notification->unread()) {
@@ -93,7 +93,7 @@ class NotificationBell extends Component
 
         $deleted = $user
             ->notifications()
-            ->where('id', $notification_id)
+            ->where('id', '=', $notification_id)
             ->delete();
 
         $this->updateUnreadCount();

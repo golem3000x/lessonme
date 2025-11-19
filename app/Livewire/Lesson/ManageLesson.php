@@ -83,7 +83,7 @@ class ManageLesson extends Component
             $this->topic_id = $this->topics[0]['id'];
         }
 
-        $selected = collect($this->topics)->firstWhere('id', $this->topic_id);
+        $selected = collect($this->topics)->firstWhere('id', '=', $this->topic_id);
         $this->topic = $selected['label'] ?? '';
 
         $this->keyword_ids = array_values(array_map('intval', (array) session('selected_keyword_ids', [])));
@@ -101,7 +101,7 @@ class ManageLesson extends Component
         $this->topic_id = (int) $value;
         session(['selected_topic_id' => $this->topic_id]);
 
-        $selected = collect($this->topics)->firstWhere('id', $this->topic_id);
+        $selected = collect($this->topics)->firstWhere('id', '=', $this->topic_id);
         $this->topic = $selected['label'] ?? '';
 
         $this->keyword_ids = [];
@@ -239,7 +239,7 @@ class ManageLesson extends Component
 
         $locale = app()->getLocale();
 
-        $topic = $this->preloaded_topics->firstWhere('id', $topic_id);
+        $topic = $this->preloaded_topics->firstWhere('id', '=', $topic_id);
 
         if (! $topic) {
             return [];

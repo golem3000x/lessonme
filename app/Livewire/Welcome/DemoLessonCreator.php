@@ -66,8 +66,8 @@ class DemoLessonCreator extends Component
             'translations',
             'keywords.translations',
         ])
-            ->where('is_system', true)
-            ->where('is_approved', true)
+            ->where('is_system', '=', true)
+            ->where('is_approved', '=', true)
             ->get();
 
         $this->topics = $this->preloaded_topics->map(function (Topic $topic) use ($locale) {
@@ -80,7 +80,7 @@ class DemoLessonCreator extends Component
         // Set default values
         if (! empty($this->topics)) {
             $this->topic_id = $this->topics[0]['id'];
-            $selected = collect($this->topics)->firstWhere('id', $this->topic_id);
+            $selected = collect($this->topics)->firstWhere('id', '=', $this->topic_id);
             $this->topic = $selected['label'] ?? '';
         }
 
@@ -110,7 +110,7 @@ class DemoLessonCreator extends Component
     {
         $this->topic_id = (int) $value;
 
-        $selected = collect($this->topics)->firstWhere('id', $this->topic_id);
+        $selected = collect($this->topics)->firstWhere('id', '=', $this->topic_id);
         $this->topic = $selected['label'] ?? '';
 
         $this->keyword_ids = [];
@@ -225,7 +225,7 @@ class DemoLessonCreator extends Component
 
         $locale = app()->getLocale();
 
-        $topic = $this->preloaded_topics->firstWhere('id', $topic_id);
+        $topic = $this->preloaded_topics->firstWhere('id', '=', $topic_id);
 
         if (! $topic) {
             return [];

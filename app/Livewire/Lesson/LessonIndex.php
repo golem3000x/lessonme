@@ -110,7 +110,7 @@ class LessonIndex extends Component
 
     protected function getLessonsQuery()
     {
-        $query = Lesson::where('user_id', Auth::id())
+        $query = Lesson::where('user_id', '=', Auth::id())
             ->with(['topic' => function ($q) {
                 $q->with('translations');
             }]);
@@ -187,8 +187,8 @@ class LessonIndex extends Component
             abort(401);
         }
 
-        $lesson = Lesson::where('id', $this->lesson_to_regenerate)
-            ->where('user_id', $user->id)
+        $lesson = Lesson::where('id', '=', $this->lesson_to_regenerate)
+            ->where('user_id', '=', $user->id)
             ->with(['topic.translations', 'topic.keywords.translations'])
             ->first();
 
@@ -273,7 +273,7 @@ class LessonIndex extends Component
             return;
         }
 
-        $lesson = Lesson::where('id', $this->lesson_to_delete)
+        $lesson = Lesson::where('id', '=', $this->lesson_to_delete)
             ->where('user_id', Auth::id())
             ->first();
 
@@ -336,7 +336,7 @@ class LessonIndex extends Component
     #[Computed]
     public function filteredLessonsCount(): int
     {
-        $query = Lesson::where('user_id', Auth::id());
+        $query = Lesson::where('user_id', '=', Auth::id());
 
         // Apply temporary search filter
         if ($this->temp_search) {

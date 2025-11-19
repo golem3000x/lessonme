@@ -41,7 +41,7 @@ class ChatLesson extends Component
 
         // Load visible topics
         $topics_query = Topic::with('translations')
-            ->where('is_system', true)
+            ->where('is_system', '=', true)
             ->visibleForUser($user->id)
             ->get();
 
@@ -122,7 +122,7 @@ class ChatLesson extends Component
         $locale = app()->getLocale();
 
         $keywords_query = Keyword::with('translations')
-            ->where('topic_id', $this->topic_id)
+            ->where('topic_id', '=', $this->topic_id)
             ->visibleForUser($user->id)
             ->get();
 

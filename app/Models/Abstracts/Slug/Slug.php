@@ -79,7 +79,7 @@ abstract class Slug extends BaseModel
 
         /** @var SlugTranslation|null $translation */
         $translation = $this->translations
-            ->where('language_code', $lang)
+            ->where('language_code', '=', $lang)
             ->first();
 
         if ($translation) {
@@ -99,7 +99,7 @@ abstract class Slug extends BaseModel
 
         // Try to get translation for requested language
         $translation = $this->translations
-            ->firstWhere('language_code', $lang);
+            ->firstWhere('language_code', '=', $lang);
 
         if ($translation) {
             return $translation->value;
@@ -129,16 +129,16 @@ abstract class Slug extends BaseModel
                 $q->where(function (Builder $sys) use ($userId): void {
                     $sys->whereNull('user_id')
                         ->whereDoesntHave('visibility', function (Builder $v) use ($userId): void {
-                            $v->where('user_id', $userId)
-                                ->where('is_hidden', true);
+                            $v->where('user_id', '=', $userId)
+                                ->where('is_hidden', '=', true);
                         });
                 })->orWhere(function (Builder $own) use ($userId): void {
-                    $own->where('user_id', $userId)
+                    $own->where('user_id', '=', $userId)
                         ->whereDoesntHave('visibility', function (Builder $v) use ($userId): void {
-                            $v->where('user_id', $userId)
-                                ->where('is_hidden', true);
+                            $v->where('user_id', '=', $userId)
+                                ->where('is_hidden', '=', true);
                         })
-                        ->where('is_approved', true);
+                        ->where('is_approved', '=', true);
                 });
             });
     }

@@ -45,7 +45,7 @@ class LessonController extends Controller
         if (! $topic_id && isset($validated['topic'])) {
             $topic = Topic::with('translations')
                 ->whereHas('translations', function ($query) use ($validated): void {
-                    $query->where('value', $validated['topic']);
+                    $query->where('value', '=', $validated['topic']);
                 })
                 ->first();
 

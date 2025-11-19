@@ -136,8 +136,8 @@ class ChatPanel extends Component
         }
 
         $this->chat_session->messages()
-            ->where('is_read', false)
-            ->where('is_from_admin', true)
+            ->where('is_read', '=', false)
+            ->where('is_from_admin', '=', true)
             ->update(['is_read' => true]);
 
         $this->chat_session->update(['unread_count' => 0]);
