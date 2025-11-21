@@ -29,8 +29,7 @@ class CreateLessonJob implements ShouldQueue
     public function __construct(
         protected int $user_id,
         protected int $topic_id,
-        protected LessonDto $lesson_dto,
-        protected string $user_locale
+        protected LessonDto $lesson_dto
     ) {}
 
     /**
@@ -62,9 +61,6 @@ class CreateLessonJob implements ShouldQueue
 
     private function notify(?Lesson $lesson, LessonCreationStatusEnum $status)
     {
-        // Set the user's locale for translation
-        app()->setLocale($this->user_locale);
-
         User::find($this->user_id)?->notify(
             new LessonCreationNotification(
                 $lesson,

@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create(TableNameEnum::LESSON_HISTORIES->value, function (Blueprint $table): void {
             $table->id();
+            $table->uuid();
             $table->foreignId('lesson_id')
                 ->constrained('lessons')
                 ->cascadeOnDelete();

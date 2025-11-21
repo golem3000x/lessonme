@@ -38,94 +38,126 @@ class LessonGenerationService
             - Learning language: $learning_lang_name
             - Level: $level_enum->value ($level_desc)
 
+            ⚠️ CRITICAL LANGUAGE REQUIREMENTS:
+            The student is learning $learning_lang_name but may not understand it well yet.
+            They need to understand what the lesson is about and what they need to do.
+            
+            YOU MUST WRITE IN $native_lang_name:
+            - lesson_name (the title explaining what this lesson teaches)
+            - lesson_text (introduction explaining the topic and what student will learn)
+            - ALL explanations, translations, and instructions
+            - ALL exercise questions (so student understands what to do)
+            - homework instructions
+            - All "label", "explanation", "breakdown" fields
+            
+            YOU MUST WRITE IN $learning_lang_name:
+            - vocabulary words, example sentences
+            - dialogue lines
+            - grammar phrases and examples
+            - exercise content (sentences, options, words to arrange)
+
             Guidelines:
-            1. All explanations must be in $native_lang_name.
-            2. All examples, dialogues, and exercises must be in $learning_lang_name.
-            3. The difficulty must match the CEFR level:
+            1. lesson_name: Write in $native_lang_name explaining what the student will learn.
+               Example: "Giới thiệu về JavaScript và Laravel" (NOT "Introduction to JavaScript and Laravel")
+            2. lesson_text: Write in $native_lang_name explaining the topic, why it's useful, what they'll learn.
+               This helps beginners understand the lesson before starting.
+            3. Exercise questions: MUST be in $native_lang_name so student knows what to do.
+               Example: "Laravel là gì?" (NOT "What is Laravel?")
+            4. Exercise options/content: Must be in $learning_lang_name (this is what they practice).
+            5. All explanations, instructions, homework: MUST be in $native_lang_name.
+            6. The difficulty must match the CEFR level:
                - A1–A2: short, simple sentences; very basic vocabulary.
                - B1–B2: natural language; moderate complexity; light idioms allowed.
                - C1–C2: fluent, rich, authentic expressions; advanced grammar.
-            4. Strictly follow the topic: "$topic".
-            5. You MUST naturally include and use all provided keywords: $keywords.
-            6. Be concise; avoid repetition.
+            7. Strictly follow the topic: "$topic".
+            8. You MUST naturally include and use all provided keywords: $keywords.
+            9. Be concise; avoid repetition.
+            10. Every grammar_highlight MUST include:
+               - phrase
+                - label
+                - formula (explicit grammar pattern such as "Subject + Verb + Object")
+                - breakdown (explain each element in $native_lang_name)
+                - example
+            11. When using a grammar pattern inside lesson_text, briefly show the pattern in parentheses.
+
 
             Output format:
             Return your answer STRICTLY as valid JSON (no markdown, no comments, no extra text) using this structure:
 
             {
               "topic": "string",
-              "lesson_name": "string (max 100 chars)",
-              "lesson_text": "string (150–250 words or fewer if A1–A2, in $learning_lang_name)",
+              "lesson_name": "MUST BE IN $native_lang_name - title explaining the lesson topic",
+              "lesson_text": "MUST BE IN $native_lang_name - 150-250 words introduction explaining what student will learn and why it's useful",
 
               "vocabulary": [
                 {
-                  "word": "string",
-                  "translation": "string (in $native_lang_name)",
-                  "example": "string (in $learning_lang_name)"
+                  "word": "in $learning_lang_name (the word being taught)",
+                  "translation": "in $native_lang_name (meaning)",
+                  "example": "in $learning_lang_name (sentence using the word)"
                 }
               ],
 
               "grammar_highlights": [
                 {
-                  "phrase": "string",
-                  "label": "string",
-                  "explanation": "string (in $native_lang_name)",
-                  "formula": "string (optional)",
-                  "example": "string (in $learning_lang_name)"
+                  "phrase": "in $learning_lang_name (the grammar pattern)",
+                  "label": "in $native_lang_name (name of the pattern)",
+                  "explanation": "in $native_lang_name (how it works)",
+                  "formula": "grammar structure like: Subject + Verb + Object",
+                  "example": "in $learning_lang_name (example sentence)",
+                  "breakdown": "in $native_lang_name (explain each part simply)"
                 }
               ],
 
               "dialogue": [
-                { "speaker": "A", "line": "string (in $learning_lang_name)" },
-                { "speaker": "B", "line": "string (in $learning_lang_name)" }
+                { "speaker": "A", "line": "in $learning_lang_name" },
+                { "speaker": "B", "line": "in $learning_lang_name" }
               ],
 
               "exercises": {
                 "gap_fill": [
                   {
-                    "sentence": "string with ___ (in $learning_lang_name)",
-                    "answer": "string"
+                    "sentence": "in $learning_lang_name with ___",
+                    "answer": "the missing word"
                   }
                 ],
                 "sentence_ordering": [
                   {
-                    "words": ["string", "string", "string"],
-                    "answer": "string"
+                    "words": ["in", "$learning_lang_name", "words"],
+                    "answer": "correct sentence"
                   }
                 ],
                 "true_false": [
                   {
-                    "statement": "string (in $learning_lang_name)",
+                    "statement": "in $learning_lang_name (statement to evaluate)",
                     "answer": "True or False"
                   }
                 ],
                 "matching": [
                   {
-                    "word": "string",
-                    "match": "string"
+                    "word": "in $learning_lang_name (word to match)",
+                    "match": "in $native_lang_name (its meaning)"
+                  }
+                ],
+                "quiz": [
+                  {
+                    "question": "MUST BE IN $native_lang_name (so student understands the question)",
+                    "options": ["A. in $learning_lang_name", "B. in $learning_lang_name", "C. ...", "D. ..."],
+                    "answer": "A or B or C or D"
                   }
                 ]
               },
 
-              "homework": "string (instruction in $learning_lang_name)",
+              "homework": "MUST BE IN $native_lang_name - clear instruction what to practice",
 
               "common_mistakes": [
                 {
-                  "mistake": "string (incorrect)",
-                  "correction": "string (correct)",
-                  "explanation": "string (in $native_lang_name)"
+                  "mistake": "in $learning_lang_name (wrong example)",
+                  "correction": "in $learning_lang_name (correct version)",
+                  "explanation": "in $native_lang_name (why it's wrong and how to fix)"
                 }
               ],
 
-              "culture_notes": "string (in $native_lang_name)",
-
-              "quiz": [
-                {
-                  "question": "string (in $learning_lang_name)",
-                  "options": ["A. ...", "B. ...", "C. ...", "D. ..."],
-                  "answer": "A or B or C or D"
-                }
-              ]
+              "culture_notes": "MUST BE IN $native_lang_name - cultural context information"
             }
 
             Rules:

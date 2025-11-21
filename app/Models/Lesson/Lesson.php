@@ -10,12 +10,14 @@ use App\Models\Abstracts\Lesson\BaseLesson;
 use App\Models\Topic\Topic;
 use Barryvdh\LaravelIdeHelper\Eloquent;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
+ * @property string $uuid
  * @property int $user_id
  * @property int $topic_id
  * @property string $lesson_name
@@ -35,8 +37,14 @@ use Illuminate\Support\Carbon;
  * @property-read string $formatted_created_at
  * @property-read string $level_badge_color
  * @property-read Topic|null $topic
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Lesson\LessonHistory> $histories
+ * @property-read Collection<int, LessonHistory> $histories
  * @property-read int|null $histories_count
+ * @property-read Collection<int, LessonAssignment> $assignments
+ * @property-read int|null $assignments_count
+ * @property-read Collection<int, LessonAttempt> $attempts
+ * @property-read int|null $attempts_count
+ * @property-read Collection<int, LessonScore> $scores
+ * @property-read int|null $scores_count
  * @property-read \App\Models\User $user
  *
  * @method static Builder<static>|Lesson newModelQuery()
@@ -80,5 +88,29 @@ class Lesson extends BaseLesson
     public function histories(): HasMany
     {
         return $this->hasMany(LessonHistory::class);
+    }
+
+    /**
+     * @return HasMany<LessonAssignment>
+     */
+    public function assignments(): HasMany
+    {
+        return $this->hasMany(LessonAssignment::class);
+    }
+
+    /**
+     * @return HasMany<LessonAttempt>
+     */
+    public function attempts(): HasMany
+    {
+        return $this->hasMany(LessonAttempt::class);
+    }
+
+    /**
+     * @return HasMany<LessonScore>
+     */
+    public function scores(): HasMany
+    {
+        return $this->hasMany(LessonScore::class);
     }
 }

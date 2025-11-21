@@ -62,6 +62,11 @@ Route::middleware('auth')->group(function () {
     // Lessons management
     Route::get('/lessons', LessonIndex::class)->name('lessons.index');
     Route::post('/lessons', [LessonController::class, 'store'])->name('lessons.store');
-    Route::get('/lessons/{lesson}/history', [LessonController::class, 'history'])->name('lessons.history');
-    Route::post('/lessons/{lesson}/history/{history}/restore', [LessonController::class, 'restore'])->name('lessons.history.restore');
+    
+    // Protected lesson routes - require ownership
+    Route::middleware('lesson.owner')->group(function () {
+        Route::get('/lessons/{lesson}/history', [LessonController::class, 'history'])->name('lessons.history');
+        Route::post('/lessons/{lesson}/history/{history}/restore', [LessonController::class, 'restore'])->name('lessons.history.restore');
+        Route::get('/lessons/{lesson}/scores', [LessonController::class, 'scores'])->name('lessons.scores');
+    });
 });

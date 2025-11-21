@@ -25,7 +25,6 @@ class LessonHistoryService
             'homework' => $lesson->homework,
             'common_mistakes' => $lesson->common_mistakes,
             'culture_notes' => $lesson->culture_notes,
-            'quiz' => $lesson->quiz,
             'embedding' => $lesson->embedding,
         ]);
     }
@@ -34,7 +33,10 @@ class LessonHistoryService
     {
         $lesson = $history->lesson;
 
+        $this->snapshot($lesson);
+
         $lesson->update([
+            'uuid' => $history->uuid,
             'topic_id' => $history->topic_id,
             'lesson_name' => $history->lesson_name,
             'lesson_text' => $history->lesson_text,
@@ -46,9 +48,10 @@ class LessonHistoryService
             'homework' => $history->homework,
             'common_mistakes' => $history->common_mistakes,
             'culture_notes' => $history->culture_notes,
-            'quiz' => $history->quiz,
             'embedding' => $history->embedding,
         ]);
+
+        $history->delete();
 
         return $lesson;
     }

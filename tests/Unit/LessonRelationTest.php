@@ -46,7 +46,6 @@ class LessonRelationTest extends TestCase
             'homework' => null,
             'common_mistakes' => [],
             'culture_notes' => null,
-            'quiz' => [],
         ]);
 
         $this->assertNotNull($lesson->topic);

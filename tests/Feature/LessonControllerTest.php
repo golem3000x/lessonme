@@ -48,7 +48,6 @@ class LessonControllerTest extends TestCase
                     'homework' => null,
                     'common_mistakes' => [],
                     'culture_notes' => null,
-                    'quiz' => [],
                 ]);
         });
     }
@@ -75,7 +74,7 @@ class LessonControllerTest extends TestCase
         $lesson = Lesson::first();
         $this->assertNotNull($lesson);
         $this->assertSame($topic->id, $lesson->topic_id);
-        $response->assertRedirect(route('lessons.show', $lesson->id));
+        $response->assertRedirect(route('lessons.show', $lesson->uuid));
     }
 
     public function test_store_with_topic_id_only_persists_topic_id(): void
@@ -99,7 +98,7 @@ class LessonControllerTest extends TestCase
         $lesson = Lesson::first();
         $this->assertNotNull($lesson);
         $this->assertSame($topic->id, $lesson->topic_id);
-        $response->assertRedirect(route('lessons.show', $lesson->id));
+        $response->assertRedirect(route('lessons.show', $lesson->uuid));
     }
 
     public function test_store_without_topic_defaults_and_allows_null_topic_id(): void
@@ -120,6 +119,6 @@ class LessonControllerTest extends TestCase
         $lesson = Lesson::first();
         $this->assertNotNull($lesson);
         $this->assertNull($lesson->topic_id);
-        $response->assertRedirect(route('lessons.show', $lesson->id));
+        $response->assertRedirect(route('lessons.show', $lesson->uuid));
     }
 }

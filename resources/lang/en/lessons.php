@@ -71,6 +71,7 @@ return [
     'lesson_history' => 'Lesson History',
     'version_created' => 'Created',
     'restore_version' => 'Restore',
+    'restoring' => 'Restoring',
     'current_version' => 'Current version',
     'no_history' => 'No history available for this lesson.',
     'no_history_description' => 'Previous versions will appear here after regenerating the lesson.',
@@ -102,4 +103,57 @@ return [
     'creation_timeout' => 'Lesson creation is taking longer than expected. Please try again.',
     'creation_failed' => 'Lesson Creation Failed',
     'try_again' => 'Try Again',
+    
+    // Exercises
+    'check_answers_title' => 'Are You Ready?',
+    'check_answers_message' => 'Are you sure you want to check your answers?',
+    'check_answers' => 'Yes, Check!',
+    'wait' => 'No, Wait',
+    
+    // Exercise types
+    'quiz' => 'Quiz',
+    'gap_fill' => 'Fill in the blanks',
+    'sentence_ordering' => 'Sentence Ordering',
+    'true_false' => 'True or False',
+    'matching' => 'Matching',
+    
+    // Exercise navigation
+    'exercise_of' => 'Exercise :current of :total',
+    'progress' => 'Progress',
+    'previous' => 'Previous',
+    'next' => 'Next',
+    'arrange_words' => 'Arrange the words in the correct order:',
+    'match_with' => 'Match with...',
+    'true' => 'True',
+    'false' => 'False',
+    
+    // Exercise results
+    'correct' => 'Correct!',
+    'wrong_answer' => 'Wrong. Correct answer:',
+    'perfect_score' => 'Perfect score! Excellent work!',
+    'great_job' => 'Great job! Keep it up!',
+    'good_effort' => 'Good effort! Practice more!',
+    'keep_practicing' => 'Keep practicing, you\'ll get better!',
+    'try_again' => 'Try Again',
+    
+    // Lesson sections
+    'dialogue' => 'Dialogue',
+    'exercises' => 'Exercises',
+    'homework' => 'Homework',
+    'common_mistakes' => 'Common Mistakes',
+    'culture_notes' => 'Culture Notes',
+    
+    // Grading system
+    'student_scores' => 'Student Scores',
+    'no_scores_yet' => 'No scores available yet.',
+    'student' => 'Student',
+    'attempt' => 'Attempt',
+    'score' => 'Score',
+    'percentage' => 'Percentage',
+    'grade' => 'Grade',
+    'completed_at' => 'Completed At',
+    'view_scores' => 'View Scores',
+    'my_attempts' => 'My Attempts',
+    'duration' => 'Duration',
+    'minutes' => 'minutes',
 ];

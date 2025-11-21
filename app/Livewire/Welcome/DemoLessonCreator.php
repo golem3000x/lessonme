@@ -99,7 +99,7 @@ class DemoLessonCreator extends Component
 
             if ($existing_lesson) {
                 // Show existing lesson button immediately
-                $this->demo_lesson_url = route('lessons.show', $existing_lesson->id);
+                $this->demo_lesson_url = route('lessons.show', $existing_lesson->uuid);
                 $this->demo_lesson_name = $existing_lesson->lesson_name;
                 $this->show_success_message = true;
             }
@@ -191,8 +191,7 @@ class DemoLessonCreator extends Component
             CreateLessonJob::dispatch(
                 $temp_guest_user_id,
                 $this->topic_id,
-                $lesson_dto,
-                app()->getLocale()
+                $lesson_dto
             );
 
             $this->is_generating = false;
@@ -342,7 +341,7 @@ class DemoLessonCreator extends Component
 
         if ($lesson) {
             // Lesson created successfully!
-            $this->demo_lesson_url = route('lessons.show', $lesson->id);
+            $this->demo_lesson_url = route('lessons.show', $lesson->uuid);
             $this->demo_lesson_name = $lesson->lesson_name;
             $this->show_success_message = true;
             $this->pending_lesson_id = null;

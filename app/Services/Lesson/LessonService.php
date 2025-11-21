@@ -43,7 +43,6 @@ readonly class LessonService
             'homework' => $data['homework'] ?? null,
             'common_mistakes' => $data['common_mistakes'] ?? [],
             'culture_notes' => $data['culture_notes'] ?? null,
-            'quiz' => $data['quiz'],
             'embedding' => $embedding,
         ]);
     }
@@ -75,7 +74,6 @@ readonly class LessonService
             'homework' => $new_data['homework'] ?? null,
             'common_mistakes' => $new_data['common_mistakes'] ?? [],
             'culture_notes' => $new_data['culture_notes'] ?? null,
-            'quiz' => $new_data['quiz'],
             'embedding' => $new_embedding,
         ]);
 

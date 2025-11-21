@@ -9,6 +9,9 @@ use App\Enums\SystemLanguageEnum;
 use App\Enums\TableNameEnum;
 use App\Enums\UserRoleEnum;
 use App\Models\Lesson\Lesson;
+use App\Models\Lesson\LessonAssignment;
+use App\Models\Lesson\LessonAttempt;
+use App\Models\Lesson\LessonScore;
 use App\Models\Support\ChatSession;
 use App\Models\Support\Message;
 use Barryvdh\LaravelIdeHelper\Eloquent;
@@ -19,6 +22,7 @@ use Illuminate\Contracts\Translation\HasLocalePreference;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\DatabaseNotification;
@@ -49,6 +53,18 @@ use Illuminate\Support\Carbon;
  * @property-read int|null $chat_sessions_count
  * @property-read Collection<int, Message> $messages
  * @property-read int|null $messages_count
+ * @property-read Collection<int, User> $students
+ * @property-read int|null $students_count
+ * @property-read Collection<int, User> $teachers
+ * @property-read int|null $teachers_count
+ * @property-read Collection<int, LessonAssignment> $assignedLessons
+ * @property-read int|null $assigned_lessons_count
+ * @property-read Collection<int, LessonAssignment> $myAssignments
+ * @property-read int|null $my_assignments_count
+ * @property-read Collection<int, LessonAttempt> $lessonAttempts
+ * @property-read int|null $lesson_attempts_count
+ * @property-read Collection<int, LessonScore> $scores
+ * @property-read int|null $scores_count
  *
  * @method static UserFactory factory($count = null, $state = [])
  * @method static Builder<static>|User newModelQuery()
@@ -184,6 +200,76 @@ class User extends Authenticatable implements FilamentUser, HasLocalePreference
     public function messages(): HasMany
     {
         return $this->hasMany(Message::class);
+    }
+
+    /**
+     * Students of this teacher.
+     *
+     * @return BelongsToMany<User, $this>
+     */
+    public function students(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            User::class,
+            TableNameEnum::TEACHER_STUDENT->value,
+            'teacher_id',
+            'student_id'
+        )->withTimestamps();
+    }
+
+    /**
+     * Teachers of this student.
+     *
+     * @return BelongsToMany<User, $this>
+     */
+    public function teachers(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            User::class,
+            TableNameEnum::TEACHER_STUDENT->value,
+            'student_id',
+            'teacher_id'
+        )->withTimestamps();
+    }
+
+    /**
+     * Lessons assigned by this teacher.
+     *
+     * @return HasMany<LessonAssignment, $this>
+     */
+    public function assignedLessons(): HasMany
+    {
+        return $this->hasMany(LessonAssignment::class, 'teacher_id');
+    }
+
+    /**
+     * Lessons assigned to this student.
+     *
+     * @return HasMany<LessonAssignment, $this>
+     */
+    public function myAssignments(): HasMany
+    {
+        return $this->hasMany(LessonAssignment::class, 'student_id');
+    }
+
+    /**
+     * All lesson attempts by this user.
+     *
+     * @return HasMany<LessonAttempt, $this>
+     */
+    public function lessonAttempts(): HasMany
+    {
+        return $this->hasMany(LessonAttempt::class);
+    }
+
+    /**
+     * All scores earned by this user.
+     *
+     * @return HasMany<LessonScore, $this>
+     */
+    public function scores(): HasMany
+    {
+        return $this->hasMany(LessonScore::class);
     }
 
     /**

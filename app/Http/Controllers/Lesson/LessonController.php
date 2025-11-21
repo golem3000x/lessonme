@@ -12,7 +12,6 @@ use App\Models\Topic\Topic;
 use App\Models\User;
 use App\Services\Lesson\LessonHistoryService;
 use App\Services\Slug\SlugService;
-use Database\Seeders\GuestUserSeeder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
@@ -75,48 +74,14 @@ class LessonController extends Controller
             'exercises' => $lesson_data['exercises'] ?? [],
             'homework' => $lesson_data['homework'] ?? null,
             'common_mistakes' => $lesson_data['common_mistakes'] ?? [],
-            'culture_notes' => $lesson_data['culture_notes'] ?? null,
-            'quiz' => $lesson_data['quiz'] ?? [],
+            'culture_notes' => $lesson_data['culture_notes'] ?? null
         ]);
 
-        return redirect()->route('lessons.show', $lesson->id);
+        return redirect()->route('lessons.show', $lesson->uuid);
     }
 
     public function show(Lesson $lesson): Factory|View
     {
-        $is_authorized = false;
-
-        // 1. Check if authenticated user owns the lesson
-        if (Auth::check() && $lesson->user_id === Auth::id()) {
-            $is_authorized = true;
-        }
-
-        // 2. Check for temporary guest users (new system)
-        if (! $is_authorized) {
-            $temp_guest_user_id = session('temp_guest_user_id');
-            if ($temp_guest_user_id) {
-                $is_temp_guest_lesson = User::where('id', '=', $lesson->user_id)
-                    ->where('id', '=', $temp_guest_user_id)
-                    ->where('is_temp_guest', '=', true)
-                    ->where('temp_guest_expires_at', '>', now())
-                    ->exists();
-
-                if ($is_temp_guest_lesson) {
-                    $is_authorized = true;
-                }
-            }
-        }
-
-        // 3. Check for legacy guest user system (backwards compatibility)
-        if (! $is_authorized) {
-            $guest_user = User::where('email', '=', GuestUserSeeder::GUEST_EMAIL)->first();
-            if ($guest_user && $lesson->user_id === $guest_user->id) {
-                $is_authorized = true;
-            }
-        }
-
-        abort_unless($is_authorized, 403);
-
         $lesson->load('topic.translations');
 
         return view('lessons.show', compact('lesson'));
@@ -124,8 +89,7 @@ class LessonController extends Controller
 
     public function history(Lesson $lesson): Factory|View
     {
-        abort_if($lesson->user_id !== Auth::id(), 403);
-
+        // Authorization is handled by lesson.owner middleware
         $histories = $lesson->histories()
             ->orderBy('created_at', 'desc')
             ->paginate(12);
@@ -135,11 +99,8 @@ class LessonController extends Controller
 
     public function restore(Lesson $lesson, LessonHistory $history, LessonHistoryService $history_service): RedirectResponse
     {
-        abort_if($lesson->user_id !== Auth::id(), 403);
+        // Authorization is handled by lesson.owner middleware
         abort_if($history->lesson_id !== $lesson->id, 404);
-
-        // Сохраняем текущую версию в историю перед восстановлением
-        $history_service->snapshot($lesson);
 
         // Восстанавливаем выбранную версию
         $history_service->restore($history);
@@ -147,5 +108,11 @@ class LessonController extends Controller
         return redirect()
             ->route('lessons.index')
             ->with('success', __('lessons.version_restored'));
+    }
+
+    public function scores(Lesson $lesson): Factory|View
+    {
+        // Authorization is handled by lesson.owner middleware
+        return view('lessons.scores', compact('lesson'));
     }
 }

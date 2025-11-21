@@ -60,8 +60,8 @@ abstract class AbstractLessonNotification extends Notification implements Should
         ];
 
         if ($this->entity) {
-            $data['lesson_id'] = $this->entity->id;
-            $data['lesson_url'] = route('lessons.show', $this->entity->id);
+            $data['lesson_id'] = $this->entity->uuid;
+            $data['lesson_url'] = route('lessons.show', $this->entity->uuid);
             $data['lesson_name'] = $this->entity->lesson_name;
         }
 

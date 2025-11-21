@@ -155,8 +155,7 @@ class ManageLesson extends Component
             CreateLessonJob::dispatch(
                 $user->id,
                 $this->topic_id,
-                $lesson_dto,
-                app()->getLocale()
+                $lesson_dto
             );
 
             // Send immediate notification that creation is in process
@@ -165,14 +164,14 @@ class ManageLesson extends Component
                 LessonCreationStatusEnum::PROCESSING
             ));
 
-            // Reset generating state
-            $this->is_generating = false;
-
             // Notify user via UI
             $this->notifyUser(LessonCreationStatusEnum::PROCESSING->value, __('lessons.lesson_creation_in_progress'));
 
-            // Dispatch events and close modal
+            // Dispatch event to add placeholder to parent component
             $this->dispatch('lesson-creation-queued');
+            
+            // Reset generating state and close modal
+            $this->is_generating = false;
             $this->dispatch('close-manage-modal');
 
         } catch (\Exception $e) {
@@ -194,9 +193,6 @@ class ManageLesson extends Component
             status: $status,
             message: $message
         );
-
-        // Debug log
-        $this->js("console.log('Notification sent:', { id: '{$notification_id}', status: '{$status}', message: '{$message}' });");
     }
 
     /**
@@ -220,9 +216,6 @@ class ManageLesson extends Component
     {
         $this->reset(['is_generating']);
         $this->is_generating = false;
-
-        // Debug log
-        $this->js("console.log('ManageLesson state reset');");
     }
 
     /**

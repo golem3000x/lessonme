@@ -51,7 +51,19 @@
         @else
             <div class="space-y-4">
                 @foreach($histories as $history)
-                    <div class="group bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg hover:border-blue-200 transition-all duration-200">
+                    <div class="group bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg hover:border-blue-200 transition-all duration-200 relative"
+                         x-data="{ isRestoring_{{ $history->id }}: false }">
+                        
+                        {{-- Loading overlay --}}
+                        <div x-show="isRestoring_{{ $history->id }}" 
+                             x-cloak
+                             class="absolute inset-0 bg-white/80 backdrop-blur-sm z-10 flex items-center justify-center">
+                            <div class="text-center">
+                                <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mb-3"></div>
+                                <p class="text-sm font-semibold text-gray-700">{{ __('lessons.restoring') }}...</p>
+                            </div>
+                        </div>
+
                         <div class="p-6 bg-gradient-to-r from-white to-gray-50">
                             <div class="flex items-start justify-between">
                                 <div class="flex-1">
@@ -146,22 +158,81 @@
                                 <div class="ml-4 flex-shrink-0" x-data="{ showRestoreModal_{{ $history->id }}: false }">
                                     <button 
                                         @click="showRestoreModal_{{ $history->id }} = true"
-                                        class="group inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-lg hover:from-green-700 hover:to-emerald-700 font-medium shadow-md hover:shadow-lg transition-all duration-200 whitespace-nowrap">
+                                        :disabled="isRestoring_{{ $history->id }}"
+                                        class="group inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-lg hover:from-green-700 hover:to-emerald-700 font-medium shadow-md hover:shadow-lg transition-all duration-200 whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                                         </svg>
                                         {{ __('lessons.restore_version') }}
                                     </button>
 
-                                    <x-confirm-modal
-                                        icon="warning"
-                                        :title="__('lessons.restore_version') . '?'"
-                                        :message="__('lessons.restore_confirm')"
-                                        :confirmText="__('lessons.restore_version')"
-                                        :cancelText="__('lessons.cancel')"
-                                        :confirmRoute="route('lessons.history.restore', [$lesson, $history])"
-                                        showVariable="showRestoreModal_{{ $history->id }}"
-                                    />
+                                    {{-- Custom modal for restore with loading state --}}
+                                    <div
+                                        x-show="showRestoreModal_{{ $history->id }}"
+                                        x-cloak
+                                        class="fixed inset-0 z-50 overflow-y-auto"
+                                        @click.self="showRestoreModal_{{ $history->id }} = false"
+                                    >
+                                        {{-- Backdrop --}}
+                                        <div class="fixed inset-0 bg-black/50 backdrop-blur-sm"
+                                             x-show="showRestoreModal_{{ $history->id }}"
+                                             x-transition
+                                        ></div>
+
+                                        {{-- Modal --}}
+                                        <div class="flex items-center justify-center min-h-screen p-4">
+                                            <div
+                                                class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden border border-gray-100"
+                                                x-show="showRestoreModal_{{ $history->id }}"
+                                                x-transition
+                                                @click.stop
+                                            >
+                                                {{-- Icon --}}
+                                                <div class="flex justify-center pt-8 pb-4">
+                                                    <div class="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-yellow-100 to-orange-100 rounded-full">
+                                                        <svg class="h-10 w-10 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                                        </svg>
+                                                    </div>
+                                                </div>
+
+                                                {{-- Content --}}
+                                                <div class="px-6 pb-6 text-center">
+                                                    <h3 class="text-2xl font-bold text-gray-900 mb-3">
+                                                        {{ __('lessons.restore_version') }}?
+                                                    </h3>
+                                                    <p class="text-sm text-gray-600 mb-6">
+                                                        {{ __('lessons.restore_confirm') }}
+                                                    </p>
+
+                                                    {{-- Buttons --}}
+                                                    <div class="flex gap-3">
+                                                        <button
+                                                            @click="showRestoreModal_{{ $history->id }} = false"
+                                                            type="button"
+                                                            class="flex-1 px-6 py-3 bg-gray-100 text-gray-700 font-semibold rounded-xl hover:bg-gray-200 transition-all duration-200"
+                                                        >
+                                                            {{ __('lessons.cancel') }}
+                                                        </button>
+                                                        
+                                                        <form method="POST" 
+                                                              action="{{ route('lessons.history.restore', [$lesson, $history]) }}" 
+                                                              class="flex-1"
+                                                              @submit="isRestoring_{{ $history->id }} = true; showRestoreModal_{{ $history->id }} = false">
+                                                            @csrf
+                                                            @method('POST')
+                                                            <button
+                                                                type="submit"
+                                                                class="w-full px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white font-semibold rounded-xl hover:from-green-600 hover:to-emerald-600 shadow-md hover:shadow-lg transition-all duration-200"
+                                                            >
+                                                                {{ __('lessons.restore_version') }}
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

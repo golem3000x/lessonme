@@ -16,6 +16,7 @@ return new class extends Migration
     {
         Schema::create(TableNameEnum::LESSONS->value, function (Blueprint $table): void {
             $table->id();
+            $table->uuid();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->unsignedTinyInteger('topic_id')->nullable();
             $table->string('lesson_name');
@@ -28,7 +29,6 @@ return new class extends Migration
             $table->text('homework')->nullable();
             $table->json('common_mistakes')->nullable();
             $table->text('culture_notes')->nullable();
-            $table->json('quiz')->nullable();
             $table->vector('embedding', 1536)->nullable();
             $table->timestamps();
         });

@@ -9,12 +9,14 @@ use App\Enums\LanguageLevelEnum;
 use App\Models\Abstracts\BaseModel;
 use App\Models\User;
 use Database\Factories\UserFactory;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
+ * @property string $uuid
  * @property int $user_id
  * @property int|null $topic_id
  * @property string $lesson_name
@@ -36,9 +38,10 @@ use Illuminate\Support\Carbon;
 abstract class BaseLesson extends BaseModel
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory;
+    use HasFactory, HasUuids;
 
     protected $fillable = [
+        'uuid',
         'user_id',
         'topic_id',
         'lesson_name',
@@ -51,7 +54,6 @@ abstract class BaseLesson extends BaseModel
         'homework',
         'common_mistakes',
         'culture_notes',
-        'quiz',
         'embedding',
     ];
 
@@ -62,7 +64,6 @@ abstract class BaseLesson extends BaseModel
         'dialogue' => 'array',
         'exercises' => 'array',
         'common_mistakes' => 'array',
-        'quiz' => 'array',
         'embedding' => EmbeddingCast::class,
     ];
 
@@ -100,5 +101,21 @@ abstract class BaseLesson extends BaseModel
     public function getFormattedCreatedAtAttribute(): string
     {
         return $this->created_at?->format('d M Y, H:i') ?? '';
+    }
+
+    /**
+     * Get the route key name for Laravel route model binding
+     */
+    public function getRouteKeyName(): string
+    {
+        return 'uuid';
+    }
+
+    /**
+     * Get the columns that should receive a unique identifier
+     */
+    public function uniqueIds(): array
+    {
+        return ['uuid'];
     }
 }

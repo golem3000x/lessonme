@@ -40,6 +40,10 @@ class LessonIndex extends Component
     /** @var array<int, string> */
     public array $creating_lessons_placeholders = [];
 
+    // IDs of lessons being regenerated
+    /** @var array<int, int> */
+    public array $regenerating_lesson_ids = [];
+
     // Filters UI state
     public bool $show_filters = false;
 
@@ -103,6 +107,7 @@ class LessonIndex extends Component
     {
         // Clear all placeholders when lesson is created
         $this->creating_lessons_placeholders = [];
+        $this->regenerating_lesson_ids = [];
 
         // Just refresh the component - pagination will be handled automatically
         $this->resetPage();
@@ -193,7 +198,15 @@ class LessonIndex extends Component
             ->first();
 
         if (! $lesson) {
-            session()->flash('error', __('lessons.lesson_not_found'));
+            // Remove from regenerating list if lesson not found
+            $this->regenerating_lesson_ids = array_diff($this->regenerating_lesson_ids, [$this->lesson_to_regenerate]);
+            
+            $this->dispatch('lesson-notification',
+                id: uniqid('lesson_error_'),
+                entity: EntityTypeEnum::LESSON->value,
+                status: LessonCreationStatusEnum::ERROR->value,
+                message: __('lessons.lesson_not_found')
+            );
             $this->cancelRegenerate();
 
             return;
@@ -229,8 +242,7 @@ class LessonIndex extends Component
             // Dispatch job for async lesson regeneration
             RegenerateLessonJob::dispatch(
                 $this->lesson_to_regenerate,
-                $lesson_dto,
-                app()->getLocale()
+                $lesson_dto
             );
 
             // Send immediate notification that regeneration is in process
@@ -247,8 +259,23 @@ class LessonIndex extends Component
                 message: __('lessons.lesson_regeneration_in_progress')
             );
 
+            // Add lesson ID to regenerating list to show placeholder
+            $this->regenerating_lesson_ids[] = $this->lesson_to_regenerate;
+
+            // Add placeholder for lesson being regenerated
+            $this->addPlaceholder();
+
         } catch (\Exception $e) {
-            session()->flash('error', __('lessons.regeneration_failed').': '.$e->getMessage());
+            // Remove from regenerating list on error
+            $this->regenerating_lesson_ids = array_diff($this->regenerating_lesson_ids, [$this->lesson_to_regenerate]);
+            
+            // Notify user via UI about error
+            $this->dispatch('lesson-notification',
+                id: uniqid('lesson_error_'),
+                entity: EntityTypeEnum::LESSON->value,
+                status: LessonCreationStatusEnum::ERROR->value,
+                message: __('lessons.regeneration_failed').': '.$e->getMessage()
+            );
         }
 
         $this->cancelRegenerate();

@@ -1,206 +1,274 @@
-<div class="space-y-8">
-    {{-- GAP FILL EXERCISES --}}
-    @if(!empty($exercises['gap_fill']))
-        <div class="bg-white rounded-lg shadow-sm border border-blue-100 p-6">
-            <h4 class="text-lg font-semibold mb-4 text-blue-600">📝 Fill in the blanks</h4>
-            <div class="space-y-4">
-                @foreach($exercises['gap_fill'] as $index => $item)
-                    <div class="p-4 bg-blue-50 rounded-lg">
-                        <div class="flex flex-col gap-2">
-                            @php
-                                $sentence = $item['sentence'] ?? '';
-                                $parts = explode('___', $sentence);
-                            @endphp
-                            
-                            <div class="text-gray-800 text-lg leading-relaxed flex flex-wrap items-center gap-1">
-                                @foreach($parts as $part_index => $part)
-                                    <span>{{ $part }}</span>
-                                    @if($part_index < count($parts) - 1)
-                                        <input
-                                            type="text"
-                                            wire:model="user_answers.gap_fill.{{ $index }}"
-                                            placeholder="..."
-                                            class="inline-block px-3 py-1 border-b-2 border-blue-400 bg-transparent text-center min-w-[120px] max-w-[200px] transition-all duration-200
-                                                   @if(!$checked) focus:border-blue-600 focus:bg-blue-50 hover:border-blue-500 @endif
-                                                   @if($checked) {{ isset($user_answers['gap_fill'][$index]) && strcasecmp(trim($user_answers['gap_fill'][$index]), trim($item['answer'] ?? '')) === 0 ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50' }} @endif"
-                                            @if($checked) disabled @endif
-                                        >
-                                    @endif
-                                @endforeach
-                            </div>
+<div class="space-y-6">
+    {{-- EXERCISE COUNTER --}}
+    <div class="bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg shadow-lg p-4">
+        <div class="flex items-center justify-between">
+            <div class="text-lg font-semibold">
+                📚 {{ __('lessons.exercise_of', ['current' => $current_exercise_index + 1, 'total' => $total_exercises]) }}
+            </div>
+            <div class="text-sm opacity-90">
+                {{ __('lessons.progress') }}: {{ round((($current_exercise_index + 1) / $total_exercises) * 100) }}%
+            </div>
+        </div>
+        <div class="mt-2 bg-white bg-opacity-20 rounded-full h-2">
+            <div class="bg-white rounded-full h-2 transition-all duration-300" 
+                 style="width: {{ (($current_exercise_index + 1) / $total_exercises) * 100 }}%"></div>
+        </div>
+    </div>
 
-                            @if($checked)
-                                <div class="text-sm mt-2">
-                                    @if(isset($user_answers['gap_fill'][$index]) && strcasecmp(trim($user_answers['gap_fill'][$index]), trim($item['answer'] ?? '')) === 0)
-                                        <span class="text-success font-medium">✅ Correct!</span>
-                                    @else
-                                        <span class="text-error font-medium">❌ Wrong. Correct answer: <strong>{{ $item['answer'] ?? '' }}</strong></span>
-                                    @endif
-                                </div>
+    @if(!empty($all_exercises_flat))
+        @php
+            $current = $all_exercises_flat[$current_exercise_index];
+            $type = $current['type'];
+            $index = $current['index'];
+            $item = $current['data'];
+        @endphp
+
+        {{-- CURRENT EXERCISE CARD --}}
+        <div class="bg-white rounded-lg shadow-lg border-2 border-blue-200 p-8 min-h-[400px]">
+            {{-- QUIZ --}}
+            @if($type === 'quiz')
+                <h4 class="text-xl font-bold mb-6 text-yellow-600 flex items-center gap-2">
+                    <span class="text-2xl">🎯</span> {{ __('lessons.quiz') }}
+                </h4>
+                <div class="p-6 bg-yellow-50 rounded-lg">
+                    <p class="text-gray-800 font-medium mb-4 text-lg">
+                        {{ $item['question'] ?? '' }}
+                    </p>
+
+                    <div class="flex flex-col gap-3 mt-4">
+                        @foreach($item['options'] ?? [] as $option)
+                            <label class="cursor-pointer flex items-center gap-3 p-3 rounded-lg hover:bg-yellow-100 transition-colors">
+                                <input
+                                    type="radio"
+                                    wire:model="user_answers.quiz.{{ $index }}"
+                                    value="{{ substr($option, 0, 1) }}"
+                                    class="w-4 h-4 text-yellow-600 focus:ring-yellow-500"
+                                    @if($checked) disabled @endif
+                                >
+                                <span class="text-base">{{ $option }}</span>
+                            </label>
+                        @endforeach
+                    </div>
+
+                    @if($checked)
+                        <div class="text-sm mt-4 p-3 rounded-lg {{ ($user_answers['quiz'][$index] ?? '') === ($item['answer'] ?? '') ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                            @if(($user_answers['quiz'][$index] ?? '') === ($item['answer'] ?? ''))
+                                <span class="font-medium">✅ {{ __('lessons.correct') }}</span>
+                            @else
+                                <span class="font-medium">❌ {{ __('lessons.wrong_answer') }} <strong>{{ $item['answer'] ?? '' }}</strong></span>
                             @endif
                         </div>
-                    </div>
-                @endforeach
-            </div>
-        </div>
-    @endif
+                    @endif
+                </div>
+            @endif
 
-    {{-- SENTENCE ORDERING EXERCISES --}}
-    @if(!empty($exercises['sentence_ordering']))
-        <div class="bg-white rounded-lg shadow-sm border border-purple-100 p-6">
-            <h4 class="text-lg font-semibold mb-4 text-purple-600">🔄 Put in the correct order</h4>
-            <div class="space-y-6">
-                @foreach($exercises['sentence_ordering'] as $index => $item)
-                    <div class="p-4 bg-purple-50 rounded-lg">
-                        <p class="text-sm text-gray-600 mb-3">Arrange the words in the correct order:</p>
-                        <div class="flex flex-wrap gap-2 mb-3">
-                            @foreach($ordered_words[$index] ?? [] as $word_index => $word)
-                                <div class="flex items-center gap-1 bg-white border border-purple-300 rounded-lg px-3 py-2">
-                                    @if(!$checked)
-                                        <button
-                                            wire:click="moveWord({{ $index }}, {{ $word_index }}, 'left')"
-                                            class="btn btn-xs btn-circle btn-ghost"
-                                            @if($word_index === 0) disabled @endif
-                                        >
-                                            ←
-                                        </button>
-                                    @endif
-                                    <span class="font-medium text-gray-800">{{ $word }}</span>
-                                    @if(!$checked)
-                                        <button
-                                            wire:click="moveWord({{ $index }}, {{ $word_index }}, 'right')"
-                                            class="btn btn-xs btn-circle btn-ghost"
-                                            @if($word_index === count($ordered_words[$index] ?? []) - 1) disabled @endif
-                                        >
-                                            →
-                                        </button>
-                                    @endif
-                                </div>
-                            @endforeach
-                        </div>
-                        @if($checked)
-                            <div class="text-sm mt-2">
-                                @php
-                                    $user_sentence = implode(' ', $ordered_words[$index] ?? []);
-                                    $correct_sentence = trim($item['answer'] ?? '');
-                                    $is_correct = strcasecmp($user_sentence, $correct_sentence) === 0;
-                                @endphp
-                                @if($is_correct)
-                                    <span class="text-success font-medium">✅ Correct!</span>
-                                @else
-                                    <span class="text-error font-medium">❌ Wrong. Correct answer: <strong>{{ $item['answer'] ?? '' }}</strong></span>
-                                @endif
-                            </div>
-                        @endif
-                    </div>
-                @endforeach
-            </div>
-        </div>
-    @endif
-
-    {{-- TRUE/FALSE EXERCISES --}}
-    @if(!empty($exercises['true_false']))
-        <div class="bg-white rounded-lg shadow-sm border border-green-100 p-6">
-            <h4 class="text-lg font-semibold mb-4 text-green-600">✓ True or False</h4>
-            <div class="space-y-4">
-                @foreach($exercises['true_false'] as $index => $item)
-                    <div class="p-4 bg-green-50 rounded-lg">
-                        <p class="text-gray-800 mb-3">{{ $item['statement'] ?? '' }}</p>
-                        <div class="flex gap-3">
-                            <label class="cursor-pointer">
+            {{-- GAP FILL --}}
+            @if($type === 'gap_fill')
+                <h4 class="text-xl font-bold mb-6 text-blue-600 flex items-center gap-2">
+                    <span class="text-2xl">📝</span> {{ __('lessons.gap_fill') }}
+                </h4>
+                <div class="p-6 bg-blue-50 rounded-lg">
+                    @php
+                        $sentence = $item['sentence'] ?? '';
+                        $parts = explode('___', $sentence);
+                    @endphp
+                    
+                    <div class="text-gray-800 text-xl leading-relaxed flex flex-wrap items-center gap-2">
+                        @foreach($parts as $part_index => $part)
+                            <span>{{ $part }}</span>
+                            @if($part_index < count($parts) - 1)
                                 <input
-                                    type="radio"
-                                    wire:model="user_answers.true_false.{{ $index }}"
-                                    value="True"
-                                    class="radio radio-success radio-sm"
+                                    type="text"
+                                    wire:model="user_answers.gap_fill.{{ $index }}"
+                                    placeholder="..."
+                                    class="inline-block px-4 py-2 border-b-2 border-blue-400 bg-transparent text-center min-w-[150px] max-w-[250px] transition-all duration-200
+                                           @if(!$checked) focus:border-blue-600 focus:bg-blue-100 hover:border-blue-500 @endif
+                                           @if($checked) {{ isset($user_answers['gap_fill'][$index]) && strcasecmp(trim($user_answers['gap_fill'][$index]), trim($item['answer'] ?? '')) === 0 ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50' }} @endif"
                                     @if($checked) disabled @endif
                                 >
-                                <span class="ml-2">True</span>
-                            </label>
-                            <label class="cursor-pointer">
-                                <input
-                                    type="radio"
-                                    wire:model="user_answers.true_false.{{ $index }}"
-                                    value="False"
-                                    class="radio radio-error radio-sm"
-                                    @if($checked) disabled @endif
-                                >
-                                <span class="ml-2">False</span>
-                            </label>
+                            @endif
+                        @endforeach
+                    </div>
+
+                    @if($checked)
+                        <div class="text-sm mt-4 p-3 rounded-lg {{ isset($user_answers['gap_fill'][$index]) && strcasecmp(trim($user_answers['gap_fill'][$index]), trim($item['answer'] ?? '')) === 0 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                            @if(isset($user_answers['gap_fill'][$index]) && strcasecmp(trim($user_answers['gap_fill'][$index]), trim($item['answer'] ?? '')) === 0)
+                                <span class="font-medium">✅ {{ __('lessons.correct') }}</span>
+                            @else
+                                <span class="font-medium">❌ {{ __('lessons.wrong_answer') }} <strong>{{ $item['answer'] ?? '' }}</strong></span>
+                            @endif
                         </div>
-                        @if($checked)
-                            <div class="text-sm mt-3">
-                                @if(isset($user_answers['true_false'][$index]) && strcasecmp($user_answers['true_false'][$index], $item['answer'] ?? '') === 0)
-                                    <span class="text-success font-medium">✅ Correct!</span>
-                                @else
-                                    <span class="text-error font-medium">❌ Wrong. Correct answer: <strong>{{ $item['answer'] ?? '' }}</strong></span>
+                    @endif
+                </div>
+            @endif
+
+            {{-- SENTENCE ORDERING --}}
+            @if($type === 'sentence_ordering')
+                <h4 class="text-xl font-bold mb-6 text-purple-600 flex items-center gap-2">
+                    <span class="text-2xl">🔄</span> {{ __('lessons.sentence_ordering') }}
+                </h4>
+                <div class="p-6 bg-purple-50 rounded-lg">
+                    <p class="text-sm text-gray-600 mb-4">{{ __('lessons.arrange_words') }}</p>
+                    <div class="flex flex-wrap gap-3 mb-4">
+                        @foreach($ordered_words[$index] ?? [] as $word_index => $word)
+                            <div class="flex items-center gap-1 bg-white border-2 border-purple-300 rounded-lg px-4 py-3 shadow-sm">
+                                @if(!$checked)
+                                    <button
+                                        wire:click="moveWord({{ $index }}, {{ $word_index }}, 'left')"
+                                        class="text-purple-600 hover:text-purple-800 px-2 py-1 rounded hover:bg-purple-100 transition-colors"
+                                        @if($word_index === 0) disabled class="text-gray-300 cursor-not-allowed" @endif
+                                    >
+                                        ←
+                                    </button>
+                                @endif
+                                <span class="font-medium text-gray-800 text-lg px-2">{{ $word }}</span>
+                                @if(!$checked)
+                                    <button
+                                        wire:click="moveWord({{ $index }}, {{ $word_index }}, 'right')"
+                                        class="text-purple-600 hover:text-purple-800 px-2 py-1 rounded hover:bg-purple-100 transition-colors"
+                                        @if($word_index === count($ordered_words[$index] ?? []) - 1) disabled class="text-gray-300 cursor-not-allowed" @endif
+                                    >
+                                        →
+                                    </button>
                                 @endif
                             </div>
-                        @endif
+                        @endforeach
                     </div>
-                @endforeach
-            </div>
-        </div>
-    @endif
+                    @if($checked)
+                        @php
+                            $user_sentence = implode(' ', $ordered_words[$index] ?? []);
+                            $correct_sentence = trim($item['answer'] ?? '');
+                            $is_correct = strcasecmp($user_sentence, $correct_sentence) === 0;
+                        @endphp
+                        <div class="text-sm mt-4 p-3 rounded-lg {{ $is_correct ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                            @if($is_correct)
+                                <span class="font-medium">✅ {{ __('lessons.correct') }}</span>
+                            @else
+                                <span class="font-medium">❌ {{ __('lessons.wrong_answer') }} <strong>{{ $item['answer'] ?? '' }}</strong></span>
+                            @endif
+                        </div>
+                    @endif
+                </div>
+            @endif
 
-    {{-- MATCHING EXERCISES --}}
-    @if(!empty($exercises['matching']))
-        <div class="bg-white rounded-lg shadow-sm border border-orange-100 p-6">
-            <h4 class="text-lg font-semibold mb-4 text-orange-600">🔗 Match the pairs</h4>
-            <div class="space-y-4">
-                @foreach($exercises['matching'] as $index => $item)
-                    <div class="p-4 bg-orange-50 rounded-lg">
-                        <div class="flex flex-col gap-2">
-                            <p class="text-gray-800 font-medium">{{ $item['word'] ?? '' }}</p>
+            {{-- TRUE/FALSE --}}
+            @if($type === 'true_false')
+                <h4 class="text-xl font-bold mb-6 text-green-600 flex items-center gap-2">
+                    <span class="text-2xl">✓</span> {{ __('lessons.true_false') }}
+                </h4>
+                <div class="p-6 bg-green-50 rounded-lg">
+                    <p class="text-gray-800 mb-6 text-lg">{{ $item['statement'] ?? '' }}</p>
+                    <div class="flex gap-4">
+                        <label class="cursor-pointer flex items-center gap-3 p-4 bg-white rounded-lg border-2 border-green-300 hover:border-green-500 transition-colors flex-1">
                             <input
-                                type="text"
-                                wire:model="user_answers.matching.{{ $index }}"
-                                placeholder="Match with..."
-                                class="input input-bordered w-full max-w-md transition-all duration-200 
-                                       @if(!$checked) focus:ring-2 focus:ring-orange-400 focus:border-orange-400 hover:border-orange-300 @endif
-                                       @if($checked) {{ isset($user_answers['matching'][$index]) && strcasecmp(trim($user_answers['matching'][$index]), trim($item['match'] ?? '')) === 0 ? 'input-success' : 'input-error' }} @endif"
+                                type="radio"
+                                wire:model="user_answers.true_false.{{ $index }}"
+                                value="True"
+                                class="w-5 h-5 text-green-600 focus:ring-green-500"
                                 @if($checked) disabled @endif
                             >
-                            @if($checked)
-                                <div class="text-sm mt-2">
-                                    @if(isset($user_answers['matching'][$index]) && strcasecmp(trim($user_answers['matching'][$index]), trim($item['match'] ?? '')) === 0)
-                                        <span class="text-success font-medium">✅ Correct!</span>
-                                    @else
-                                        <span class="text-error font-medium">❌ Wrong. Correct answer: <strong>{{ $item['match'] ?? '' }}</strong></span>
-                                    @endif
-                                </div>
+                            <span class="font-medium text-lg">{{ __('lessons.true') }}</span>
+                        </label>
+                        <label class="cursor-pointer flex items-center gap-3 p-4 bg-white rounded-lg border-2 border-red-300 hover:border-red-500 transition-colors flex-1">
+                            <input
+                                type="radio"
+                                wire:model="user_answers.true_false.{{ $index }}"
+                                value="False"
+                                class="w-5 h-5 text-red-600 focus:ring-red-500"
+                                @if($checked) disabled @endif
+                            >
+                            <span class="font-medium text-lg">{{ __('lessons.false') }}</span>
+                        </label>
+                    </div>
+                    @if($checked)
+                        <div class="text-sm mt-4 p-3 rounded-lg {{ isset($user_answers['true_false'][$index]) && strcasecmp($user_answers['true_false'][$index], $item['answer'] ?? '') === 0 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                            @if(isset($user_answers['true_false'][$index]) && strcasecmp($user_answers['true_false'][$index], $item['answer'] ?? '') === 0)
+                                <span class="font-medium">✅ {{ __('lessons.correct') }}</span>
+                            @else
+                                <span class="font-medium">❌ {{ __('lessons.wrong_answer') }} <strong>{{ $item['answer'] ?? '' }}</strong></span>
                             @endif
                         </div>
+                    @endif
+                </div>
+            @endif
+
+            {{-- MATCHING --}}
+            @if($type === 'matching')
+                <h4 class="text-xl font-bold mb-6 text-orange-600 flex items-center gap-2">
+                    <span class="text-2xl">🔗</span> {{ __('lessons.matching') }}
+                </h4>
+                <div class="p-6 bg-orange-50 rounded-lg">
+                    <div class="flex flex-col gap-4">
+                        <p class="text-gray-800 font-medium text-lg">{{ $item['word'] ?? '' }}</p>
+                        <input
+                            type="text"
+                            wire:model="user_answers.matching.{{ $index }}"
+                            placeholder="{{ __('lessons.match_with') }}"
+                            class="px-4 py-3 border-2 rounded-lg w-full transition-all duration-200 text-base
+                                   @if(!$checked) focus:ring-2 focus:ring-orange-400 focus:border-orange-400 hover:border-orange-300 border-orange-200 @endif
+                                   @if($checked) {{ isset($user_answers['matching'][$index]) && strcasecmp(trim($user_answers['matching'][$index]), trim($item['match'] ?? '')) === 0 ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50' }} @endif"
+                            @if($checked) disabled @endif
+                        >
+                        @if($checked)
+                            <div class="text-sm mt-4 p-3 rounded-lg {{ isset($user_answers['matching'][$index]) && strcasecmp(trim($user_answers['matching'][$index]), trim($item['match'] ?? '')) === 0 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                                @if(isset($user_answers['matching'][$index]) && strcasecmp(trim($user_answers['matching'][$index]), trim($item['match'] ?? '')) === 0)
+                                    <span class="font-medium">✅ {{ __('lessons.correct') }}</span>
+                                @else
+                                    <span class="font-medium">❌ {{ __('lessons.wrong_answer') }} <strong>{{ $item['match'] ?? '' }}</strong></span>
+                                @endif
+                            </div>
+                        @endif
                     </div>
-                @endforeach
-            </div>
+                </div>
+            @endif
+        </div>
+
+        {{-- NAVIGATION BUTTONS --}}
+        <div class="flex items-center justify-between gap-4">
+            <button
+                wire:click="previousExercise"
+                @if($current_exercise_index === 0) disabled @endif
+                class="flex items-center gap-2 px-6 py-3 rounded-lg border-2 border-gray-300 hover:border-blue-500 hover:bg-blue-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:border-gray-300"
+            >
+                <span class="text-xl">←</span>
+                <span class="font-medium">{{ __('lessons.previous') }}</span>
+            </button>
+
+            <button
+                wire:click="nextExercise"
+                @if($current_exercise_index >= $total_exercises - 1) disabled @endif
+                class="flex items-center gap-2 px-6 py-3 rounded-lg border-2 border-gray-300 hover:border-blue-500 hover:bg-blue-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:border-gray-300"
+            >
+                <span class="font-medium">{{ __('lessons.next') }}</span>
+                <span class="text-xl">→</span>
+            </button>
         </div>
     @endif
 
     {{-- ACTION BUTTONS & SCORE --}}
-    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+    <div class="bg-white rounded-lg shadow-lg border border-gray-200 p-6">
         @if(!$checked)
             <button
-                wire:click="checkAnswers"
-                class="btn btn-primary btn-lg w-full"
+                wire:click="showConfirmModal"
+                class="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg w-full text-lg transition-colors shadow-lg hover:shadow-xl"
             >
-                🎯 Check Answers
+                🎯 {{ __('lessons.check_answers') }}
             </button>
         @else
             <div class="space-y-4">
                 <div class="text-center">
-                    <div class="text-3xl font-bold text-blue-600 mb-2">
+                    <div class="text-4xl font-bold text-blue-600 mb-2">
                         {{ $total_score }} / {{ $max_score }}
                     </div>
-                    <p class="text-gray-600">
+                    <p class="text-gray-600 text-lg">
                         @if($total_score === $max_score)
-                            🎉 Perfect score! Excellent work!
+                            🎉 {{ __('lessons.perfect_score') }}
                         @elseif($total_score >= $max_score * 0.8)
-                            🌟 Great job! Keep it up!
+                            🌟 {{ __('lessons.great_job') }}
                         @elseif($total_score >= $max_score * 0.5)
-                            👍 Good effort! Practice more!
+                            👍 {{ __('lessons.good_effort') }}
                         @else
-                            💪 Keep practicing, you'll get better!
+                            💪 {{ __('lessons.keep_practicing') }}
                         @endif
                     </p>
                 </div>
@@ -208,12 +276,25 @@
                 @if($total_score < $max_score)
                     <button
                         wire:click="resetExercises"
-                        class="btn btn-outline btn-primary w-full"
+                        class="px-8 py-3 border-2 border-blue-600 text-blue-600 hover:bg-blue-50 font-bold rounded-lg w-full text-lg transition-colors"
                     >
-                        🔄 Try Again
+                        🔄 {{ __('lessons.try_again') }}
                     </button>
                 @endif
             </div>
         @endif
     </div>
+
+    {{-- CONFIRMATION MODAL --}}
+    @if($show_confirm_modal)
+        <x-confirm-modal-livewire
+            icon="info"
+            :title="__('lessons.check_answers_title')"
+            :message="__('lessons.check_answers_message')"
+            :confirmText="__('lessons.check_answers')"
+            :cancelText="__('lessons.wait')"
+            confirmMethod="checkAnswers"
+            cancelMethod="closeConfirmModal"
+        />
+    @endif
 </div>

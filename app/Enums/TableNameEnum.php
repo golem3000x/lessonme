@@ -22,6 +22,10 @@ enum TableNameEnum: string
     case USER_TOPIC_VISIBILITY = 'user_topic_visibility';
     case USER_KEYWORD_VISIBILITY = 'user_keyword_visibility';
     case LESSON_HISTORIES = 'lesson_histories';
+    case TEACHER_STUDENT = 'teacher_student';
+    case LESSON_ASSIGNMENTS = 'lesson_assignments';
+    case LESSON_ATTEMPTS = 'lesson_attempts';
+    case LESSON_SCORES = 'lesson_scores';
     case CHAT_SESSIONS = 'chat_sessions';
     case MESSAGES = 'messages';
 }

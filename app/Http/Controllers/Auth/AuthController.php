@@ -68,7 +68,7 @@ class AuthController extends Controller
         }
 
         throw ValidationException::withMessages([
-            'email' => ['Неверный email или пароль.'],
+            'email' => [__('auth.failed')],
         ]);
     }
 

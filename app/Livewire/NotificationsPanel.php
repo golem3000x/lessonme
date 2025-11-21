@@ -13,7 +13,7 @@ use Livewire\Component;
 
 class NotificationsPanel extends Component
 {
-    /** @var array<int, array{id: string, entity: string, status: string, message: string, lesson_id: int|null, lesson_url: string|null, lesson_name: string|null, user_id: int|null, user_name: string|null}> */
+    /** @var array<int, array{id: string, entity: string, status: string, message: string, lesson_id: string|null, lesson_url: string|null, lesson_name: string|null, user_id: int|null, user_name: string|null}> */
     public array $notifications = [];
 
     #[On('slug-processing-updated')]

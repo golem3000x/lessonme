@@ -12,8 +12,8 @@
         </h2>
 
         <div class="flex items-center gap-2">
-            {{-- Show filter and sort buttons if there are lessons OR if filters are active --}}
-            @if(!$lessons->isEmpty() || $this->hasActiveFilters())
+            {{-- Show filter and sort buttons if there are lessons OR if filters are active OR if placeholders exist --}}
+            @if(!$lessons->isEmpty() || $this->hasActiveFilters() || !empty($creating_lessons_placeholders))
                 {{-- Sort dropdown --}}
                 <div class="relative" x-data="{ open: @entangle('show_sort_dropdown') }">
                     <button
@@ -79,8 +79,8 @@
                 </button>
             @endif
 
-            {{-- Create button always visible if lessons exist or no filters applied --}}
-            @if(!$lessons->isEmpty() || !$this->hasActiveFilters())
+            {{-- Create button always visible if lessons exist or no filters applied or placeholders exist --}}
+            @if(!$lessons->isEmpty() || !$this->hasActiveFilters() || !empty($creating_lessons_placeholders))
                 <button
                         wire:click="openManageModal"
                         class="group flex items-center gap-2 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 shadow transition"
@@ -217,7 +217,7 @@
     @endif
 
     {{-- Пустой список --}}
-    @if($lessons->isEmpty())
+    @if($lessons->isEmpty() && empty($creating_lessons_placeholders))
         <div class="text-center py-16 space-y-4">
             @if($this->hasActiveFilters())
                 {{-- No results from filters --}}
@@ -243,11 +243,17 @@
                 <p class="text-sm text-gray-500">{{ __('lessons.get_started_message') }}</p>
             @endif
         </div>
-    @else
+    @endif
+
+    {{-- Список уроков (показываем если есть уроки ИЛИ есть placeholders) --}}
+    @if(!$lessons->isEmpty() || !empty($creating_lessons_placeholders))
         {{-- Список уроков --}}
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {{-- Placeholder cards for lessons being created --}}
-            @foreach($creating_lessons_placeholders as $placeholder_id)
+            @foreach($creating_lessons_placeholders as $index => $placeholder_id)
+                @php
+                    $is_regenerating = $index < count($regenerating_lesson_ids);
+                @endphp
                 <div wire:key="placeholder-{{ $placeholder_id }}" class="group bg-white border border-gray-100 rounded-xl shadow-sm p-5 relative overflow-hidden animate-pulse">
                     {{-- Animated gradient background --}}
                     <div class="absolute inset-0 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 opacity-50"></div>
@@ -271,7 +277,7 @@
 
                             {{-- Loading spinner --}}
                             <div class="ml-2">
-                                <svg class="animate-spin h-6 w-6 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <svg class="animate-spin h-6 w-6 {{ $is_regenerating ? 'text-yellow-600' : 'text-blue-600' }}" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                 </svg>
@@ -285,13 +291,13 @@
                             <div class="h-3 bg-gray-200 rounded w-4/6 animate-pulse"></div>
                         </div>
 
-                        {{-- Creating message --}}
-                        <div class="flex items-center justify-center gap-2 w-full px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-md font-medium">
+                        {{-- Creating/Regenerating message --}}
+                        <div class="flex items-center justify-center gap-2 w-full px-4 py-2 bg-gradient-to-r {{ $is_regenerating ? 'from-yellow-500 to-orange-500' : 'from-blue-500 to-indigo-500' }} text-white rounded-md font-medium">
                             <svg class="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                             </svg>
-                            <span class="text-sm">{{ __('lessons.creating_lesson') }}</span>
+                            <span class="text-sm">{{ $is_regenerating ? __('lessons.lesson_regeneration_in_progress') : __('lessons.creating_lesson') }}</span>
                         </div>
                     </div>
                 </div>
@@ -299,6 +305,11 @@
             
             {{-- Real lesson cards --}}
             @foreach($lessons as $lesson)
+                {{-- Skip lesson if it's being regenerated (placeholder will be shown instead) --}}
+                @if(in_array($lesson->id, $regenerating_lesson_ids))
+                    @continue
+                @endif
+                
                 <div class="group bg-white border border-gray-100 rounded-xl shadow-sm hover:shadow-md hover:-translate-y-1 transition p-5 relative overflow-hidden">
                     <div class="absolute inset-0 bg-gradient-to-br from-blue-50/20 to-transparent opacity-0 group-hover:opacity-100 transition pointer-events-none"></div>
 
@@ -356,7 +367,7 @@
 
                                 <div class="border-t border-gray-100"></div>
 
-                                <a href="{{ route('lessons.history', $lesson->id) }}"
+                                <a href="{{ route('lessons.history', $lesson->uuid) }}"
                                    class="group flex items-center gap-3 w-full px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-all duration-200">
                                     <div class="p-1.5 rounded-lg bg-gray-100 group-hover:bg-blue-100 transition-colors">
                                         <svg class="h-4 w-4 group-hover:text-blue-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -386,7 +397,7 @@
 
                     <p class="text-sm text-gray-600 mb-4 leading-snug">{{ Str::limit($lesson->lesson_text, 120) }}</p>
 
-                    <a href="{{ route('lessons.show', $lesson->id) }}"
+                    <a href="{{ route('lessons.show', $lesson->uuid) }}"
                        class="group inline-flex items-center justify-center gap-2 w-full px-4 py-2 bg-blue-600 text-white rounded-md font-medium hover:bg-blue-700 transition">
                         <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
@@ -398,10 +409,12 @@
             @endforeach
         </div>
 
-        {{-- Pagination --}}
-        <div class="mt-8">
-            {{ $lessons->links() }}
-        </div>
+        {{-- Pagination (только если есть реальные уроки) --}}
+        @if(!$lessons->isEmpty())
+            <div class="mt-8">
+                {{ $lessons->links() }}
+            </div>
+        @endif
     @endif
 
     {{-- Modal --}}

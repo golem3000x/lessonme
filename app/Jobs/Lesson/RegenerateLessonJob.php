@@ -25,8 +25,7 @@ class RegenerateLessonJob implements ShouldQueue
 
     public function __construct(
         protected int $lesson_id,
-        protected LessonDto $lesson_dto,
-        protected string $user_locale,
+        protected LessonDto $lesson_dto
     ) {}
 
     public function handle(LessonService $lessonService): void
@@ -63,9 +62,6 @@ class RegenerateLessonJob implements ShouldQueue
 
     private function notify(User $user, ?Lesson $lesson, LessonCreationStatusEnum $status): void
     {
-        // Set the user's locale for translation
-        app()->setLocale($this->user_locale);
-
         $user->notify(
             new LessonCreationNotification(
                 $lesson,

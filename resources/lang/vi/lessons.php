@@ -71,6 +71,7 @@ return [
     'lesson_history' => 'Lịch sử Bài học',
     'version_created' => 'Đã tạo',
     'restore_version' => 'Khôi phục',
+    'restoring' => 'Đang khôi phục',
     'current_version' => 'Phiên bản hiện tại',
     'no_history' => 'Không có lịch sử cho bài học này.',
     'no_history_description' => 'Các phiên bản trước sẽ xuất hiện ở đây sau khi tạo lại bài học.',
@@ -102,4 +103,57 @@ return [
     'creation_timeout' => 'Việc tạo bài học mất nhiều thời gian hơn dự kiến. Vui lòng thử lại.',
     'creation_failed' => 'Tạo Bài Học Thất Bại',
     'try_again' => 'Thử Lại',
+    
+    // Exercises
+    'check_answers_title' => 'Bạn Sẵn Sàng Chưa?',
+    'check_answers_message' => 'Bạn có chắc chắn muốn kiểm tra câu trả lời của mình không?',
+    'check_answers' => 'Có, Kiểm Tra!',
+    'wait' => 'Không, Đợi Đã',
+    
+    // Exercise types
+    'quiz' => 'Câu đố',
+    'gap_fill' => 'Điền vào chỗ trống',
+    'sentence_ordering' => 'Sắp xếp câu',
+    'true_false' => 'Đúng hay Sai',
+    'matching' => 'Ghép cặp',
+    
+    // Exercise navigation
+    'exercise_of' => 'Bài tập :current trong :total',
+    'progress' => 'Tiến độ',
+    'previous' => 'Trước',
+    'next' => 'Tiếp',
+    'arrange_words' => 'Sắp xếp các từ theo đúng thứ tự:',
+    'match_with' => 'Ghép với...',
+    'true' => 'Đúng',
+    'false' => 'Sai',
+    
+    // Exercise results
+    'correct' => 'Đúng rồi!',
+    'wrong_answer' => 'Sai rồi. Câu trả lời đúng:',
+    'perfect_score' => 'Điểm tuyệt vời! Xuất sắc!',
+    'great_job' => 'Làm tốt lắm! Tiếp tục phát huy!',
+    'good_effort' => 'Cố gắng tốt! Luyện tập nhiều hơn nhé!',
+    'keep_practicing' => 'Tiếp tục luyện tập, bạn sẽ tiến bộ!',
+    'try_again' => 'Thử Lại',
+    
+    // Lesson sections
+    'dialogue' => 'Hội thoại',
+    'exercises' => 'Bài tập',
+    'homework' => 'Bài tập về nhà',
+    'common_mistakes' => 'Lỗi thường gặp',
+    'culture_notes' => 'Ghi chú văn hóa',
+    
+    // Grading system
+    'student_scores' => 'Điểm Học Sinh',
+    'no_scores_yet' => 'Chưa có điểm nào.',
+    'student' => 'Học sinh',
+    'attempt' => 'Lần thử',
+    'score' => 'Điểm',
+    'percentage' => 'Phần trăm',
+    'grade' => 'Xếp loại',
+    'completed_at' => 'Hoàn thành lúc',
+    'view_scores' => 'Xem Điểm',
+    'my_attempts' => 'Lần Thử Của Tôi',
+    'duration' => 'Thời gian',
+    'minutes' => 'phút',
 ];
