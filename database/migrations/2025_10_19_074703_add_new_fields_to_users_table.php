@@ -17,7 +17,7 @@ return new class extends Migration
     {
         Schema::table(TableNameEnum::USERS->value, function (Blueprint $table): void {
             $table->string('zalo_user_id')->nullable()->unique();
-            $table->string('avatar')->nullable();
+            $table->text('avatar')->nullable();
             $table->string('native_lang')->default(SystemLanguageEnum::VIETNAMESE->value);
             $table->string('learning_lang')->default(SystemLanguageEnum::ENGLISH->value);
         });
