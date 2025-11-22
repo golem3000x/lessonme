@@ -52,7 +52,7 @@ readonly class LessonGradingService
         int $total_score,
         int $max_score
     ): LessonScore {
-        return DB::transaction(function () use ($attempt, $user_answers, $scores, $total_score, $max_score) {
+        return DB::transaction(function () use ($attempt, $user_answers, $total_score, $max_score) {
             $attempt->update([
                 'user_answers' => $user_answers,
                 'completed_at' => now(),
@@ -102,8 +102,6 @@ readonly class LessonGradingService
 
     /**
      * Assign a lesson to a student.
-     *
-     * @param  \DateTimeInterface|null  $due_date
      */
     public function assignLesson(
         Lesson $lesson,
@@ -118,7 +116,7 @@ readonly class LessonGradingService
             'assigned_version' => $lesson->exercises,
             'assigned_at' => now(),
             'due_date' => $due_date,
-            'status' => \App\Enums\AssignmentStatusEnum::PENDING->value,
+            'status' => \App\Enums\System\AssignmentStatusEnum::PENDING->value,
         ]);
     }
 
@@ -173,11 +171,11 @@ readonly class LessonGradingService
 
         if ($has_completed_attempt) {
             $assignment->update([
-                'status' => \App\Enums\AssignmentStatusEnum::COMPLETED->value,
+                'status' => \App\Enums\System\AssignmentStatusEnum::COMPLETED->value,
             ]);
         } elseif ($assignment->isOverdue()) {
             $assignment->update([
-                'status' => \App\Enums\AssignmentStatusEnum::OVERDUE->value,
+                'status' => \App\Enums\System\AssignmentStatusEnum::OVERDUE->value,
             ]);
         }
     }

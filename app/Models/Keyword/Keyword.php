@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace App\Models\Keyword;
 
-use App\Enums\TableNameEnum;
+use App\Enums\System\TableNameEnum;
 use App\Models\Abstracts\Slug\Slug;
 use App\Models\Topic\Topic;
 use App\Models\User;
-use Barryvdh\LaravelIdeHelper\Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -25,10 +24,10 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read Topic|null $topic
- * @property-read Collection<int, KeywordTranslation> $translations
+ * @property-read Collection<int, \App\Models\Keyword\KeywordTranslation> $translations
  * @property-read int|null $translations_count
  * @property-read User|null $user
- * @property-read Collection<int, UserKeywordVisibility> $visibility
+ * @property-read Collection<int, \App\Models\Keyword\UserKeywordVisibility> $visibility
  * @property-read int|null $visibility_count
  *
  * @method static Builder<static>|Keyword newModelQuery()
@@ -44,7 +43,6 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|Keyword whereUpdatedAt($value)
  * @method static Builder<static>|Keyword whereUserId($value)
  *
- * @mixin Eloquent
  * @mixin \Eloquent
  */
 class Keyword extends Slug

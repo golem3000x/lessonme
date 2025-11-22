@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Middleware;
 
-use App\Enums\SystemLanguageEnum;
+use App\Enums\System\SystemLanguageEnum;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,7 +18,7 @@ class SetLocale
     {
         // Проверяем локаль в сессии
         $locale = session('locale');
-        
+
         // Если локаль не в сессии, пытаемся взять из native_lang пользователя
         if (! $locale) {
             $user = auth()->user();
@@ -28,7 +28,7 @@ class SetLocale
                 session(['locale' => $locale]);
             }
         }
-        
+
         // Устанавливаем локаль, если она валидна
         if (is_string($locale) && in_array($locale, SystemLanguageEnum::toArray(), true)) {
             app()->setLocale($locale);

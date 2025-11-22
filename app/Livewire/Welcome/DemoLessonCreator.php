@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace App\Livewire\Welcome;
 
 use App\Dto\LessonDto;
-use App\Enums\LanguageLevelEnum;
-use App\Enums\SystemLanguageEnum;
+use App\Enums\System\LanguageLevelEnum;
+use App\Enums\System\SystemLanguageEnum;
 use App\Jobs\Lesson\CreateLessonJob;
 use App\Models\Keyword\Keyword;
 use App\Models\Lesson\Lesson;
 use App\Models\Topic\Topic;
-use App\Models\User;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Collection;

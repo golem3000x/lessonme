@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Jobs;
 
-use App\Enums\SystemLanguageEnum;
+use App\Enums\System\SystemLanguageEnum;
 use App\Jobs\Moderate\ModerateKeywordJob;
 use App\Models\Keyword\Keyword;
 use App\Models\Keyword\KeywordTranslation;

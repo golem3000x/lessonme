@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Services\Lesson;
 
 use App\Dto\LessonDto;
-use App\Enums\LanguageLevelEnum;
-use App\Enums\OpenAiModelEnum;
-use App\Enums\SystemLanguageEnum;
+use App\Enums\System\LanguageLevelEnum;
+use App\Enums\System\OpenAiModelEnum;
+use App\Enums\System\SystemLanguageEnum;
 use OpenAI\Laravel\Facades\OpenAI;
 
 class LessonGenerationService

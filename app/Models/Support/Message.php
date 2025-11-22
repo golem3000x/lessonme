@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models\Support;
 
-use App\Enums\TableNameEnum;
+use App\Enums\System\TableNameEnum;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -19,7 +19,7 @@ use Illuminate\Support\Carbon;
  * @property bool $is_read
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read ChatSession $chatSession
+ * @property-read \App\Models\Support\ChatSession $chatSession
  * @property-read User $user
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Message newModelQuery()

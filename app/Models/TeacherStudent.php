@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Enums\TableNameEnum;
+use App\Enums\System\TableNameEnum;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
@@ -15,16 +15,16 @@ use Illuminate\Support\Carbon;
  * @property int $student_id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read User $teacher
- * @property-read User $student
+ * @property-read \App\Models\User $student
+ * @property-read \App\Models\User $teacher
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TeacherStudent newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TeacherStudent newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TeacherStudent query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|TeacherStudent whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|TeacherStudent whereTeacherId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|TeacherStudent whereStudentId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TeacherStudent whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TeacherStudent whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TeacherStudent whereStudentId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TeacherStudent whereTeacherId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TeacherStudent whereUpdatedAt($value)
  *
  * @mixin \Eloquent

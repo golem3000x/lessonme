@@ -5,16 +5,15 @@ declare(strict_types=1);
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use App\Enums\SystemLanguageEnum;
-use App\Enums\TableNameEnum;
-use App\Enums\UserRoleEnum;
+use App\Enums\System\SystemLanguageEnum;
+use App\Enums\System\TableNameEnum;
+use App\Enums\System\UserRoleEnum;
 use App\Models\Lesson\Lesson;
 use App\Models\Lesson\LessonAssignment;
 use App\Models\Lesson\LessonAttempt;
 use App\Models\Lesson\LessonScore;
 use App\Models\Support\ChatSession;
 use App\Models\Support\Message;
-use Barryvdh\LaravelIdeHelper\Eloquent;
 use Database\Factories\UserFactory;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
@@ -29,6 +28,8 @@ use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Notifications\DatabaseNotificationCollection;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 /**
  * @property int $id
@@ -36,37 +37,41 @@ use Illuminate\Support\Carbon;
  * @property string $email
  * @property Carbon|null $email_verified_at
  * @property string $password
+ * @property UserRoleEnum $role
  * @property string|null $remember_token
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property UserRoleEnum $role
  * @property string|null $zalo_user_id
- * @property string|null $facebook_id
  * @property string|null $avatar
  * @property string $native_lang
  * @property string $learning_lang
- * @property-read Collection<int, Lesson> $lessons
- * @property-read int|null $lessons_count
- * @property-read DatabaseNotificationCollection<int, DatabaseNotification> $notifications
- * @property-read int|null $notifications_count
+ * @property string|null $facebook_id
+ * @property string $timezone
+ * @property bool $is_temp_guest
+ * @property Carbon|null $temp_guest_expires_at
+ * @property-read Collection<int, LessonAssignment> $assignedLessons
+ * @property-read int|null $assigned_lessons_count
  * @property-read Collection<int, ChatSession> $chatSessions
  * @property-read int|null $chat_sessions_count
+ * @property-read string|null $avatar_url
+ * @property-read Collection<int, LessonAttempt> $lessonAttempts
+ * @property-read int|null $lesson_attempts_count
+ * @property-read Collection<int, Lesson> $lessons
+ * @property-read int|null $lessons_count
  * @property-read Collection<int, Message> $messages
  * @property-read int|null $messages_count
+ * @property-read Collection<int, LessonAssignment> $myAssignments
+ * @property-read int|null $my_assignments_count
+ * @property-read DatabaseNotificationCollection<int, DatabaseNotification> $notifications
+ * @property-read int|null $notifications_count
+ * @property-read Collection<int, LessonScore> $scores
+ * @property-read int|null $scores_count
  * @property-read Collection<int, User> $students
  * @property-read int|null $students_count
  * @property-read Collection<int, User> $teachers
  * @property-read int|null $teachers_count
- * @property-read Collection<int, LessonAssignment> $assignedLessons
- * @property-read int|null $assigned_lessons_count
- * @property-read Collection<int, LessonAssignment> $myAssignments
- * @property-read int|null $my_assignments_count
- * @property-read Collection<int, LessonAttempt> $lessonAttempts
- * @property-read int|null $lesson_attempts_count
- * @property-read Collection<int, LessonScore> $scores
- * @property-read int|null $scores_count
  *
- * @method static UserFactory factory($count = null, $state = [])
+ * @method static \Database\Factories\UserFactory factory($count = null, $state = [])
  * @method static Builder<static>|User newModelQuery()
  * @method static Builder<static>|User newQuery()
  * @method static Builder<static>|User query()
@@ -74,29 +79,19 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|User whereCreatedAt($value)
  * @method static Builder<static>|User whereEmail($value)
  * @method static Builder<static>|User whereEmailVerifiedAt($value)
+ * @method static Builder<static>|User whereFacebookId($value)
  * @method static Builder<static>|User whereId($value)
- * @method static Builder<static>|User whereLearningLangId($value)
+ * @method static Builder<static>|User whereIsTempGuest($value)
+ * @method static Builder<static>|User whereLearningLang($value)
  * @method static Builder<static>|User whereName($value)
- * @method static Builder<static>|User whereNativeLangId($value)
+ * @method static Builder<static>|User whereNativeLang($value)
  * @method static Builder<static>|User wherePassword($value)
  * @method static Builder<static>|User whereRememberToken($value)
+ * @method static Builder<static>|User whereRole($value)
+ * @method static Builder<static>|User whereTempGuestExpiresAt($value)
+ * @method static Builder<static>|User whereTimezone($value)
  * @method static Builder<static>|User whereUpdatedAt($value)
  * @method static Builder<static>|User whereZaloUserId($value)
- * @method static Builder<static>|User whereFacebookId($value)
- *
- * @mixin Eloquent
- *
- * @method static Builder<static>|User whereLearningLang($value)
- * @method static Builder<static>|User whereNativeLang($value)
- *
- * @property string $timezone
- * @property bool $is_temp_guest
- * @property Carbon|null $temp_guest_expires_at
- *
- * @method static Builder<static>|User whereRole($value)
- * @method static Builder<static>|User whereTimezone($value)
- * @method static Builder<static>|User whereIsTempGuest($value)
- * @method static Builder<static>|User whereTempGuestExpiresAt($value)
  *
  * @mixin \Eloquent
  */
@@ -309,7 +304,7 @@ class User extends Authenticatable implements FilamentUser, HasLocalePreference
 
         // Опционально: логирование для аудита
         if ($actor) {
-            \Log::info('User role changed', [
+            Log::info('User role changed', [
                 'user_id' => $this->id,
                 'user_email' => $this->email,
                 'old_role' => $old_role?->value,
@@ -352,5 +347,24 @@ class User extends Authenticatable implements FilamentUser, HasLocalePreference
     public function makeStudent(?User $actor = null): void
     {
         $this->assignRole(UserRoleEnum::STUDENT, $actor);
+    }
+
+    /**
+     * Get the full URL for the user's avatar.
+     * Handles both local storage paths and external URLs (Facebook, Zalo, etc.)
+     */
+    public function getAvatarUrlAttribute(): ?string
+    {
+        if (! $this->avatar) {
+            return null;
+        }
+
+        // Check if avatar is already a full URL (starts with http:// or https://)
+        if (Str::startsWith($this->avatar, ['http://', 'https://'])) {
+            return $this->avatar;
+        }
+
+        // Otherwise, it's a local storage path
+        return asset('storage/'.$this->avatar);
     }
 }

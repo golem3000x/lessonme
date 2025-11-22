@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Dto;
 
-use App\Enums\LanguageLevelEnum;
+use App\Enums\System\LanguageLevelEnum;
 
 /**
  * Data Transfer Object (DTO) for Lesson entity.

@@ -19,16 +19,16 @@ const userId = userIdMeta ? userIdMeta.getAttribute('content') : null;
 if (userId) {
     const channel = window.Echo.private(`App.Models.User.${userId}`);
 
-    // Processing notifications for Topics
-    channel.listen('.topic.processing.pending', (notification) => {
-        console.log('🔥 Topic processing:', notification);
-        Livewire.dispatch('slug-processing-updated', {notification});
+    // Creation notifications for Topics
+    channel.listen('.topic.creation.pending', (notification) => {
+        console.log('🔥 Topic creation:', notification);
+        Livewire.dispatch('slug-creation-updated', {notification});
     });
 
-    // Processing notifications for Keywords
-    channel.listen('.keyword.processing.pending', (notification) => {
-        console.log('🔥 Keyword processing:', notification);
-        Livewire.dispatch('slug-processing-updated', {notification});
+    // Creation notifications for Keywords
+    channel.listen('.keyword.creation.pending', (notification) => {
+        console.log('🔥 Keyword creation:', notification);
+        Livewire.dispatch('slug-creation-updated', {notification});
     });
 
     // Moderation notifications for Topics
@@ -136,32 +136,6 @@ if (userId) {
         });
         // Clear placeholders on error
         Livewire.dispatch('lesson-created');
-    });
-
-    // User auth notifications (welcome & registration)
-    // Format: user.auth.status
-    channel.listen('.user.auth.welcome', (notification) => {
-        console.log('🔥 User welcome:', notification);
-        Livewire.dispatch('user-notification', {
-            id: notification.id,
-            entity: notification.entity,
-            status: notification.status,
-            message: notification.message,
-            user_id: notification.user_id,
-            user_name: notification.user_name
-        });
-    });
-
-    channel.listen('.user.auth.registered', (notification) => {
-        console.log('🔥 User registered:', notification);
-        Livewire.dispatch('user-notification', {
-            id: notification.id,
-            entity: notification.entity,
-            status: notification.status,
-            message: notification.message,
-            user_id: notification.user_id,
-            user_name: notification.user_name
-        });
     });
 
     // Chat channel

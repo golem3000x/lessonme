@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Models\Lesson;
 
-use App\Enums\AssignmentStatusEnum;
-use App\Enums\TableNameEnum;
+use App\Enums\System\AssignmentStatusEnum;
+use App\Enums\System\TableNameEnum;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -17,31 +19,31 @@ use Illuminate\Support\Carbon;
  * @property int $lesson_id
  * @property int $teacher_id
  * @property int $student_id
- * @property array<string, mixed>|null $assigned_version
+ * @property array<array-key, mixed>|null $assigned_version Snapshot of exercises at assignment time
  * @property Carbon $assigned_at
  * @property Carbon|null $due_date
  * @property AssignmentStatusEnum $status
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read Lesson $lesson
- * @property-read User $teacher
- * @property-read User $student
- * @property-read \Illuminate\Database\Eloquent\Collection<int, LessonAttempt> $attempts
+ * @property-read Collection<int, LessonAttempt> $attempts
  * @property-read int|null $attempts_count
+ * @property-read Lesson $lesson
+ * @property-read User $student
+ * @property-read User $teacher
  *
- * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAssignment newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAssignment newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAssignment query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAssignment whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAssignment whereLessonId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAssignment whereTeacherId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAssignment whereStudentId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAssignment whereAssignedVersion($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAssignment whereAssignedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAssignment whereDueDate($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAssignment whereStatus($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAssignment whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAssignment whereUpdatedAt($value)
+ * @method static Builder<static>|LessonAssignment newModelQuery()
+ * @method static Builder<static>|LessonAssignment newQuery()
+ * @method static Builder<static>|LessonAssignment query()
+ * @method static Builder<static>|LessonAssignment whereAssignedAt($value)
+ * @method static Builder<static>|LessonAssignment whereAssignedVersion($value)
+ * @method static Builder<static>|LessonAssignment whereCreatedAt($value)
+ * @method static Builder<static>|LessonAssignment whereDueDate($value)
+ * @method static Builder<static>|LessonAssignment whereId($value)
+ * @method static Builder<static>|LessonAssignment whereLessonId($value)
+ * @method static Builder<static>|LessonAssignment whereStatus($value)
+ * @method static Builder<static>|LessonAssignment whereStudentId($value)
+ * @method static Builder<static>|LessonAssignment whereTeacherId($value)
+ * @method static Builder<static>|LessonAssignment whereUpdatedAt($value)
  *
  * @mixin \Eloquent
  */
@@ -103,8 +105,8 @@ class LessonAssignment extends Model
 
     public function isOverdue(): bool
     {
-        return $this->due_date !== null 
-            && $this->due_date->isPast() 
+        return $this->due_date !== null
+            && $this->due_date->isPast()
             && ! $this->status->isCompleted();
     }
 }

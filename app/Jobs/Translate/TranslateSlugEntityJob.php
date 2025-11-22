@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Jobs\Translate;
 
-use App\Enums\TranslateStatusEnum;
+use App\Enums\Notifications\TranslateStatusEnum;
 use App\Models\Abstracts\Slug\Slug;
 use App\Notifications\Slug\Translate\SlugTranslateNotification;
 use App\Services\Slug\SlugService;

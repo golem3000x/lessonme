@@ -74,7 +74,7 @@ class LessonController extends Controller
             'exercises' => $lesson_data['exercises'] ?? [],
             'homework' => $lesson_data['homework'] ?? null,
             'common_mistakes' => $lesson_data['common_mistakes'] ?? [],
-            'culture_notes' => $lesson_data['culture_notes'] ?? null
+            'culture_notes' => $lesson_data['culture_notes'] ?? null,
         ]);
 
         return redirect()->route('lessons.show', $lesson->uuid);

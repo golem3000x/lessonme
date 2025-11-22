@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Auth;
 
-use App\Enums\SystemLanguageEnum;
 use App\Http\Controllers\Controller;
-use App\Notifications\Auth\WelcomeNotification;
-use App\Services\GreetingService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,10 +15,6 @@ use Illuminate\View\View;
 
 class AuthController extends Controller
 {
-    public function __construct(
-        protected GreetingService $greeting_service
-    ) {}
-
     public function showLogin(): Factory|View
     {
         return view('auth.login');
@@ -54,15 +47,6 @@ class AuthController extends Controller
             if ($user->timezone !== $timezone) {
                 $user->update(['timezone' => $timezone]);
             }
-
-            // Отправляем приветственное уведомление
-            $message = $this->greeting_service->getWelcomeMessage(
-                $user->name,
-                $timezone,
-                $user->native_lang ?? SystemLanguageEnum::ENGLISH->value
-            );
-
-            $user->notify(new WelcomeNotification($user, $message));
 
             return redirect()->intended('/dashboard');
         }

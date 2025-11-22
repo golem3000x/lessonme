@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace App\Livewire\Auth;
 
-use App\Enums\SystemLanguageEnum;
+use App\Enums\System\SystemLanguageEnum;
 use App\Models\User;
-use App\Notifications\Auth\RegistrationNotification;
-use App\Services\GreetingService;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
@@ -74,16 +72,6 @@ class LanguageSelection extends Component
         // Логиним пользователя
         Auth::login($user);
         session()->regenerate();
-
-        // Отправляем приветственное уведомление
-        $greeting_service = app(GreetingService::class);
-        $message = $greeting_service->getRegistrationMessage(
-            $user->name,
-            $user->timezone ?? 'UTC',
-            $this->native_lang
-        );
-
-        $user->notify(new RegistrationNotification($user, $message));
 
         // Очищаем данные регистрации из сессии
         session()->forget('registration_data');

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Services\Slug;
 
-use App\Enums\OpenAiModelEnum;
-use App\Enums\SystemLanguageEnum;
+use App\Enums\System\OpenAiModelEnum;
+use App\Enums\System\SystemLanguageEnum;
 use OpenAI\Laravel\Facades\OpenAI;
 
 class SlugService

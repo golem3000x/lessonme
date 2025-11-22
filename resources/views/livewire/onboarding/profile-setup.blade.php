@@ -37,7 +37,7 @@
                          alt="Preview" 
                          class="h-20 w-20 rounded-full object-cover border-2 border-blue-400">
                 @elseif(auth()->user()->avatar)
-                    <img src="{{ asset('storage/' . auth()->user()->avatar) }}" 
+                    <img src="{{ auth()->user()->avatar_url }}" 
                          alt="Avatar" 
                          class="h-20 w-20 rounded-full object-cover border-2 border-gray-200">
                 @else

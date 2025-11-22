@@ -14,9 +14,9 @@ return [
     'topic_rejected_db' => 'Chủ đề bị từ chối bởi kiểm duyệt.',
     'thanks' => 'Cảm ơn bạn đã thông cảm!',
 
-    // Processing notifications
-    'topic_processing_pending' => 'Chủ đề ":slug" của bạn đã được gửi để kiểm duyệt',
-    'keyword_processing_pending' => 'Từ khóa ":slug" của bạn đã được gửi để kiểm duyệt',
+    // Creation notifications
+    'topic_creation_pending' => 'Chủ đề ":slug" của bạn đã được gửi để kiểm duyệt',
+    'keyword_creation_pending' => 'Từ khóa ":slug" của bạn đã được gửi để kiểm duyệt',
 
     // Moderation notifications for topics
     'topic_moderation_approved' => 'Chủ đề ":slug" của bạn đã được phê duyệt!',

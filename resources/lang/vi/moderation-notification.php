@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Enums\ModerationStatusEnum;
+use App\Enums\Notifications\ModerationStatusEnum;
 
 return [
     ModerationStatusEnum::APPROVED->name => 'Nội dung của bạn đã được phê duyệt 🎉',

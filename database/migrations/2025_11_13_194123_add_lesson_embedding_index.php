@@ -1,6 +1,6 @@
 <?php
 
-use App\Enums\TableNameEnum;
+use App\Enums\System\TableNameEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 

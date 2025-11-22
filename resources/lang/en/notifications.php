@@ -14,9 +14,9 @@ return [
     'topic_rejected_db' => 'The topic was rejected by moderation.',
     'thanks' => 'Thank you for your understanding!',
 
-    // Processing notifications
-    'topic_processing_pending' => 'Your topic ":slug" has been submitted for moderation',
-    'keyword_processing_pending' => 'Your keyword ":slug" has been submitted for moderation',
+    // Creation notifications
+    'topic_creation_pending' => 'Your topic ":slug" has been submitted for moderation',
+    'keyword_creation_pending' => 'Your keyword ":slug" has been submitted for moderation',
 
     // Moderation notifications for topics
     'topic_moderation_approved' => 'Your topic ":slug" has been approved!',

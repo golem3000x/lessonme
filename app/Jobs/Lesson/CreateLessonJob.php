@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Jobs\Lesson;
 
 use App\Dto\LessonDto;
-use App\Enums\LessonCreationStatusEnum;
+use App\Enums\Notifications\LessonCreationStatusEnum;
 use App\Exceptions\LessonExistsException;
 use App\Models\Lesson\Lesson;
 use App\Models\User;
@@ -27,10 +27,12 @@ class CreateLessonJob implements ShouldQueue
     private SlugService $open_ai_service;
 
     public function __construct(
-        protected int $user_id,
-        protected int $topic_id,
+        protected int       $user_id,
+        protected int       $topic_id,
         protected LessonDto $lesson_dto
-    ) {}
+    )
+    {
+    }
 
     /**
      * @throws Throwable
@@ -54,17 +56,19 @@ class CreateLessonJob implements ShouldQueue
                 'topic_id' => $this->topic_id,
                 'error' => $e->getMessage(),
             ]);
-            $this->notify(null, LessonCreationStatusEnum::ERROR);
+            $this->notify(new Lesson(), LessonCreationStatusEnum::ERROR);
             throw $e;
         }
     }
 
-    private function notify(?Lesson $lesson, LessonCreationStatusEnum $status)
+    private function notify(Lesson $lesson, LessonCreationStatusEnum $status)
     {
-        User::find($this->user_id)?->notify(
+        $user = User::find($this->user_id);
+        $user->notify(
             new LessonCreationNotification(
-                $lesson,
-                $status
+                $user,
+                $status,
+                $lesson->id,
             )
         );
     }

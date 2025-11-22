@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Notifications\Slug\Translate;
 
-use App\Enums\NotificationEventTypeEnum;
-use App\Enums\TranslateStatusEnum;
+use App\Enums\Notifications\NotificationEventTypeEnum;
+use App\Enums\Notifications\TranslateStatusEnum;
 use App\Models\Abstracts\Slug\Slug;
 use App\Notifications\Abstracts\AbstractSlugNotification;
 

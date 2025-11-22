@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Jobs\Lesson;
 
 use App\Dto\LessonDto;
-use App\Enums\LessonCreationStatusEnum;
+use App\Enums\Notifications\LessonCreationStatusEnum;
 use App\Exceptions\LessonExistsException;
 use App\Models\Lesson\Lesson;
 use App\Models\User;
@@ -24,22 +24,24 @@ class RegenerateLessonJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public function __construct(
-        protected int $lesson_id,
+        protected int       $lesson_id,
         protected LessonDto $lesson_dto
-    ) {}
+    )
+    {
+    }
 
     public function handle(LessonService $lessonService): void
     {
         $lesson = Lesson::find($this->lesson_id);
 
-        if (! $lesson) {
+        if (!$lesson) {
             Log::error('Lesson not found for regeneration', ['lesson_id' => $this->lesson_id]);
 
             return;
         }
 
         $user = User::find($lesson->user_id);
-        if (! $user) {
+        if (!$user) {
             Log::error('User not found for lesson regeneration', ['user_id' => $lesson->user_id]);
 
             return;
@@ -47,25 +49,26 @@ class RegenerateLessonJob implements ShouldQueue
 
         try {
             $updatedLesson = $lessonService->regenerateLesson($lesson, $this->lesson_dto);
-            $this->notify($user, $updatedLesson, LessonCreationStatusEnum::SUCCESSFULLY);
+            $this->notify($user, LessonCreationStatusEnum::SUCCESSFULLY,$updatedLesson);
         } catch (LessonExistsException $e) {
-            $this->notify($user, $e->lesson, LessonCreationStatusEnum::EXISTS);
+            $this->notify($user, LessonCreationStatusEnum::EXISTS, $e->lesson);
         } catch (Exception $e) {
             Log::error('Lesson regeneration failed', [
                 'lesson_id' => $this->lesson_id,
                 'error' => $e->getMessage(),
             ]);
 
-            $this->notify($user, null, LessonCreationStatusEnum::ERROR);
+            $this->notify($user, LessonCreationStatusEnum::ERROR, null);
         }
     }
 
-    private function notify(User $user, ?Lesson $lesson, LessonCreationStatusEnum $status): void
+    private function notify(User $user, LessonCreationStatusEnum $status, ?Lesson $lesson): void
     {
         $user->notify(
             new LessonCreationNotification(
-                $lesson,
-                $status
+                $user,
+                $status,
+                $lesson->id,
             )
         );
     }

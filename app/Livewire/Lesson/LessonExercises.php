@@ -17,6 +17,7 @@ class LessonExercises extends Component
     public ?int $lesson_id = null;
 
     public ?int $attempt_id = null;
+
     /** @var array<string, mixed> */
     public array $exercises = [];
 
@@ -66,7 +67,7 @@ class LessonExercises extends Component
 
         // Build flat array of all exercises
         $flat_exercises = [];
-        
+
         foreach (['quiz', 'gap_fill', 'sentence_ordering', 'true_false', 'matching'] as $type) {
             if (! empty($exercises[$type])) {
                 foreach ($exercises[$type] as $index => $data) {
@@ -78,7 +79,7 @@ class LessonExercises extends Component
                 }
             }
         }
-        
+
         $this->all_exercises_flat = $flat_exercises;
         $this->total_exercises = count($flat_exercises);
 

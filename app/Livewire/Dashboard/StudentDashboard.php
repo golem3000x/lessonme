@@ -7,6 +7,7 @@ namespace App\Livewire\Dashboard;
 use App\Models\Lesson\Lesson;
 use App\Models\Lesson\LessonAttempt;
 use App\Models\Lesson\LessonScore;
+use App\Services\GreetingService;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
@@ -15,18 +16,20 @@ use Livewire\Component;
 
 class StudentDashboard extends Component
 {
+    public string $greeting = '';
+
     public int $total_lessons = 0;
-    
+
     public int $attempted_lessons = 0;
-    
+
     public int $completed_lessons = 0;
-    
+
     public float $average_score = 0.0;
-    
+
     public int $total_attempts = 0;
-    
+
     public ?float $best_score = null;
-    
+
     public ?float $latest_score = null;
 
     /** @var array<int, array{lesson_name: string, score_percentage: float, graded_at: string, grade: string}> */
@@ -38,6 +41,13 @@ class StudentDashboard extends Component
     public function mount(): void
     {
         $user = Auth::user();
+
+        // Get time-based greeting
+        $greeting_service = app(GreetingService::class);
+        $this->greeting = $greeting_service->getGreeting(
+            $user->timezone ?? 'UTC',
+            app()->getLocale()
+        );
 
         // Total available lessons
         $this->total_lessons = Lesson::count();

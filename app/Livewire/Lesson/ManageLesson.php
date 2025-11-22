@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\Livewire\Lesson;
 
 use App\Dto\LessonDto;
-use App\Enums\EntityTypeEnum;
-use App\Enums\LanguageLevelEnum;
-use App\Enums\LessonCreationStatusEnum;
+use App\Enums\Notifications\LessonCreationStatusEnum;
+use App\Enums\System\LanguageLevelEnum;
 use App\Jobs\Lesson\CreateLessonJob;
 use App\Models\Keyword\Keyword;
+use App\Models\Lesson\Lesson;
 use App\Models\Topic\Topic;
 use App\Notifications\Lesson\LessonCreationNotification;
 use Illuminate\Contracts\View\Factory;
@@ -44,7 +44,7 @@ class ManageLesson extends Component
     public function mount(): void
     {
         $user = Auth::user();
-        if (! $user) {
+        if (!$user) {
             abort(401);
         }
 
@@ -79,14 +79,14 @@ class ManageLesson extends Component
         }
 
         // If no valid topic_id, use first available
-        if (! $this->topic_id && ! empty($this->topics)) {
+        if (!$this->topic_id && !empty($this->topics)) {
             $this->topic_id = $this->topics[0]['id'];
         }
 
         $selected = collect($this->topics)->firstWhere('id', '=', $this->topic_id);
         $this->topic = $selected['label'] ?? '';
 
-        $this->keyword_ids = array_values(array_map('intval', (array) session('selected_keyword_ids', [])));
+        $this->keyword_ids = array_values(array_map('intval', (array)session('selected_keyword_ids', [])));
 
         $this->language_level = session('selected_language_level', LanguageLevelEnum::A1->value);
 
@@ -98,7 +98,7 @@ class ManageLesson extends Component
 
     public function updatedTopicId(int|string $value): void
     {
-        $this->topic_id = (int) $value;
+        $this->topic_id = (int)$value;
         session(['selected_topic_id' => $this->topic_id]);
 
         $selected = collect($this->topics)->firstWhere('id', '=', $this->topic_id);
@@ -120,12 +120,12 @@ class ManageLesson extends Component
         $this->is_generating = true;
 
         $user = Auth::user();
-        if (! $user) {
+        if (!$user) {
             abort(401);
         }
 
         $topic = Topic::find($this->topic_id);
-        if (! $topic) {
+        if (!$topic) {
             $this->notifyUser('error', __('lessons.topic_not_found'));
             $this->is_generating = false;
 
@@ -135,13 +135,13 @@ class ManageLesson extends Component
         try {
             $selected_keyword_labels = [];
 
-            if (! empty($this->keyword_ids)) {
+            if (!empty($this->keyword_ids)) {
                 $keywords = Keyword::with('translations')->whereIn('id', $this->keyword_ids)->get();
                 $locale = app()->getLocale();
-                $selected_keyword_labels = $keywords->map(fn (Keyword $k) => $k->value($locale))->filter()->values()->all();
+                $selected_keyword_labels = $keywords->map(fn(Keyword $k) => $k->value($locale))->filter()->values()->all();
             }
 
-            $keywords = ! empty($selected_keyword_labels) ? $selected_keyword_labels : [$this->topic];
+            $keywords = !empty($selected_keyword_labels) ? $selected_keyword_labels : [$this->topic];
             $level_enum = LanguageLevelEnum::from($this->language_level);
             $lesson_dto = new LessonDto(
                 $this->topic,
@@ -151,6 +151,12 @@ class ManageLesson extends Component
                 $keywords
             );
 
+            $user->notify(new LessonCreationNotification(
+                $user,
+                LessonCreationStatusEnum::PROCESSING,
+                null,
+            ));
+
             // Dispatch job for async lesson creation
             CreateLessonJob::dispatch(
                 $user->id,
@@ -158,45 +164,29 @@ class ManageLesson extends Component
                 $lesson_dto
             );
 
-            // Send immediate notification that creation is in process
-            $user->notify(new LessonCreationNotification(
-                null,
-                LessonCreationStatusEnum::PROCESSING
-            ));
-
-            // Notify user via UI
-            $this->notifyUser(LessonCreationStatusEnum::PROCESSING->value, __('lessons.lesson_creation_in_progress'));
-
             // Dispatch event to add placeholder to parent component
             $this->dispatch('lesson-creation-queued');
-            
+
             // Reset generating state and close modal
             $this->is_generating = false;
             $this->dispatch('close-manage-modal');
 
         } catch (\Exception $e) {
             $this->is_generating = false;
-            $this->notifyUser('error', __('lessons.generation_failed').': '.$e->getMessage());
+
+            $user->notify(new LessonCreationNotification(
+                $user,
+                LessonCreationStatusEnum::ERROR,
+                null,
+            ));
 
             // Log error for debugging
-            $this->js('console.error("Lesson creation dispatch failed:", "'.addslashes($e->getMessage()).'");');
+            $this->js('console.error("Lesson creation dispatch failed:", "' . addslashes($e->getMessage()) . '");');
         }
     }
 
-    protected function notifyUser(string $status, string $message): void
-    {
-        $notification_id = uniqid('lesson_');
-
-        $this->dispatch('lesson-notification',
-            id: $notification_id,
-            entity: EntityTypeEnum::LESSON->value,
-            status: $status,
-            message: $message
-        );
-    }
-
     /**
-     * @param  array<int, int>  $ids
+     * @param array<int, int> $ids
      */
     #[On('keywords-selected')]
     public function setKeywordIds(array $ids): void
@@ -234,11 +224,11 @@ class ManageLesson extends Component
 
         $topic = $this->preloaded_topics->firstWhere('id', '=', $topic_id);
 
-        if (! $topic) {
+        if (!$topic) {
             return [];
         }
 
-        if (! $topic->relationLoaded('keywords')) {
+        if (!$topic->relationLoaded('keywords')) {
             return [];
         }
 

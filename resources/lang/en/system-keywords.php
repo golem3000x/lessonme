@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Enums\SystemKeywordEnum;
+use App\Enums\System\SystemKeywordEnum;
 
 return [
     SystemKeywordEnum::PHP->name => 'PHP',

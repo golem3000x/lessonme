@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace App\Livewire\Lesson;
 
 use App\Dto\LessonDto;
-use App\Enums\EntityTypeEnum;
-use App\Enums\LanguageLevelEnum;
-use App\Enums\LessonCreationStatusEnum;
+use App\Enums\Notifications\LessonCreationStatusEnum;
+use App\Enums\System\LanguageLevelEnum;
 use App\Jobs\Lesson\RegenerateLessonJob;
 use App\Models\Lesson\Lesson;
 use App\Notifications\Lesson\LessonCreationNotification;
@@ -122,11 +121,11 @@ class LessonIndex extends Component
 
         // Apply search filter
         if ($this->search) {
-            $query->where('lesson_name', 'like', '%'.$this->search.'%');
+            $query->where('lesson_name', 'like', '%' . $this->search . '%');
         }
 
         // Apply language level filter
-        if (! empty($this->language_levels)) {
+        if (!empty($this->language_levels)) {
             $query->whereIn('language_level', $this->language_levels);
         }
 
@@ -188,7 +187,7 @@ class LessonIndex extends Component
         }
 
         $user = Auth::user();
-        if (! $user) {
+        if (!$user) {
             abort(401);
         }
 
@@ -197,16 +196,16 @@ class LessonIndex extends Component
             ->with(['topic.translations', 'topic.keywords.translations'])
             ->first();
 
-        if (! $lesson) {
+        if (!$lesson) {
             // Remove from regenerating list if lesson not found
             $this->regenerating_lesson_ids = array_diff($this->regenerating_lesson_ids, [$this->lesson_to_regenerate]);
-            
-            $this->dispatch('lesson-notification',
-                id: uniqid('lesson_error_'),
-                entity: EntityTypeEnum::LESSON->value,
-                status: LessonCreationStatusEnum::ERROR->value,
-                message: __('lessons.lesson_not_found')
-            );
+
+            $user->notify(new LessonCreationNotification(
+                $user,
+                LessonCreationStatusEnum::ERROR,
+                null,
+            ));
+
             $this->cancelRegenerate();
 
             return;
@@ -220,7 +219,7 @@ class LessonIndex extends Component
             $keywords = [];
             if ($lesson->topic && $lesson->topic->relationLoaded('keywords')) {
                 $keywords = $lesson->topic->keywords
-                    ->map(fn ($keyword) => $keyword->value($locale))
+                    ->map(fn($keyword) => $keyword->value($locale))
                     ->filter()
                     ->values()
                     ->all();
@@ -239,24 +238,16 @@ class LessonIndex extends Component
                 $keywords
             );
 
+            $user->notify(new LessonCreationNotification(
+                $user,
+                LessonCreationStatusEnum::PROCESSING,
+                null,
+            ));
+
             // Dispatch job for async lesson regeneration
             RegenerateLessonJob::dispatch(
                 $this->lesson_to_regenerate,
                 $lesson_dto
-            );
-
-            // Send immediate notification that regeneration is in process
-            $user->notify(new LessonCreationNotification(
-                null,
-                LessonCreationStatusEnum::PROCESSING
-            ));
-
-            // Notify user via Livewire dispatch
-            $this->dispatch('lesson-notification',
-                id: uniqid('lesson_regenerate_'),
-                entity: EntityTypeEnum::LESSON->value,
-                status: LessonCreationStatusEnum::PROCESSING->value,
-                message: __('lessons.lesson_regeneration_in_progress')
             );
 
             // Add lesson ID to regenerating list to show placeholder
@@ -268,14 +259,12 @@ class LessonIndex extends Component
         } catch (\Exception $e) {
             // Remove from regenerating list on error
             $this->regenerating_lesson_ids = array_diff($this->regenerating_lesson_ids, [$this->lesson_to_regenerate]);
-            
-            // Notify user via UI about error
-            $this->dispatch('lesson-notification',
-                id: uniqid('lesson_error_'),
-                entity: EntityTypeEnum::LESSON->value,
-                status: LessonCreationStatusEnum::ERROR->value,
-                message: __('lessons.regeneration_failed').': '.$e->getMessage()
-            );
+
+            $user->notify(new LessonCreationNotification(
+                $user,
+                LessonCreationStatusEnum::ERROR,
+                null,
+            ));
         }
 
         $this->cancelRegenerate();
@@ -315,7 +304,7 @@ class LessonIndex extends Component
 
     public function toggleFilters(): void
     {
-        $this->show_filters = ! $this->show_filters;
+        $this->show_filters = !$this->show_filters;
 
         // Sync temp filters with current applied filters when opening
         if ($this->show_filters) {
@@ -324,7 +313,7 @@ class LessonIndex extends Component
         }
 
         // Close level dropdown when closing filters panel
-        if (! $this->show_filters) {
+        if (!$this->show_filters) {
             $this->show_level_dropdown = false;
         }
     }
@@ -367,11 +356,11 @@ class LessonIndex extends Component
 
         // Apply temporary search filter
         if ($this->temp_search) {
-            $query->where('lesson_name', 'like', '%'.$this->temp_search.'%');
+            $query->where('lesson_name', 'like', '%' . $this->temp_search . '%');
         }
 
         // Apply temporary language level filter
-        if (! empty($this->temp_language_levels)) {
+        if (!empty($this->temp_language_levels)) {
             $query->whereIn('language_level', $this->temp_language_levels);
         }
 
@@ -380,7 +369,7 @@ class LessonIndex extends Component
 
     public function hasActiveFilters(): bool
     {
-        return $this->search !== '' || ! empty($this->language_levels) || $this->sort !== 'newest';
+        return $this->search !== '' || !empty($this->language_levels) || $this->sort !== 'newest';
     }
 
     /**

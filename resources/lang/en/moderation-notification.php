@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Enums\ModerationStatusEnum;
+use App\Enums\Notifications\ModerationStatusEnum;
 
 return [
     ModerationStatusEnum::APPROVED->name => 'Your content has been approved 🎉',

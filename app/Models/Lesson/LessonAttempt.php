@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models\Lesson;
 
-use App\Enums\TableNameEnum;
+use App\Enums\System\TableNameEnum;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -17,33 +17,33 @@ use Illuminate\Support\Carbon;
  * @property int $user_id
  * @property int|null $assignment_id
  * @property int $attempt_number
- * @property array<string, mixed>|null $exercises_snapshot
- * @property array<string, mixed>|null $user_answers
+ * @property array<array-key, mixed>|null $exercises_snapshot Exercises at attempt time
+ * @property array<array-key, mixed>|null $user_answers User answers for all exercises
  * @property Carbon $started_at
  * @property Carbon|null $completed_at
  * @property bool $is_completed
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read Lesson $lesson
+ * @property-read \App\Models\Lesson\LessonAssignment|null $assignment
+ * @property-read \App\Models\Lesson\Lesson $lesson
+ * @property-read \App\Models\Lesson\LessonScore|null $score
  * @property-read User $user
- * @property-read LessonAssignment|null $assignment
- * @property-read LessonScore|null $score
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAttempt newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAttempt newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAttempt query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAttempt whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAttempt whereLessonId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAttempt whereUserId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAttempt whereAssignmentId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAttempt whereAttemptNumber($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAttempt whereExercisesSnapshot($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAttempt whereUserAnswers($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAttempt whereStartedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAttempt whereCompletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAttempt whereIsCompleted($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAttempt whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAttempt whereExercisesSnapshot($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAttempt whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAttempt whereIsCompleted($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAttempt whereLessonId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAttempt whereStartedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAttempt whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAttempt whereUserAnswers($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAttempt whereUserId($value)
  *
  * @mixin \Eloquent
  */

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models\Lesson;
 
-use App\Enums\TableNameEnum;
+use App\Enums\System\TableNameEnum;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -18,33 +18,33 @@ use Illuminate\Support\Carbon;
  * @property int|null $teacher_id
  * @property int $total_questions
  * @property int $correct_answers
- * @property float $score_percentage
+ * @property float $score_percentage 0.00 to 100.00
  * @property bool $auto_graded
  * @property string|null $teacher_comment
  * @property Carbon $graded_at
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read LessonAttempt $attempt
- * @property-read Lesson $lesson
- * @property-read User $user
+ * @property-read \App\Models\Lesson\LessonAttempt $attempt
+ * @property-read \App\Models\Lesson\Lesson $lesson
  * @property-read User|null $teacher
+ * @property-read User $user
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonScore newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonScore newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonScore query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonScore whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonScore whereAttemptId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonScore whereAutoGraded($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonScore whereCorrectAnswers($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonScore whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonScore whereGradedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonScore whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonScore whereLessonId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonScore whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonScore whereScorePercentage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonScore whereTeacherComment($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonScore whereTeacherId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonScore whereTotalQuestions($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonScore whereCorrectAnswers($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonScore whereScorePercentage($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonScore whereAutoGraded($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonScore whereTeacherComment($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonScore whereGradedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonScore whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonScore whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonScore whereUserId($value)
  *
  * @mixin \Eloquent
  */

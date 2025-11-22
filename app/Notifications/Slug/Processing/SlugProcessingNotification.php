@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Notifications\Slug\Processing;
 
-use App\Enums\ModerationStatusEnum;
-use App\Enums\NotificationEventTypeEnum;
+use App\Enums\Notifications\ModerationStatusEnum;
+use App\Enums\Notifications\NotificationEventTypeEnum;
 use App\Models\Abstracts\Slug\Slug;
 use App\Notifications\Abstracts\AbstractSlugNotification;
 
@@ -23,6 +23,6 @@ class SlugProcessingNotification extends AbstractSlugNotification
 
     protected function getEventType(): \BackedEnum
     {
-        return NotificationEventTypeEnum::PROCESSING;
+        return NotificationEventTypeEnum::CREATION;
     }
 }

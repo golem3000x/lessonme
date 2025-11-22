@@ -4,11 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Auth;
 
-use App\Enums\SystemLanguageEnum;
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Notifications\Auth\WelcomeNotification;
-use App\Services\GreetingService;
 use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
@@ -18,10 +15,6 @@ use Laravel\Socialite\Facades\Socialite;
 
 class SocialAuthController extends Controller
 {
-    public function __construct(
-        protected GreetingService $greeting_service
-    ) {}
-
     /**
      * Redirect to Facebook for authentication
      */
@@ -74,14 +67,6 @@ class SocialAuthController extends Controller
             }
 
             Auth::login($user, true);
-
-            // Отправляем приветственное уведомление для существующего пользователя
-            $message = $this->greeting_service->getWelcomeMessage(
-                $user->name,
-                $user->timezone ?? 'UTC',
-                $user->native_lang ?? SystemLanguageEnum::ENGLISH->value
-            );
-            $user->notify(new WelcomeNotification($user, $message));
 
             return redirect()->intended('/');
         } catch (Exception $e) {

@@ -1,21 +1,21 @@
 <?php
 
-use App\Enums\SystemLanguageEnum;
+use App\Enums\System\SystemLanguageEnum;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\SocialAuthController;
 use App\Http\Controllers\Auth\ZaloController;
 use App\Http\Controllers\Lesson\LessonController;
+use App\Http\Middleware\EnsureTempGuestUser;
 use App\Livewire\Auth\LanguageSelection;
 use App\Livewire\Lesson\LessonIndex;
 use App\Livewire\Onboarding\ProfileSetup;
-use App\Livewire\Onboarding\TopicSelector;
 use App\Livewire\Topic\TopicIndex;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 
 Route::get('/', function () {
     return view('welcome');
-})->middleware(['guest', \App\Http\Middleware\EnsureTempGuestUser::class]);
+})->middleware(['guest', EnsureTempGuestUser::class]);
 
 Route::get('/about', function () {
     return view('about');
@@ -54,7 +54,6 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('/onboarding', ProfileSetup::class)->name('onboarding.profile');
-    // Route::get('/topics', TopicSelector::class)->name('onboarding.topics'); // Disabled - not needed
 
     // Topics management
     Route::get('/manage-topics', TopicIndex::class)->name('topics.index');
@@ -62,7 +61,7 @@ Route::middleware('auth')->group(function () {
     // Lessons management
     Route::get('/lessons', LessonIndex::class)->name('lessons.index');
     Route::post('/lessons', [LessonController::class, 'store'])->name('lessons.store');
-    
+
     // Protected lesson routes - require ownership
     Route::middleware('lesson.owner')->group(function () {
         Route::get('/lessons/{lesson}/history', [LessonController::class, 'history'])->name('lessons.history');

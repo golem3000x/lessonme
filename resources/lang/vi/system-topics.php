@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Enums\SystemTopicEnum;
+use App\Enums\System\SystemTopicEnum;
 
 return [
     SystemTopicEnum::PROGRAMMING->value => 'Lập trình',

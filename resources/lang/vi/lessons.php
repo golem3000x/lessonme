@@ -103,20 +103,20 @@ return [
     'creation_timeout' => 'Việc tạo bài học mất nhiều thời gian hơn dự kiến. Vui lòng thử lại.',
     'creation_failed' => 'Tạo Bài Học Thất Bại',
     'try_again' => 'Thử Lại',
-    
+
     // Exercises
     'check_answers_title' => 'Bạn Sẵn Sàng Chưa?',
     'check_answers_message' => 'Bạn có chắc chắn muốn kiểm tra câu trả lời của mình không?',
     'check_answers' => 'Có, Kiểm Tra!',
     'wait' => 'Không, Đợi Đã',
-    
+
     // Exercise types
     'quiz' => 'Câu đố',
     'gap_fill' => 'Điền vào chỗ trống',
     'sentence_ordering' => 'Sắp xếp câu',
     'true_false' => 'Đúng hay Sai',
     'matching' => 'Ghép cặp',
-    
+
     // Exercise navigation
     'exercise_of' => 'Bài tập :current trong :total',
     'progress' => 'Tiến độ',
@@ -126,7 +126,7 @@ return [
     'match_with' => 'Ghép với...',
     'true' => 'Đúng',
     'false' => 'Sai',
-    
+
     // Exercise results
     'correct' => 'Đúng rồi!',
     'wrong_answer' => 'Sai rồi. Câu trả lời đúng:',
@@ -135,14 +135,14 @@ return [
     'good_effort' => 'Cố gắng tốt! Luyện tập nhiều hơn nhé!',
     'keep_practicing' => 'Tiếp tục luyện tập, bạn sẽ tiến bộ!',
     'try_again' => 'Thử Lại',
-    
+
     // Lesson sections
     'dialogue' => 'Hội thoại',
     'exercises' => 'Bài tập',
     'homework' => 'Bài tập về nhà',
     'common_mistakes' => 'Lỗi thường gặp',
     'culture_notes' => 'Ghi chú văn hóa',
-    
+
     // Grading system
     'student_scores' => 'Điểm Học Sinh',
     'no_scores_yet' => 'Chưa có điểm nào.',

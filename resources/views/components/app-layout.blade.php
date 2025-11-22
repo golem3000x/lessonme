@@ -103,7 +103,7 @@
                     <button @click="open = !open"
                             class="group flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-blue-50 transition-all duration-200">
                         @if(Auth::user()->avatar)
-                            <img src="{{ asset('storage/' . Auth::user()->avatar) }}"
+                            <img src="{{ Auth::user()->avatar_url }}"
                                  alt="{{ Auth::user()->name }}"
                                  class="h-9 w-9 rounded-full ring-2 ring-gray-200 group-hover:ring-blue-400 transition-all shadow-sm object-cover">
                         @else
@@ -123,7 +123,7 @@
                         <div class="px-4 py-3 border-b border-gray-100 bg-gradient-to-r from-blue-50 to-indigo-50">
                             <div class="flex items-center gap-3 mb-2">
                                 @if(Auth::user()->avatar)
-                                    <img src="{{ asset('storage/' . Auth::user()->avatar) }}"
+                                    <img src="{{ Auth::user()->avatar_url }}"
                                          alt="{{ Auth::user()->name }}"
                                          class="h-10 w-10 rounded-full object-cover border-2 border-white shadow-sm">
                                 @else
@@ -233,5 +233,14 @@
 
 @livewireScripts
 @vite(['resources/js/app.js'])
+
+{{-- Remove Facebook OAuth fragment #_=_ from URL --}}
+<script>
+    if (window.location.hash === '#_=_') {
+        history.replaceState 
+            ? history.replaceState(null, null, window.location.href.split('#')[0])
+            : window.location.hash = '';
+    }
+</script>
 </body>
 </html>

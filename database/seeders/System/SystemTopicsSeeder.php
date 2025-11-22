@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Database\Seeders\System;
 
-use App\Enums\SystemTopicEnum;
-use App\Enums\TableNameEnum;
+use App\Enums\System\SystemTopicEnum;
+use App\Enums\System\TableNameEnum;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;

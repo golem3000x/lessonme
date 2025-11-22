@@ -1,7 +1,7 @@
 <div class="space-y-6">
     {{-- WELCOME HEADER --}}
     <div class="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-lg shadow-lg p-6 text-white">
-        <h1 class="text-3xl font-bold mb-2">👋 {{ __('dashboard.welcome_back') }}, {{ auth()->user()->name }}!</h1>
+        <h1 class="text-3xl font-bold mb-2">👋 {{ $greeting }}, {{ auth()->user()->name }}!</h1>
         <p class="text-blue-100">{{ __('dashboard.student_progress_overview') }}</p>
     </div>
 

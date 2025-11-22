@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Jobs\Moderate;
 
-use App\Enums\ModerationStatusEnum;
+use App\Enums\Notifications\ModerationStatusEnum;
 use App\Models\Abstracts\Slug\Slug;
 use App\Notifications\Slug\Moderation\SlugModerationNotification;
 use App\Services\Slug\SlugService;

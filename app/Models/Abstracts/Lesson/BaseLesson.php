@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Models\Abstracts\Lesson;
 
 use App\Casts\EmbeddingCast;
-use App\Enums\LanguageLevelEnum;
+use App\Enums\System\LanguageLevelEnum;
 use App\Models\Abstracts\BaseModel;
 use App\Models\User;
 use Database\Factories\UserFactory;

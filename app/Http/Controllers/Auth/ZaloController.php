@@ -4,11 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Auth;
 
-use App\Enums\SystemLanguageEnum;
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Notifications\Auth\WelcomeNotification;
-use App\Services\GreetingService;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
@@ -18,10 +15,6 @@ use Illuminate\Support\Facades\Http;
 
 class ZaloController extends Controller
 {
-    public function __construct(
-        protected GreetingService $greeting_service
-    ) {}
-
     public function redirect(): Redirector|RedirectResponse
     {
         $zalo_app_id = config('services.zalo.app_id');
@@ -74,14 +67,6 @@ class ZaloController extends Controller
             ]);
 
             Auth::login($user);
-
-            // Отправляем приветственное уведомление для существующего пользователя
-            $message = $this->greeting_service->getWelcomeMessage(
-                $user->name,
-                $user->timezone ?? 'UTC',
-                $user->native_lang ?? SystemLanguageEnum::VIETNAMESE->value
-            );
-            $user->notify(new WelcomeNotification($user, $message));
 
             return redirect()->route('dashboard');
         } else {

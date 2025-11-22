@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Notifications\Abstracts;
 
 use App\Models\Lesson\Lesson;
+use App\Models\User;
 use BackedEnum;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
@@ -20,19 +21,22 @@ abstract class AbstractLessonNotification extends Notification implements Should
 
     protected string $entity_name;
 
+    protected ?Lesson $entity = null;
+
     public function __construct(
-        protected ?Lesson $entity
-    ) {
-        if ($entity) {
-            $this->entity_name = Str::lcfirst(class_basename($entity));
-        } else {
-            $this->entity_name = 'lesson';
+        protected User  $user,
+        protected ?int $entity_id
+    )
+    {
+        if ($this->entity_id) {
+            $this->entity = Lesson::find($this->entity_id);
         }
+        $this->entity_name = Str::lcfirst(class_basename(new Lesson()));
     }
 
     abstract protected function getStatusEnum(): BackedEnum;
 
-    abstract protected function getEventType(): string;
+    abstract protected function getEventType(): BackedEnum;
 
     /**
      * @return array<int, string>
@@ -51,14 +55,15 @@ abstract class AbstractLessonNotification extends Notification implements Should
         $event_type = $this->getEventType();
 
         $data = [
-            'id' => uniqid("lesson_{$event_type}_"),
+            'id' => uniqid("lesson_{$event_type->value}_"),
             'status' => $status,
             'entity' => $this->entity_name,
-            'message' => __("notifications.{$this->entity_name}_{$event_type}_$status", [
+            'message' => __("notifications.{$this->entity_name}_{$event_type->value}_$status", [
                 'name' => $this->entity !== null ? $this->entity->lesson_name : '',
             ]),
         ];
 
+        // Include lesson details only for successfully created lessons
         if ($this->entity) {
             $data['lesson_id'] = $this->entity->uuid;
             $data['lesson_url'] = route('lessons.show', $this->entity->uuid);
@@ -86,13 +91,11 @@ abstract class AbstractLessonNotification extends Notification implements Should
      */
     public function broadcastOn(): array
     {
-        $user_id = $this->entity?->user_id;
-
-        return [new PrivateChannel('App.Models.User.'.$user_id)];
+        return [new PrivateChannel("App.Models.User.{$this->user->id}")];
     }
 
     public function broadcastAs(): string
     {
-        return sprintf('%s.%s.%s', $this->entity_name, $this->getEventType(), $this->getStatusEnum()->value);
+        return sprintf('%s.%s.%s', $this->entity_name, $this->getEventType()->value, $this->getStatusEnum()->value);
     }
 }

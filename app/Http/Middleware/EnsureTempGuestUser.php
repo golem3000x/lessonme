@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Middleware;
 
-use App\Enums\SystemLanguageEnum;
+use App\Enums\System\SystemLanguageEnum;
 use App\Models\User;
 use Closure;
 use Illuminate\Http\Request;
