@@ -126,6 +126,8 @@ return [
     'match_with' => 'Match with...',
     'true' => 'True',
     'false' => 'False',
+    'vietnamese_keyboard' => 'Vietnamese Keyboard',
+    'english_keyboard' => 'English Keyboard',
 
     // Exercise results
     'correct' => 'Correct!',

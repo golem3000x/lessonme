@@ -49,6 +49,7 @@ use Illuminate\Support\Str;
  * @property string $timezone
  * @property bool $is_temp_guest
  * @property Carbon|null $temp_guest_expires_at
+ * @property Carbon|null $first_login_completed_at
  * @property-read Collection<int, LessonAssignment> $assignedLessons
  * @property-read int|null $assigned_lessons_count
  * @property-read Collection<int, ChatSession> $chatSessions
@@ -119,6 +120,7 @@ class User extends Authenticatable implements FilamentUser, HasLocalePreference
         'role',
         'is_temp_guest',
         'temp_guest_expires_at',
+        'first_login_completed_at',
     ];
 
     /**
@@ -152,6 +154,7 @@ class User extends Authenticatable implements FilamentUser, HasLocalePreference
             'role' => UserRoleEnum::class,
             'is_temp_guest' => 'boolean',
             'temp_guest_expires_at' => 'datetime',
+            'first_login_completed_at' => 'datetime',
         ];
     }
 

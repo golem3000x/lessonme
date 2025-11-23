@@ -8,6 +8,7 @@ return [
     'chat' => 'Trò chuyện',
     'lessons' => 'Bài học',
     'topics' => 'Chủ đề',
+    'help' => 'Trợ giúp',
     'profile' => 'Hồ sơ',
     'about' => 'Về dự án',
     'login' => 'Đăng nhập',

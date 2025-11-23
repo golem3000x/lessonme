@@ -126,6 +126,8 @@ return [
     'match_with' => 'Ghép với...',
     'true' => 'Đúng',
     'false' => 'Sai',
+    'vietnamese_keyboard' => 'Bàn Phím Tiếng Việt',
+    'english_keyboard' => 'Bàn Phím Tiếng Anh',
 
     // Exercise results
     'correct' => 'Đúng rồi!',

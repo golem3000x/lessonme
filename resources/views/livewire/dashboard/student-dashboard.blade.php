@@ -5,8 +5,11 @@
         <p class="text-blue-100">{{ __('dashboard.student_progress_overview') }}</p>
     </div>
 
+    {{-- QUICK TOUR BANNER --}}
+    <livewire:help.quick-tour-banner />
+
     {{-- MAIN STATS GRID --}}
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="stats-cards grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {{-- Completed Lessons --}}
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <div class="flex items-center justify-between mb-2">
@@ -145,39 +148,6 @@
                     @endforeach
                 </div>
             @endif
-        </div>
-    </div>
-
-    {{-- QUICK ACTIONS --}}
-    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        <h3 class="text-lg font-bold text-gray-800 mb-4">{{ __('dashboard.quick_actions') }}</h3>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <a href="{{ route('lessons.index') }}" 
-               class="flex items-center gap-3 p-4 border-2 border-gray-200 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-all group">
-                <span class="text-3xl">📚</span>
-                <div>
-                    <h4 class="font-medium text-gray-900 group-hover:text-blue-600">{{ __('dashboard.browse_lessons') }}</h4>
-                    <p class="text-sm text-gray-500">{{ __('dashboard.explore_available') }}</p>
-                </div>
-            </a>
-            
-            <a href="{{ route('lessons.index') }}" 
-               class="flex items-center gap-3 p-4 border-2 border-gray-200 rounded-lg hover:border-green-500 hover:bg-green-50 transition-all group">
-                <span class="text-3xl">✍️</span>
-                <div>
-                    <h4 class="font-medium text-gray-900 group-hover:text-green-600">{{ __('dashboard.create_lesson') }}</h4>
-                    <p class="text-sm text-gray-500">{{ __('dashboard.generate_custom') }}</p>
-                </div>
-            </a>
-            
-            <a href="{{ route('topics.index') }}" 
-               class="flex items-center gap-3 p-4 border-2 border-gray-200 rounded-lg hover:border-purple-500 hover:bg-purple-50 transition-all group">
-                <span class="text-3xl">🎨</span>
-                <div>
-                    <h4 class="font-medium text-gray-900 group-hover:text-purple-600">{{ __('dashboard.manage_topics') }}</h4>
-                    <p class="text-sm text-gray-500">{{ __('dashboard.customize_topics') }}</p>
-                </div>
-            </a>
         </div>
     </div>
 </div>

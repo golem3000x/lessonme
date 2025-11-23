@@ -79,6 +79,18 @@
                     </svg>
                     <span class="hidden md:inline">{{ __('nav.topics') }}</span>
                 </a>
+
+                <a href="{{ route('help.index') }}" class="group relative px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200 flex items-center gap-2 {{ request()->is('help*') ? 'bg-blue-50 text-blue-600' : '' }}">
+                    @if(request()->is('help*'))
+                        <span class="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full"></span>
+                    @endif
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transition-transform group-hover:scale-110" fill="none" viewBox="0 0 24 24"
+                         stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                              d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <span class="hidden md:inline">{{ __('nav.help') }}</span>
+                </a>
             @endauth
 
             <a href="{{ route('about') }}" class="group relative px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200 flex items-center gap-2 {{ request()->routeIs('about') ? 'bg-blue-50 text-blue-600' : '' }}">
@@ -97,9 +109,11 @@
         <!-- Правая часть -->
         <div class="flex items-center gap-4">
             @auth
-                <livewire:notification.notification-bell />
+                <div class="notifications-panel">
+                    <livewire:notification.notification-bell />
+                </div>
 
-                <div x-data="{ open: false }" class="relative">
+                <div x-data="{ open: false }" class="user-menu-dropdown relative">
                     <button @click="open = !open"
                             class="group flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-blue-50 transition-all duration-200">
                         @if(Auth::user()->avatar)
@@ -223,9 +237,9 @@
     <livewire:notification.notifications-panel />
 @endauth
 
-<!-- Chat button - только на странице About -->
+<!-- Chat button - на страницах About и Help -->
 @auth
-    @if(request()->routeIs('about'))
+    @if(request()->routeIs('about') || request()->is('help*'))
         <livewire:chat.chat-button />
         <livewire:chat.chat-panel />
     @endif
@@ -233,6 +247,32 @@
 
 @livewireScripts
 @vite(['resources/js/app.js'])
+
+{{-- Tour Translations --}}
+<script>
+    window.tourTranslations = {
+        welcome_title: @json(__('help.welcome_title')),
+        welcome_text: @json(__('help.welcome_text')),
+        dashboard_title: @json(__('help.dashboard_title')),
+        dashboard_text: @json(__('help.dashboard_text')),
+        lessons_title: @json(__('help.lessons_title')),
+        lessons_text: @json(__('help.lessons_text')),
+        topics_title: @json(__('help.topics_title')),
+        topics_text: @json(__('help.topics_text')),
+        notifications_title: @json(__('help.notifications_title')),
+        notifications_text: @json(__('help.notifications_text')),
+        profile_title: @json(__('help.profile_title')),
+        profile_text: @json(__('help.profile_text')),
+        complete_title: @json(__('help.complete_title')),
+        complete_text: @json(__('help.complete_text')),
+        next: @json(__('help.next')),
+        back: @json(__('help.back')),
+        skip: @json(__('help.skip')),
+        finish: @json(__('help.finish'))
+    };
+</script>
+
+@stack('scripts')
 
 {{-- Remove Facebook OAuth fragment #_=_ from URL --}}
 <script>

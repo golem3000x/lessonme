@@ -64,41 +64,190 @@
 
             {{-- GAP FILL --}}
             @if($type === 'gap_fill')
-                <h4 class="text-xl font-bold mb-6 text-blue-600 flex items-center gap-2">
-                    <span class="text-2xl">📝</span> {{ __('lessons.gap_fill') }}
-                </h4>
-                <div class="p-6 bg-blue-50 rounded-lg">
-                    @php
-                        $sentence = $item['sentence'] ?? '';
-                        $parts = explode('___', $sentence);
-                    @endphp
-                    
-                    <div class="text-gray-800 text-xl leading-relaxed flex flex-wrap items-center gap-2">
-                        @foreach($parts as $part_index => $part)
-                            <span>{{ $part }}</span>
-                            @if($part_index < count($parts) - 1)
-                                <input
-                                    type="text"
-                                    wire:model="user_answers.gap_fill.{{ $index }}"
-                                    placeholder="..."
-                                    class="inline-block px-4 py-2 border-b-2 border-blue-400 bg-transparent text-center min-w-[150px] max-w-[250px] transition-all duration-200
-                                           @if(!$checked) focus:border-blue-600 focus:bg-blue-100 hover:border-blue-500 @endif
-                                           @if($checked) {{ isset($user_answers['gap_fill'][$index]) && strcasecmp(trim($user_answers['gap_fill'][$index]), trim($item['answer'] ?? '')) === 0 ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50' }} @endif"
-                                    @if($checked) disabled @endif
-                                >
-                            @endif
-                        @endforeach
-                    </div>
-
-                    @if($checked)
-                        <div class="text-sm mt-4 p-3 rounded-lg {{ isset($user_answers['gap_fill'][$index]) && strcasecmp(trim($user_answers['gap_fill'][$index]), trim($item['answer'] ?? '')) === 0 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                            @if(isset($user_answers['gap_fill'][$index]) && strcasecmp(trim($user_answers['gap_fill'][$index]), trim($item['answer'] ?? '')) === 0)
-                                <span class="font-medium">✅ {{ __('lessons.correct') }}</span>
-                            @else
-                                <span class="font-medium">❌ {{ __('lessons.wrong_answer') }} <strong>{{ $item['answer'] ?? '' }}</strong></span>
-                            @endif
+                <div x-data="{
+                    vnKeyboardOpen: false,
+                    enKeyboardOpen: false,
+                    insertChar(char) {
+                        const input = $refs.gapInput;
+                        if (!input) return;
+                        
+                        const start = input.selectionStart;
+                        const end = input.selectionEnd;
+                        const currentValue = input.value || '';
+                        
+                        const newValue = currentValue.substring(0, start) + char + currentValue.substring(end);
+                        input.value = newValue;
+                        
+                        // Update Livewire model
+                        @this.set('user_answers.gap_fill.{{ $index }}', newValue);
+                        
+                        // Set cursor position after inserted character
+                        const newPosition = start + char.length;
+                        input.setSelectionRange(newPosition, newPosition);
+                        input.focus();
+                    }
+                }">
+                    <h4 class="text-xl font-bold mb-6 text-blue-600 flex items-center gap-2">
+                        <span class="text-2xl">📝</span> {{ __('lessons.gap_fill') }}
+                    </h4>
+                    <div class="p-6 bg-blue-50 rounded-lg">
+                        @php
+                            $sentence = $item['sentence'] ?? '';
+                            $parts = explode('___', $sentence);
+                        @endphp
+                        
+                        <div class="text-gray-800 text-xl leading-relaxed flex flex-wrap items-center gap-2 mb-4">
+                            @foreach($parts as $part_index => $part)
+                                <span>{{ $part }}</span>
+                                @if($part_index < count($parts) - 1)
+                                    <input
+                                        x-ref="gapInput"
+                                        type="text"
+                                        wire:model="user_answers.gap_fill.{{ $index }}"
+                                        placeholder="..."
+                                        class="inline-block px-4 py-2 border-b-2 border-blue-400 bg-transparent text-center min-w-[150px] max-w-[250px] transition-all duration-200
+                                               @if(!$checked) focus:border-blue-600 focus:bg-blue-100 hover:border-blue-500 @endif
+                                               @if($checked) {{ isset($user_answers['gap_fill'][$index]) && strcasecmp(trim($user_answers['gap_fill'][$index]), trim($item['answer'] ?? '')) === 0 ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50' }} @endif"
+                                        @if($checked) disabled @endif
+                                    >
+                                @endif
+                            @endforeach
                         </div>
-                    @endif
+
+                        {{-- Virtual Keyboards --}}
+                        @if(!$checked)
+                            {{-- Vietnamese Keyboard (for English speakers learning Vietnamese) --}}
+                            @if($learning_lang === 'vi')
+                                <div class="mt-4">
+                                    {{-- Toggle Button --}}
+                                    <button
+                                        type="button"
+                                        @click="vnKeyboardOpen = !vnKeyboardOpen"
+                                        class="inline-flex items-center gap-2 px-3 py-2 bg-blue-100 hover:bg-blue-200 text-blue-700 font-medium text-sm rounded-lg border border-blue-300 transition-colors"
+                                    >
+                                        <span class="text-base">⌨️</span>
+                                        <span class="text-xs">🇻🇳</span>
+                                        <span>{{ __('lessons.vietnamese_keyboard') }}</span>
+                                        <span
+                                            class="text-xs transition-transform duration-200"
+                                            :class="vnKeyboardOpen ? 'rotate-180' : ''"
+                                        >▼</span>
+                                    </button>
+
+                                    {{-- Vietnamese Keyboard Panel --}}
+                                    <div
+                                        x-show="vnKeyboardOpen"
+                                        x-transition:enter="transition ease-out duration-200"
+                                        x-transition:enter-start="opacity-0 transform -translate-y-2"
+                                        x-transition:enter-end="opacity-100 transform translate-y-0"
+                                        x-transition:leave="transition ease-in duration-150"
+                                        x-transition:leave-start="opacity-100 transform translate-y-0"
+                                        x-transition:leave-end="opacity-0 transform -translate-y-2"
+                                        class="mt-2 p-4 bg-white rounded-lg border-2 border-blue-200 shadow-lg"
+                                    >
+                                        <div class="flex flex-wrap gap-1">
+                                            @php
+                                                $vietnamese_chars = [
+                                                    ['á', 'à', 'ả', 'ã', 'ạ'],
+                                                    ['ă', 'ắ', 'ằ', 'ẳ', 'ẵ', 'ặ'],
+                                                    ['â', 'ấ', 'ầ', 'ẩ', 'ẫ', 'ậ'],
+                                                    ['é', 'è', 'ẻ', 'ẽ', 'ẹ'],
+                                                    ['ê', 'ế', 'ề', 'ể', 'ễ', 'ệ'],
+                                                    ['í', 'ì', 'ỉ', 'ĩ', 'ị'],
+                                                    ['ó', 'ò', 'ỏ', 'õ', 'ọ'],
+                                                    ['ô', 'ố', 'ồ', 'ổ', 'ỗ', 'ộ'],
+                                                    ['ơ', 'ớ', 'ờ', 'ở', 'ỡ', 'ợ'],
+                                                    ['ú', 'ù', 'ủ', 'ũ', 'ụ'],
+                                                    ['ư', 'ứ', 'ừ', 'ử', 'ữ', 'ự'],
+                                                    ['ý', 'ỳ', 'ỷ', 'ỹ', 'ỵ'],
+                                                    ['đ']
+                                                ];
+                                            @endphp
+                                            @foreach($vietnamese_chars as $char_group)
+                                                @foreach($char_group as $char)
+                                                    <button
+                                                        type="button"
+                                                        @click="insertChar('{{ $char }}')"
+                                                        class="px-2 py-1 min-w-[32px] bg-blue-100 hover:bg-blue-200 text-blue-800 font-medium text-sm rounded border border-blue-300 transition-colors focus:ring-2 focus:ring-blue-400 focus:outline-none"
+                                                    >
+                                                        {{ $char }}
+                                                    </button>
+                                                @endforeach
+                                                <div class="w-2"></div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+
+                            {{-- English Keyboard (for Vietnamese speakers learning English) --}}
+                            @if($learning_lang === 'en')
+                                <div class="mt-4">
+                                    {{-- Toggle Button --}}
+                                    <button
+                                        type="button"
+                                        @click="enKeyboardOpen = !enKeyboardOpen"
+                                        class="inline-flex items-center gap-2 px-3 py-2 bg-green-100 hover:bg-green-200 text-green-700 font-medium text-sm rounded-lg border border-green-300 transition-colors"
+                                    >
+                                        <span class="text-base">⌨️</span>
+                                        <span class="text-xs">🇬🇧</span>
+                                        <span>{{ __('lessons.english_keyboard') }}</span>
+                                        <span
+                                            class="text-xs transition-transform duration-200"
+                                            :class="enKeyboardOpen ? 'rotate-180' : ''"
+                                        >▼</span>
+                                    </button>
+
+                                    {{-- English Keyboard Panel --}}
+                                    <div
+                                        x-show="enKeyboardOpen"
+                                        x-transition:enter="transition ease-out duration-200"
+                                        x-transition:enter-start="opacity-0 transform -translate-y-2"
+                                        x-transition:enter-end="opacity-100 transform translate-y-0"
+                                        x-transition:leave="transition ease-in duration-150"
+                                        x-transition:leave-start="opacity-100 transform translate-y-0"
+                                        x-transition:leave-end="opacity-0 transform -translate-y-2"
+                                        class="mt-2 p-4 bg-white rounded-lg border-2 border-green-200 shadow-lg"
+                                    >
+                                        <div class="flex flex-wrap gap-1">
+                                            @php
+                                                $english_chars = [
+                                                    ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'],
+                                                    ['k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't'],
+                                                    ['u', 'v', 'w', 'x', 'y', 'z'],
+                                                    ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'],
+                                                    ['K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T'],
+                                                    ['U', 'V', 'W', 'X', 'Y', 'Z']
+                                                ];
+                                            @endphp
+                                            @foreach($english_chars as $char_group)
+                                                @foreach($char_group as $char)
+                                                    <button
+                                                        type="button"
+                                                        @click="insertChar('{{ $char }}')"
+                                                        class="px-2 py-1 min-w-[32px] bg-green-100 hover:bg-green-200 text-green-800 font-medium text-sm rounded border border-green-300 transition-colors focus:ring-2 focus:ring-green-400 focus:outline-none"
+                                                    >
+                                                        {{ $char }}
+                                                    </button>
+                                                @endforeach
+                                                <div class="w-2"></div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+                        @endif
+
+                        @if($checked)
+                            <div class="text-sm mt-4 p-3 rounded-lg {{ isset($user_answers['gap_fill'][$index]) && strcasecmp(trim($user_answers['gap_fill'][$index]), trim($item['answer'] ?? '')) === 0 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                                @if(isset($user_answers['gap_fill'][$index]) && strcasecmp(trim($user_answers['gap_fill'][$index]), trim($item['answer'] ?? '')) === 0)
+                                    <span class="font-medium">✅ {{ __('lessons.correct') }}</span>
+                                @else
+                                    <span class="font-medium">❌ {{ __('lessons.wrong_answer') }} <strong>{{ $item['answer'] ?? '' }}</strong></span>
+                                @endif
+                            </div>
+                        @endif
+                    </div>
                 </div>
             @endif
 

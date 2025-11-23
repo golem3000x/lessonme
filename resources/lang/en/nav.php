@@ -8,6 +8,7 @@ return [
     'chat' => 'Chat',
     'lessons' => 'Lessons',
     'topics' => 'Topics',
+    'help' => 'Help',
     'profile' => 'Profile',
     'about' => 'About',
     'login' => 'Login',

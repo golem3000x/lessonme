@@ -4,6 +4,7 @@ use App\Enums\System\SystemLanguageEnum;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\SocialAuthController;
 use App\Http\Controllers\Auth\ZaloController;
+use App\Http\Controllers\HelpController;
 use App\Http\Controllers\Lesson\LessonController;
 use App\Http\Middleware\EnsureTempGuestUser;
 use App\Livewire\Auth\LanguageSelection;
@@ -66,5 +67,15 @@ Route::middleware('auth')->group(function () {
         Route::get('/lessons/{lesson}/history', [LessonController::class, 'history'])->name('lessons.history');
         Route::post('/lessons/{lesson}/history/{history}/restore', [LessonController::class, 'restore'])->name('lessons.history.restore');
         Route::get('/lessons/{lesson}/scores', [LessonController::class, 'scores'])->name('lessons.scores');
+    });
+
+    // Help Center routes
+    Route::prefix('help')->name('help.')->group(function () {
+        Route::get('/', [HelpController::class, 'index'])->name('index');
+        Route::get('/getting-started', [HelpController::class, 'gettingStarted'])->name('getting-started');
+        Route::get('/for-students', [HelpController::class, 'forStudents'])->name('for-students');
+        Route::get('/for-teachers', [HelpController::class, 'forTeachers'])->name('for-teachers');
+        Route::get('/exercise-types', [HelpController::class, 'exerciseTypes'])->name('exercise-types');
+        Route::get('/faq', [HelpController::class, 'faq'])->name('faq');
     });
 });

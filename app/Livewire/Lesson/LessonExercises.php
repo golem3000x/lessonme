@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Livewire\Lesson;
 
+use App\Enums\System\SystemLanguageEnum;
 use App\Models\Lesson\Lesson;
 use App\Models\Lesson\LessonAttempt;
 use App\Services\Lesson\LessonGradingService;
@@ -18,6 +19,8 @@ class LessonExercises extends Component
     public ?int $lesson_id = null;
 
     public ?int $attempt_id = null;
+
+    public ?string $learning_lang = null;
 
     /** @var array<string, mixed> */
     public array $exercises = [];
@@ -65,6 +68,12 @@ class LessonExercises extends Component
     {
         $this->exercises = $exercises;
         $this->lesson_id = $lesson_id;
+
+        // Get learning language from authenticated user
+        $user = Auth::user();
+        if ($user) {
+            $this->learning_lang = $user->learning_lang;
+        }
 
         // Build flat array of all exercises
         $flat_exercises = [];

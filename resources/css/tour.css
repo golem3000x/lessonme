@@ -1,0 +1,249 @@
+/* Shepherd.js Custom Theme - Pure CSS */
+
+.shepherd-element {
+    z-index: 9999 !important;
+    max-width: 480px !important;
+    animation: shepherdFadeIn 0.4s ease-out !important;
+}
+
+.shepherd-theme-custom {
+    border-radius: 16px !important;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+    background: linear-gradient(to bottom, #ffffff, #f8fafc) !important;
+    border: 3px solid transparent !important;
+    background-image: linear-gradient(white, white), linear-gradient(135deg, #3b82f6, #8b5cf6, #ec4899) !important;
+    background-origin: border-box !important;
+    background-clip: padding-box, border-box !important;
+}
+
+@keyframes shepherdFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.shepherd-title {
+    font-size: 1.5rem !important;
+    font-weight: 700 !important;
+    margin-bottom: 0.75rem !important;
+    background: linear-gradient(135deg, #1e40af, #7c3aed, #db2777) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    letter-spacing: -0.02em !important;
+}
+
+.shepherd-text {
+    color: #374151 !important;
+    font-size: 1.125rem !important;
+    line-height: 1.7 !important;
+}
+
+.shepherd-header {
+    padding: 1.5rem !important;
+    padding-bottom: 1rem !important;
+    background: linear-gradient(to bottom, #fefefe, #f9fafb) !important;
+    border-bottom: 2px solid #e5e7eb !important;
+}
+
+.shepherd-content {
+    padding: 1.5rem !important;
+    padding-top: 1rem !important;
+    background: white !important;
+}
+
+.shepherd-footer {
+    padding: 1.5rem !important;
+    padding-top: 1rem !important;
+    background: linear-gradient(to top, #f9fafb, #ffffff) !important;
+    border-top: 2px solid #e5e7eb !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+}
+
+.shepherd-footer .shepherd-button-group {
+    display: flex !important;
+    gap: 12px !important;
+    justify-content: flex-end !important;
+}
+
+.shepherd-button {
+    padding: 0.75rem 1.5rem !important;
+    border-radius: 12px !important;
+    font-weight: 700 !important;
+    font-size: 1rem !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1) !important;
+    background: linear-gradient(135deg, #3b82f6, #6366f1) !important;
+    color: white !important;
+    border: none !important;
+    text-transform: none !important;
+    cursor: pointer !important;
+}
+
+.shepherd-button:hover {
+    background: linear-gradient(135deg, #2563eb, #4f46e5) !important;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1) !important;
+    transform: translateY(-2px) scale(1.05) !important;
+}
+
+.shepherd-button-secondary {
+    padding: 0.75rem 1.5rem !important;
+    border-radius: 12px !important;
+    font-weight: 600 !important;
+    font-size: 1rem !important;
+    transition: all 0.3s ease !important;
+    background: #f3f4f6 !important;
+    color: #374151 !important;
+    border: 2px solid #d1d5db !important;
+    cursor: pointer !important;
+}
+
+.shepherd-button-secondary:hover {
+    background: #e5e7eb !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+    transform: translateY(-1px) !important;
+}
+
+.shepherd-cancel-icon {
+    color: #9ca3af !important;
+    transition: all 0.3s ease !important;
+    width: 20px !important;
+    height: 20px !important;
+}
+
+.shepherd-cancel-icon:hover {
+    color: #374151 !important;
+    transform: rotate(90deg) scale(1.2) !important;
+}
+
+/* Modal overlay */
+.shepherd-modal-overlay-container {
+    transition: opacity 0.4s ease-in-out;
+    background: rgba(15, 23, 42, 0.75) !important;
+    backdrop-filter: blur(4px);
+}
+
+.shepherd-modal-overlay-container.shepherd-modal-is-visible {
+    opacity: 1 !important;
+}
+
+/* Arrow */
+.shepherd-arrow {
+    border-color: #3b82f6 !important;
+}
+
+.shepherd-arrow::before {
+    background: white !important;
+    border: 2px solid #3b82f6 !important;
+}
+
+/* Highlighted element during tour */
+.shepherd-enabled.shepherd-element-attached-top .shepherd-target,
+.shepherd-enabled.shepherd-element-attached-bottom .shepherd-target,
+.shepherd-target {
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.3) !important;
+    border-radius: 12px !important;
+    transition: box-shadow 0.3s ease, border-radius 0.3s ease !important;
+}
+
+/* Progress indicator */
+.shepherd-progress {
+    margin-top: 1rem !important;
+    padding-top: 1rem !important;
+    font-size: 0.875rem !important;
+    text-align: center !important;
+    font-weight: 600 !important;
+    color: #6b7280 !important;
+    border-top: 2px solid #e5e7eb !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+}
+
+.shepherd-progress::before {
+    content: '📍';
+    font-size: 16px;
+}
+
+/* Help Banner Animations */
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.8;
+    }
+}
+
+.help-banner-enter {
+    animation: slideInDown 0.5s ease-out;
+}
+
+.help-icon-pulse {
+    animation: pulse 2s ease-in-out infinite;
+}
+
+/* Help Card Hover Effects */
+.help-card {
+    transition: all 0.3s ease;
+}
+
+.help-card:hover {
+    transform: translateY(-4px);
+}
+
+.help-card-icon {
+    transition: transform 0.3s ease;
+}
+
+.help-card:hover .help-card-icon {
+    transform: scale(1.2) rotate(5deg);
+}
+
+/* Gradient Text */
+.gradient-text {
+    background: linear-gradient(135deg, #2563eb, #7c3aed);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Button Shine Effect */
+.btn-shine {
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-shine::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s;
+}
+
+.btn-shine:hover::before {
+    left: 100%;
+}
