@@ -7,6 +7,7 @@ namespace App\Livewire\Lesson;
 use App\Dto\LessonDto;
 use App\Enums\Notifications\LessonCreationStatusEnum;
 use App\Enums\System\LanguageLevelEnum;
+use App\Enums\System\QueueNameEnum;
 use App\Jobs\Lesson\RegenerateLessonJob;
 use App\Models\Lesson\Lesson;
 use App\Notifications\Lesson\LessonCreationNotification;
@@ -248,7 +249,8 @@ class LessonIndex extends Component
             RegenerateLessonJob::dispatch(
                 $this->lesson_to_regenerate,
                 $lesson_dto
-            );
+            )
+                ->onQueue(QueueNameEnum::LESSON->value);
 
             // Add lesson ID to regenerating list to show placeholder
             $this->regenerating_lesson_ids[] = $this->lesson_to_regenerate;

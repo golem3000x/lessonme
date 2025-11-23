@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Listeners;
 
+use App\Enums\System\QueueNameEnum;
 use App\Events\SlugEntityChanged;
 use App\Jobs\Moderate\ModerateSlugEntityJob;
 use App\Jobs\Translate\TranslateSlugEntityJob;
@@ -22,7 +23,8 @@ class HandleSlugEntityChanged
         Bus::chain([
             new ModerateSlugEntityJob($event->entity),
             new TranslateSlugEntityJob($event->entity),
-        ])->catch(fn ($e) => Log::error('SlugEntityChanged chain failed: '.$e->getMessage()))
-            ->dispatch();
+        ])->catch(fn($e) => Log::error('SlugEntityChanged chain failed: ' . $e->getMessage()))
+            ->dispatch()
+            ->onQueue(QueueNameEnum::SLUG->value);
     }
 }

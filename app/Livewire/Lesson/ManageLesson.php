@@ -7,9 +7,9 @@ namespace App\Livewire\Lesson;
 use App\Dto\LessonDto;
 use App\Enums\Notifications\LessonCreationStatusEnum;
 use App\Enums\System\LanguageLevelEnum;
+use App\Enums\System\QueueNameEnum;
 use App\Jobs\Lesson\CreateLessonJob;
 use App\Models\Keyword\Keyword;
-use App\Models\Lesson\Lesson;
 use App\Models\Topic\Topic;
 use App\Notifications\Lesson\LessonCreationNotification;
 use Illuminate\Contracts\View\Factory;
@@ -151,18 +151,19 @@ class ManageLesson extends Component
                 $keywords
             );
 
-            $user->notify(new LessonCreationNotification(
-                $user,
-                LessonCreationStatusEnum::PROCESSING,
-                null,
-            ));
-
             // Dispatch job for async lesson creation
             CreateLessonJob::dispatch(
                 $user->id,
                 $this->topic_id,
                 $lesson_dto
-            );
+            )
+                ->onQueue(QueueNameEnum::LESSON->value);
+
+            $user->notify(new LessonCreationNotification(
+                $user,
+                LessonCreationStatusEnum::PROCESSING,
+                null,
+            ));
 
             // Dispatch event to add placeholder to parent component
             $this->dispatch('lesson-creation-queued');
