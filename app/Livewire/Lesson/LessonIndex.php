@@ -122,11 +122,11 @@ class LessonIndex extends Component
 
         // Apply search filter
         if ($this->search) {
-            $query->where('lesson_name', 'like', '%' . $this->search . '%');
+            $query->where('lesson_name', 'like', '%'.$this->search.'%');
         }
 
         // Apply language level filter
-        if (!empty($this->language_levels)) {
+        if (! empty($this->language_levels)) {
             $query->whereIn('language_level', $this->language_levels);
         }
 
@@ -188,7 +188,7 @@ class LessonIndex extends Component
         }
 
         $user = Auth::user();
-        if (!$user) {
+        if (! $user) {
             abort(401);
         }
 
@@ -197,7 +197,7 @@ class LessonIndex extends Component
             ->with(['topic.translations', 'topic.keywords.translations'])
             ->first();
 
-        if (!$lesson) {
+        if (! $lesson) {
             // Remove from regenerating list if lesson not found
             $this->regenerating_lesson_ids = array_diff($this->regenerating_lesson_ids, [$this->lesson_to_regenerate]);
 
@@ -220,7 +220,7 @@ class LessonIndex extends Component
             $keywords = [];
             if ($lesson->topic && $lesson->topic->relationLoaded('keywords')) {
                 $keywords = $lesson->topic->keywords
-                    ->map(fn($keyword) => $keyword->value($locale))
+                    ->map(fn ($keyword) => $keyword->value($locale))
                     ->filter()
                     ->values()
                     ->all();
@@ -306,7 +306,7 @@ class LessonIndex extends Component
 
     public function toggleFilters(): void
     {
-        $this->show_filters = !$this->show_filters;
+        $this->show_filters = ! $this->show_filters;
 
         // Sync temp filters with current applied filters when opening
         if ($this->show_filters) {
@@ -315,7 +315,7 @@ class LessonIndex extends Component
         }
 
         // Close level dropdown when closing filters panel
-        if (!$this->show_filters) {
+        if (! $this->show_filters) {
             $this->show_level_dropdown = false;
         }
     }
@@ -358,11 +358,11 @@ class LessonIndex extends Component
 
         // Apply temporary search filter
         if ($this->temp_search) {
-            $query->where('lesson_name', 'like', '%' . $this->temp_search . '%');
+            $query->where('lesson_name', 'like', '%'.$this->temp_search.'%');
         }
 
         // Apply temporary language level filter
-        if (!empty($this->temp_language_levels)) {
+        if (! empty($this->temp_language_levels)) {
             $query->whereIn('language_level', $this->temp_language_levels);
         }
 
@@ -371,7 +371,7 @@ class LessonIndex extends Component
 
     public function hasActiveFilters(): bool
     {
-        return $this->search !== '' || !empty($this->language_levels) || $this->sort !== 'newest';
+        return $this->search !== '' || ! empty($this->language_levels) || $this->sort !== 'newest';
     }
 
     /**

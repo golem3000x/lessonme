@@ -68,13 +68,18 @@ class ZaloControllerTest extends TestCase
 
         $response = $this->get('/auth/zalo/callback?code=abc');
 
-        $response->assertRedirect(route('dashboard'));
+        // New users are redirected to language selection
+        $response->assertRedirect(route('auth.language'));
 
-        $user = User::where('zalo_user_id', 'zalo-uid-1')->first();
-        $this->assertNotNull($user);
-        $this->assertSame('Zed Lao', $user->name);
-        $this->assertSame('http://img.example/pic.jpg', $user->avatar);
-        $this->assertAuthenticatedAs($user);
+        // User is not created yet - it's saved in session
+        $this->assertNull(User::where('zalo_user_id', '=', 'zalo-uid-1')->first());
+        
+        // Check session has registration data
+        $this->assertTrue(session()->has('registration_data'));
+        $registration_data = session('registration_data');
+        $this->assertSame('zalo-uid-1', $registration_data['zalo_user_id']);
+        $this->assertSame('Zed Lao', $registration_data['name']);
+        $this->assertSame('http://img.example/pic.jpg', $registration_data['avatar']);
     }
 
     public function test_callback_updates_existing_user_when_zalo_id_already_exists(): void

@@ -8,6 +8,7 @@ use App\Enums\System\LanguageLevelEnum;
 use App\Enums\System\TableNameEnum;
 use App\Models\Abstracts\Lesson\BaseLesson;
 use App\Models\Topic\Topic;
+use Database\Factories\Lesson\LessonFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -45,6 +46,7 @@ use Illuminate\Support\Carbon;
  * @property-read Topic|null $topic
  * @property-read \App\Models\User $user
  *
+ * @method static LessonFactory factory($count = null, $state = [])
  * @method static Builder<static>|Lesson newModelQuery()
  * @method static Builder<static>|Lesson newQuery()
  * @method static Builder<static>|Lesson query()
@@ -73,6 +75,14 @@ class Lesson extends BaseLesson
     protected $table = TableNameEnum::LESSONS->value;
 
     public const float SIMILARITY_THRESHOLD = 0.9;
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): LessonFactory
+    {
+        return LessonFactory::new();
+    }
 
     /**
      * @return BelongsTo<Topic, $this>

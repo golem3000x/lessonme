@@ -24,24 +24,22 @@ class RegenerateLessonJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public function __construct(
-        protected int       $lesson_id,
+        protected int $lesson_id,
         protected LessonDto $lesson_dto
-    )
-    {
-    }
+    ) {}
 
     public function handle(LessonService $lessonService): void
     {
         $lesson = Lesson::find($this->lesson_id);
 
-        if (!$lesson) {
+        if (! $lesson) {
             Log::error('Lesson not found for regeneration', ['lesson_id' => $this->lesson_id]);
 
             return;
         }
 
         $user = User::find($lesson->user_id);
-        if (!$user) {
+        if (! $user) {
             Log::error('User not found for lesson regeneration', ['user_id' => $lesson->user_id]);
 
             return;
@@ -49,7 +47,7 @@ class RegenerateLessonJob implements ShouldQueue
 
         try {
             $updatedLesson = $lessonService->regenerateLesson($lesson, $this->lesson_dto);
-            $this->notify($user, LessonCreationStatusEnum::SUCCESSFULLY,$updatedLesson);
+            $this->notify($user, LessonCreationStatusEnum::SUCCESSFULLY, $updatedLesson);
         } catch (LessonExistsException $e) {
             $this->notify($user, LessonCreationStatusEnum::EXISTS, $e->lesson);
         } catch (Exception $e) {

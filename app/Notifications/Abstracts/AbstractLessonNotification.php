@@ -24,14 +24,13 @@ abstract class AbstractLessonNotification extends Notification implements Should
     protected ?Lesson $entity = null;
 
     public function __construct(
-        protected User  $user,
+        protected User $user,
         protected ?int $entity_id
-    )
-    {
+    ) {
         if ($this->entity_id) {
             $this->entity = Lesson::find($this->entity_id);
         }
-        $this->entity_name = Str::lcfirst(class_basename(new Lesson()));
+        $this->entity_name = Str::lcfirst(class_basename(new Lesson));
     }
 
     abstract protected function getStatusEnum(): BackedEnum;

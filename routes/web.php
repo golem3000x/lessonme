@@ -60,7 +60,6 @@ Route::middleware('auth')->group(function () {
 
     // Lessons management
     Route::get('/lessons', LessonIndex::class)->name('lessons.index');
-    Route::post('/lessons', [LessonController::class, 'store'])->name('lessons.store');
 
     // Protected lesson routes - require ownership
     Route::middleware('lesson.owner')->group(function () {

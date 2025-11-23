@@ -39,6 +39,7 @@ class LessonRelationTest extends TestCase
             'topic_id' => $topic->id,
             'lesson_name' => 'Test Lesson',
             'lesson_text' => 'Sample',
+            'language_level' => 'B1',
             'grammar_data' => [],
             'vocabulary' => [],
             'dialogue' => [],

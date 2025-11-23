@@ -105,7 +105,7 @@ class ProfileSetupKeywordVisibilityTest extends TestCase
         Livewire::test(ProfileSetup::class)
             ->set('visible_keyword_ids', [$k1->id]) // Hide k2 by omitting it
             ->call('save')
-            ->assertRedirect(route('onboarding.topics'));
+            ->assertRedirect(route('dashboard'));
 
         $this->assertDatabaseHas('user_keyword_visibility', [
             'user_id' => $user->id,

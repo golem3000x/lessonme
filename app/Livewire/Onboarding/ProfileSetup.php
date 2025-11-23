@@ -210,8 +210,8 @@ class ProfileSetup extends Component
 
         session()->flash('message', __('onboarding.profile_saved'));
 
-        // Redirect to refresh the page and show updated avatar
-        return redirect()->route('onboarding.profile');
+        // Redirect to dashboard
+        return redirect()->route('dashboard');
     }
 
     protected function saveTopicVisibility(User $user): void
