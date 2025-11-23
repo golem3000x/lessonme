@@ -128,6 +128,8 @@ return [
     'false' => 'False',
     'vietnamese_keyboard' => 'Vietnamese Keyboard',
     'english_keyboard' => 'English Keyboard',
+    'show_hint' => 'Show Hint',
+    'hide_hint' => 'Hide Hint',
 
     // Exercise results
     'correct' => 'Correct!',

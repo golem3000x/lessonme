@@ -216,7 +216,12 @@ class LessonExercises extends Component
             foreach ($this->exercises['sentence_ordering'] as $i => $item) {
                 $user_answer = implode(' ', $this->ordered_words[$i] ?? []);
                 $correct_answer = trim($item['answer'] ?? '');
-                if (strcasecmp($user_answer, $correct_answer) === 0) {
+                
+                // Strip punctuation for comparison
+                $user_answer_clean = preg_replace('/[^\p{L}\p{N}\s]/u', '', $user_answer);
+                $correct_answer_clean = preg_replace('/[^\p{L}\p{N}\s]/u', '', $correct_answer);
+                
+                if (strcasecmp(trim($user_answer_clean), trim($correct_answer_clean)) === 0) {
                     $this->scores['sentence_ordering']++;
                 }
             }

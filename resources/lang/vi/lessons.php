@@ -128,6 +128,8 @@ return [
     'false' => 'Sai',
     'vietnamese_keyboard' => 'Bàn Phím Tiếng Việt',
     'english_keyboard' => 'Bàn Phím Tiếng Anh',
+    'show_hint' => 'Hiển Thị Gợi Ý',
+    'hide_hint' => 'Ẩn Gợi Ý',
 
     // Exercise results
     'correct' => 'Đúng rồi!',

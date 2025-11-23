@@ -67,6 +67,7 @@
                 <div x-data="{
                     vnKeyboardOpen: false,
                     enKeyboardOpen: false,
+                    showHint: false,
                     insertChar(char) {
                         const input = $refs.gapInput;
                         if (!input) return;
@@ -94,24 +95,60 @@
                         @php
                             $sentence = $item['sentence'] ?? '';
                             $parts = explode('___', $sentence);
+                            // Extract hint from parentheses if exists
+                            $hint = '';
+                            if (preg_match('/\(([^)]+)\)/', $sentence, $matches)) {
+                                $hint = $matches[1];
+                                // Remove hint from sentence parts
+                                $parts = array_map(function($part) {
+                                    return preg_replace('/\s*\([^)]+\)/', '', $part);
+                                }, $parts);
+                            }
                         @endphp
                         
-                        <div class="text-gray-800 text-xl leading-relaxed flex flex-wrap items-center gap-2 mb-4">
-                            @foreach($parts as $part_index => $part)
-                                <span>{{ $part }}</span>
-                                @if($part_index < count($parts) - 1)
-                                    <input
-                                        x-ref="gapInput"
-                                        type="text"
-                                        wire:model="user_answers.gap_fill.{{ $index }}"
-                                        placeholder="..."
-                                        class="inline-block px-4 py-2 border-b-2 border-blue-400 bg-transparent text-center min-w-[150px] max-w-[250px] transition-all duration-200
-                                               @if(!$checked) focus:border-blue-600 focus:bg-blue-100 hover:border-blue-500 @endif
-                                               @if($checked) {{ isset($user_answers['gap_fill'][$index]) && strcasecmp(trim($user_answers['gap_fill'][$index]), trim($item['answer'] ?? '')) === 0 ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50' }} @endif"
-                                        @if($checked) disabled @endif
+                        <div class="text-gray-800 text-xl leading-relaxed mb-4">
+                            <div class="flex flex-wrap items-center gap-2">
+                                @foreach($parts as $part_index => $part)
+                                    <span>{{ $part }}</span>
+                                    @if($part_index < count($parts) - 1)
+                                        <input
+                                            x-ref="gapInput"
+                                            type="text"
+                                            wire:model="user_answers.gap_fill.{{ $index }}"
+                                            placeholder="..."
+                                            class="inline-block px-4 py-2 border-b-2 border-blue-400 bg-transparent text-center min-w-[150px] max-w-[250px] transition-all duration-200
+                                                   @if(!$checked) focus:border-blue-600 focus:bg-blue-100 hover:border-blue-500 @endif
+                                                   @if($checked) {{ isset($user_answers['gap_fill'][$index]) && strcasecmp(trim($user_answers['gap_fill'][$index]), trim($item['answer'] ?? '')) === 0 ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50' }} @endif"
+                                            @if($checked) disabled @endif
+                                        >
+                                    @endif
+                                @endforeach
+                                
+                                {{-- Hint Toggle Button --}}
+                                @if(!$checked && !empty($hint))
+                                    <button
+                                        type="button"
+                                        @click="showHint = !showHint"
+                                        class="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 hover:bg-blue-200 text-blue-700 font-medium text-sm rounded-lg border border-blue-300 transition-colors ml-2"
                                     >
+                                        <span class="text-base" x-show="!showHint">👁️</span>
+                                        <span class="text-base" x-show="showHint">🙈</span>
+                                        <span class="text-xs" x-text="showHint ? '{{ __('lessons.hide_hint') }}' : '{{ __('lessons.show_hint') }}'"></span>
+                                    </button>
+                                    <div 
+                                        x-show="showHint"
+                                        x-transition:enter="transition ease-out duration-200"
+                                        x-transition:enter-start="opacity-0 scale-90"
+                                        x-transition:enter-end="opacity-100 scale-100"
+                                        x-transition:leave="transition ease-in duration-150"
+                                        x-transition:leave-start="opacity-100 scale-100"
+                                        x-transition:leave-end="opacity-0 scale-90"
+                                        class="text-blue-700 font-medium px-3 py-2 bg-blue-200 rounded-lg"
+                                    >
+                                        ({{ $hint }})
+                                    </div>
                                 @endif
-                            @endforeach
+                            </div>
                         </div>
 
                         {{-- Virtual Keyboards --}}
@@ -287,7 +324,10 @@
                         @php
                             $user_sentence = implode(' ', $ordered_words[$index] ?? []);
                             $correct_sentence = trim($item['answer'] ?? '');
-                            $is_correct = strcasecmp($user_sentence, $correct_sentence) === 0;
+                            // Strip punctuation for comparison
+                            $user_sentence_clean = preg_replace('/[^\p{L}\p{N}\s]/u', '', $user_sentence);
+                            $correct_sentence_clean = preg_replace('/[^\p{L}\p{N}\s]/u', '', $correct_sentence);
+                            $is_correct = strcasecmp(trim($user_sentence_clean), trim($correct_sentence_clean)) === 0;
                         @endphp
                         <div class="text-sm mt-4 p-3 rounded-lg {{ $is_correct ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
                             @if($is_correct)
