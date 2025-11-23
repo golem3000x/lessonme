@@ -7,6 +7,7 @@ namespace App\Livewire\Slug;
 use App\Models\Keyword\Keyword;
 use App\Models\User;
 use App\Notifications\Slug\Processing\SlugProcessingNotification;
+use App\Rules\IsMeaningful;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
@@ -42,12 +43,13 @@ class CreateKeyword extends Component
 
         $slug = Str::slug($value);
 
-        // Validate uniqueness of keyword slug within topic
+        // Validate meaningfulness and uniqueness of keyword
         $this->validate([
             'keyword_value' => [
                 'required',
                 'string',
                 'max:255',
+                new IsMeaningful(),
                 function ($attribute, $value, $fail) use ($slug) {
                     // Check if keyword with same slug already exists in this topic
                     $exists = Keyword::where('slug', '=', $slug)

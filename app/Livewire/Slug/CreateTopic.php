@@ -7,6 +7,7 @@ namespace App\Livewire\Slug;
 use App\Models\Topic\Topic;
 use App\Models\User;
 use App\Notifications\Slug\Processing\SlugProcessingNotification;
+use App\Rules\IsMeaningful;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
@@ -38,12 +39,13 @@ class CreateTopic extends Component
 
         $slug = Str::slug($value);
 
-        // Validate uniqueness of topic slug for current user
+        // Validate meaningfulness and uniqueness of topic
         $this->validate([
             'topic_name' => [
                 'required',
                 'string',
                 'max:255',
+                new IsMeaningful(),
                 function ($attribute, $value, $fail) use ($slug, $user) {
                     $exists = Topic::where('slug', '=', $slug)
                         ->where('user_id', '=', $user->id)
