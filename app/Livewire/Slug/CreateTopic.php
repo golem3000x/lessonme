@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Livewire\Onboarding;
+namespace App\Livewire\Slug;
 
 use App\Models\Topic\Topic;
 use App\Models\User;
