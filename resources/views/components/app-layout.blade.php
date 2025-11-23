@@ -97,7 +97,7 @@
         <!-- Правая часть -->
         <div class="flex items-center gap-4">
             @auth
-                <livewire:notification-bell />
+                <livewire:notification.notification-bell />
 
                 <div x-data="{ open: false }" class="relative">
                     <button @click="open = !open"
@@ -220,14 +220,14 @@
 
 <!-- Real-time notifications panel -->
 @auth
-    <livewire:notifications-panel />
+    <livewire:notification.notifications-panel />
 @endauth
 
 <!-- Chat button - только на странице About -->
 @auth
     @if(request()->routeIs('about'))
-        <livewire:chat-button />
-        <livewire:chat-panel />
+        <livewire:chat.chat-button />
+        <livewire:chat.chat-panel />
     @endif
 @endauth
 

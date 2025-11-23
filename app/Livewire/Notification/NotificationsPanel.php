@@ -80,6 +80,6 @@ class NotificationsPanel extends Component
 
     public function render(): Factory|View|\Illuminate\View\View
     {
-        return view('livewire.notifications-panel');
+        return view('livewire.notification.notifications-panel');
     }
 }

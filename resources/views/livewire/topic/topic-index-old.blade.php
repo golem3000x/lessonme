@@ -27,7 +27,7 @@
                 </svg>
                 <h3 class="text-lg font-semibold text-blue-900">{{ __('topics.create_new_topic') }}</h3>
             </div>
-            @livewire('onboarding.create-topic')
+            @livewire('slug.create-topic')
         </div>
 
         <div class="border-t border-gray-200 pt-8">
@@ -98,7 +98,7 @@
                                         </svg>
                                         <h4 class="text-sm font-semibold text-gray-700">{{ __('topics.add_keyword') }}</h4>
                                     </div>
-                                    @livewire('onboarding.create-keyword', ['topicId' => $t['id']],
+                                    @livewire('slug.create-keyword', ['topicId' => $t['id']],
                                     key('create-keyword-'.$t['id']))
                                 </div>
 

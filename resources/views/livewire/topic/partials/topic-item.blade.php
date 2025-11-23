@@ -78,7 +78,7 @@
                     </svg>
                     <h4 class="text-sm font-semibold text-gray-700">{{ __('topics.add_keyword') }}</h4>
                 </div>
-                @livewire('onboarding.create-keyword', ['topicId' => $topic->id], key('create-keyword-'.$topic->id))
+                @livewire('slug.create-keyword', ['topicId' => $topic->id], key('create-keyword-'.$topic->id))
             </div>
 
             @if($keyword_count > 0 || isset($creating_keywords_placeholders[$topic->id]))

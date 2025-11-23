@@ -151,7 +151,7 @@
                     </svg>
                     <h3 class="text-lg font-semibold text-blue-900">{{ __('topics.create_new_topic') }}</h3>
                 </div>
-                @livewire('onboarding.create-topic')
+                @livewire('slug.create-topic')
             </div>
         @endif
 

@@ -153,6 +153,6 @@ class ChatPanel extends Component
 
     public function render(): \Illuminate\View\View
     {
-        return view('livewire.chat-panel');
+        return view('livewire.chat.chat-panel');
     }
 }

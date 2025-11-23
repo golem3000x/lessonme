@@ -27,6 +27,6 @@ class ChatButton extends Component
 
     public function render(): \Illuminate\View\View
     {
-        return view('livewire.chat-button');
+        return view('livewire.chat.chat-button');
     }
 }

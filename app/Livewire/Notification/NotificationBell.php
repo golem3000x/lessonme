@@ -104,7 +104,7 @@ class NotificationBell extends Component
     {
         $user = Auth::user();
         if (! $user) {
-            return view('livewire.notification-bell', [
+            return view('livewire.notification.notification-bell', [
                 'notifications' => collect(),
             ]);
         }
@@ -115,7 +115,7 @@ class NotificationBell extends Component
             ->limit(20)
             ->get();
 
-        return view('livewire.notification-bell', [
+        return view('livewire.notification.notification-bell', [
             'notifications' => $notifications,
         ]);
     }
