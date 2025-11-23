@@ -109,7 +109,7 @@
                                             $has_homework = !empty($history->homework);
                                             $mistakes_count = is_array($history->common_mistakes) ? count($history->common_mistakes) : 0;
                                             $has_culture = !empty($history->culture_notes);
-                                            $quiz_count = is_array($history->quiz) ? count($history->quiz) : 0;
+                                            $quiz_count = is_array($history->exercises) && isset($history->exercises['quiz']) ? count($history->exercises['quiz']) : 0;
                                         @endphp
                                         
                                         @if($grammar_count > 0)

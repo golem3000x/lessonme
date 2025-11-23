@@ -20,6 +20,9 @@ class TranslateSlugEntityJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    /**
+     * @param Slug<*, *> $entity
+     */
     public function __construct(protected Slug $entity) {}
 
     public function handle(SlugService $openAI): void
@@ -35,7 +38,7 @@ class TranslateSlugEntityJob implements ShouldQueue
             try {
                 $translations = $openAI->translateSlugAllLanguages($this->entity->slug);
 
-                if (empty($translations) || ! is_array($translations)) {
+                if (empty($translations)) {
                     return TranslateStatusEnum::INVALID;
                 }
 

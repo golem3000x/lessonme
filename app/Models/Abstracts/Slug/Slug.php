@@ -13,6 +13,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
+ * @template TTranslation of SlugTranslation
+ * @template TVisibility of UserSlugVisibility
+ * 
  * @property int $id
  * @property int|null $user_id
  * @property string $slug
@@ -52,11 +55,15 @@ abstract class Slug extends BaseModel
 
     /**
      * Relation to translations table
+     * 
+     * @return HasMany<TTranslation, $this>
      */
     abstract public function translations(): HasMany;
 
     /**
      * Relation to visibility table
+     * 
+     * @return HasMany<TVisibility, $this>
      */
     abstract public function visibility(): HasMany;
 
@@ -72,12 +79,14 @@ abstract class Slug extends BaseModel
 
     /**
      * Get translation for specific language or fallback to first available
+     * 
+     * @return TTranslation|null
      */
     public function translation(?string $lang = null): ?SlugTranslation
     {
         $lang = $lang ?? app()->getLocale();
 
-        /** @var SlugTranslation|null $translation */
+        /** @var TTranslation|null $translation */
         $translation = $this->translations
             ->where('language_code', '=', $lang)
             ->first();
@@ -86,7 +95,7 @@ abstract class Slug extends BaseModel
             return $translation;
         }
 
-        /** @var SlugTranslation|null */
+        /** @var TTranslation|null */
         return $this->translations->first();
     }
 
@@ -98,6 +107,7 @@ abstract class Slug extends BaseModel
         $lang = $lang ?? app()->getLocale();
 
         // Try to get translation for requested language
+        /** @var TTranslation|null $translation */
         $translation = $this->translations
             ->firstWhere('language_code', '=', $lang);
 
@@ -106,6 +116,7 @@ abstract class Slug extends BaseModel
         }
 
         // Fallback to first available translation
+        /** @var TTranslation|null $firstTranslation */
         $firstTranslation = $this->translations->first();
 
         if ($firstTranslation) {

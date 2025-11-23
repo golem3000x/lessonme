@@ -39,6 +39,12 @@ class AuthController extends Controller
             $request->session()->regenerate();
 
             $user = Auth::user();
+            
+            if (! $user) {
+                throw ValidationException::withMessages([
+                    'email' => [__('auth.failed')],
+                ]);
+            }
 
             // Получаем timezone из запроса (если отправлен из браузера)
             $timezone = $request->input('timezone', $user->timezone ?? 'UTC');

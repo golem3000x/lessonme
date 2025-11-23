@@ -186,6 +186,10 @@ class DemoLessonCreator extends Component
             // Mark that we're waiting for a lesson
             $this->pending_lesson_id = -1; // Placeholder to show spinner
 
+            if ($this->topic_id === null) {
+                throw new \RuntimeException('Topic ID is required');
+            }
+
             // Dispatch job for async lesson generation
             CreateLessonJob::dispatch(
                 $temp_guest_user_id,
@@ -250,6 +254,8 @@ class DemoLessonCreator extends Component
     /**
      * Handle lesson creation notification from WebSocket
      * Called when Echo.js receives lesson creation event
+     * 
+     * @param array<string, mixed> $notification
      */
     #[On('lesson-notification')]
     public function handleLessonNotification(array $notification): void

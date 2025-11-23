@@ -7,8 +7,10 @@ namespace App\Models\Lesson;
 use App\Enums\System\AssignmentStatusEnum;
 use App\Enums\System\TableNameEnum;
 use App\Models\User;
+use Database\Factories\Lesson\LessonAssignmentFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -30,7 +32,6 @@ use Illuminate\Support\Carbon;
  * @property-read Lesson $lesson
  * @property-read User $student
  * @property-read User $teacher
- *
  * @method static Builder<static>|LessonAssignment newModelQuery()
  * @method static Builder<static>|LessonAssignment newQuery()
  * @method static Builder<static>|LessonAssignment query()
@@ -44,12 +45,23 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|LessonAssignment whereStudentId($value)
  * @method static Builder<static>|LessonAssignment whereTeacherId($value)
  * @method static Builder<static>|LessonAssignment whereUpdatedAt($value)
- *
+ * @method static LessonAssignmentFactory factory($count = null, $state = [])
  * @mixin \Eloquent
  */
 class LessonAssignment extends Model
 {
+    /** @use HasFactory<LessonAssignmentFactory> */
+    use HasFactory;
+
     protected $table = TableNameEnum::LESSON_ASSIGNMENTS->value;
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): LessonAssignmentFactory
+    {
+        return LessonAssignmentFactory::new();
+    }
 
     protected $fillable = [
         'lesson_id',
@@ -96,7 +108,7 @@ class LessonAssignment extends Model
     }
 
     /**
-     * @return HasMany<LessonAttempt>
+     * @return HasMany<LessonAttempt, $this>
      */
     public function attempts(): HasMany
     {

@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\RedirectResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse as SymfonyRedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -18,7 +19,7 @@ class SocialAuthController extends Controller
     /**
      * Redirect to Facebook for authentication
      */
-    public function redirectToFacebook(): RedirectResponse
+    public function redirectToFacebook(): SymfonyRedirectResponse
     {
         return Socialite::driver('facebook')->redirect();
     }

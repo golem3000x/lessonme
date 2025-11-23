@@ -9,6 +9,7 @@ use App\Models\Lesson\LessonAttempt;
 use App\Services\Lesson\LessonGradingService;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
@@ -21,7 +22,7 @@ class LessonExercises extends Component
     /** @var array<string, mixed> */
     public array $exercises = [];
 
-    /** @var array<int, array{type: string, index: int, data: array}> */
+    /** @var array<int, array{type: string, index: int, data: array<string, mixed>}> */
     public array $all_exercises_flat = [];
 
     public int $current_exercise_index = 0;
@@ -37,7 +38,7 @@ class LessonExercises extends Component
         'quiz' => [],
     ];
 
-    /** @var array<string, array<int, string>> */
+    /** @var array<int, array<int, string>> */
     public array $ordered_words = [];
 
     public bool $checked = false;
@@ -114,6 +115,10 @@ class LessonExercises extends Component
 
         $grading_service = app(LessonGradingService::class);
         $user = Auth::user();
+        
+        if (! $user) {
+            abort(Response::HTTP_UNAUTHORIZED);
+        }
 
         // Check for existing active attempt
         $active_attempt = $grading_service->getActiveAttempt($lesson, $user);

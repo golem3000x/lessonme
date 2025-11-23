@@ -26,7 +26,7 @@ readonly class LessonGradingService
             ->where('user_id', '=', $user->id)
             ->count() + 1;
 
-        $exercises_snapshot = $assignment?->assigned_version ?? $lesson->exercises;
+        $exercises_snapshot = $assignment !== null ? $assignment->assigned_version : $lesson->exercises;
 
         return LessonAttempt::create([
             'lesson_id' => $lesson->id,

@@ -29,7 +29,6 @@ use Illuminate\Support\Carbon;
  * @property string|null $homework
  * @property array<array-key, mixed>|null $common_mistakes
  * @property string|null $culture_notes
- * @property array<array-key, mixed>|null $quiz
  * @property string|null $embedding
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
@@ -113,6 +112,8 @@ abstract class BaseLesson extends BaseModel
 
     /**
      * Get the columns that should receive a unique identifier
+     * 
+     * @return array<int, string>
      */
     public function uniqueIds(): array
     {

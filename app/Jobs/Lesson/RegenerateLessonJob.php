@@ -47,9 +47,9 @@ class RegenerateLessonJob implements ShouldQueue
 
         try {
             $updatedLesson = $lessonService->regenerateLesson($lesson, $this->lesson_dto);
-            $this->notify($user, LessonCreationStatusEnum::SUCCESSFULLY, $updatedLesson);
+            $this->notify($user, LessonCreationStatusEnum::SUCCESSFULLY, $updatedLesson->id);
         } catch (LessonExistsException $e) {
-            $this->notify($user, LessonCreationStatusEnum::EXISTS, $e->lesson);
+            $this->notify($user, LessonCreationStatusEnum::EXISTS, $e->lesson->id);
         } catch (Exception $e) {
             Log::error('Lesson regeneration failed', [
                 'lesson_id' => $this->lesson_id,
@@ -60,13 +60,13 @@ class RegenerateLessonJob implements ShouldQueue
         }
     }
 
-    private function notify(User $user, LessonCreationStatusEnum $status, ?Lesson $lesson): void
+    private function notify(User $user, LessonCreationStatusEnum $status, ?int $lesson_id): void
     {
         $user->notify(
             new LessonCreationNotification(
                 $user,
                 $status,
-                $lesson->id,
+                $lesson_id,
             )
         );
     }

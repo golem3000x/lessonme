@@ -15,6 +15,7 @@ use App\Notifications\Lesson\LessonCreationNotification;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -45,7 +46,7 @@ class ManageLesson extends Component
     {
         $user = Auth::user();
         if (! $user) {
-            abort(401);
+            abort(Response::HTTP_UNAUTHORIZED);
         }
 
         $locale = app()->getLocale();
@@ -121,12 +122,16 @@ class ManageLesson extends Component
 
         $user = Auth::user();
         if (! $user) {
-            abort(401);
+            abort(Response::HTTP_UNAUTHORIZED);
         }
 
         $topic = Topic::find($this->topic_id);
         if (! $topic) {
-            $this->notifyUser('error', __('lessons.topic_not_found'));
+            $user->notify(new LessonCreationNotification(
+                $user,
+                LessonCreationStatusEnum::ERROR,
+                null,
+            ));
             $this->is_generating = false;
 
             return;
@@ -150,6 +155,11 @@ class ManageLesson extends Component
                 $user->learning_lang,
                 $keywords
             );
+
+            // Ensure topic_id is not null (already validated above)
+            if ($this->topic_id === null) {
+                throw new \RuntimeException('Topic ID is required');
+            }
 
             // Dispatch job for async lesson creation
             CreateLessonJob::dispatch(

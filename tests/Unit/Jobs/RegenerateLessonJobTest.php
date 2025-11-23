@@ -5,10 +5,8 @@ declare(strict_types=1);
 namespace Tests\Unit\Jobs;
 
 use App\Dto\LessonDto;
-use App\Enums\Notifications\LessonCreationStatusEnum;
 use App\Enums\System\LanguageLevelEnum;
 use App\Enums\System\SystemLanguageEnum;
-use App\Exceptions\LessonExistsException;
 use App\Jobs\Lesson\RegenerateLessonJob;
 use App\Models\Lesson\Lesson;
 use App\Models\User;
@@ -17,7 +15,6 @@ use App\Services\Lesson\LessonGenerationService;
 use App\Services\Lesson\LessonHistoryService;
 use App\Services\Lesson\LessonService;
 use App\Services\Lesson\LessonSimilarityService;
-use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
 use Mockery;
@@ -51,7 +48,7 @@ class RegenerateLessonJobTest extends TestCase
         Notification::fake();
 
         $lesson_dto = $this->createLessonDto();
-        
+
         // Create service with mocked dependencies
         $generator = Mockery::mock(LessonGenerationService::class);
         $similarity = Mockery::mock(LessonSimilarityService::class);
@@ -94,5 +91,4 @@ class RegenerateLessonJobTest extends TestCase
             LessonCreationNotification::class
         );
     }
-
 }

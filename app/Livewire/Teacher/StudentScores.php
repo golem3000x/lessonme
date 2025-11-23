@@ -8,6 +8,7 @@ use App\Models\Lesson\Lesson;
 use App\Models\Lesson\LessonScore;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -16,7 +17,7 @@ class StudentScores extends Component
 {
     use WithPagination;
 
-    public int $lesson_id;
+    public int $lesson_id = 0;
 
     public function mount(int $lesson_id): void
     {
@@ -29,8 +30,8 @@ class StudentScores extends Component
 
         // Check authorization
         $user = Auth::user();
-        if ($lesson->user_id !== $user->id && ! $user->isAdmin()) {
-            abort(403, 'Unauthorized');
+        if (! $user || ($lesson->user_id !== $user->id && ! $user->isAdmin())) {
+            abort(Response::HTTP_FORBIDDEN, 'Unauthorized');
         }
 
         $scores = LessonScore::query()

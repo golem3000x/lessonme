@@ -17,7 +17,7 @@ class ChatPanel extends Component
 
     public string $new_message = '';
 
-    /** @var array<int, array> */
+    /** @var array<int, array<string, mixed>> */
     public array $messages = [];
 
     public ?ChatSession $chat_session = null;
@@ -77,6 +77,10 @@ class ChatPanel extends Component
             $this->loadChatSession();
         }
 
+        if (! $this->chat_session) {
+            return;
+        }
+
         $message = Message::create([
             'chat_session_id' => $this->chat_session->id,
             'user_id' => auth()->id(),
@@ -106,10 +110,14 @@ class ChatPanel extends Component
         $this->dispatch('message-sent');
     }
 
+    /**
+     * @param array<string, mixed> $message_data
+     */
     #[On('message-received')]
     public function addMessage(array $message_data): void
     {
         // Добавляем новое сообщение в массив
+        /** @var Message|null $message */
         $message = Message::with('user')->find($message_data['id']);
 
         if ($message) {
@@ -143,7 +151,7 @@ class ChatPanel extends Component
         $this->chat_session->update(['unread_count' => 0]);
     }
 
-    public function render()
+    public function render(): \Illuminate\View\View
     {
         return view('livewire.chat-panel');
     }

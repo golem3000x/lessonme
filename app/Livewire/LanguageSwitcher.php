@@ -8,9 +8,9 @@ use Livewire\Component;
 
 class LanguageSwitcher extends Component
 {
-    public string $current_locale;
+    public string $current_locale = '';
 
-    public string $target_locale;
+    public string $target_locale = '';
 
     public function mount(): void
     {
@@ -18,7 +18,7 @@ class LanguageSwitcher extends Component
         $this->target_locale = $this->current_locale === 'vi' ? 'en' : 'vi';
     }
 
-    public function render()
+    public function render(): \Illuminate\View\View
     {
         return view('livewire.language-switcher');
     }

@@ -11,6 +11,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
+ * @extends UserSlugVisibility<Topic>
+ * 
  * @property int $id
  * @property int $user_id
  * @property int $topic_id
@@ -20,7 +22,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property-read \App\Models\Topic\Topic $entity
  * @property-read \App\Models\Topic\Topic $topic
  * @property-read User $user
- *
  * @method static Builder<static>|UserTopicVisibility newModelQuery()
  * @method static Builder<static>|UserTopicVisibility newQuery()
  * @method static Builder<static>|UserTopicVisibility query()
@@ -30,7 +31,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static Builder<static>|UserTopicVisibility whereTopicId($value)
  * @method static Builder<static>|UserTopicVisibility whereUpdatedAt($value)
  * @method static Builder<static>|UserTopicVisibility whereUserId($value)
- *
  * @mixin \Eloquent
  */
 class UserTopicVisibility extends UserSlugVisibility

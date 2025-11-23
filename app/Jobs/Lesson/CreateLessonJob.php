@@ -24,8 +24,6 @@ class CreateLessonJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private SlugService $open_ai_service;
-
     public function __construct(
         protected int $user_id,
         protected int $topic_id,
@@ -59,9 +57,14 @@ class CreateLessonJob implements ShouldQueue
         }
     }
 
-    private function notify(Lesson $lesson, LessonCreationStatusEnum $status)
+    private function notify(Lesson $lesson, LessonCreationStatusEnum $status): void
     {
         $user = User::find($this->user_id);
+        if (! $user) {
+            Log::warning('User not found for notification', ['user_id' => $this->user_id]);
+            return;
+        }
+        
         $user->notify(
             new LessonCreationNotification(
                 $user,

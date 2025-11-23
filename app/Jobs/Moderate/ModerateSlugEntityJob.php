@@ -20,6 +20,9 @@ class ModerateSlugEntityJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    /**
+     * @param Slug<*, *> $entity
+     */
     public function __construct(protected Slug $entity) {}
 
     public function handle(SlugService $openAI): void

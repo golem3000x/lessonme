@@ -47,8 +47,8 @@
                 </svg>
                 {{ __('lessons.keywords_label') }}
             </label>
-            <livewire:chat.keyword-select :topic_id="$topic_id" :keyword_ids="$keyword_ids" :keywords="$keywords"
-                                          :key="'keyword-select-'.$topic_id"/>
+            <livewire:lesson.keyword-select :topic_id="$topic_id" :keyword_ids="$keyword_ids" :keywords="$keywords"
+                                            :key="'keyword-select-'.$topic_id"/>
         </div>
 
         <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border-l-4 border-blue-500 rounded-lg p-4 shadow-sm">

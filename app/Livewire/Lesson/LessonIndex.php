@@ -13,6 +13,7 @@ use App\Models\Lesson\Lesson;
 use App\Notifications\Lesson\LessonCreationNotification;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
@@ -113,7 +114,10 @@ class LessonIndex extends Component
         $this->resetPage();
     }
 
-    protected function getLessonsQuery()
+    /**
+     * @return \Illuminate\Database\Eloquent\Builder<Lesson>
+     */
+    protected function getLessonsQuery(): \Illuminate\Database\Eloquent\Builder
     {
         $query = Lesson::where('user_id', '=', Auth::id())
             ->with(['topic' => function ($q) {
@@ -189,7 +193,7 @@ class LessonIndex extends Component
 
         $user = Auth::user();
         if (! $user) {
-            abort(401);
+            abort(Response::HTTP_UNAUTHORIZED);
         }
 
         $lesson = Lesson::where('id', '=', $this->lesson_to_regenerate)

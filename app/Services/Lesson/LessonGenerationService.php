@@ -19,13 +19,13 @@ class LessonGenerationService
     {
         $keywords = $lesson_dto->getKeywordsAsString();
 
-        $learning_lang_enum = SystemLanguageEnum::tryFrom($lesson_dto->learning_lang);
-        $learning_lang_name = $learning_lang_enum->name ?? SystemLanguageEnum::ENGLISH;
+        $learning_lang_enum = SystemLanguageEnum::tryFrom($lesson_dto->learning_lang) ?? SystemLanguageEnum::ENGLISH;
+        $learning_lang_name = $learning_lang_enum->name;
 
-        $native_lang_enum = SystemLanguageEnum::tryFrom($lesson_dto->native_lang);
-        $native_lang_name = $native_lang_enum->name ?? SystemLanguageEnum::VIETNAMESE;
+        $native_lang_enum = SystemLanguageEnum::tryFrom($lesson_dto->native_lang) ?? SystemLanguageEnum::VIETNAMESE;
+        $native_lang_name = $native_lang_enum->name;
 
-        $level_enum = $lesson_dto->level ?? LanguageLevelEnum::A1;
+        $level_enum = $lesson_dto->level;
         $level_desc = $level_enum->description();
 
         $topic = $lesson_dto->topic;
@@ -205,6 +205,9 @@ class LessonGenerationService
         return $response->embeddings[0]->embedding ?? [];
     }
 
+    /**
+     * @return array{temperature: float, top_p: float}
+     */
     private function getModelParamsByLevel(LanguageLevelEnum $level): array
     {
         return match ($level) {

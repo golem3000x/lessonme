@@ -24,15 +24,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string|null $homework
  * @property array<array-key, mixed>|null $common_mistakes
  * @property string|null $culture_notes
- * @property string|null $quiz
- * @property array $embedding
+ * @property array<int, float>|null $embedding
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read string $formatted_created_at
  * @property-read string $level_badge_color
  * @property-read \App\Models\Lesson\Lesson $lesson
  * @property-read \App\Models\User $user
- *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonHistory newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonHistory newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonHistory query()
@@ -49,13 +47,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonHistory whereLessonId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonHistory whereLessonName($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonHistory whereLessonText($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonHistory whereQuiz($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonHistory whereTopicId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonHistory whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonHistory whereUserId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonHistory whereUuid($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonHistory whereVocabulary($value)
- *
  * @mixin \Eloquent
  */
 class LessonHistory extends BaseLesson
@@ -68,6 +64,9 @@ class LessonHistory extends BaseLesson
 
     // Other fillable and casts inherited from BaseLesson
 
+    /**
+     * @return BelongsTo<Lesson, $this>
+     */
     public function lesson(): BelongsTo
     {
         return $this->belongsTo(Lesson::class);

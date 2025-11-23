@@ -7,7 +7,8 @@ namespace App\Http\Middleware;
 use App\Models\Lesson\Lesson;
 use Closure;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Http\Response;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 class EnsureLessonBelongsToUser
 {
@@ -16,7 +17,7 @@ class EnsureLessonBelongsToUser
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next): SymfonyResponse
     {
         $lesson = $request->route('lesson');
 
@@ -31,11 +32,13 @@ class EnsureLessonBelongsToUser
         }
 
         // Allow access to temp guest users' lessons (for demo purposes)
+        $lesson->loadMissing('user');
+        // @phpstan-ignore-next-line - user can be null even after loadMissing
         if ($lesson->user && $lesson->user->is_temp_guest) {
             return $next($request);
         }
 
         // Redirect to lessons index with error message
-        abort(403, __('lessons.access_denied'));
+        abort(Response::HTTP_FORBIDDEN, __('lessons.access_denied'));
     }
 }

@@ -30,7 +30,7 @@ use Illuminate\Support\Carbon;
  * @property string|null $homework
  * @property array<array-key, mixed>|null $common_mistakes
  * @property string|null $culture_notes
- * @property array|null $embedding
+ * @property array<int, float>|null $embedding
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read Collection<int, \App\Models\Lesson\LessonAssignment> $assignments
@@ -45,7 +45,6 @@ use Illuminate\Support\Carbon;
  * @property-read int|null $scores_count
  * @property-read Topic|null $topic
  * @property-read \App\Models\User $user
- *
  * @method static LessonFactory factory($count = null, $state = [])
  * @method static Builder<static>|Lesson newModelQuery()
  * @method static Builder<static>|Lesson newQuery()
@@ -67,7 +66,6 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|Lesson whereUserId($value)
  * @method static Builder<static>|Lesson whereUuid($value)
  * @method static Builder<static>|Lesson whereVocabulary($value)
- *
  * @mixin \Eloquent
  */
 class Lesson extends BaseLesson
@@ -92,13 +90,16 @@ class Lesson extends BaseLesson
         return $this->belongsTo(Topic::class, 'topic_id');
     }
 
+    /**
+     * @return HasMany<LessonHistory, $this>
+     */
     public function histories(): HasMany
     {
         return $this->hasMany(LessonHistory::class);
     }
 
     /**
-     * @return HasMany<LessonAssignment>
+     * @return HasMany<LessonAssignment, $this>
      */
     public function assignments(): HasMany
     {
@@ -106,7 +107,7 @@ class Lesson extends BaseLesson
     }
 
     /**
-     * @return HasMany<LessonAttempt>
+     * @return HasMany<LessonAttempt, $this>
      */
     public function attempts(): HasMany
     {
@@ -114,7 +115,7 @@ class Lesson extends BaseLesson
     }
 
     /**
-     * @return HasMany<LessonScore>
+     * @return HasMany<LessonScore, $this>
      */
     public function scores(): HasMany
     {

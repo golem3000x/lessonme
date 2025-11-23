@@ -30,7 +30,8 @@ class ProfileSetup extends Component
 
     public string $learning_lang = '';
 
-    public $avatar;
+    /** @var \Livewire\Features\SupportFileUploads\TemporaryUploadedFile|null */
+    public $avatar = null;
 
     /** @var SystemLanguageEnum[] */
     public array $languages = [];
@@ -147,6 +148,9 @@ class ProfileSetup extends Component
         dispatch(new ModerateKeywordJob($keyword));
     }
 
+    /**
+     * @return mixed
+     */
     public function removeAvatar()
     {
         /** @var User $user */
@@ -163,6 +167,9 @@ class ProfileSetup extends Component
         return redirect()->route('onboarding.profile');
     }
 
+    /**
+     * @return mixed
+     */
     public function save()
     {
         $this->validate([
@@ -203,6 +210,11 @@ class ProfileSetup extends Component
 
         // Refresh auth user data in session
         $user = $user->fresh();
+        
+        if (! $user) {
+            return redirect()->route('login');
+        }
+        
         Auth::login($user);
 
         $this->saveTopicVisibility($user);

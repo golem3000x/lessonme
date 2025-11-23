@@ -17,6 +17,8 @@ class SlugEntityChanged
 
     /**
      * Create a new event instance.
+     * 
+     * @param Slug<*, *> $entity
      */
     public function __construct(public readonly Slug $entity) {}
 

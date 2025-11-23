@@ -73,7 +73,7 @@ class ZaloControllerTest extends TestCase
 
         // User is not created yet - it's saved in session
         $this->assertNull(User::where('zalo_user_id', '=', 'zalo-uid-1')->first());
-        
+
         // Check session has registration data
         $this->assertTrue(session()->has('registration_data'));
         $registration_data = session('registration_data');

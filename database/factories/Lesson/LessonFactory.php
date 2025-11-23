@@ -25,7 +25,7 @@ class LessonFactory extends Factory
     {
         return [
             'user_id' => User::factory(),
-            'topic_id' => null,
+            'topic_id' => 1, // Default topic_id to avoid NOT NULL constraint
             'lesson_name' => fake()->sentence(3),
             'lesson_text' => fake()->paragraphs(3, true),
             'language_level' => fake()->randomElement(LanguageLevelEnum::cases())->value,
@@ -33,10 +33,10 @@ class LessonFactory extends Factory
             'vocabulary' => [],
             'dialogue' => [],
             'exercises' => [],
-            'homework' => null,
+            'homework' => '',
             'common_mistakes' => [],
-            'culture_notes' => null,
-            'embedding' => null,
+            'culture_notes' => '',
+            'embedding' => [],
         ];
     }
 
@@ -62,6 +62,8 @@ class LessonFactory extends Factory
 
     /**
      * Indicate that the lesson has exercises.
+     * 
+     * @param array<int, array<string, mixed>> $exercises
      */
     public function withExercises(array $exercises = []): static
     {

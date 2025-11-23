@@ -9,6 +9,9 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @template TEntity of Slug
+ */
 abstract class UserSlugVisibility extends BaseModel
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
@@ -45,6 +48,8 @@ abstract class UserSlugVisibility extends BaseModel
 
     /**
      * Relation to parent entity (Topic, Keyword, etc.)
+     * 
+     * @return BelongsTo<TEntity, $this>
      */
     abstract public function entity(): BelongsTo;
 }

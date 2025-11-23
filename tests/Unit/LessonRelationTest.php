@@ -22,11 +22,7 @@ class LessonRelationTest extends TestCase
             'learning_lang' => 'vi',
         ]);
 
-        $topic = Topic::create([
-            'slug' => 'general-'.uniqid(),
-            'is_system' => true,
-            'is_approved' => true,
-        ]);
+        $topic = Topic::factory()->create();
 
         TopicTranslation::create([
             'topic_id' => $topic->id,
@@ -34,19 +30,9 @@ class LessonRelationTest extends TestCase
             'value' => 'General',
         ]);
 
-        $lesson = Lesson::create([
+        $lesson = Lesson::factory()->create([
             'user_id' => $user->id,
             'topic_id' => $topic->id,
-            'lesson_name' => 'Test Lesson',
-            'lesson_text' => 'Sample',
-            'language_level' => 'B1',
-            'grammar_data' => [],
-            'vocabulary' => [],
-            'dialogue' => [],
-            'exercises' => [],
-            'homework' => null,
-            'common_mistakes' => [],
-            'culture_notes' => null,
         ]);
 
         $this->assertNotNull($lesson->topic);

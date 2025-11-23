@@ -11,6 +11,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
+ * @extends UserSlugVisibility<Keyword>
+ * 
  * @property int $id
  * @property int $user_id
  * @property int $keyword_id
@@ -20,7 +22,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property-read \App\Models\Keyword\Keyword $entity
  * @property-read \App\Models\Keyword\Keyword $keyword
  * @property-read User $user
- *
  * @method static Builder<static>|UserKeywordVisibility newModelQuery()
  * @method static Builder<static>|UserKeywordVisibility newQuery()
  * @method static Builder<static>|UserKeywordVisibility query()
@@ -30,7 +31,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static Builder<static>|UserKeywordVisibility whereKeywordId($value)
  * @method static Builder<static>|UserKeywordVisibility whereUpdatedAt($value)
  * @method static Builder<static>|UserKeywordVisibility whereUserId($value)
- *
  * @mixin \Eloquent
  */
 class UserKeywordVisibility extends UserSlugVisibility

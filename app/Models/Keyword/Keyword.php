@@ -15,6 +15,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 
 /**
+ * @extends Slug<KeywordTranslation, UserKeywordVisibility>
+ * 
  * @property int $id
  * @property int|null $user_id
  * @property int|null $topic_id
@@ -29,7 +31,6 @@ use Illuminate\Support\Carbon;
  * @property-read User|null $user
  * @property-read Collection<int, \App\Models\Keyword\UserKeywordVisibility> $visibility
  * @property-read int|null $visibility_count
- *
  * @method static Builder<static>|Keyword newModelQuery()
  * @method static Builder<static>|Keyword newQuery()
  * @method static Builder<static>|Keyword query()
@@ -42,7 +43,6 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|Keyword whereTopicId($value)
  * @method static Builder<static>|Keyword whereUpdatedAt($value)
  * @method static Builder<static>|Keyword whereUserId($value)
- *
  * @mixin \Eloquent
  */
 class Keyword extends Slug
@@ -53,6 +53,14 @@ class Keyword extends Slug
     protected array $extra_fillable = [
         'topic_id',
     ];
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): \Database\Factories\Keyword\KeywordFactory
+    {
+        return \Database\Factories\Keyword\KeywordFactory::new();
+    }
 
     /**
      * @return HasMany<KeywordTranslation, $this>

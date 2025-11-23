@@ -7,6 +7,7 @@ namespace App\Filament\Resources\ChatSessionResource\Pages;
 use App\Enums\ChatSessionStatusEnum;
 use App\Events\MessageSent;
 use App\Filament\Resources\ChatSessionResource;
+use App\Models\Support\ChatSession;
 use App\Models\Support\Message;
 use Filament\Actions;
 use Filament\Infolists;
@@ -15,6 +16,9 @@ use Filament\Resources\Pages\ViewRecord;
 use Filament\Support\Enums\FontWeight;
 use Illuminate\Contracts\Support\Htmlable;
 
+/**
+ * @property ChatSession $record
+ */
 class ViewChatSession extends ViewRecord
 {
     protected static string $resource = ChatSessionResource::class;
@@ -90,7 +94,7 @@ class ViewChatSession extends ViewRecord
                                     ->label('')
                                     ->color(fn (Message $record) => $record->is_from_admin ? 'info' : 'success')
                                     ->weight(FontWeight::Medium)
-                                    ->suffix(fn (Message $record) => ' — '.$record->created_at->format('d.m.Y H:i'))
+                                    ->suffix(fn (Message $record) => $record->created_at ? ' — '.$record->created_at->format('d.m.Y H:i') : '')
                                     ->icon(fn (Message $record) => $record->is_from_admin ? 'heroicon-o-user-circle' : 'heroicon-o-chat-bubble-left')
                                     ->iconColor(fn (Message $record) => $record->is_from_admin ? 'info' : 'success'),
                             ])
@@ -109,7 +113,7 @@ class ViewChatSession extends ViewRecord
     public function sendMessage(): void
     {
         $this->validate([
-            'new_message' => 'required|string|max:1000',
+            'new_message' => ['required', 'string', 'max:1000'],
         ]);
 
         $message = Message::create([

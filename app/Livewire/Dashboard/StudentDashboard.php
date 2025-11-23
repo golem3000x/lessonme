@@ -41,6 +41,10 @@ class StudentDashboard extends Component
     public function mount(): void
     {
         $user = Auth::user();
+        
+        if (! $user) {
+            return;
+        }
 
         // Get time-based greeting
         $greeting_service = app(GreetingService::class);

@@ -20,6 +20,9 @@ abstract class AbstractSlugNotification extends Notification implements ShouldBr
 
     protected string $entity_name;
 
+    /**
+     * @param Slug<*, *> $entity
+     */
     public function __construct(protected Slug $entity)
     {
         $this->entity_name = Str::lcfirst(class_basename($entity));

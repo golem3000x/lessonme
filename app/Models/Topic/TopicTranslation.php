@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
+ * @extends SlugTranslation<Topic>
+ * 
  * @property int $id
  * @property int $topic_id
  * @property string $language_code
@@ -18,7 +20,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string|null $updated_at
  * @property-read \App\Models\Topic\Topic $entity
  * @property-read \App\Models\Topic\Topic $topic
- *
  * @method static Builder<static>|TopicTranslation newModelQuery()
  * @method static Builder<static>|TopicTranslation newQuery()
  * @method static Builder<static>|TopicTranslation query()
@@ -28,7 +29,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static Builder<static>|TopicTranslation whereTopicId($value)
  * @method static Builder<static>|TopicTranslation whereUpdatedAt($value)
  * @method static Builder<static>|TopicTranslation whereValue($value)
- *
  * @mixin \Eloquent
  */
 class TopicTranslation extends SlugTranslation

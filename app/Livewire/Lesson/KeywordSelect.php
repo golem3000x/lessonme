@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Livewire\Chat;
+namespace App\Livewire\Lesson;
 
 use App\Models\Keyword\Keyword;
 use Illuminate\Contracts\View\Factory;
@@ -80,7 +80,7 @@ class KeywordSelect extends Component
     /**
      * Livewire updates array from <select multiple> as array of selected values.
      *
-     * @param  array<int,int|string>|null  $value
+     * @param  array<int,int|string>|int|string|null  $value
      */
     public function updatedKeywordIds($value): void
     {
@@ -88,7 +88,7 @@ class KeywordSelect extends Component
         $incoming = is_array($value) ? $value : ($value !== null && $value !== '' ? [$value] : []);
 
         $ids = collect($incoming)
-            ->filter(fn ($v) => $v !== null && $v !== '')
+            ->filter(fn ($v) => $v !== '')
             ->map(fn ($v) => (int) $v)
             ->unique()
             ->values();
@@ -184,6 +184,6 @@ class KeywordSelect extends Component
 
     public function render(): Factory|View
     {
-        return view('livewire.chat.keyword-select');
+        return view('livewire.lesson.keyword-select');
     }
 }

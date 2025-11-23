@@ -24,9 +24,9 @@ return new class extends Migration
                 ->cascadeOnDelete();
             $table->foreignId('teacher_id')
                 ->nullable()
+                ->comment('For manual grading by teacher')
                 ->constrained(TableNameEnum::USERS->value)
-                ->nullOnDelete()
-                ->comment('For manual grading by teacher');
+                ->nullOnDelete();
             $table->unsignedInteger('total_questions');
             $table->unsignedInteger('correct_answers');
             $table->decimal('score_percentage', 5, 2)->comment('0.00 to 100.00');
