@@ -318,6 +318,12 @@
                             <h3 class="font-semibold text-lg text-gray-800 line-clamp-2 mb-2">{{ $lesson->lesson_name }}</h3>
                             
                             <div class="flex flex-wrap items-center gap-2">
+                                @if($lesson->lesson_lang)
+                                    <span class="text-xl" title="{{ $lesson->lesson_lang->label() }}">
+                                        {{ $lesson->lesson_lang->flag() }}
+                                    </span>
+                                @endif
+                                
                                 @if($lesson->language_level)
                                     <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold {{ $lesson->level_badge_color }}">
                                         {{ $lesson->language_level->value }}

@@ -69,10 +69,12 @@ class LessonExercises extends Component
         $this->exercises = $exercises;
         $this->lesson_id = $lesson_id;
 
-        // Get learning language from authenticated user
-        $user = Auth::user();
-        if ($user) {
-            $this->learning_lang = $user->learning_lang;
+        // Get lesson language from the lesson itself
+        if ($lesson_id) {
+            $lesson = Lesson::find($lesson_id);
+            if ($lesson && $lesson->lesson_lang) {
+                $this->learning_lang = $lesson->lesson_lang->value;
+            }
         }
 
         // Build flat array of all exercises

@@ -107,6 +107,22 @@
                         @endphp
                         
                         <div class="text-gray-800 text-xl leading-relaxed mb-4">
+                            {{-- Speaker button for the complete sentence --}}
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-sm text-gray-600">{{ __('lessons.listen_and_fill') }}</span>
+                                @php
+                                    // Build complete sentence with the correct answer
+                                    $complete_sentence = str_replace('___', $item['answer'] ?? '', $sentence);
+                                    // Remove hint in parentheses
+                                    $complete_sentence = preg_replace('/\s*\([^)]+\)/', '', $complete_sentence);
+                                @endphp
+                                <livewire:lesson.lesson-speaker 
+                                    :word="$complete_sentence" 
+                                    :lang="$learning_lang ?? 'vi'" 
+                                    :key="'gap-speaker-' . $index" 
+                                />
+                            </div>
+                            
                             <div class="flex flex-wrap items-center gap-2">
                                 @foreach($parts as $part_index => $part)
                                     <span>{{ $part }}</span>
@@ -153,7 +169,7 @@
 
                         {{-- Virtual Keyboards --}}
                         @if(!$checked)
-                            {{-- Vietnamese Keyboard (for English speakers learning Vietnamese) --}}
+                            {{-- Vietnamese Keyboard (lesson in Vietnamese language) --}}
                             @if($learning_lang === 'vi')
                                 <div class="mt-4">
                                     {{-- Toggle Button --}}
@@ -217,7 +233,7 @@
                                 </div>
                             @endif
 
-                            {{-- English Keyboard (for Vietnamese speakers learning English) --}}
+                            {{-- English Keyboard (lesson in English language) --}}
                             @if($learning_lang === 'en')
                                 <div class="mt-4">
                                     {{-- Toggle Button --}}

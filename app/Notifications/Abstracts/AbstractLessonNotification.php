@@ -67,6 +67,7 @@ abstract class AbstractLessonNotification extends Notification implements Should
             $data['lesson_id'] = $this->entity->uuid;
             $data['lesson_url'] = route('lessons.show', $this->entity->uuid);
             $data['lesson_name'] = $this->entity->lesson_name;
+            $data['language_name'] = $this->entity->lesson_lang?->label() ?? '';
         }
 
         return $data;

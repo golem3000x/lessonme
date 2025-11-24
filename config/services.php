@@ -45,4 +45,8 @@ return [
         'client_secret' => env('FACEBOOK_CLIENT_SECRET'),
         'redirect' => env('FACEBOOK_REDIRECT_URL'),
     ],
+
+    'fpt_tts' => [
+        'api_key' => env('FPT_TTS_API_KEY'),
+    ]
 ];

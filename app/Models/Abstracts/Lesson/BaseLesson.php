@@ -6,6 +6,7 @@ namespace App\Models\Abstracts\Lesson;
 
 use App\Casts\EmbeddingCast;
 use App\Enums\System\LanguageLevelEnum;
+use App\Enums\System\SystemLanguageEnum;
 use App\Models\Abstracts\BaseModel;
 use App\Models\User;
 use Database\Factories\UserFactory;
@@ -22,6 +23,7 @@ use Illuminate\Support\Carbon;
  * @property string $lesson_name
  * @property string $lesson_text
  * @property LanguageLevelEnum|null $language_level
+ * @property SystemLanguageEnum|null $lesson_lang
  * @property array<array-key, mixed>|null $grammar_data
  * @property array<array-key, mixed>|null $vocabulary
  * @property array<array-key, mixed>|null $dialogue
@@ -46,6 +48,7 @@ abstract class BaseLesson extends BaseModel
         'lesson_name',
         'lesson_text',
         'language_level',
+        'lesson_lang',
         'grammar_data',
         'vocabulary',
         'dialogue',
@@ -58,6 +61,7 @@ abstract class BaseLesson extends BaseModel
 
     protected $casts = [
         'language_level' => LanguageLevelEnum::class,
+        'lesson_lang' => SystemLanguageEnum::class,
         'grammar_data' => 'array',
         'vocabulary' => 'array',
         'dialogue' => 'array',
@@ -112,7 +116,7 @@ abstract class BaseLesson extends BaseModel
 
     /**
      * Get the columns that should receive a unique identifier
-     * 
+     *
      * @return array<int, string>
      */
     public function uniqueIds(): array

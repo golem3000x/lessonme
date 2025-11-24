@@ -17,6 +17,8 @@ return [
     'vocabulary' => 'Vocabulary',
     'example' => 'Example',
     'show_translations' => 'Show translations',
+    'speak_word' => 'Speak word',
+    'listen_and_fill' => 'Listen and fill in the blank',
 
     // Welcome page
     'welcome' => 'Welcome',
@@ -160,4 +162,5 @@ return [
     'my_attempts' => 'My Attempts',
     'duration' => 'Duration',
     'minutes' => 'minutes',
+    'language_name' => 'Language',
 ];

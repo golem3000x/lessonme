@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Feature\Controllers;
 
 use App\Enums\System\LanguageLevelEnum;
+use App\Enums\System\SystemLanguageEnum;
 use App\Models\Lesson\Lesson;
 use App\Models\Lesson\LessonHistory;
 use App\Models\User;
@@ -173,6 +174,7 @@ class LessonControllerTest extends TestCase
             'lesson_name' => 'Old Version',
             'lesson_text' => 'Old content',
             'language_level' => LanguageLevelEnum::A1->value,
+            'lesson_lang' => SystemLanguageEnum::ENGLISH->value,
             'grammar_data' => [],
             'vocabulary' => [],
             'dialogue' => [],
@@ -209,6 +211,7 @@ class LessonControllerTest extends TestCase
             'lesson_name' => 'Old Version',
             'lesson_text' => 'Old content',
             'language_level' => LanguageLevelEnum::A1->value,
+            'lesson_lang' => SystemLanguageEnum::VIETNAMESE->value,
             'grammar_data' => [],
             'vocabulary' => [],
             'dialogue' => [],
@@ -243,6 +246,7 @@ class LessonControllerTest extends TestCase
             'lesson_name' => 'Old Version',
             'lesson_text' => 'Old content',
             'language_level' => LanguageLevelEnum::A1->value,
+            'lesson_lang' => SystemLanguageEnum::ENGLISH->value,
             'grammar_data' => [],
             'vocabulary' => [],
             'dialogue' => [],
@@ -274,6 +278,7 @@ class LessonControllerTest extends TestCase
             'lesson_name' => 'Old Version',
             'lesson_text' => 'Old content',
             'language_level' => LanguageLevelEnum::A1->value,
+            'lesson_lang' => SystemLanguageEnum::VIETNAMESE->value,
             'grammar_data' => [],
             'vocabulary' => [],
             'dialogue' => [],
@@ -304,6 +309,7 @@ class LessonControllerTest extends TestCase
             'lesson_name' => 'Old Version',
             'lesson_text' => 'Old content',
             'language_level' => LanguageLevelEnum::A1->value,
+            'lesson_lang' => SystemLanguageEnum::ENGLISH->value,
             'grammar_data' => [],
             'vocabulary' => [],
             'dialogue' => [],

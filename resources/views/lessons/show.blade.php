@@ -20,6 +20,12 @@
                 @endauth
             </div>
             <div class="flex items-center gap-3 text-sm text-gray-500 mb-6">
+                @if($lesson->lesson_lang)
+                    <span class="text-2xl" title="{{ $lesson->lesson_lang->label() }}">
+                        {{ $lesson->lesson_lang->flag() }}
+                    </span>
+                @endif
+                
                 @if($lesson->language_level)
                     <span class="px-3 py-1 rounded-full text-sm font-semibold {{ $lesson->level_badge_color }}">
                         {{ $lesson->language_level->value }}
@@ -151,11 +157,11 @@
                                         — {{ $v['translation'] ?? '' }}
                                     </span>
                                 </div>
-                                <button
-                                        class="speak-btn text-gray-500 hover:text-green-700 transition"
-                                        data-word="{{ $v['word'] }}">
-                                    🔊
-                                </button>
+                                <livewire:lesson.lesson-speaker 
+                                    :word="$v['word'] ?? ''" 
+                                    :lang="$lesson->lesson_lang?->value ?? 'vi'" 
+                                    :key="'speaker-' . $loop->index" 
+                                />
                             </div>
                             @if(!empty($v['example']))
                                 <div class="text-sm italic text-gray-600 mt-1">{{ $v['example'] }}</div>
@@ -242,15 +248,6 @@
         // Показать/скрыть переводы
         document.getElementById('toggleTranslations')?.addEventListener('click', () => {
             document.querySelectorAll('.translation').forEach(el => el.classList.toggle('hidden'));
-        });
-
-        // Озвучка слов (через SpeechSynthesis API)
-        document.querySelectorAll('.speak-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const utterance = new SpeechSynthesisUtterance(btn.dataset.word);
-                utterance.lang = '{{ strtolower($lesson->learning_lang ?? 'en') }}';
-                speechSynthesis.speak(utterance);
-            });
         });
     </script>
 </x-app-layout>

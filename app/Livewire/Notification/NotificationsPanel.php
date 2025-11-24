@@ -12,7 +12,7 @@ use Livewire\Component;
 
 class NotificationsPanel extends Component
 {
-    /** @var array<int, array{id: string, entity: string, status: string, message: string, lesson_id: string|null, lesson_url: string|null, lesson_name: string|null, user_id: int|null, user_name: string|null}> */
+    /** @var array<int, array{id: string, entity: string, status: string, message: string, lesson_id: string|null, lesson_url: string|null, lesson_name: string|null, language_name: string|null, user_id: int|null, user_name: string|null}> */
     public array $notifications = [];
 
     #[On('slug-creation-updated')]
@@ -20,7 +20,7 @@ class NotificationsPanel extends Component
     #[On('slug-translate-updated')]
     #[On('lesson-notification')]
     #[On('user-notification')]
-    public function addNotification(mixed $notification = null, mixed $id = null, mixed $entity = null, mixed $status = null, mixed $message = null, mixed $lesson_id = null, mixed $lesson_url = null, mixed $lesson_name = null, mixed $user_id = null, mixed $user_name = null): void
+    public function addNotification(mixed $notification = null, mixed $id = null, mixed $entity = null, mixed $status = null, mixed $message = null, mixed $lesson_id = null, mixed $lesson_url = null, mixed $lesson_name = null, mixed $language_name = null, mixed $user_id = null, mixed $user_name = null): void
     {
         // Handle both old format (array) and new format (named parameters)
         if ($notification && is_array($notification)) {
@@ -32,6 +32,7 @@ class NotificationsPanel extends Component
             $lesson_id = $data['lesson_id'] ?? null;
             $lesson_url = $data['lesson_url'] ?? null;
             $lesson_name = $data['lesson_name'] ?? null;
+            $language_name = $data['language_name'] ?? null;
             $user_id = $data['user_id'] ?? null;
             $user_name = $data['user_name'] ?? null;
         }
@@ -44,6 +45,7 @@ class NotificationsPanel extends Component
             'lesson_id' => $lesson_id,
             'lesson_url' => $lesson_url,
             'lesson_name' => $lesson_name,
+            'language_name' => $language_name,
             'user_id' => $user_id,
             'user_name' => $user_name,
         ];

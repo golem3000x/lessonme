@@ -72,6 +72,12 @@
                                     </h3>
                                     
                                     <div class="flex flex-wrap items-center gap-3 text-sm text-gray-500 mb-4">
+                                        @if($history->lesson_lang)
+                                            <span class="text-2xl" title="{{ $history->lesson_lang->label() }}">
+                                                {{ $history->lesson_lang->flag() }}
+                                            </span>
+                                        @endif
+                                        
                                         @if($history->language_level)
                                             <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold {{ $history->level_badge_color }}">
                                                 {{ $history->language_level->value }}

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Database\Factories\Lesson;
 
 use App\Enums\System\LanguageLevelEnum;
+use App\Enums\System\SystemLanguageEnum;
 use App\Models\Lesson\Lesson;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -29,6 +30,7 @@ class LessonFactory extends Factory
             'lesson_name' => fake()->sentence(3),
             'lesson_text' => fake()->paragraphs(3, true),
             'language_level' => fake()->randomElement(LanguageLevelEnum::cases())->value,
+            'lesson_lang' => fake()->randomElement(SystemLanguageEnum::cases())->value,
             'grammar_data' => [],
             'vocabulary' => [],
             'dialogue' => [],

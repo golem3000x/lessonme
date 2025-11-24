@@ -17,6 +17,8 @@ return [
     'vocabulary' => 'Từ vựng',
     'example' => 'Ví dụ',
     'show_translations' => 'Hiển thị bản dịch',
+    'speak_word' => 'Phát âm từ',
+    'listen_and_fill' => 'Nghe và điền vào chỗ trống',
 
     // Welcome page
     'welcome' => 'Chào mừng',
@@ -160,4 +162,5 @@ return [
     'my_attempts' => 'Lần Thử Của Tôi',
     'duration' => 'Thời gian',
     'minutes' => 'phút',
+    'language_name' => 'Ngôn ngữ',
 ];
