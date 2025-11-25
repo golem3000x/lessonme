@@ -64,8 +64,8 @@ class LessonFactory extends Factory
 
     /**
      * Indicate that the lesson has exercises.
-     * 
-     * @param array<int, array<string, mixed>> $exercises
+     *
+     * @param  array<int, array<string, mixed>>  $exercises
      */
     public function withExercises(array $exercises = []): static
     {

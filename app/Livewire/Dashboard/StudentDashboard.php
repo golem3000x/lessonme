@@ -41,7 +41,7 @@ class StudentDashboard extends Component
     public function mount(): void
     {
         $user = Auth::user();
-        
+
         if (! $user) {
             return;
         }

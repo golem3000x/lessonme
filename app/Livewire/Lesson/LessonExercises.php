@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Livewire\Lesson;
 
-use App\Enums\System\SystemLanguageEnum;
 use App\Models\Lesson\Lesson;
 use App\Models\Lesson\LessonAttempt;
 use App\Services\Lesson\LessonGradingService;
@@ -17,6 +16,8 @@ use Livewire\Component;
 class LessonExercises extends Component
 {
     public ?int $lesson_id = null;
+
+    public ?Lesson $lesson = null;
 
     public ?int $attempt_id = null;
 
@@ -69,11 +70,11 @@ class LessonExercises extends Component
         $this->exercises = $exercises;
         $this->lesson_id = $lesson_id;
 
-        // Get lesson language from the lesson itself
+        // Load lesson for audio files access
         if ($lesson_id) {
-            $lesson = Lesson::find($lesson_id);
-            if ($lesson && $lesson->lesson_lang) {
-                $this->learning_lang = $lesson->lesson_lang->value;
+            $this->lesson = Lesson::with('audioFiles')->find($lesson_id);
+            if ($this->lesson && $this->lesson->lesson_lang) {
+                $this->learning_lang = $this->lesson->lesson_lang->value;
             }
         }
 
@@ -126,7 +127,7 @@ class LessonExercises extends Component
 
         $grading_service = app(LessonGradingService::class);
         $user = Auth::user();
-        
+
         if (! $user) {
             abort(Response::HTTP_UNAUTHORIZED);
         }
@@ -218,11 +219,11 @@ class LessonExercises extends Component
             foreach ($this->exercises['sentence_ordering'] as $i => $item) {
                 $user_answer = implode(' ', $this->ordered_words[$i] ?? []);
                 $correct_answer = trim($item['answer'] ?? '');
-                
+
                 // Strip punctuation for comparison
                 $user_answer_clean = preg_replace('/[^\p{L}\p{N}\s]/u', '', $user_answer);
                 $correct_answer_clean = preg_replace('/[^\p{L}\p{N}\s]/u', '', $correct_answer);
-                
+
                 if (strcasecmp(trim($user_answer_clean), trim($correct_answer_clean)) === 0) {
                     $this->scores['sentence_ordering']++;
                 }

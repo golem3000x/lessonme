@@ -73,7 +73,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
                     </svg>
                     <span class="hidden sm:inline">{{ __('lessons.filters') }}</span>
-                    @if($search || !empty($language_levels))
+                    @if($search || !empty($language_levels) || !empty($lesson_languages))
                         <span class="inline-flex items-center justify-center w-5 h-5 text-xs font-bold bg-white text-blue-600 rounded-full">!</span>
                     @endif
                 </button>
@@ -99,7 +99,7 @@
     {{-- Filters Panel --}}
     @if($show_filters)
         <div class="bg-white border border-gray-200 rounded-xl shadow-sm p-6 space-y-4" wire:key="filters-panel">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {{-- Search --}}
                 <div>
                     <label for="temp_search" class="block text-sm font-medium text-gray-700 mb-2">
@@ -164,6 +164,70 @@
                                             class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-2 focus:ring-blue-500 cursor-pointer"
                                     />
                                     <span class="text-sm text-gray-700 font-medium">{{ $level['label'] }}</span>
+                                </label>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Lesson Language --}}
+                <div class="relative" x-data="{ open: @entangle('show_language_dropdown') }">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        {{ __('lessons.lesson_language') }}
+                        @if(!empty($temp_lesson_languages))
+                            <span class="text-xs text-blue-600 font-semibold">({{ count($temp_lesson_languages) }})</span>
+                        @endif
+                    </label>
+                    
+                    {{-- Dropdown Button --}}
+                    <button
+                            type="button"
+                            @click="open = !open"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition bg-white text-left flex items-center justify-between"
+                    >
+                        <span class="text-sm text-gray-700 flex items-center gap-2">
+                            @if(empty($temp_lesson_languages))
+                                {{ __('lessons.all_languages') }}
+                            @else
+                                @foreach($this->getLessonLanguages() as $lang)
+                                    @if(in_array($lang['value'], $temp_lesson_languages))
+                                        <span class="inline-flex items-center gap-1">
+                                            {{ $lang['flag'] }}
+                                            <span class="hidden sm:inline">{{ $lang['label'] }}</span>
+                                        </span>
+                                    @endif
+                                @endforeach
+                            @endif
+                        </span>
+                        <svg class="w-4 h-4 text-gray-500 transition-transform" :class="{'rotate-180': open}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </button>
+
+                    {{-- Dropdown Menu --}}
+                    <div
+                            x-show="open"
+                            @click.outside="open = false"
+                            x-transition:enter="transition ease-out duration-100"
+                            x-transition:enter-start="opacity-0 scale-95"
+                            x-transition:enter-end="opacity-100 scale-100"
+                            x-transition:leave="transition ease-in duration-75"
+                            x-transition:leave-start="opacity-100 scale-100"
+                            x-transition:leave-end="opacity-0 scale-95"
+                            class="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto"
+                            style="display: none;"
+                    >
+                        <div class="p-2 space-y-1">
+                            @foreach($this->getLessonLanguages() as $language)
+                                <label class="flex items-center gap-2 cursor-pointer hover:bg-gray-50 p-2 rounded transition">
+                                    <input
+                                            type="checkbox"
+                                            wire:model.live="temp_lesson_languages"
+                                            value="{{ $language['value'] }}"
+                                            class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-2 focus:ring-blue-500 cursor-pointer"
+                                    />
+                                    <span class="text-xl">{{ $language['flag'] }}</span>
+                                    <span class="text-sm text-gray-700 font-medium">{{ $language['label'] }}</span>
                                 </label>
                             @endforeach
                         </div>

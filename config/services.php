@@ -48,5 +48,5 @@ return [
 
     'fpt_tts' => [
         'api_key' => env('FPT_TTS_API_KEY'),
-    ]
+    ],
 ];

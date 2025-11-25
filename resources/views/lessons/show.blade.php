@@ -136,14 +136,18 @@
         {{-- ===== VOCABULARY SECTION ===== --}}
         @php $vocab = is_array($lesson->vocabulary) ? $lesson->vocabulary : []; @endphp
         @if(!empty($vocab))
-            <section class="bg-green-50 rounded-2xl p-6 border-l-4 border-green-400 shadow-sm">
+            <section x-data="{ showTranslations: false }" class="bg-green-50 rounded-2xl p-6 border-l-4 border-green-400 shadow-sm">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="text-2xl font-semibold text-green-700">
                         🗣️ {{ __('lessons.vocabulary') }}
                     </h3>
-                    <button id="toggleTranslations"
-                            class="text-sm px-3 py-1 bg-green-100 text-green-700 rounded-md hover:bg-green-200 transition">
-                        👁️ {{ __('lessons.show_translations') }}
+                    <button 
+                        @click="showTranslations = !showTranslations"
+                        class="flex items-center gap-2 text-sm px-3 py-1 bg-green-100 text-green-700 rounded-md hover:bg-green-200 transition"
+                    >
+                        <span x-show="!showTranslations">👁️</span>
+                        <span x-show="showTranslations">🙈</span>
+                        <span x-text="showTranslations ? '{{ __('lessons.hide_translations') }}' : '{{ __('lessons.show_translations') }}'"></span>
                     </button>
                 </div>
 
@@ -151,16 +155,28 @@
                     @foreach($vocab as $v)
                         <li class="py-3">
                             <div class="flex items-center justify-between">
-                                <div>
+                                <div class="flex-1">
                                     <strong class="text-gray-800 text-lg">{{ $v['word'] ?? '' }}</strong>
-                                    <span class="ml-2 text-sm text-gray-500 hidden translation">
+                                    <span 
+                                        x-show="showTranslations" 
+                                        x-transition:enter="transition ease-out duration-200"
+                                        x-transition:enter-start="opacity-0 transform scale-95"
+                                        x-transition:enter-end="opacity-100 transform scale-100"
+                                        x-transition:leave="transition ease-in duration-150"
+                                        x-transition:leave-start="opacity-100 transform scale-100"
+                                        x-transition:leave-end="opacity-0 transform scale-95"
+                                        class="ml-2 text-sm text-green-700 font-medium"
+                                    >
                                         — {{ $v['translation'] ?? '' }}
                                     </span>
                                 </div>
+                                @php
+                                    $audio_file = $lesson->getVocabularyAudio($v['word'] ?? '');
+                                    $audio_url = $audio_file?->getPublicUrl();
+                                @endphp
                                 <livewire:lesson.lesson-speaker 
-                                    :word="$v['word'] ?? ''" 
-                                    :lang="$lesson->lesson_lang?->value ?? 'vi'" 
-                                    :key="'speaker-' . $loop->index" 
+                                    :audio_url="$audio_url" 
+                                    :key="'speaker-vocab-' . $loop->index" 
                                 />
                             </div>
                             @if(!empty($v['example']))
@@ -242,12 +258,4 @@
         @endif
 
     </div>
-
-    {{-- ===== INLINE SCRIPT ===== --}}
-    <script>
-        // Показать/скрыть переводы
-        document.getElementById('toggleTranslations')?.addEventListener('click', () => {
-            document.querySelectorAll('.translation').forEach(el => el.classList.toggle('hidden'));
-        });
-    </script>
 </x-app-layout>

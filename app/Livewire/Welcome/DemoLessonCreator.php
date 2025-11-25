@@ -254,8 +254,8 @@ class DemoLessonCreator extends Component
     /**
      * Handle lesson creation notification from WebSocket
      * Called when Echo.js receives lesson creation event
-     * 
-     * @param array<string, mixed> $notification
+     *
+     * @param  array<string, mixed>  $notification
      */
     #[On('lesson-notification')]
     public function handleLessonNotification(array $notification): void

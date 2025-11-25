@@ -6,7 +6,6 @@ namespace Tests\Feature\Livewire;
 
 use App\Livewire\Lesson\LessonExercises;
 use App\Models\Lesson\Lesson;
-use App\Models\Lesson\LessonAssignment;
 use App\Models\Lesson\LessonAttempt;
 use App\Models\User;
 use App\Services\Lesson\LessonGradingService;
@@ -19,6 +18,7 @@ class LessonExercisesTest extends TestCase
     use RefreshDatabase;
 
     private User $user;
+
     private Lesson $lesson;
 
     /** @var array<string, mixed> */
@@ -29,7 +29,7 @@ class LessonExercisesTest extends TestCase
         parent::setUp();
         $this->user = User::factory()->create();
         $this->lesson = Lesson::factory()->create(['user_id' => $this->user->id]);
-        
+
         $this->sample_exercises = [
             'quiz' => [
                 ['question' => 'What is 2+2?', 'options' => ['3', '4', '5'], 'answer' => '4'],
@@ -48,7 +48,7 @@ class LessonExercisesTest extends TestCase
                 ['term' => 'cat', 'match' => 'animal'],
             ],
         ];
-        
+
         app()->setLocale('en');
     }
 
@@ -69,7 +69,7 @@ class LessonExercisesTest extends TestCase
     public function test_mount_builds_flat_exercises_array(): void
     {
         $component = Livewire::test(LessonExercises::class, ['exercises' => $this->sample_exercises]);
-        
+
         $flat = $component->get('all_exercises_flat');
         // 1 quiz + 2 gap_fill + 1 sentence + 1 true_false + 1 matching = 6
         $this->assertCount(6, $flat);
@@ -90,7 +90,7 @@ class LessonExercisesTest extends TestCase
     public function test_mount_initializes_ordered_words_for_sentence_ordering(): void
     {
         $component = Livewire::test(LessonExercises::class, ['exercises' => $this->sample_exercises]);
-        
+
         $ordered_words = $component->get('ordered_words');
         $this->assertArrayHasKey(0, $ordered_words);
         $this->assertSame(['is', 'This', 'test', 'a'], $ordered_words[0]);
@@ -104,7 +104,7 @@ class LessonExercisesTest extends TestCase
                 'lesson_id' => $this->lesson->id,
             ])
             ->assertSet('lesson_id', $this->lesson->id);
-        
+
         $this->assertNotNull($component->get('attempt_id'));
     }
 
@@ -121,12 +121,12 @@ class LessonExercisesTest extends TestCase
     public function test_next_exercise_does_not_exceed_total(): void
     {
         $component = Livewire::test(LessonExercises::class, ['exercises' => $this->sample_exercises]);
-        
+
         // Navigate to last exercise
         for ($i = 0; $i < 10; $i++) {
             $component->call('nextExercise');
         }
-        
+
         $component->assertSet('current_exercise_index', 5); // Max is 5 (0-indexed, 6 total)
     }
 
@@ -141,11 +141,11 @@ class LessonExercisesTest extends TestCase
     public function test_previous_exercise_does_not_go_below_zero(): void
     {
         $component = Livewire::test(LessonExercises::class, ['exercises' => $this->sample_exercises]);
-        
+
         for ($i = 0; $i < 5; $i++) {
             $component->call('previousExercise');
         }
-        
+
         $component->assertSet('current_exercise_index', 0);
     }
 
@@ -155,7 +155,7 @@ class LessonExercisesTest extends TestCase
     {
         $component = Livewire::test(LessonExercises::class, ['exercises' => $this->sample_exercises])
             ->call('moveWord', 0, 0, 'right'); // Move 'is' right
-        
+
         $words = $component->get('ordered_words')[0];
         $this->assertSame('This', $words[0]);
         $this->assertSame('is', $words[1]);
@@ -165,7 +165,7 @@ class LessonExercisesTest extends TestCase
     {
         $component = Livewire::test(LessonExercises::class, ['exercises' => $this->sample_exercises])
             ->call('moveWord', 0, 1, 'left'); // Move 'This' left
-        
+
         $words = $component->get('ordered_words')[0];
         $this->assertSame('This', $words[0]);
         $this->assertSame('is', $words[1]);
@@ -175,7 +175,7 @@ class LessonExercisesTest extends TestCase
     {
         $component = Livewire::test(LessonExercises::class, ['exercises' => $this->sample_exercises])
             ->call('moveWord', 0, 0, 'left'); // Try to move first word left
-        
+
         $words = $component->get('ordered_words')[0];
         $this->assertSame('is', $words[0]); // Should not change
     }
@@ -343,7 +343,7 @@ class LessonExercisesTest extends TestCase
         $component = Livewire::test(LessonExercises::class, ['exercises' => $this->sample_exercises])
             ->call('moveWord', 0, 0, 'right')
             ->call('resetExercises');
-        
+
         $words = $component->get('ordered_words')[0];
         $this->assertSame(['is', 'This', 'test', 'a'], $words);
     }
@@ -356,11 +356,11 @@ class LessonExercisesTest extends TestCase
                 'lesson_id' => $this->lesson->id,
             ])
             ->call('checkAnswers');
-        
+
         $old_attempt_id = $component->get('attempt_id');
-        
+
         $component->call('resetExercises');
-        
+
         $new_attempt_id = $component->get('attempt_id');
         $this->assertNotEquals($old_attempt_id, $new_attempt_id);
     }
@@ -378,7 +378,7 @@ class LessonExercisesTest extends TestCase
                 'exercises' => $this->sample_exercises,
                 'lesson_id' => $this->lesson->id,
             ]);
-        
+
         $this->assertNotNull($component->get('attempt_id'));
 
         $attempt = LessonAttempt::where('lesson_id', '=', $this->lesson->id)
@@ -419,18 +419,18 @@ class LessonExercisesTest extends TestCase
                 'exercises' => $this->sample_exercises,
                 'lesson_id' => $this->lesson->id,
             ]);
-        
+
         $first_attempt_id = $component1->get('attempt_id');
-        
+
         // Mount again - should reuse same attempt
         $component2 = Livewire::actingAs($this->user)
             ->test(LessonExercises::class, [
                 'exercises' => $this->sample_exercises,
                 'lesson_id' => $this->lesson->id,
             ]);
-        
+
         $second_attempt_id = $component2->get('attempt_id');
-        
+
         $this->assertSame($first_attempt_id, $second_attempt_id);
     }
 }

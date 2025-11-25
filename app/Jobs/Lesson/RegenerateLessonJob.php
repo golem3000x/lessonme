@@ -10,6 +10,7 @@ use App\Exceptions\LessonExistsException;
 use App\Models\Lesson\Lesson;
 use App\Models\User;
 use App\Notifications\Lesson\LessonCreationNotification;
+use App\Services\Lesson\LessonAudioService;
 use App\Services\Lesson\LessonService;
 use Exception;
 use Illuminate\Bus\Queueable;
@@ -28,7 +29,7 @@ class RegenerateLessonJob implements ShouldQueue
         protected LessonDto $lesson_dto
     ) {}
 
-    public function handle(LessonService $lessonService): void
+    public function handle(LessonService $lessonService, LessonAudioService $audio_service): void
     {
         $lesson = Lesson::find($this->lesson_id);
 
@@ -46,7 +47,26 @@ class RegenerateLessonJob implements ShouldQueue
         }
 
         try {
+            try {
+                $audio_service->deleteAudioFiles($lesson);
+            } catch (\Exception $e) {
+                Log::error('Failed to delete old audio files', [
+                    'lesson_id' => $lesson->id,
+                    'error' => $e->getMessage(),
+                ]);
+            }
+
             $updatedLesson = $lessonService->regenerateLesson($lesson, $this->lesson_dto);
+
+            try {
+                $audio_service->generateAudioForLesson($updatedLesson);
+            } catch (\Exception $e) {
+                Log::error('Audio generation failed for lesson regenerated', [
+                    'lesson_id' => $updatedLesson->id,
+                    'error' => $e->getMessage(),
+                ]);
+            }
+
             $this->notify($user, LessonCreationStatusEnum::SUCCESSFULLY, $updatedLesson->id);
         } catch (LessonExistsException $e) {
             $this->notify($user, LessonCreationStatusEnum::EXISTS, $e->lesson->id);

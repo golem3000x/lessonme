@@ -48,7 +48,7 @@ abstract class UserSlugVisibility extends BaseModel
 
     /**
      * Relation to parent entity (Topic, Keyword, etc.)
-     * 
+     *
      * @return BelongsTo<TEntity, $this>
      */
     abstract public function entity(): BelongsTo;

@@ -17,6 +17,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $updated_at
  * @property-read \App\Models\User $student
  * @property-read \App\Models\User $teacher
+ *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TeacherStudent newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TeacherStudent newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TeacherStudent query()
@@ -25,6 +26,7 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TeacherStudent whereStudentId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TeacherStudent whereTeacherId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TeacherStudent whereUpdatedAt($value)
+ *
  * @mixin \Eloquent
  */
 class TeacherStudent extends Model

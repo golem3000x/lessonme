@@ -35,7 +35,7 @@ class QuickTourBanner extends Component
         }
 
         $this->show_banner = false;
-        
+
         // Dispatch event to frontend to start Shepherd tour
         $this->dispatch('start-shepherd-tour');
     }

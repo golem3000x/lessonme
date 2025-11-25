@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 class FptTtsService
 {
     private const string FPT_TTS_API_URL = 'https://api.fpt.ai/hmi/tts/v5';
+
     private string $fpt_tts_api_key;
 
     public function __construct()
@@ -17,21 +18,25 @@ class FptTtsService
         $this->fpt_tts_api_key = config('services.fpt_tts.api_key');
     }
 
-    public function synthesize(string $text, string $voice = 'banmai'): ?array
+    public function synthesize(string $text, string $voice): ?array
     {
         if (empty($this->fpt_tts_api_key)) {
             Log::error('FPT TTS API key is not configured');
+
             return null;
         }
 
         try {
             $response = Http::withHeaders([
                 'api-key' => $this->fpt_tts_api_key,
-                'speed' => '-1',
-            ])->post(self::FPT_TTS_API_URL, [
-                'text' => $text,
-                'voice' => $voice
-            ]);
+                'voice' => $voice,
+                'speed' => '-1.5',
+                'Content-Type' => 'text/plain; charset=utf-8',
+                'Accept' => 'application/json',
+            ])
+                ->send('POST', self::FPT_TTS_API_URL, [
+                    'body' => $text,
+                ]);
 
             if ($response->successful()) {
                 return $response->json();
@@ -39,7 +44,7 @@ class FptTtsService
 
             Log::error('FPT TTS API error', [
                 'status' => $response->status(),
-                'body' => $response->body()
+                'body' => $response->body(),
             ]);
 
             return null;
@@ -47,8 +52,9 @@ class FptTtsService
             Log::error('FPT TTS API exception', [
                 'message' => $e->getMessage(),
                 'text' => $text,
-                'voice' => $voice
+                'voice' => $voice,
             ]);
+
             return null;
         }
     }

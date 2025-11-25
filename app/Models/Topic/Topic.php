@@ -17,7 +17,7 @@ use Illuminate\Support\Carbon;
 
 /**
  * @extends Slug<TopicTranslation, UserTopicVisibility>
- * 
+ *
  * @property int $id
  * @property int|null $user_id
  * @property string $slug
@@ -34,6 +34,7 @@ use Illuminate\Support\Carbon;
  * @property-read User|null $user
  * @property-read Collection<int, \App\Models\Topic\UserTopicVisibility> $visibility
  * @property-read int|null $visibility_count
+ *
  * @method static Builder<static>|Topic newModelQuery()
  * @method static Builder<static>|Topic newQuery()
  * @method static Builder<static>|Topic query()
@@ -45,6 +46,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|Topic whereSlug($value)
  * @method static Builder<static>|Topic whereUpdatedAt($value)
  * @method static Builder<static>|Topic whereUserId($value)
+ *
  * @mixin \Eloquent
  */
 class Topic extends Slug

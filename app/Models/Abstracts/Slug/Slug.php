@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 /**
  * @template TTranslation of SlugTranslation
  * @template TVisibility of UserSlugVisibility
- * 
+ *
  * @property int $id
  * @property int|null $user_id
  * @property string $slug
@@ -55,14 +55,14 @@ abstract class Slug extends BaseModel
 
     /**
      * Relation to translations table
-     * 
+     *
      * @return HasMany<TTranslation, $this>
      */
     abstract public function translations(): HasMany;
 
     /**
      * Relation to visibility table
-     * 
+     *
      * @return HasMany<TVisibility, $this>
      */
     abstract public function visibility(): HasMany;
@@ -79,7 +79,7 @@ abstract class Slug extends BaseModel
 
     /**
      * Get translation for specific language or fallback to first available
-     * 
+     *
      * @return TTranslation|null
      */
     public function translation(?string $lang = null): ?SlugTranslation

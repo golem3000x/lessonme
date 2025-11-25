@@ -23,7 +23,7 @@ class LessonGradingServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->service = new LessonGradingService();
+        $this->service = new LessonGradingService;
     }
 
     public function test_start_attempt_creates_new_attempt(): void

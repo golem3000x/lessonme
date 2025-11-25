@@ -8,6 +8,7 @@ use App\Dto\LessonDto;
 use App\Enums\Notifications\LessonCreationStatusEnum;
 use App\Enums\System\LanguageLevelEnum;
 use App\Enums\System\QueueNameEnum;
+use App\Enums\System\SystemLanguageEnum;
 use App\Jobs\Lesson\RegenerateLessonJob;
 use App\Models\Lesson\Lesson;
 use App\Notifications\Lesson\LessonCreationNotification;
@@ -50,6 +51,8 @@ class LessonIndex extends Component
 
     public bool $show_level_dropdown = false;
 
+    public bool $show_language_dropdown = false;
+
     public bool $show_sort_dropdown = false;
 
     // Filter values (temporary, not applied yet)
@@ -58,11 +61,17 @@ class LessonIndex extends Component
     /** @var array<int, string> */
     public array $temp_language_levels = [];
 
+    /** @var array<int, string> */
+    public array $temp_lesson_languages = [];
+
     // Applied filter values
     public string $search = '';
 
     /** @var array<int, string> */
     public array $language_levels = [];
+
+    /** @var array<int, string> */
+    public array $lesson_languages = [];
 
     public string $sort = 'newest';
 
@@ -71,11 +80,13 @@ class LessonIndex extends Component
         // Restore filters from session
         $this->search = session('lesson_filters.search', '');
         $this->language_levels = session('lesson_filters.language_levels', []);
+        $this->lesson_languages = session('lesson_filters.lesson_languages', []);
         $this->sort = session('lesson_filters.sort', 'newest');
 
         // Initialize temp filters with applied values
         $this->temp_search = $this->search;
         $this->temp_language_levels = $this->language_levels;
+        $this->temp_lesson_languages = $this->lesson_languages;
     }
 
     public function updated(string $property): void
@@ -132,6 +143,11 @@ class LessonIndex extends Component
         // Apply language level filter
         if (! empty($this->language_levels)) {
             $query->whereIn('language_level', $this->language_levels);
+        }
+
+        // Apply lesson language filter
+        if (! empty($this->lesson_languages)) {
+            $query->whereIn('lesson_lang', $this->lesson_languages);
         }
 
         // Apply sorting
@@ -316,11 +332,13 @@ class LessonIndex extends Component
         if ($this->show_filters) {
             $this->temp_search = $this->search;
             $this->temp_language_levels = $this->language_levels;
+            $this->temp_lesson_languages = $this->lesson_languages;
         }
 
-        // Close level dropdown when closing filters panel
+        // Close dropdowns when closing filters panel
         if (! $this->show_filters) {
             $this->show_level_dropdown = false;
+            $this->show_language_dropdown = false;
         }
     }
 
@@ -328,31 +346,37 @@ class LessonIndex extends Component
     {
         $this->search = $this->temp_search;
         $this->language_levels = $this->temp_language_levels;
+        $this->lesson_languages = $this->temp_lesson_languages;
 
         // Save filters to session
         session([
             'lesson_filters.search' => $this->search,
             'lesson_filters.language_levels' => $this->language_levels,
+            'lesson_filters.lesson_languages' => $this->lesson_languages,
         ]);
 
         $this->resetPage();
         $this->show_filters = false;
         $this->show_level_dropdown = false;
+        $this->show_language_dropdown = false;
     }
 
     public function resetFilters(): void
     {
         $this->temp_search = '';
         $this->temp_language_levels = [];
+        $this->temp_lesson_languages = [];
 
         $this->search = '';
         $this->language_levels = [];
+        $this->lesson_languages = [];
 
         // Clear filters from session (keep sort)
-        session()->forget(['lesson_filters.search', 'lesson_filters.language_levels']);
+        session()->forget(['lesson_filters.search', 'lesson_filters.language_levels', 'lesson_filters.lesson_languages']);
 
         $this->resetPage();
         $this->show_level_dropdown = false;
+        $this->show_language_dropdown = false;
     }
 
     #[Computed]
@@ -370,12 +394,17 @@ class LessonIndex extends Component
             $query->whereIn('language_level', $this->temp_language_levels);
         }
 
+        // Apply temporary lesson language filter
+        if (! empty($this->temp_lesson_languages)) {
+            $query->whereIn('lesson_lang', $this->temp_lesson_languages);
+        }
+
         return $query->count();
     }
 
     public function hasActiveFilters(): bool
     {
-        return $this->search !== '' || ! empty($this->language_levels) || $this->sort !== 'newest';
+        return $this->search !== '' || ! empty($this->language_levels) || ! empty($this->lesson_languages) || $this->sort !== 'newest';
     }
 
     /**
@@ -393,6 +422,24 @@ class LessonIndex extends Component
         }
 
         return $levels;
+    }
+
+    /**
+     * @return array<int, array{value: string, label: string, flag: string}>
+     */
+    public function getLessonLanguages(): array
+    {
+        $languages = [];
+
+        foreach (SystemLanguageEnum::cases() as $language) {
+            $languages[] = [
+                'value' => $language->value,
+                'label' => $language->label(),
+                'flag' => $language->flag(),
+            ];
+        }
+
+        return $languages;
     }
 
     public function render(): Factory|View

@@ -32,6 +32,7 @@ use Illuminate\Support\Carbon;
  * @property-read Lesson $lesson
  * @property-read User $student
  * @property-read User $teacher
+ *
  * @method static Builder<static>|LessonAssignment newModelQuery()
  * @method static Builder<static>|LessonAssignment newQuery()
  * @method static Builder<static>|LessonAssignment query()
@@ -46,6 +47,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|LessonAssignment whereTeacherId($value)
  * @method static Builder<static>|LessonAssignment whereUpdatedAt($value)
  * @method static LessonAssignmentFactory factory($count = null, $state = [])
+ *
  * @mixin \Eloquent
  */
 class LessonAssignment extends Model

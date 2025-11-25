@@ -17,7 +17,9 @@ return [
     'vocabulary' => 'Từ vựng',
     'example' => 'Ví dụ',
     'show_translations' => 'Hiển thị bản dịch',
+    'hide_translations' => 'Ẩn bản dịch',
     'speak_word' => 'Phát âm từ',
+    'audio_not_available' => 'Âm thanh không có sẵn',
     'listen_and_fill' => 'Nghe và điền vào chỗ trống',
 
     // Welcome page
@@ -92,6 +94,8 @@ return [
     'search' => 'Tìm kiếm',
     'search_placeholder' => 'Tìm kiếm theo tên bài học...',
     'all_levels' => 'Tất cả trình độ',
+    'lesson_language' => 'Ngôn ngữ bài học',
+    'all_languages' => 'Tất cả ngôn ngữ',
     'sort_by' => 'Sắp xếp theo',
     'newest_first' => 'Mới nhất trước',
     'oldest_first' => 'Cũ nhất trước',

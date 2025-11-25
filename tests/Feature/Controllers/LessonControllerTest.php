@@ -23,7 +23,7 @@ class LessonControllerTest extends TestCase
     {
         parent::setUp();
         $this->history_service = app(LessonHistoryService::class);
-        
+
         // Set locale to avoid translation issues in tests
         app()->setLocale('en');
     }
@@ -108,7 +108,7 @@ class LessonControllerTest extends TestCase
     public function test_history_orders_by_created_at_desc(): void
     {
         $this->markTestSkipped('Timestamp ordering in tests is unreliable due to transaction timing');
-        
+
         $user = User::factory()->create();
         $lesson = Lesson::factory()->create(['user_id' => $user->id]);
 
@@ -159,7 +159,7 @@ class LessonControllerTest extends TestCase
     public function test_restore_restores_lesson_version_for_owner(): void
     {
         $this->markTestSkipped('CSRF token handling in tests requires session setup');
-        
+
         $user = User::factory()->create();
         $lesson = Lesson::factory()->create([
             'user_id' => $user->id,
@@ -197,7 +197,7 @@ class LessonControllerTest extends TestCase
     public function test_restore_creates_snapshot_before_restoring(): void
     {
         $this->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class);
-        
+
         $user = User::factory()->create();
         $lesson = Lesson::factory()->create([
             'user_id' => $user->id,
@@ -234,7 +234,7 @@ class LessonControllerTest extends TestCase
     public function test_restore_aborts_if_history_does_not_belong_to_lesson(): void
     {
         $this->markTestSkipped('CSRF token handling in tests requires session setup');
-        
+
         $user = User::factory()->create();
         $lesson1 = Lesson::factory()->create(['user_id' => $user->id]);
         $lesson2 = Lesson::factory()->create(['user_id' => $user->id]);
@@ -266,7 +266,7 @@ class LessonControllerTest extends TestCase
     public function test_restore_denies_access_to_non_owner(): void
     {
         $this->markTestSkipped('Authorization is tested in middleware tests');
-        
+
         $owner = User::factory()->create();
         $other_user = User::factory()->create();
         $lesson = Lesson::factory()->create(['user_id' => $owner->id]);
@@ -298,7 +298,7 @@ class LessonControllerTest extends TestCase
     public function test_restore_requires_authentication(): void
     {
         $this->markTestSkipped('Authentication is tested in middleware tests');
-        
+
         $user = User::factory()->create();
         $lesson = Lesson::factory()->create(['user_id' => $user->id]);
 

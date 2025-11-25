@@ -111,7 +111,7 @@ class ChatPanel extends Component
     }
 
     /**
-     * @param array<string, mixed> $message_data
+     * @param  array<string, mixed>  $message_data
      */
     #[On('message-received')]
     public function addMessage(array $message_data): void

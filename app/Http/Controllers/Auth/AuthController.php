@@ -39,7 +39,7 @@ class AuthController extends Controller
             $request->session()->regenerate();
 
             $user = Auth::user();
-            
+
             if (! $user) {
                 throw ValidationException::withMessages([
                     'email' => [__('auth.failed')],

@@ -21,7 +21,7 @@ class LessonHistoryServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->service = new LessonHistoryService();
+        $this->service = new LessonHistoryService;
     }
 
     public function test_snapshot_creates_history_record(): void
@@ -145,7 +145,7 @@ class LessonHistoryServiceTest extends TestCase
         // Should have created one snapshot (and deleted the old history)
         // So count should be the same (created 1, deleted 1)
         $this->assertSame($initial_history_count, LessonHistory::count());
-        
+
         // The new snapshot should have the "Current Version" data
         $latest_history = LessonHistory::where('lesson_id', '=', $lesson->id)->latest()->first();
         $this->assertSame('Current Version', $latest_history->lesson_name);

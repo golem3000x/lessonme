@@ -20,6 +20,7 @@ class ManageLessonTest extends TestCase
     use RefreshDatabase;
 
     private User $user;
+
     private Topic $topic;
 
     protected function setUp(): void
@@ -265,7 +266,7 @@ class ManageLessonTest extends TestCase
     public function test_all_selections_persist_across_component_instances(): void
     {
         $topic2 = Topic::factory()->create(['is_system' => true]);
-        
+
         // First instance sets values
         Livewire::actingAs($this->user)
             ->test(ManageLesson::class)

@@ -71,6 +71,7 @@ use Illuminate\Support\Str;
  * @property-read int|null $students_count
  * @property-read Collection<int, User> $teachers
  * @property-read int|null $teachers_count
+ *
  * @method static \Database\Factories\UserFactory factory($count = null, $state = [])
  * @method static Builder<static>|User newModelQuery()
  * @method static Builder<static>|User newQuery()
@@ -92,6 +93,7 @@ use Illuminate\Support\Str;
  * @method static Builder<static>|User whereTimezone($value)
  * @method static Builder<static>|User whereUpdatedAt($value)
  * @method static Builder<static>|User whereZaloUserId($value)
+ *
  * @mixin \Eloquent
  */
 class User extends Authenticatable implements FilamentUser, HasLocalePreference

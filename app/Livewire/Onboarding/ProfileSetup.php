@@ -210,11 +210,11 @@ class ProfileSetup extends Component
 
         // Refresh auth user data in session
         $user = $user->fresh();
-        
+
         if (! $user) {
             return redirect()->route('login');
         }
-        
+
         Auth::login($user);
 
         $this->saveTopicVisibility($user);

@@ -111,14 +111,11 @@
                             <div class="flex items-center justify-between mb-3">
                                 <span class="text-sm text-gray-600">{{ __('lessons.listen_and_fill') }}</span>
                                 @php
-                                    // Build complete sentence with the correct answer
-                                    $complete_sentence = str_replace('___', $item['answer'] ?? '', $sentence);
-                                    // Remove hint in parentheses
-                                    $complete_sentence = preg_replace('/\s*\([^)]+\)/', '', $complete_sentence);
+                                    $audio_file = $lesson?->getGapFillAudio($index);
+                                    $audio_url = $audio_file?->getPublicUrl();
                                 @endphp
                                 <livewire:lesson.lesson-speaker 
-                                    :word="$complete_sentence" 
-                                    :lang="$learning_lang ?? 'vi'" 
+                                    :audio_url="$audio_url" 
                                     :key="'gap-speaker-' . $index" 
                                 />
                             </div>
@@ -161,7 +158,7 @@
                                         x-transition:leave-end="opacity-0 scale-90"
                                         class="text-blue-700 font-medium px-3 py-2 bg-blue-200 rounded-lg"
                                     >
-                                        ({{ $hint }})
+                                        {{ $hint }}
                                     </div>
                                 @endif
                             </div>

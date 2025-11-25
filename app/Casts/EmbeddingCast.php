@@ -29,7 +29,7 @@ class EmbeddingCast implements CastsAttributes
     }
 
     /**
-     * @param mixed $value
+     * @param  mixed  $value
      */
     public function set($model, string $key, $value, array $attributes): ?string
     {

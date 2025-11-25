@@ -17,6 +17,7 @@ class KeywordSelectTest extends TestCase
     use RefreshDatabase;
 
     private User $user;
+
     private Topic $topic;
 
     protected function setUp(): void
@@ -51,7 +52,7 @@ class KeywordSelectTest extends TestCase
             ['id' => 2, 'label' => 'B'],
             ['id' => 3, 'label' => 'C'],
         ];
-        
+
         Livewire::actingAs($this->user)
             ->test(KeywordSelect::class, [
                 'keywords' => $keywords,
@@ -68,7 +69,7 @@ class KeywordSelectTest extends TestCase
             ['id' => 2, 'label' => 'B'],
             ['id' => 3, 'label' => 'C'],
         ];
-        
+
         Livewire::actingAs($this->user)
             ->test(KeywordSelect::class, [
                 'keywords' => $keywords,
@@ -264,7 +265,7 @@ class KeywordSelectTest extends TestCase
             ['id' => 1, 'label' => 'A'],
             ['id' => 99, 'label' => 'Z'],
         ];
-        
+
         $new_keywords = [
             ['id' => 1, 'label' => 'A'],
             ['id' => 2, 'label' => 'B'],
@@ -288,9 +289,9 @@ class KeywordSelectTest extends TestCase
 
         Livewire::actingAs($this->user)
             ->test(KeywordSelect::class)
-            ->dispatch('keywords-preloaded', 
-                keywords: $keywords, 
-                reset: false, 
+            ->dispatch('keywords-preloaded',
+                keywords: $keywords,
+                reset: false,
                 selectedIds: [1, 2]
             )
             ->assertSet('keyword_ids', [1, 2]);
@@ -390,8 +391,8 @@ class KeywordSelectTest extends TestCase
         $component->dispatch('topic-changed', id: 2);
 
         // Parent sends new keywords
-        $component->dispatch('keywords-preloaded', 
-            keywords: $new_keywords, 
+        $component->dispatch('keywords-preloaded',
+            keywords: $new_keywords,
             reset: true
         );
 

@@ -17,7 +17,9 @@ return [
     'vocabulary' => 'Vocabulary',
     'example' => 'Example',
     'show_translations' => 'Show translations',
+    'hide_translations' => 'Hide translations',
     'speak_word' => 'Speak word',
+    'audio_not_available' => 'Audio not available',
     'listen_and_fill' => 'Listen and fill in the blank',
 
     // Welcome page
@@ -92,6 +94,8 @@ return [
     'search' => 'Search',
     'search_placeholder' => 'Search by lesson name...',
     'all_levels' => 'All levels',
+    'lesson_language' => 'Lesson Language',
+    'all_languages' => 'All languages',
     'sort_by' => 'Sort by',
     'newest_first' => 'Newest first',
     'oldest_first' => 'Oldest first',

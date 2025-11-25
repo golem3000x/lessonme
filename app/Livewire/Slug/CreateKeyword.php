@@ -49,7 +49,7 @@ class CreateKeyword extends Component
                 'required',
                 'string',
                 'max:255',
-                new IsMeaningful(),
+                new IsMeaningful,
                 function ($attribute, $value, $fail) use ($slug) {
                     // Check if keyword with same slug already exists in this topic
                     $exists = Keyword::where('slug', '=', $slug)

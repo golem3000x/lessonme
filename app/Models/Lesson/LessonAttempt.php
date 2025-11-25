@@ -28,6 +28,7 @@ use Illuminate\Support\Carbon;
  * @property-read \App\Models\Lesson\Lesson $lesson
  * @property-read \App\Models\Lesson\LessonScore|null $score
  * @property-read User $user
+ *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAttempt newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAttempt newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAttempt query()
@@ -43,6 +44,7 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAttempt whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAttempt whereUserAnswers($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAttempt whereUserId($value)
+ *
  * @mixin \Eloquent
  */
 class LessonAttempt extends Model

@@ -10,8 +10,8 @@ use App\Exceptions\LessonExistsException;
 use App\Models\Lesson\Lesson;
 use App\Models\User;
 use App\Notifications\Lesson\LessonCreationNotification;
+use App\Services\Lesson\LessonAudioService;
 use App\Services\Lesson\LessonService;
-use App\Services\Slug\SlugService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -34,10 +34,20 @@ class CreateLessonJob implements ShouldQueue
      * @throws Throwable
      * @throws LessonExistsException
      */
-    public function handle(LessonService $service): void
+    public function handle(LessonService $service, LessonAudioService $audio_service): void
     {
         try {
             $lesson = $service->createLesson($this->user_id, $this->topic_id, $this->lesson_dto);
+
+            try {
+                $audio_service->generateAudioForLesson($lesson);
+            } catch (\Exception $e) {
+                Log::error('Audio generation failed for lesson creation', [
+                    'lesson_id' => $lesson->id,
+                    'error' => $e->getMessage(),
+                ]);
+            }
+
             $this->notify($lesson, LessonCreationStatusEnum::SUCCESSFULLY);
         } catch (LessonExistsException $e) {
             Log::error('Lesson already exists', [
@@ -62,9 +72,10 @@ class CreateLessonJob implements ShouldQueue
         $user = User::find($this->user_id);
         if (! $user) {
             Log::warning('User not found for notification', ['user_id' => $this->user_id]);
+
             return;
         }
-        
+
         $user->notify(
             new LessonCreationNotification(
                 $user,

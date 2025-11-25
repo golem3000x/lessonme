@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models\Lesson;
 
+use App\Enums\Lesson\LessonAudioStatusEnum;
 use App\Enums\System\LanguageLevelEnum;
 use App\Enums\System\TableNameEnum;
 use App\Models\Abstracts\Lesson\BaseLesson;
@@ -43,8 +44,11 @@ use Illuminate\Support\Carbon;
  * @property-read int|null $histories_count
  * @property-read Collection<int, \App\Models\Lesson\LessonScore> $scores
  * @property-read int|null $scores_count
+ * @property-read Collection<int, \App\Models\Lesson\LessonAudioFile> $audio_files
+ * @property-read int|null $audio_files_count
  * @property-read Topic|null $topic
  * @property-read \App\Models\User $user
+ *
  * @method static LessonFactory factory($count = null, $state = [])
  * @method static Builder<static>|Lesson newModelQuery()
  * @method static Builder<static>|Lesson newQuery()
@@ -66,6 +70,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|Lesson whereUserId($value)
  * @method static Builder<static>|Lesson whereUuid($value)
  * @method static Builder<static>|Lesson whereVocabulary($value)
+ *
  * @mixin \Eloquent
  */
 class Lesson extends BaseLesson
@@ -120,5 +125,31 @@ class Lesson extends BaseLesson
     public function scores(): HasMany
     {
         return $this->hasMany(LessonScore::class);
+    }
+
+    /**
+     * @return HasMany<LessonAudioFile, $this>
+     */
+    public function audioFiles(): HasMany
+    {
+        return $this->hasMany(LessonAudioFile::class);
+    }
+
+    public function getVocabularyAudio(string $word): ?LessonAudioFile
+    {
+        return $this->audioFiles()
+            ->where('audio_type', '=', 'vocabulary')
+            ->where('audio_key', '=', $word)
+            ->where('status', '=', LessonAudioStatusEnum::READY->value)
+            ->first();
+    }
+
+    public function getGapFillAudio(int $index): ?LessonAudioFile
+    {
+        return $this->audioFiles()
+            ->where('audio_type', '=', 'gap_fill')
+            ->where('audio_key', '=', (string) $index)
+            ->where('status', '=', LessonAudioStatusEnum::READY->value)
+            ->first();
     }
 }

@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @template TEntity of Slug
- * 
+ *
  * @property string $language_code
  * @property string $value
  */
@@ -28,7 +28,7 @@ abstract class SlugTranslation extends BaseModel
 
     /**
      * Relation to parent entity (Topic, Keyword, etc.)
-     * 
+     *
      * @return BelongsTo<TEntity, $this>
      */
     abstract public function entity(): BelongsTo;
