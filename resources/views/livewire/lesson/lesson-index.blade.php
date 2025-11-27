@@ -1,6 +1,6 @@
 @php use Illuminate\Support\Str; @endphp
 <div class="max-w-6xl mx-auto p-6 space-y-8">
-    {{-- Заголовок --}}
+    {{-- Header --}}
     <div class="flex items-center justify-between">
         <h2 class="text-3xl font-bold text-gray-900 flex items-center gap-2">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-blue-600 drop-shadow-md" fill="none" viewBox="0 0 24 24"
@@ -280,7 +280,7 @@
         </div>
     @endif
 
-    {{-- Пустой список --}}
+    {{-- Empty list --}}
     @if($lessons->isEmpty() && empty($creating_lessons_placeholders))
         <div class="text-center py-16 space-y-4">
             @if($this->hasActiveFilters())
@@ -309,10 +309,10 @@
         </div>
     @endif
 
-    {{-- Список уроков (показываем если есть уроки ИЛИ есть placeholders) --}}
+    {{-- Lessons list (show if there are lessons OR placeholders) --}}
     @if(!$lessons->isEmpty() || !empty($creating_lessons_placeholders))
-        {{-- Список уроков --}}
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {{-- Lessons list --}}
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
             {{-- Placeholder cards for lessons being created --}}
             @foreach($creating_lessons_placeholders as $index => $placeholder_id)
                 @php
@@ -374,12 +374,12 @@
                     @continue
                 @endif
                 
-                <div class="group bg-white border border-gray-100 rounded-xl shadow-sm hover:shadow-md hover:-translate-y-1 transition p-5 relative overflow-hidden">
+                <div class="group bg-white border border-gray-100 rounded-xl shadow-sm hover:shadow-md hover:-translate-y-1 transition p-5 relative overflow-hidden flex flex-col h-full">
                     <div class="absolute inset-0 bg-gradient-to-br from-blue-50/20 to-transparent opacity-0 group-hover:opacity-100 transition pointer-events-none"></div>
 
                     <div class="flex justify-between items-start mb-3">
                         <div class="flex-1">
-                            <h3 class="font-semibold text-lg text-gray-800 line-clamp-2 mb-2">{{ $lesson->lesson_name }}</h3>
+                            <h3 class="font-semibold text-lg text-gray-800 line-clamp-2 mb-2 min-h-[3.5rem]">{{ $lesson->lesson_name }}</h3>
                             
                             <div class="flex flex-wrap items-center gap-2">
                                 @if($lesson->lesson_lang)
@@ -404,7 +404,7 @@
                         </div>
 
                         <div class="relative ml-2">
-                            <!-- Кнопка с тремя точками -->
+                            <!-- Three dots button -->
                             <button wire:click="toggleDropdown({{ $lesson->id }})"
                                     class="group p-2 rounded-lg text-gray-500 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200 {{ !empty($open_dropdowns[$lesson->id]) ? 'bg-blue-50 text-blue-600' : '' }}"
                                     title="{{ __('lessons.actions') }}">
@@ -465,10 +465,10 @@
                         </div>
                     </div>
 
-                    <p class="text-sm text-gray-600 mb-4 leading-snug">{{ Str::limit($lesson->lesson_text, 120) }}</p>
+                    <p class="text-sm text-gray-600 mb-4 leading-snug line-clamp-3 flex-grow">{{ $lesson->lesson_text }}</p>
 
                     <a href="{{ route('lessons.show', $lesson->uuid) }}"
-                       class="group inline-flex items-center justify-center gap-2 w-full px-4 py-2 bg-blue-600 text-white rounded-md font-medium hover:bg-blue-700 transition">
+                       class="group inline-flex items-center justify-center gap-2 w-full px-4 py-2 bg-blue-600 text-white rounded-md font-medium hover:bg-blue-700 transition mt-auto">
                         <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
                                   d="M14 5l7 7-7 7M3 12h18"/>
@@ -479,7 +479,7 @@
             @endforeach
         </div>
 
-        {{-- Pagination (только если есть реальные уроки) --}}
+        {{-- Pagination (only if there are real lessons) --}}
         @if(!$lessons->isEmpty())
             <div class="mt-8">
                 {{ $lessons->links() }}
@@ -495,13 +495,13 @@
                 class="fixed inset-0 z-50 overflow-y-auto"
                 @click.self="$wire.closeManageModal()"
         >
-            {{-- Фон с размытием --}}
+            {{-- Background with blur --}}
             <div class="fixed inset-0 bg-black/50 backdrop-blur-sm"
                  x-show="open"
                  x-transition
             ></div>
 
-            {{-- Центрируем модальное окно --}}
+            {{-- Center modal window --}}
             <div class="flex items-center justify-center min-h-screen p-4">
                 <div
                         class="relative bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden border border-gray-100"

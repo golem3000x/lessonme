@@ -1,8 +1,6 @@
-<!-- Кнопка чата в правом нижнем углу -->
+<!-- Chat button in bottom right corner -->
 <div 
     class="fixed bottom-6 right-6 z-50"
-    x-data="{ chatOpen: @js($is_chat_open) }"
-    @chat-toggled.window="chatOpen = $event.detail.is_open"
 >
     <style>
         @keyframes fade-in {
@@ -20,7 +18,7 @@
             animation: fade-in 0.3s ease-out;
         }
         
-        /* Медленная пульсация */
+        /* Slow pulse */
         @keyframes slow-pulse {
             0%, 100% {
                 opacity: 0.3;
@@ -40,12 +38,12 @@
     <button 
         wire:click="toggleChat"
         class="group relative flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 text-white rounded-full shadow-2xl hover:shadow-blue-500/50 transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-4 focus:ring-blue-300"
-        aria-label="Открыть чат"
+        aria-label="Open chat"
     >
-        <!-- Замедленная пульсация -->
+        <!-- Slow pulse -->
         <span class="absolute inset-0 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 opacity-40 animate-slow-pulse"></span>
         
-        <!-- Иконка без вращения -->
+        <!-- Icon without rotation -->
         <svg 
             xmlns="http://www.w3.org/2000/svg" 
             class="relative h-8 w-8 z-10 transition-transform duration-300" 
@@ -61,7 +59,7 @@
             />
         </svg>
 
-        <!-- Badge с количеством непрочитанных сообщений -->
+        <!-- Badge with unread message count -->
         @if($unread_count > 0)
             <span class="absolute -top-2 -right-2 flex items-center justify-center w-7 h-7 bg-red-500 text-white text-xs font-bold rounded-full border-2 border-white shadow-lg animate-bounce">
                 {{ $unread_count > 9 ? '9+' : $unread_count }}
@@ -69,7 +67,7 @@
         @endif
     </button>
 
-    <!-- Подсказка при наведении -->
+    <!-- Tooltip on hover -->
     <div class="absolute bottom-full right-0 mb-3 hidden group-hover:block animate-fade-in">
         <div class="bg-gray-900 text-white text-sm py-2 px-4 rounded-lg shadow-xl whitespace-nowrap">
             {{ __('nav.chat') }}

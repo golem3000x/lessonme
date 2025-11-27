@@ -1,7 +1,6 @@
-<!-- Панель чата -->
+<!-- Chat panel -->
 <div 
     x-data="{ 
-        isOpen: @js($is_open),
         scrollToBottom() { 
             this.$nextTick(() => {
                 setTimeout(() => {
@@ -13,14 +12,14 @@
             });
         }
     }"
-    @chat-toggled.window="isOpen = $event.detail.is_open; if (isOpen) scrollToBottom()"
+    x-init="$watch('$wire.is_open', value => { if (value) scrollToBottom() })"
     @message-sent.window="scrollToBottom()"
     @message-received.window="scrollToBottom()"
-    :class="isOpen ? 'opacity-100 scale-100 pointer-events-auto' : 'opacity-0 scale-95 pointer-events-none'"
+    :class="$wire.is_open ? 'opacity-100 scale-100 pointer-events-auto' : 'opacity-0 scale-95 pointer-events-none'"
     class="fixed bottom-24 right-6 w-96 h-[500px] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden z-40 transition-all duration-300"
     x-cloak
 >
-    <!-- Заголовок -->
+    <!-- Header -->
     <div class="bg-gradient-to-r from-blue-500 to-purple-600 p-4 flex items-center justify-between">
         <div class="flex items-center gap-3">
             <div class="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
@@ -35,7 +34,7 @@
             </div>
         </div>
         <button 
-            @click="isOpen = false; $dispatch('chat-toggled', { is_open: false })"
+            wire:click="closeChat"
             class="text-white hover:bg-white/20 rounded-lg p-2 transition"
         >
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -44,7 +43,7 @@
         </button>
     </div>
 
-    <!-- Сообщения -->
+    <!-- Messages -->
     <div 
         x-ref="messagesContainer"
         class="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50"
@@ -53,7 +52,7 @@
         @forelse($messages as $message)
             <div class="flex {{ $message['is_from_admin'] ? 'justify-start' : 'justify-end' }} animate-fade-in">
                 <div class="flex items-start gap-2 max-w-[80%] {{ $message['is_from_admin'] ? 'flex-row' : 'flex-row-reverse' }}">
-                    <!-- Аватар -->
+                    <!-- Avatar -->
                     <div class="flex-shrink-0">
                         @if($message['is_from_admin'])
                             <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center">
@@ -63,15 +62,23 @@
                                 </svg>
                             </div>
                         @else
-                            <img 
-                                src="https://ui-avatars.com/api/?name={{ urlencode($message['user']['name']) }}&background=2563EB&color=fff" 
-                                alt="{{ $message['user']['name'] }}"
-                                class="w-8 h-8 rounded-full ring-2 ring-blue-100"
-                            >
+                            @if(!empty($message['user']['avatar_url']))
+                                <img 
+                                    src="{{ $message['user']['avatar_url'] }}" 
+                                    alt="{{ $message['user']['name'] }}"
+                                    class="w-8 h-8 rounded-full ring-2 ring-blue-100 object-cover"
+                                >
+                            @else
+                                <img 
+                                    src="https://ui-avatars.com/api/?name={{ urlencode($message['user']['name']) }}&background=2563EB&color=fff" 
+                                    alt="{{ $message['user']['name'] }}"
+                                    class="w-8 h-8 rounded-full ring-2 ring-blue-100"
+                                >
+                            @endif
                         @endif
                     </div>
 
-                    <!-- Сообщение -->
+                    <!-- Message -->
                     <div>
                         <div class="
                             {{ $message['is_from_admin'] 
@@ -101,7 +108,7 @@
         @endforelse
     </div>
 
-    <!-- Форма ввода -->
+    <!-- Input form -->
     <div class="p-4 bg-white border-t border-gray-200">
         <form wire:submit="sendMessage" class="flex gap-2">
             <input 

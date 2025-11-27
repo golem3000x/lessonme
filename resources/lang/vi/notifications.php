@@ -54,4 +54,7 @@ return [
     'delete' => 'Xóa',
     'no_notifications' => 'Chưa có thông báo',
     'all_caught_up' => 'Bạn đã xem hết tất cả!',
+    'previous' => 'Trước',
+    'next' => 'Tiếp',
+    'page' => 'Trang',
 ];

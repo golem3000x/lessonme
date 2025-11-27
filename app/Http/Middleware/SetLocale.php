@@ -16,20 +16,20 @@ class SetLocale
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // Проверяем локаль в сессии
+        // Check locale in session
         $locale = session('locale');
 
-        // Если локаль не в сессии, пытаемся взять из native_lang пользователя
+        // If locale not in session, try to get it from user's native_lang
         if (! $locale) {
             $user = auth()->user();
             if ($user && property_exists($user, 'native_lang') && $user->native_lang) {
                 $locale = $user->native_lang;
-                // Сохраняем в сессию для последующих запросов
+                // Save to session for subsequent requests
                 session(['locale' => $locale]);
             }
         }
 
-        // Устанавливаем локаль, если она валидна
+        // Set locale if it's valid
         if (is_string($locale) && in_array($locale, SystemLanguageEnum::toArray(), true)) {
             app()->setLocale($locale);
         }

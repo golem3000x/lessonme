@@ -12,7 +12,7 @@
 ])
 
 @php
-    // Определяем цвета на основе типа иконки
+    // Define colors based on icon type
     $iconConfig = match($icon) {
         'danger', 'delete' => [
             'bg' => 'from-red-100 to-pink-100',
@@ -51,7 +51,7 @@
         ],
     };
 
-    // Переопределяем цвета, если они заданы явно
+    // Override colors if explicitly set
     if ($iconColor) {
         $iconConfig['bg'] = $iconColor;
     }
@@ -119,7 +119,7 @@
                             </button>
                         </form>
                     @else
-                        {{-- Для случаев без route (например, wire:click) --}}
+                        {{-- For cases without route (e.g., wire:click) --}}
                         {{ $slot }}
                     @endif
                 </div>

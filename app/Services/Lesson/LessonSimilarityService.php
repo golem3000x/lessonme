@@ -9,7 +9,7 @@ use App\Models\Lesson\Lesson;
 class LessonSimilarityService
 {
     /**
-     * Найти похожий урок для пользователя по вектору embedding.
+     * Find a similar lesson for the user by embedding vector.
      *
      * @param  array<float>  $embedding
      */
@@ -17,7 +17,7 @@ class LessonSimilarityService
     {
         $embedding_str = '['.implode(',', $embedding).']';
 
-        // Используем pgvector оператор <=>; similarity = 1 - distance
+        // Use pgvector operator <=>; similarity = 1 - distance
         return Lesson::selectRaw('*, 1 - (embedding <=> ?) as similarity_score', [$embedding_str])
             ->where('user_id', '=', $user_id)
             ->whereRaw('1 - (embedding <=> ?) >= ?', [$embedding_str, Lesson::SIMILARITY_THRESHOLD])

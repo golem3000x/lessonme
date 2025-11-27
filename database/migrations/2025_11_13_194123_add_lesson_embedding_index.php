@@ -8,11 +8,11 @@ return new class extends Migration
 {
     public function up(): void
     {
-        // Убедимся, что расширение pgvector включено
+        // Ensure pgvector extension is enabled
         DB::statement('CREATE EXTENSION IF NOT EXISTS vector;');
 
         $lesson_table = TableNameEnum::LESSONS->value;
-        // Создаём индекс для быстрого поиска похожих embedding
+        // Create index for fast similarity search of embeddings
         DB::statement("
             CREATE INDEX IF NOT EXISTS lesson_embedding_idx
             ON $lesson_table USING ivfflat (embedding vector_cosine_ops)

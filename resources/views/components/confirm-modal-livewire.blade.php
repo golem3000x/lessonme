@@ -9,7 +9,7 @@
 ])
 
 @php
-    // Определяем цвета на основе типа иконки
+    // Define colors based on icon type
     $iconConfig = match($icon) {
         'danger', 'delete' => [
             'bg' => 'from-red-100 to-pink-100',

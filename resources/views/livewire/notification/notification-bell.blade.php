@@ -3,7 +3,7 @@
     <button 
         type="button"
         wire:click="toggleDropdown"
-        class="group relative p-2.5 text-gray-600 hover:text-blue-600 hover:bg-blue-50 focus:outline-none rounded-lg transition-all duration-200"
+        class="group relative px-2.5 py-3 text-gray-600 hover:text-blue-600 hover:bg-blue-50 focus:outline-none rounded-lg transition-all duration-200"
         :class="{ 'bg-blue-50 text-blue-600': open }"
         aria-label="{{ __('notifications.notifications') }}"
     >
@@ -25,12 +25,12 @@
         x-cloak
         @click.outside="$wire.closeDropdown()"
         x-transition:enter="transition ease-out duration-200"
-        x-transition:enter-start="opacity-0 translate-y-2"
-        x-transition:enter-end="opacity-100 translate-y-0"
+        x-transition:enter-start="opacity-0 scale-95"
+        x-transition:enter-end="opacity-100 scale-100"
         x-transition:leave="transition ease-in duration-150"
-        x-transition:leave-start="opacity-100 translate-y-0"
-        x-transition:leave-end="opacity-0 translate-y-2"
-        class="absolute right-0 mt-3 w-96 bg-white rounded-xl shadow-2xl border border-gray-200 z-50 overflow-hidden"
+        x-transition:leave-start="opacity-100 scale-100"
+        x-transition:leave-end="opacity-0 scale-95"
+        class="absolute right-0 mt-[0.625rem] w-96 bg-white rounded-xl shadow-2xl border border-gray-200 z-50 overflow-hidden"
     >
         <!-- Header -->
         <div class="px-5 py-4 bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-gray-200 flex justify-between items-center">
@@ -168,5 +168,48 @@
                 </div>
             @endforelse
         </div>
+
+        <!-- Pagination -->
+        @if($notifications->hasPages())
+            <div class="px-5 py-3 bg-gray-50 border-t border-gray-200">
+                <div class="flex items-center justify-between">
+                    @if($notifications->onFirstPage())
+                        <span class="px-3 py-1.5 text-xs text-gray-400 cursor-not-allowed">
+                            {{ __('notifications.previous') }}
+                        </span>
+                    @else
+                        <button 
+                            wire:click="previousPage"
+                            class="group px-3 py-1.5 text-xs text-blue-600 hover:text-blue-700 font-medium hover:bg-blue-50 rounded-lg transition-all flex items-center gap-1"
+                        >
+                            <svg class="h-3 w-3 transition-transform group-hover:-translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                            </svg>
+                            {{ __('notifications.previous') }}
+                        </button>
+                    @endif
+
+                    <span class="text-xs text-gray-500">
+                        {{ __('notifications.page') }} {{ $notifications->currentPage() }}
+                    </span>
+
+                    @if($notifications->hasMorePages())
+                        <button 
+                            wire:click="nextPage"
+                            class="group px-3 py-1.5 text-xs text-blue-600 hover:text-blue-700 font-medium hover:bg-blue-50 rounded-lg transition-all flex items-center gap-1"
+                        >
+                            {{ __('notifications.next') }}
+                            <svg class="h-3 w-3 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </button>
+                    @else
+                        <span class="px-3 py-1.5 text-xs text-gray-400 cursor-not-allowed">
+                            {{ __('notifications.next') }}
+                        </span>
+                    @endif
+                </div>
+            </div>
+        @endif
     </div>
 </div>

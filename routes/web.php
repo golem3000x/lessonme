@@ -2,6 +2,7 @@
 
 use App\Enums\System\SystemLanguageEnum;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Auth\SocialAuthController;
 use App\Http\Controllers\Auth\ZaloController;
 use App\Http\Controllers\HelpController;
@@ -37,6 +38,12 @@ Route::middleware('guest')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
 
     Route::get('/auth/language', LanguageSelection::class)->name('auth.language');
+
+    // Password reset
+    Route::get('/forgot-password', [PasswordResetController::class, 'showForgotPasswordForm'])->name('password.request');
+    Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLinkEmail'])->name('password.email');
+    Route::get('/reset-password/{token}', [PasswordResetController::class, 'showResetPasswordForm'])->name('password.reset');
+    Route::post('/reset-password', [PasswordResetController::class, 'reset'])->name('password.update');
 
     Route::get('/auth/zalo', [ZaloController::class, 'redirect'])->name('zalo.login');
     Route::get('/auth/zalo/callback', [ZaloController::class, 'callback']);

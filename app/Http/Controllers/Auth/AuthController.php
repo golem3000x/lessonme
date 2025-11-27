@@ -46,13 +46,17 @@ class AuthController extends Controller
                 ]);
             }
 
-            // Получаем timezone из запроса (если отправлен из браузера)
+            // Get timezone from request (if sent from browser)
             $timezone = $request->input('timezone', $user->timezone ?? 'UTC');
 
-            // Обновляем timezone пользователя если он изменился
+            // Update user timezone if changed
             if ($user->timezone !== $timezone) {
                 $user->update(['timezone' => $timezone]);
             }
+
+            // Set a persistent cookie to indicate user has an account
+            // This prevents creating temp guest users after logout
+            cookie()->queue('has_account', '1', 525600); // 1 year
 
             return redirect()->intended('/dashboard');
         }
@@ -70,10 +74,10 @@ class AuthController extends Controller
             'password' => 'required|string|min:8|confirmed',
         ]);
 
-        // Получаем timezone из запроса (если отправлен из браузера)
+        // Get timezone from request (if sent from browser)
         $timezone = $request->input('timezone', 'UTC');
 
-        // Сохраняем данные регистрации в сессию (с хешированным паролем)
+        // Save registration data to session (with hashed password)
         $request->session()->put('registration_data', [
             'name' => $request->name,
             'email' => $request->email,
@@ -81,7 +85,7 @@ class AuthController extends Controller
             'timezone' => $timezone,
         ]);
 
-        // Редиректим на выбор родного языка
+        // Redirect to native language selection
         return redirect()->route('auth.language');
     }
 

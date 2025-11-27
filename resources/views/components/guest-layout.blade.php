@@ -7,12 +7,12 @@
 
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Опционально: кастомная тема -->
+    <!-- Optional: custom theme -->
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    colors: { primary: '#2563EB' } // Синий
+                    colors: { primary: '#2563EB' } // Blue
                 }
             }
         }
@@ -30,7 +30,7 @@
 
 <nav class="bg-gradient-to-r from-white via-gray-50 to-white border-b border-gray-200 sticky top-0 z-50 shadow-lg backdrop-blur-md">
     <div class="max-w-7xl mx-auto px-6 flex justify-between items-center h-16">
-        <!-- Левая часть -->
+        <!-- Left side -->
         <div class="flex items-center gap-8">
             <a href="/" class="group text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent hover:from-blue-700 hover:to-indigo-700 transition-all flex items-center gap-2">
                 <div class="p-1.5 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg shadow-md group-hover:shadow-lg transition-all duration-200">
@@ -44,7 +44,7 @@
             </a>
         </div>
 
-        <!-- Правая часть -->
+        <!-- Right side -->
         <div class="flex items-center gap-4">
             <a href="{{ route('login') }}" class="group px-4 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg flex items-center gap-2 transition-all duration-200">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transition-transform group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24"
@@ -65,7 +65,7 @@
                 {{ __('nav.register') }}
             </a>
 
-            <!-- Переключатель языка -->
+            <!-- Language switcher -->
             @php($current_locale = app()->getLocale())
             @php($target_locale = $current_locale === 'vi' ? 'en' : 'vi')
             @php($flag = $target_locale === 'vi' ? '🇻🇳' : '🇬🇧')

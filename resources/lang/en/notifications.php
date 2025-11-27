@@ -54,4 +54,7 @@ return [
     'delete' => 'Delete',
     'no_notifications' => 'No notifications yet',
     'all_caught_up' => 'You\'re all caught up!',
+    'previous' => 'Previous',
+    'next' => 'Next',
+    'page' => 'Page',
 ];

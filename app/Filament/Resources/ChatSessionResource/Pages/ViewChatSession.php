@@ -124,22 +124,22 @@ class ViewChatSession extends ViewRecord
             'is_read' => false,
         ]);
 
-        // Обновляем сессию
+        // Update session
         $this->record->update([
             'last_message_at' => now(),
-            'unread_count' => 0, // Сбрасываем счетчик непрочитанных от пользователя
+            'unread_count' => 0, // Reset unread count from user
         ]);
 
-        // Загружаем отношения для события
+        // Load relationships for event
         $message->load('user');
 
-        // Отправляем событие через WebSocket пользователю
+        // Send event via WebSocket to user
         broadcast(new MessageSent($message))->toOthers();
 
-        // Очищаем поле ввода
+        // Clear input field
         $this->new_message = '';
 
-        // Обновляем страницу для отображения нового сообщения
+        // Refresh page to display new message
         $this->refreshFormData(['messages']);
     }
 }

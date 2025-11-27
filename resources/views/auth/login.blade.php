@@ -60,12 +60,20 @@
                         </div>
                     </div>
 
-                    <div class="flex items-center">
-                        <input id="remember" name="remember" type="checkbox"
-                               class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded transition">
-                        <label for="remember" class="ml-2 block text-sm text-gray-700 font-medium">
-                            {{ __('auth.login.remember_me') }}
-                        </label>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <input id="remember" name="remember" type="checkbox"
+                                   class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded transition">
+                            <label for="remember" class="ml-2 block text-sm text-gray-700 font-medium">
+                                {{ __('auth.login.remember_me') }}
+                            </label>
+                        </div>
+
+                        <div class="text-sm">
+                            <a href="{{ route('password.request') }}" class="font-medium text-blue-600 hover:text-blue-700 transition">
+                                {{ __('auth.login.forgot_password') }}
+                            </a>
+                        </div>
                     </div>
 
                     <button type="submit"

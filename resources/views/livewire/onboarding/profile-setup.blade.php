@@ -1,5 +1,5 @@
 <div class="max-w-3xl mx-auto p-8 bg-white rounded-2xl shadow-lg">
-    <!-- Заголовок -->
+    <!-- Header -->
     <div class="flex items-center justify-between mb-6 border-b pb-3">
         <h2 class="text-2xl font-semibold text-gray-800 flex items-center gap-2">
             <svg xmlns="http://www.w3.org/2000/svg"

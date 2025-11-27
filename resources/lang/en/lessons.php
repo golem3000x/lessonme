@@ -167,4 +167,8 @@ return [
     'duration' => 'Duration',
     'minutes' => 'minutes',
     'language_name' => 'Language',
+
+    // Access control
+    'access_denied' => 'You do not have permission to access this lesson.',
+    'login_required' => 'Please login to access this lesson.',
 ];

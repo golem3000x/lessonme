@@ -26,6 +26,12 @@ class EnsureTempGuestUser
             return $next($request);
         }
 
+        // Skip if user has a real account (was previously authenticated)
+        // Check for 'has_account' cookie that persists after logout
+        if ($request->cookie('has_account')) {
+            return $next($request);
+        }
+
         // Check if we already have a temp guest user in session
         $temp_guest_user_id = $request->session()->get('temp_guest_user_id');
 
@@ -41,7 +47,7 @@ class EnsureTempGuestUser
             }
         }
 
-        // Create a new temporary guest user
+        // Create a new temporary guest user only for genuinely new visitors
         $unique_id = uniqid('guest_', true);
         $temp_guest_user = User::create([
             'name' => 'Demo Guest',

@@ -35,13 +35,13 @@ class ChatPanel extends Component
             return;
         }
 
-        // Получаем или создаем сессию чата для текущего пользователя
+        // Get or create chat session for current user
         $this->chat_session = ChatSession::firstOrCreate(
             ['user_id' => $user->id],
             ['status' => ChatSessionStatusEnum::OPEN]
         );
 
-        // Загружаем последние 50 сообщений
+        // Load last 50 messages
         $this->messages = $this->chat_session
             ->messages()
             ->with('user')
@@ -59,12 +59,18 @@ class ChatPanel extends Component
         $this->is_open = $is_open;
 
         if ($is_open) {
-            // Загружаем сообщения при открытии
+            // Load messages when opening
             $this->loadChatSession();
 
-            // Отмечаем все сообщения как прочитанные
+            // Mark all messages as read
             $this->markMessagesAsRead();
         }
+    }
+
+    public function closeChat(): void
+    {
+        $this->is_open = false;
+        $this->dispatch('chat-toggled', is_open: false);
     }
 
     public function sendMessage(): void
@@ -89,24 +95,24 @@ class ChatPanel extends Component
             'is_read' => false,
         ]);
 
-        // Обновляем сессию
+        // Update session
         $this->chat_session->update([
             'last_message_at' => now(),
         ]);
 
-        // Загружаем отношения для события
+        // Load relationships for event
         $message->load('user');
 
-        // Отправляем событие через WebSocket
+        // Send event via WebSocket
         broadcast(new MessageSent($message))->toOthers();
 
-        // Добавляем сообщение в массив
+        // Add message to array
         $this->messages[] = $message->toArray();
 
-        // Очищаем поле ввода
+        // Clear input field
         $this->new_message = '';
 
-        // Диспетчим событие для прокрутки к последнему сообщению
+        // Dispatch event to scroll to last message
         $this->dispatch('message-sent');
     }
 
@@ -116,18 +122,18 @@ class ChatPanel extends Component
     #[On('message-received')]
     public function addMessage(array $message_data): void
     {
-        // Добавляем новое сообщение в массив
+        // Add new message to array
         /** @var Message|null $message */
         $message = Message::with('user')->find($message_data['id']);
 
         if ($message) {
-            // Проверяем, есть ли уже это сообщение
+            // Check if message already exists
             $message_ids = array_column($this->messages, 'id');
 
             if (! in_array($message->id, $message_ids)) {
                 $this->messages[] = $message->toArray();
 
-                // Если чат открыт, отмечаем сообщение как прочитанное
+                // If chat is open, mark message as read
                 if ($this->is_open) {
                     $message->update(['is_read' => true]);
                 }

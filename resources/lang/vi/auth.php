@@ -13,6 +13,7 @@ return [
         'password_label' => 'Mật khẩu',
         'password_placeholder' => 'Mật khẩu',
         'remember_me' => 'Ghi nhớ đăng nhập',
+        'forgot_password' => 'Quên mật khẩu?',
         'submit' => 'Đăng nhập',
         'or_continue_with' => 'Hoặc tiếp tục với',
         'sign_in_with_zalo' => 'Đăng nhập với Zalo',
@@ -45,10 +46,34 @@ return [
         'info_text' => 'Bạn có thể thay đổi tùy chọn ngôn ngữ bất cứ lúc nào trong cài đặt hồ sơ.',
     ],
 
+    // Password reset
+    'forgot_password' => [
+        'title' => 'Quên mật khẩu?',
+        'description' => 'Không vấn đề gì. Hãy cho chúng tôi biết địa chỉ email của bạn và chúng tôi sẽ gửi liên kết đặt lại mật khẩu.',
+        'email_label' => 'Địa chỉ email',
+        'email_placeholder' => 'Địa chỉ email',
+        'submit' => 'Gửi liên kết đặt lại mật khẩu',
+        'back_to_login' => 'Quay lại đăng nhập',
+    ],
+
+    'reset_password' => [
+        'title' => 'Đặt lại mật khẩu',
+        'email_label' => 'Địa chỉ email',
+        'email_placeholder' => 'Địa chỉ email',
+        'password_label' => 'Mật khẩu mới',
+        'password_placeholder' => 'Tối thiểu 8 ký tự',
+        'password_confirmation_label' => 'Xác nhận mật khẩu',
+        'password_confirmation_placeholder' => 'Nhập lại mật khẩu',
+        'submit' => 'Đặt lại mật khẩu',
+    ],
+
     // Common
     'failed' => 'Thông tin đăng nhập không chính xác.',
     'password' => 'Mật khẩu không đúng.',
     'throttle' => 'Quá nhiều lần đăng nhập. Vui lòng thử lại sau :seconds giây.',
+    'reset_link_sent' => 'Chúng tôi đã gửi liên kết đặt lại mật khẩu qua email!',
+    'reset_success' => 'Mật khẩu của bạn đã được đặt lại!',
+    'reset_token_invalid' => 'Liên kết đặt lại mật khẩu không hợp lệ.',
 
     // Greetings by time of day
     'greetings' => [

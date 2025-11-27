@@ -68,9 +68,12 @@ class ZaloController extends Controller
 
             Auth::login($user);
 
+            // Set a persistent cookie to indicate user has an account
+            cookie()->queue('has_account', '1', 525600); // 1 year
+
             return redirect()->route('dashboard');
         } else {
-            // Новый пользователь - сохраняем данные в сессию и редиректим на выбор языка
+            // New user - save data to session and redirect to language selection
             session()->put('registration_data', [
                 'zalo_user_id' => $zalo_id,
                 'name' => $name,

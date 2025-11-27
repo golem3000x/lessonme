@@ -13,6 +13,7 @@ return [
         'password_label' => 'Password',
         'password_placeholder' => 'Password',
         'remember_me' => 'Remember me',
+        'forgot_password' => 'Forgot password?',
         'submit' => 'Sign in',
         'or_continue_with' => 'Or continue with',
         'sign_in_with_zalo' => 'Sign in with Zalo',
@@ -45,10 +46,34 @@ return [
         'info_text' => 'You can change your language preference anytime in your profile settings.',
     ],
 
+    // Password reset
+    'forgot_password' => [
+        'title' => 'Forgot your password?',
+        'description' => 'No problem. Just let us know your email address and we will email you a password reset link.',
+        'email_label' => 'Email address',
+        'email_placeholder' => 'Email address',
+        'submit' => 'Email password reset link',
+        'back_to_login' => 'Back to login',
+    ],
+
+    'reset_password' => [
+        'title' => 'Reset password',
+        'email_label' => 'Email address',
+        'email_placeholder' => 'Email address',
+        'password_label' => 'New password',
+        'password_placeholder' => 'Minimum 8 characters',
+        'password_confirmation_label' => 'Confirm password',
+        'password_confirmation_placeholder' => 'Repeat password',
+        'submit' => 'Reset password',
+    ],
+
     // Common
     'failed' => 'These credentials do not match our records.',
     'password' => 'The provided password is incorrect.',
     'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
+    'reset_link_sent' => 'We have emailed your password reset link!',
+    'reset_success' => 'Your password has been reset!',
+    'reset_token_invalid' => 'This password reset token is invalid.',
 
     // Greetings by time of day
     'greetings' => [

@@ -188,7 +188,7 @@ class LessonGenerationService
     }
 
     /**
-     * Создаёт embedding для текста.
+     * Create embedding for text.
      *
      * @return array<float>
      */
@@ -196,7 +196,7 @@ class LessonGenerationService
     {
         $level_value = $lesson_dto->levelValue();
         $keywords_str = $lesson_dto->getKeywordsAsString();
-        $input = "$level_value $lesson_dto->topic $keywords_str";
+        $input = "$lesson_dto->learning_lang $level_value $lesson_dto->topic $keywords_str";
         $response = OpenAI::embeddings()->create([
             'model' => OpenAiModelEnum::TEXT_EMBEDDING_THREE_SMALL->value,
             'input' => trim($input),

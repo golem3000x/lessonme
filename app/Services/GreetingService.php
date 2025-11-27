@@ -9,7 +9,7 @@ use Carbon\Carbon;
 class GreetingService
 {
     /**
-     * Получить приветствие в зависимости от времени суток
+     * Get greeting based on time of day
      */
     public function getGreeting(?string $timezone = null, string $locale = 'en'): string
     {
@@ -32,7 +32,7 @@ class GreetingService
     }
 
     /**
-     * Получить сообщение приветствия для уведомления
+     * Get welcome message for notification
      */
     public function getWelcomeMessage(string $name, ?string $timezone = null, string $locale = 'en'): string
     {
@@ -45,7 +45,7 @@ class GreetingService
     }
 
     /**
-     * Получить сообщение для новой регистрации
+     * Get message for new registration
      */
     public function getRegistrationMessage(string $name, ?string $timezone = null, string $locale = 'en'): string
     {

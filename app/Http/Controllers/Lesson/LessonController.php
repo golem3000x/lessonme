@@ -36,7 +36,7 @@ class LessonController extends Controller
         // Authorization is handled by lesson.owner middleware
         abort_if($history->lesson_id !== $lesson->id, 404);
 
-        // Восстанавливаем выбранную версию
+        // Restore selected version
         $history_service->restore($history);
 
         return redirect()

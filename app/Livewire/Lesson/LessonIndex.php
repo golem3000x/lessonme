@@ -177,7 +177,7 @@ class LessonIndex extends Component
         if (isset($this->open_dropdowns[$lesson_id]) && $this->open_dropdowns[$lesson_id]) {
             $this->open_dropdowns[$lesson_id] = false;
         } else {
-            // Закрываем все остальные dropdown'ы
+            // Close all other dropdowns
             $this->open_dropdowns = [];
             $this->open_dropdowns[$lesson_id] = true;
         }

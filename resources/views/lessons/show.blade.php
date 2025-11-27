@@ -59,7 +59,7 @@
                         <div x-data="{ open: false }"
                              class="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
 
-                            {{-- Заголовок карточки --}}
+                            {{-- Card header --}}
                             <button
                                     @click="open = !open"
                                     class="w-full flex justify-between items-center p-4 text-left font-semibold text-gray-800 hover:bg-indigo-50 transition"
@@ -77,7 +77,7 @@
                                 </svg>
                             </button>
 
-                            {{-- Содержание карточки --}}
+                            {{-- Card content --}}
                             <div x-show="open" x-transition
                                  class="p-4 border-t border-gray-100 text-sm text-gray-700 space-y-4">
 

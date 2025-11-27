@@ -20,7 +20,7 @@ class LanguageSelection extends Component
 
     public function mount(): void
     {
-        // Проверяем, есть ли данные регистрации в сессии
+        // Check if registration data exists in session
         if (! session()->has('registration_data')) {
             redirect()->route('register');
 
@@ -29,7 +29,7 @@ class LanguageSelection extends Component
 
         $this->languages = SystemLanguageEnum::all();
 
-        // Устанавливаем язык по умолчанию на основе локали
+        // Set default language based on locale
         $locale = app()->getLocale();
         $this->native_lang = $locale === 'vi'
             ? SystemLanguageEnum::VIETNAMESE->value
@@ -50,16 +50,16 @@ class LanguageSelection extends Component
             return;
         }
 
-        // Определяем learning_lang (противоположный язык от native_lang)
+        // Determine learning_lang (opposite language from native_lang)
         $learning_lang = $this->native_lang === SystemLanguageEnum::ENGLISH->value
             ? SystemLanguageEnum::VIETNAMESE->value
             : SystemLanguageEnum::ENGLISH->value;
 
-        // Создаем пользователя с выбранным языком
+        // Create user with selected language
         $user = User::create([
             'name' => $registration_data['name'],
             'email' => $registration_data['email'],
-            'password' => $registration_data['password'], // Пароль уже хеширован в сессии
+            'password' => $registration_data['password'], // Password already hashed in session
             'timezone' => $registration_data['timezone'] ?? 'UTC',
             'native_lang' => $this->native_lang,
             'learning_lang' => $learning_lang,
@@ -69,14 +69,18 @@ class LanguageSelection extends Component
             'email_verified_at' => $registration_data['email_verified_at'] ?? null,
         ]);
 
-        // Логиним пользователя
+        // Login user
         Auth::login($user);
         session()->regenerate();
 
-        // Очищаем данные регистрации из сессии
+        // Set a persistent cookie to indicate user has an account
+        // This prevents creating temp guest users after logout
+        cookie()->queue('has_account', '1', 525600); // 1 year
+
+        // Clear registration data from session
         session()->forget('registration_data');
 
-        // Редиректим на дашборд
+        // Redirect to dashboard
         redirect()->route('dashboard');
     }
 

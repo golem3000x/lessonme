@@ -5,9 +5,9 @@
 
     <div class="py-8">
         <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
-            <!-- Основная карточка -->
+            <!-- Main card -->
             <div class="bg-white shadow-lg rounded-2xl overflow-hidden">
-                <!-- Заголовок с градиентом -->
+                <!-- Header with gradient -->
                 <div class="bg-gradient-to-r from-blue-500 to-purple-600 p-8 text-white">
                     <div class="flex items-center gap-4 mb-4">
                         <div class="p-3 bg-white/20 backdrop-blur-sm rounded-full">
@@ -23,9 +23,9 @@
                     </div>
                 </div>
 
-                <!-- Содержимое -->
+                <!-- Content -->
                 <div class="p-8 space-y-8">
-                    <!-- О проекте -->
+                    <!-- About project -->
                     <section class="space-y-4">
                         <div class="flex items-start gap-4">
                             <div class="p-2 bg-blue-100 rounded-lg">
@@ -45,7 +45,7 @@
 
                     <hr class="border-gray-200">
 
-                    <!-- Поддержка проекта -->
+                    <!-- Project support -->
                     <section class="space-y-4">
                         <div class="flex items-start gap-4">
                             <div class="p-2 bg-green-100 rounded-lg">
@@ -65,7 +65,7 @@
 
                     <hr class="border-gray-200">
 
-                    <!-- Планы развития -->
+                    <!-- Development plans -->
                     <section class="space-y-4">
                         <div class="flex items-start gap-4">
                             <div class="p-2 bg-purple-100 rounded-lg">
@@ -96,7 +96,7 @@
 
                     <hr class="border-gray-200">
 
-                    <!-- Связь -->
+                    <!-- Contact -->
                     <section class="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-6">
                         <div class="flex items-start gap-4">
                             <div class="p-2 bg-white rounded-lg shadow-sm">
@@ -114,7 +114,7 @@
                         </div>
                     </section>
 
-                    <!-- Кнопка назад -->
+                    <!-- Back button -->
                     <div class="pt-4 flex justify-center">
                         <a href="{{ url()->previous() }}" 
                            class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg hover:from-blue-600 hover:to-purple-700 transition shadow-md hover:shadow-lg">

@@ -9,12 +9,17 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class NotificationBell extends Component
 {
+    use WithPagination;
+
     public int $unread_count = 0;
 
     public bool $is_open = false;
+
+    protected string $paginationTheme = 'tailwind';
 
     public function mount(): void
     {
@@ -112,8 +117,7 @@ class NotificationBell extends Component
         $notifications = $user
             ->notifications()
             ->orderBy('created_at', 'desc')
-            ->limit(20)
-            ->get();
+            ->simplePaginate(10);
 
         return view('livewire.notification.notification-bell', [
             'notifications' => $notifications,

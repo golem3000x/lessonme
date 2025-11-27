@@ -14,6 +14,7 @@ use App\Models\Lesson\LessonAttempt;
 use App\Models\Lesson\LessonScore;
 use App\Models\Support\ChatSession;
 use App\Models\Support\Message;
+use App\Notifications\ResetPasswordNotification;
 use Database\Factories\UserFactory;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
@@ -127,7 +128,6 @@ class User extends Authenticatable implements FilamentUser, HasLocalePreference
 
     /**
      * The attributes that should be guarded from mass assignment.
-     * Защита критичных полей от случайной перезаписи.
      *
      * @var list<string>
      */
@@ -141,6 +141,15 @@ class User extends Authenticatable implements FilamentUser, HasLocalePreference
     protected $hidden = [
         'password',
         'remember_token',
+    ];
+
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var list<string>
+     */
+    protected $appends = [
+        'avatar_url',
     ];
 
     /**
@@ -271,7 +280,7 @@ class User extends Authenticatable implements FilamentUser, HasLocalePreference
     }
 
     /**
-     * Проверить, является ли пользователь администратором.
+     * Check if the user is an administrator.
      */
     public function isAdmin(): bool
     {
@@ -279,7 +288,7 @@ class User extends Authenticatable implements FilamentUser, HasLocalePreference
     }
 
     /**
-     * Проверить, является ли пользователь учителем.
+     * Check if the user is a teacher.
      */
     public function isTeacher(): bool
     {
@@ -287,7 +296,7 @@ class User extends Authenticatable implements FilamentUser, HasLocalePreference
     }
 
     /**
-     * Проверить, является ли пользователь учеником.
+     * Check if the user is a student.
      */
     public function isStudent(): bool
     {
@@ -295,17 +304,17 @@ class User extends Authenticatable implements FilamentUser, HasLocalePreference
     }
 
     /**
-     * Назначить роль пользователю.
-     * Только для явных административных операций.
+     * Assign a role to the user.
+     * Only for explicit administrative operations.
      *
-     * @param  UserRoleEnum  $role  Новая роль
-     * @param  User|null  $actor  Пользователь, выполняющий операцию (для аудита)
+     * @param  UserRoleEnum  $role  New role
+     * @param  User|null  $actor  User performing the operation (for audit)
      */
     public function assignRole(UserRoleEnum $role, ?User $actor = null): void
     {
         $old_role = $this->role;
 
-        // Опционально: логирование для аудита
+        // Optional: logging for audit
         if ($actor) {
             Log::info('User role changed', [
                 'user_id' => $this->id,
@@ -322,10 +331,10 @@ class User extends Authenticatable implements FilamentUser, HasLocalePreference
     }
 
     /**
-     * Назначить пользователя администратором.
-     * Алиас для assignRole(UserRoleEnum::ADMIN).
+     * Make the user an administrator.
+     * Alias for assignRole(UserRoleEnum::ADMIN).
      *
-     * @param  User|null  $actor  Пользователь, выполняющий операцию (для аудита)
+     * @param  User|null  $actor  User performing the operation (for audit)
      */
     public function makeAdmin(?User $actor = null): void
     {
@@ -333,9 +342,9 @@ class User extends Authenticatable implements FilamentUser, HasLocalePreference
     }
 
     /**
-     * Назначить пользователя учителем.
+     * Make the user a teacher.
      *
-     * @param  User|null  $actor  Пользователь, выполняющий операцию (для аудита)
+     * @param  User|null  $actor  User performing the operation (for audit)
      */
     public function makeTeacher(?User $actor = null): void
     {
@@ -343,9 +352,9 @@ class User extends Authenticatable implements FilamentUser, HasLocalePreference
     }
 
     /**
-     * Назначить пользователя учеником.
+     * Make the user a student.
      *
-     * @param  User|null  $actor  Пользователь, выполняющий операцию (для аудита)
+     * @param  User|null  $actor  User performing the operation (for audit)
      */
     public function makeStudent(?User $actor = null): void
     {
@@ -369,5 +378,20 @@ class User extends Authenticatable implements FilamentUser, HasLocalePreference
 
         // Otherwise, it's a local storage path
         return asset('storage/'.$this->avatar);
+    }
+
+    /**
+     * Send the password reset notification.
+     * Uses the application's current locale for email content.
+     */
+    public function sendPasswordResetNotification($token): void
+    {
+        // Get user's preferred locale or app locale
+        $locale = $this->preferredLocale() ?? app()->getLocale();
+
+        // Set locale for email translation
+        app()->setLocale($locale);
+
+        $this->notify(new ResetPasswordNotification($token));
     }
 }

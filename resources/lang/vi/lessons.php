@@ -167,4 +167,8 @@ return [
     'duration' => 'Thời gian',
     'minutes' => 'phút',
     'language_name' => 'Ngôn ngữ',
+
+    // Access control
+    'access_denied' => 'Bạn không có quyền truy cập bài học này.',
+    'login_required' => 'Vui lòng đăng nhập để truy cập bài học này.',
 ];

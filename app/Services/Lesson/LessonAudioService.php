@@ -17,9 +17,7 @@ readonly class LessonAudioService
 {
     public function __construct(
         private FptTtsService $tts_service
-    )
-    {
-    }
+    ) {}
 
     public function generateAudioForLesson(Lesson $lesson): void
     {
@@ -50,7 +48,7 @@ readonly class LessonAudioService
             }
 
             try {
-                $file_name = md5($word) . '.mp3';
+                $file_name = md5($word).'.mp3';
                 $file_path = "$base_path/$file_name";
 
                 $this->generateAudioFile(
@@ -103,7 +101,7 @@ readonly class LessonAudioService
                     text: $complete_sentence,
                     voice: $voice,
                     audio_type: 'gap_fill',
-                    audio_key: (string)$index,
+                    audio_key: (string) $index,
                     file_path: $file_path,
                     log_context: ['lesson_id' => $lesson->id, 'index' => $index]
                 );
@@ -183,9 +181,8 @@ readonly class LessonAudioService
         string $audio_type,
         string $audio_key,
         string $file_path,
-        array  $log_context
-    ): void
-    {
+        array $log_context
+    ): void {
         // Create pending record
         $audio_file = LessonAudioFile::create([
             'lesson_id' => $lesson->id,
@@ -199,7 +196,7 @@ readonly class LessonAudioService
             // Generate audio
             $result = $this->tts_service->synthesize($text, $voice);
 
-            if (!$result || !isset($result['async'])) {
+            if (! $result || ! isset($result['async'])) {
                 $this->markAsFailed($audio_file, 'No audio URL returned from API');
 
                 return;
@@ -209,7 +206,7 @@ readonly class LessonAudioService
             $audio_url = $result['async'];
             $audio_content = $this->downloadAudio($audio_url);
 
-            if (!$audio_content) {
+            if (! $audio_content) {
                 $this->markAsFailed($audio_file, 'Failed to download audio file');
 
                 return;

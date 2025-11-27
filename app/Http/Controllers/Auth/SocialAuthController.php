@@ -45,7 +45,7 @@ class SocialAuthController extends Controller
                         'avatar' => $facebook_user->getAvatar(),
                     ]);
                 } else {
-                    // Новый пользователь - сохраняем данные в сессию и редиректим на выбор языка
+                    // New user - save data to session and redirect to language selection
                     session()->put('registration_data', [
                         'name' => $facebook_user->getName(),
                         'email' => $facebook_user->getEmail(),
@@ -68,6 +68,9 @@ class SocialAuthController extends Controller
             }
 
             Auth::login($user, true);
+
+            // Set a persistent cookie to indicate user has an account
+            cookie()->queue('has_account', '1', 525600); // 1 year
 
             return redirect()->intended('/');
         } catch (Exception $e) {

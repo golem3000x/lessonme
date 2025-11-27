@@ -15,7 +15,7 @@ class HandleSlugEntityChanged
 {
     public function handle(SlugEntityChanged $event): void
     {
-        // Пропускаем seeders / миграции / artisan
+        // Skip seeders / migrations / artisan
         if (app()->runningInConsole()) {
             return;
         }

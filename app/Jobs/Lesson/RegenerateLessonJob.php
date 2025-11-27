@@ -46,6 +46,18 @@ class RegenerateLessonJob implements ShouldQueue
             return;
         }
 
+        // Security check: Ensure lesson belongs to the user
+        // This is a safety measure in case the job is dispatched incorrectly
+        if ($lesson->user_id !== $user->id) {
+            Log::error('Security: Lesson does not belong to user', [
+                'lesson_id' => $lesson->id,
+                'lesson_user_id' => $lesson->user_id,
+                'expected_user_id' => $user->id,
+            ]);
+
+            return;
+        }
+
         try {
             try {
                 $audio_service->deleteAudioFiles($lesson);
