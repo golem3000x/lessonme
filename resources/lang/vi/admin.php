@@ -47,4 +47,14 @@ return [
     // Validation
     'validation_required' => 'Trường này là bắt buộc',
     'validation_max' => 'Tối đa :max ký tự',
+
+    // Lesson Feedbacks
+    'lesson_feedbacks' => 'Phản hồi bài học',
+    'lesson_feedback' => 'Phản hồi',
+    'lesson' => 'Bài học',
+    'rating' => 'Đánh giá',
+    'comment' => 'Nhận xét',
+    'submitted_at' => 'Đã gửi lúc',
+    'like' => 'Thích',
+    'dislike' => 'Không thích',
 ];

@@ -47,4 +47,14 @@ return [
     // Validation
     'validation_required' => 'This field is required',
     'validation_max' => 'Maximum :max characters',
+
+    // Lesson Feedbacks
+    'lesson_feedbacks' => 'Lesson Feedbacks',
+    'lesson_feedback' => 'Lesson Feedback',
+    'lesson' => 'Lesson',
+    'rating' => 'Rating',
+    'comment' => 'Comment',
+    'submitted_at' => 'Submitted At',
+    'like' => 'Like',
+    'dislike' => 'Dislike',
 ];

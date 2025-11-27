@@ -257,5 +257,15 @@
             </section>
         @endif
 
+
+        {{-- ===== FEEDBACK SECTION ===== --}}
+        @auth
+            @if(!auth()->user()->is_temp_guest)
+                <section class="mt-8">
+                    <livewire:lesson.lesson-feedback-form :lesson_id="$lesson->id"/>
+                </section>
+            @endif
+        @endauth
+
     </div>
 </x-app-layout>

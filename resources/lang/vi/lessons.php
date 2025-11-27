@@ -171,4 +171,15 @@ return [
     // Access control
     'access_denied' => 'Bạn không có quyền truy cập bài học này.',
     'login_required' => 'Vui lòng đăng nhập để truy cập bài học này.',
+
+    // Feedback
+    'leave_feedback' => 'Để lại Phản hồi',
+    'feedback_submitted' => 'Đã Gửi Phản Hồi',
+    'feedback_title' => 'Bài học này thế nào?',
+    'how_was_lesson' => 'Bạn có thích bài học này không?',
+    'like' => 'Thích',
+    'dislike' => 'Không thích',
+    'feedback_comment' => 'Nhận xét của bạn',
+    'feedback_placeholder' => 'Cho chúng tôi biết bạn nghĩ gì về bài học này...',
+    'submit_feedback' => 'Gửi Phản Hồi',
 ];

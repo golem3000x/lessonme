@@ -171,4 +171,15 @@ return [
     // Access control
     'access_denied' => 'You do not have permission to access this lesson.',
     'login_required' => 'Please login to access this lesson.',
+
+    // Feedback
+    'leave_feedback' => 'Leave Feedback',
+    'feedback_submitted' => 'Feedback Submitted',
+    'feedback_title' => 'How was this lesson?',
+    'how_was_lesson' => 'Did you like this lesson?',
+    'like' => 'Like',
+    'dislike' => 'Dislike',
+    'feedback_comment' => 'Your comment',
+    'feedback_placeholder' => 'Tell us what you think about this lesson...',
+    'submit_feedback' => 'Submit Feedback',
 ];

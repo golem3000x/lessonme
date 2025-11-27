@@ -135,6 +135,14 @@ class Lesson extends BaseLesson
         return $this->hasMany(LessonAudioFile::class);
     }
 
+    /**
+     * @return HasMany<LessonFeedback, $this>
+     */
+    public function feedbacks(): HasMany
+    {
+        return $this->hasMany(LessonFeedback::class);
+    }
+
     public function getVocabularyAudio(string $word): ?LessonAudioFile
     {
         return $this->audioFiles()

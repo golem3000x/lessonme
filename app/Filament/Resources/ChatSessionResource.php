@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources;
 
+use App\Enums\ChatSessionStatusEnum;
 use App\Filament\Resources\ChatSessionResource\Pages;
 use App\Models\Support\ChatSession;
 use Filament\Forms;
@@ -68,7 +69,7 @@ class ChatSessionResource extends Resource
                     ->label(__('admin.last_message'))
                     ->dateTime('d.m.Y H:i')
                     ->sortable()
-                    ->default(__('admin.no_messages')),
+                    ->placeholder(__('admin.no_messages')),
                 Tables\Columns\TextColumn::make('unread_count')
                     ->label(__('admin.unread'))
                     ->badge()
@@ -77,15 +78,13 @@ class ChatSessionResource extends Resource
                 Tables\Columns\TextColumn::make('status')
                     ->label(__('admin.status'))
                     ->badge()
-                    ->color(fn (string $state): string => match ($state) {
-                        'open' => 'success',
-                        'closed' => 'gray',
-                        default => 'warning',
+                    ->color(fn (ChatSessionStatusEnum $state): string => match ($state) {
+                        ChatSessionStatusEnum::OPEN => 'success',
+                        ChatSessionStatusEnum::CLOSED => 'gray',
                     })
-                    ->formatStateUsing(fn (string $state): string => match ($state) {
-                        'open' => __('admin.status_open'),
-                        'closed' => __('admin.status_closed'),
-                        default => $state,
+                    ->formatStateUsing(fn (ChatSessionStatusEnum $state): string => match ($state) {
+                        ChatSessionStatusEnum::OPEN => __('admin.status_open'),
+                        ChatSessionStatusEnum::CLOSED => __('admin.status_closed'),
                     }),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label(__('admin.created'))

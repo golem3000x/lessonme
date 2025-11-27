@@ -81,7 +81,7 @@ class ViewChatSession extends ViewRecord
                         Infolists\Components\TextEntry::make('last_message_at')
                             ->label(__('admin.last_message_at'))
                             ->dateTime('d.m.Y H:i')
-                            ->default(__('admin.no_messages')),
+                            ->placeholder(__('admin.no_messages')),
                     ])
                     ->columns(3),
 

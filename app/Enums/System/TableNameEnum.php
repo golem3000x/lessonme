@@ -27,6 +27,7 @@ enum TableNameEnum: string
     case LESSON_ATTEMPTS = 'lesson_attempts';
     case LESSON_SCORES = 'lesson_scores';
     case LESSON_AUDIO_FILES = 'lesson_audio_files';
+    case LESSON_FEEDBACKS = 'lesson_feedbacks';
     case CHAT_SESSIONS = 'chat_sessions';
     case MESSAGES = 'messages';
 }
