@@ -68,6 +68,7 @@ class RegenerateLessonJob implements ShouldQueue
                 ]);
             }
 
+            // Feedbacks are automatically archived to history in regenerateLesson -> snapshot()
             $updatedLesson = $lessonService->regenerateLesson($lesson, $this->lesson_dto);
 
             try {

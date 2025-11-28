@@ -57,4 +57,12 @@ return [
     'submitted_at' => 'Submitted At',
     'like' => 'Like',
     'dislike' => 'Dislike',
+
+    // Feedback History
+    'feedback_history' => 'Feedback History',
+    'feedback_history_item' => 'Feedback History Item',
+    'history_version' => 'History Version',
+    'no_history_link' => 'No history link',
+    'original_date' => 'Original Date',
+    'archived_at' => 'Archived At',
 ];

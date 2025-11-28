@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace App\Services\Lesson;
 
 use App\Models\Lesson\Lesson;
+use App\Models\Lesson\LessonFeedbackHistory;
 use App\Models\Lesson\LessonHistory;
 
 class LessonHistoryService
 {
     public function snapshot(Lesson $lesson): LessonHistory
     {
-        return LessonHistory::create([
+        $history = LessonHistory::create([
             'lesson_id' => $lesson->id,
             'user_id' => $lesson->user_id,
             'topic_id' => $lesson->topic_id,
@@ -28,6 +29,11 @@ class LessonHistoryService
             'culture_notes' => $lesson->culture_notes,
             'embedding' => $lesson->embedding,
         ]);
+
+        // Archive current feedbacks to history
+        $this->archiveFeedbacks($lesson, $history->id);
+
+        return $history;
     }
 
     public function restore(LessonHistory $history): Lesson
@@ -56,5 +62,29 @@ class LessonHistoryService
         $history->delete();
 
         return $lesson;
+    }
+
+    /**
+     * Archive lesson feedbacks to history
+     */
+    protected function archiveFeedbacks(Lesson $lesson, int $lesson_history_id): void
+    {
+        $feedbacks = $lesson->feedbacks;
+
+        foreach ($feedbacks as $feedback) {
+            LessonFeedbackHistory::create([
+                'lesson_history_id' => $lesson_history_id,
+                'lesson_id' => $lesson->id,
+                'user_id' => $feedback->user_id,
+                'rating' => $feedback->rating,
+                'comment' => $feedback->comment,
+                'original_feedback_id' => $feedback->id,
+                'original_created_at' => $feedback->created_at,
+                'archived_at' => now(),
+            ]);
+        }
+
+        // Delete current feedbacks after archiving
+        $lesson->feedbacks()->delete();
     }
 }

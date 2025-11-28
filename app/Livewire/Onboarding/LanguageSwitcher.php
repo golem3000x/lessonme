@@ -20,6 +20,6 @@ class LanguageSwitcher extends Component
 
     public function render(): \Illuminate\View\View
     {
-        return view('livewire.language-switcher');
+        return view('livewire.onboarding.language-switcher');
     }
 }

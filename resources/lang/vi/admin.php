@@ -57,4 +57,12 @@ return [
     'submitted_at' => 'Đã gửi lúc',
     'like' => 'Thích',
     'dislike' => 'Không thích',
+
+    // Feedback History
+    'feedback_history' => 'Lịch sử phản hồi',
+    'feedback_history_item' => 'Mục lịch sử phản hồi',
+    'history_version' => 'Phiên bản lịch sử',
+    'no_history_link' => 'Không có liên kết lịch sử',
+    'original_date' => 'Ngày gốc',
+    'archived_at' => 'Đã lưu trữ lúc',
 ];

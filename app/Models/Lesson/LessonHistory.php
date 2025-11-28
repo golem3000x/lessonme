@@ -7,6 +7,7 @@ namespace App\Models\Lesson;
 use App\Enums\System\TableNameEnum;
 use App\Models\Abstracts\Lesson\BaseLesson;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property int $id
@@ -72,6 +73,14 @@ class LessonHistory extends BaseLesson
     public function lesson(): BelongsTo
     {
         return $this->belongsTo(Lesson::class);
+    }
+
+    /**
+     * @return HasMany<LessonFeedbackHistory, $this>
+     */
+    public function feedbacks(): HasMany
+    {
+        return $this->hasMany(LessonFeedbackHistory::class, 'lesson_history_id');
     }
 
     // user() method inherited from BaseLesson
