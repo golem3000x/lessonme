@@ -43,15 +43,27 @@ enum LanguageLevelEnum: string
         ];
     }
 
+    public function label(): string
+    {
+        return match ($this) {
+            self::A1 => __('lessons.level_a1'),
+            self::A2 => __('lessons.level_a2'),
+            self::B1 => __('lessons.level_b1'),
+            self::B2 => __('lessons.level_b2'),
+            self::C1 => __('lessons.level_c1'),
+            self::C2 => __('lessons.level_c2'),
+        };
+    }
+
     public function description(): string
     {
         return match ($this) {
-            self::A1 => 'Beginner — can use very simple expressions.',
-            self::A2 => 'Elementary — understands simple phrases and sentences.',
-            self::B1 => 'Intermediate — can express opinions on familiar topics.',
-            self::B2 => 'Upper Intermediate — can discuss a variety of subjects.',
-            self::C1 => 'Advanced — can express ideas fluently and spontaneously.',
-            self::C2 => 'Proficient — near-native understanding and production.',
+            self::A1 => __('lessons.level_a1_desc'),
+            self::A2 => __('lessons.level_a2_desc'),
+            self::B1 => __('lessons.level_b1_desc'),
+            self::B2 => __('lessons.level_b2_desc'),
+            self::C1 => __('lessons.level_c1_desc'),
+            self::C2 => __('lessons.level_c2_desc'),
         };
     }
 }

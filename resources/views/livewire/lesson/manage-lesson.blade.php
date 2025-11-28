@@ -15,9 +15,22 @@
                     class="w-full border-2 border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-white hover:border-blue-400"
             >
                 @foreach(LanguageLevelEnum::cases() as $level)
-                    <option value="{{ $level->value }}">{{ $level->value }}</option>
+                    <option value="{{ $level->value }}">{{ $level->label() }}</option>
                 @endforeach
             </select>
+            @if($language_level)
+                @php
+                    $selected_level = \App\Enums\System\LanguageLevelEnum::tryFrom($language_level);
+                @endphp
+                @if($selected_level)
+                    <div class="mt-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                        <p class="text-sm text-gray-700">
+                            <span class="font-semibold text-blue-700">{{ $selected_level->label() }}:</span>
+                            {{ $selected_level->description() }}
+                        </p>
+                    </div>
+                @endif
+            @endif
         </div>
 
         <div class="group">
@@ -47,8 +60,7 @@
                 </svg>
                 {{ __('lessons.keywords_label') }}
             </label>
-            <livewire:lesson.keyword-select :topic_id="$topic_id" :keyword_ids="$keyword_ids" :keywords="$keywords"
-                                            :key="'keyword-select-'.$topic_id"/>
+            <livewire:lesson.keyword-select :topic_id="$topic_id" :keyword_ids="$keyword_ids" :keywords="$keywords"/>
         </div>
 
         <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border-l-4 border-blue-500 rounded-lg p-4 shadow-sm">

@@ -49,7 +49,6 @@ class KeywordSelect extends Component
     public function updatedTopicId(int|string|null $value): void
     {
         $this->topic_id = $value !== null && $value !== '' ? (int) $value : null;
-        // Parent is responsible for preloading keywords and sending them via event.
     }
 
     /**

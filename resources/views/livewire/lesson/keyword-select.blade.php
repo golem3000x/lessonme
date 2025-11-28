@@ -33,11 +33,11 @@
             class="absolute left-0 right-0 z-50 mt-1 max-h-60 overflow-y-auto rounded-md border border-gray-200 bg-white shadow-lg"
         >
             @if(count($keywords) > 0)
-                <div class="p-2 space-y-1">
+                <div class="p-2 space-y-1" wire:key="keywords-list-{{ $topic_id }}">
                     @foreach($keywords as $k)
-                        <label for="kw-{{ $k['id'] }}" class="flex items-center space-x-2 p-2 rounded cursor-pointer hover:bg-blue-50 transition">
+                        <label for="kw-{{ $k['id'] }}-{{ $topic_id }}" class="flex items-center space-x-2 p-2 rounded cursor-pointer hover:bg-blue-50 transition" wire:key="keyword-{{ $k['id'] }}">
                             <input 
-                                id="kw-{{ $k['id'] }}" 
+                                id="kw-{{ $k['id'] }}-{{ $topic_id }}" 
                                 type="checkbox" 
                                 class="rounded border-gray-300 text-blue-600 focus:ring-blue-500" 
                                 @if(in_array($k['id'], $keyword_ids)) checked @endif
@@ -48,7 +48,7 @@
                     @endforeach
                 </div>
             @else
-                <div class="p-4 text-center text-gray-500 text-sm">
+                <div class="p-4 text-center text-gray-500 text-sm" wire:key="no-keywords-{{ $topic_id }}">
                     {{ __('lessons.no_keywords') }}
                 </div>
             @endif

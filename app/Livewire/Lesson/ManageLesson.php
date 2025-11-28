@@ -31,6 +31,9 @@ class ManageLesson extends Component
 
     /** @var array<int,array{id:int,label:string}> */
     public array $topics = [];
+    
+    /** @var array<int,array<int,array{id:int,label:string}>> */
+    public array $all_keywords_by_topic = [];
 
     /** @var array<int,int> */
     public array $keyword_ids = [];
@@ -67,6 +70,20 @@ class ManageLesson extends Component
                 'label' => $topic->title($locale),
             ];
         })->values()->toArray();
+        
+        // Preload all keywords into array to survive Livewire serialization
+        foreach ($this->preloaded_topics as $topic) {
+            $keywords_array = [];
+            if ($topic->relationLoaded('keywords')) {
+                $keywords_array = $topic->keywords->map(function (Keyword $keyword) use ($locale) {
+                    return [
+                        'id' => $keyword->id,
+                        'label' => $keyword->value($locale),
+                    ];
+                })->values()->toArray();
+            }
+            $this->all_keywords_by_topic[$topic->id] = $keywords_array;
+        }
 
         // Get topic_id from session or use first available
         $session_topic_id = session('selected_topic_id');
@@ -94,7 +111,11 @@ class ManageLesson extends Component
         session(['selected_topic_id' => $this->topic_id]);
 
         $this->keywords = $this->buildKeywordsForTopic($this->topic_id);
-        $this->dispatch('keywords-preloaded', keywords: $this->keywords, reset: false, selectedIds: $this->keyword_ids);
+        $this->dispatch('keywords-preloaded', 
+            keywords: $this->keywords, 
+            reset: false, 
+            selectedIds: $this->keyword_ids
+        )->to('lesson.keyword-select');
     }
 
     public function updatedTopicId(int|string $value): void
@@ -109,9 +130,12 @@ class ManageLesson extends Component
         session()->forget('selected_keyword_ids');
 
         $this->keywords = $this->buildKeywordsForTopic($this->topic_id);
-        $this->dispatch('keywords-preloaded', keywords: $this->keywords, reset: true, selectedIds: []);
-
-        $this->dispatch('topic-changed', id: $this->topic_id);
+        
+        $this->dispatch('keywords-preloaded', 
+            keywords: $this->keywords, 
+            reset: true, 
+            selectedIds: []
+        )->to('lesson.keyword-select');
     }
 
     public function createLesson(): void
@@ -227,34 +251,16 @@ class ManageLesson extends Component
      */
     protected function buildKeywordsForTopic(?int $topic_id): array
     {
-        if ($topic_id === null || $this->preloaded_topics === null) {
+        if ($topic_id === null) {
             return [];
         }
 
-        $locale = app()->getLocale();
-
-        $topic = $this->preloaded_topics->firstWhere('id', '=', $topic_id);
-
-        if (! $topic) {
+        // Use preloaded array instead of Collection
+        if (! isset($this->all_keywords_by_topic[$topic_id])) {
             return [];
         }
 
-        if (! $topic->relationLoaded('keywords')) {
-            return [];
-        }
-
-        $keywords = $topic->keywords;
-
-        if ($keywords->isEmpty()) {
-            return [];
-        }
-
-        return $keywords->map(function (Keyword $keyword) use ($locale) {
-            return [
-                'id' => $keyword->id,
-                'label' => $keyword->value($locale),
-            ];
-        })->values()->toArray();
+        return $this->all_keywords_by_topic[$topic_id];
     }
 
     public function render(): Factory|View

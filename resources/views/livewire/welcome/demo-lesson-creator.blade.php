@@ -81,11 +81,22 @@
             <select wire:model.live="language_level"
                     class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                 @foreach(\App\Enums\System\LanguageLevelEnum::cases() as $level)
-                    <option value="{{ $level->value }}">
-                        {{ $level->value }} - {{ $level->description() }}
-                    </option>
+                    <option value="{{ $level->value }}">{{ $level->label() }}</option>
                 @endforeach
             </select>
+            @if($language_level)
+                @php
+                    $selected_level = \App\Enums\System\LanguageLevelEnum::tryFrom($language_level);
+                @endphp
+                @if($selected_level)
+                    <div class="mt-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                        <p class="text-sm text-gray-700">
+                            <span class="font-semibold text-blue-700">{{ $selected_level->label() }}:</span>
+                            {{ $selected_level->description() }}
+                        </p>
+                    </div>
+                @endif
+            @endif
         </div>
 
         <!-- Submit Button -->

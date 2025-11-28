@@ -80,7 +80,7 @@
                                         
                                         @if($history->language_level)
                                             <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold {{ $history->level_badge_color }}">
-                                                {{ $history->language_level->value }}
+                                                {{ $history->language_level->label() }}
                                             </span>
                                         @endif
                                         
