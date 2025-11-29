@@ -45,8 +45,8 @@ Route::middleware('guest')->group(function () {
     Route::get('/reset-password/{token}', [PasswordResetController::class, 'showResetPasswordForm'])->name('password.reset');
     Route::post('/reset-password', [PasswordResetController::class, 'reset'])->name('password.update');
 
-    Route::get('/auth/zalo', [ZaloController::class, 'redirect'])->name('zalo.login');
-    Route::get('/auth/zalo/callback', [ZaloController::class, 'callback']);
+//    Route::get('/auth/zalo', [ZaloController::class, 'redirect'])->name('zalo.login');
+//    Route::get('/auth/zalo/callback', [ZaloController::class, 'callback']);
 
     Route::get('/auth/facebook', [SocialAuthController::class, 'redirectToFacebook'])->name('facebook.login');
     Route::get('/auth/facebook/callback', [SocialAuthController::class, 'handleFacebookCallback']);

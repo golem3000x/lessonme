@@ -97,12 +97,6 @@
 
                 {{-- Social buttons --}}
                 <div class="space-y-3">
-                    <a href="{{ route('zalo.login') }}"
-                       class="group w-full flex items-center justify-center gap-3 bg-blue-500 text-white px-4 py-3 rounded-lg hover:bg-blue-600 font-medium shadow-md hover:shadow-lg transition-all duration-200">
-                        <img src="https://stc-developers.zdn.vn/images/logo-zalo.svg" alt="Zalo" class="h-5 transition-transform group-hover:scale-110">
-                        <span>{{ __('auth.login.sign_in_with_zalo') }}</span>
-                    </a>
-
                     <a href="{{ route('facebook.login') }}"
                        class="group w-full flex items-center justify-center gap-3 bg-[#1877F2] text-white px-4 py-3 rounded-lg hover:bg-[#166FE5] font-medium shadow-md hover:shadow-lg transition-all duration-200">
                         <svg class="h-5 w-5 transition-transform group-hover:scale-110" fill="currentColor" viewBox="0 0 24 24">
