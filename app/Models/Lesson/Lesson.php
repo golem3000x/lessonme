@@ -9,6 +9,7 @@ use App\Enums\System\LanguageLevelEnum;
 use App\Enums\System\TableNameEnum;
 use App\Models\Abstracts\Lesson\BaseLesson;
 use App\Models\Topic\Topic;
+use App\Services\Lesson\LessonAudioService;
 use Database\Factories\Lesson\LessonFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -78,6 +79,20 @@ class Lesson extends BaseLesson
     protected $table = TableNameEnum::LESSONS->value;
 
     public const float SIMILARITY_THRESHOLD = 0.9;
+
+    /**
+     * Boot the model and register event listeners
+     */
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        // Automatically delete audio files when lesson is deleted
+        static::deleting(function (Lesson $lesson): void {
+            $audio_service = app(LessonAudioService::class);
+            $audio_service->deleteAudioFiles($lesson);
+        });
+    }
 
     /**
      * Create a new factory instance for the model.

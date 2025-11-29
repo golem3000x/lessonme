@@ -266,6 +266,48 @@ class LessonAudioServiceTest extends TestCase
         $this->assertFalse(Storage::disk('public')->exists($directory));
     }
 
+    public function test_lesson_deletion_automatically_deletes_audio_files(): void
+    {
+        Storage::fake('public');
+
+        $lesson = Lesson::factory()->create();
+        $directory = "lessons/{$lesson->uuid}/audio";
+
+        // Create audio files in storage
+        Storage::disk('public')->makeDirectory($directory);
+        Storage::disk('public')->put("$directory/vocab1.mp3", 'content');
+        Storage::disk('public')->put("$directory/vocab2.mp3", 'content');
+
+        // Create audio records in database
+        LessonAudioFile::create([
+            'lesson_id' => $lesson->id,
+            'audio_type' => 'vocabulary',
+            'audio_key' => 'word1',
+            'file_path' => "$directory/vocab1.mp3",
+            'status' => LessonAudioStatusEnum::READY,
+        ]);
+
+        LessonAudioFile::create([
+            'lesson_id' => $lesson->id,
+            'audio_type' => 'vocabulary',
+            'audio_key' => 'word2',
+            'file_path' => "$directory/vocab2.mp3",
+            'status' => LessonAudioStatusEnum::READY,
+        ]);
+
+        $this->assertDatabaseCount('lesson_audio_files', 2);
+        $this->assertTrue(Storage::disk('public')->exists($directory));
+
+        // Delete lesson - should trigger automatic audio cleanup
+        $lesson->delete();
+
+        // Verify audio files were deleted from database
+        $this->assertDatabaseCount('lesson_audio_files', 0);
+
+        // Verify audio files were deleted from storage
+        $this->assertFalse(Storage::disk('public')->exists($directory));
+    }
+
     // ===== GENERATE AUDIO FOR LESSON TESTS =====
 
     public function test_generate_audio_for_lesson_calls_both_methods(): void
