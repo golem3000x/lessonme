@@ -77,4 +77,5 @@ return [
 
     // Common
     'back_to_help' => 'Back to Help Center',
+    'still_have_questions' => 'Still have questions? Contact me through chat',
 ];

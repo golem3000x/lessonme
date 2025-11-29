@@ -136,6 +136,8 @@ class ManageLesson extends Component
             reset: true, 
             selectedIds: []
         )->to('lesson.keyword-select');
+        
+        $this->dispatch('topic-changed');
     }
 
     public function createLesson(): void

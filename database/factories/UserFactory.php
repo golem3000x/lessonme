@@ -36,6 +36,7 @@ class UserFactory extends Factory
             'native_lang' => 'en',
             'learning_lang' => 'vi',
             'timezone' => 'UTC',
+            'first_login_completed_at' => now(),
         ];
     }
 

@@ -10,7 +10,8 @@ return [
     'topics' => 'Topics',
     'help' => 'Help',
     'profile' => 'Profile',
-    'about' => 'About',
+    'about' => 'Support',
+    'support_tooltip' => 'Support the Project',
     'login' => 'Login',
     'register' => 'Register',
     'logout' => 'Logout',
@@ -19,9 +20,9 @@ return [
     'english' => 'English',
     'vietnamese' => 'Vietnamese',
 
-    // About page
-    'about_title' => 'About the Project',
-    'about_subtitle' => 'Language Learning Tool',
+    // Support Project page
+    'about_title' => 'Support the Project',
+    'about_subtitle' => 'Help Us Grow',
     'about_what_title' => 'What is this project?',
     'about_what_text' => 'This project is a tool for creating lessons in the language you are learning. The project is non-commercial and created to help people learn foreign languages.',
     'about_support_title' => 'Support Development',

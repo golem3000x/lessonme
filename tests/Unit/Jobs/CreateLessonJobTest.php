@@ -13,6 +13,7 @@ use App\Models\Topic\Topic;
 use App\Models\Topic\TopicTranslation;
 use App\Models\User;
 use App\Notifications\Lesson\LessonCreationNotification;
+use App\Services\Lesson\LessonAudioService;
 use App\Services\Lesson\LessonGenerationService;
 use App\Services\Lesson\LessonHistoryService;
 use App\Services\Lesson\LessonService;
@@ -88,8 +89,11 @@ class CreateLessonJobTest extends TestCase
 
         $lesson_service = new LessonService($generator, $similarity, $history);
 
+        $audio_service = Mockery::mock(LessonAudioService::class);
+        $audio_service->shouldReceive('generateAudioForLesson')->never();
+
         $job = new CreateLessonJob($user->id, $topic->id, $lesson_dto);
-        $job->handle($lesson_service);
+        $job->handle($lesson_service, $audio_service);
 
         Notification::assertSentTo(
             $user,

@@ -150,6 +150,8 @@ return [
     'english_keyboard' => 'English Keyboard',
     'show_hint' => 'Show Hint',
     'hide_hint' => 'Hide Hint',
+    'show_answer' => 'Show Answer',
+    'hide_answer' => 'Hide Answer',
 
     // Exercise results
     'correct' => 'Correct!',

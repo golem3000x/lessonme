@@ -150,6 +150,8 @@ return [
     'english_keyboard' => 'Bàn Phím Tiếng Anh',
     'show_hint' => 'Hiển Thị Gợi Ý',
     'hide_hint' => 'Ẩn Gợi Ý',
+    'show_answer' => 'Hiển Thị Đáp Án',
+    'hide_answer' => 'Ẩn Đáp Án',
 
     // Exercise results
     'correct' => 'Đúng rồi!',

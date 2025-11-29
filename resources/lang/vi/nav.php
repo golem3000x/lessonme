@@ -10,7 +10,8 @@ return [
     'topics' => 'Chủ đề',
     'help' => 'Trợ giúp',
     'profile' => 'Hồ sơ',
-    'about' => 'Về dự án',
+    'about' => 'Hỗ trợ',
+    'support_tooltip' => 'Hỗ Trợ Dự Án',
     'login' => 'Đăng nhập',
     'register' => 'Đăng ký',
     'logout' => 'Đăng xuất',
@@ -19,9 +20,9 @@ return [
     'english' => 'Tiếng Anh',
     'vietnamese' => 'Tiếng Việt',
 
-    // About page
-    'about_title' => 'Về Dự Án',
-    'about_subtitle' => 'Công cụ học ngôn ngữ',
+    // Support Project page
+    'about_title' => 'Hỗ Trợ Dự Án',
+    'about_subtitle' => 'Giúp Chúng Tôi Phát Triển',
     'about_what_title' => 'Dự án này là gì?',
     'about_what_text' => 'Dự án này là một công cụ để tạo bài học cho ngôn ngữ bạn đang học. Dự án không mang tính thương mại và được tạo ra để giúp mọi người học ngoại ngữ.',
     'about_support_title' => 'Hỗ trợ phát triển',

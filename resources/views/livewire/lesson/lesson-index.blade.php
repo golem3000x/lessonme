@@ -390,7 +390,7 @@
                                 
                                 @if($lesson->language_level)
                                     <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold {{ $lesson->level_badge_color }}">
-                                        {{ $lesson->language_level->label() }}
+                                        {{ $lesson->language_level->value }}
                                     </span>
                                 @endif
                                 

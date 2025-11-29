@@ -68,6 +68,7 @@
                     vnKeyboardOpen: false,
                     enKeyboardOpen: false,
                     showHint: false,
+                    showAnswer: false,
                     insertChar(char) {
                         const input = $refs.gapInput;
                         if (!input) return;
@@ -114,41 +115,53 @@
                                     $audio_file = $lesson?->getGapFillAudio($index);
                                     $audio_url = $audio_file?->getPublicUrl();
                                 @endphp
-                                <livewire:lesson.lesson-speaker 
-                                    :audio_url="$audio_url" 
-                                    :key="'gap-speaker-' . $index" 
-                                />
+                                <div class="flex items-center gap-2">
+                                    {{-- Show Answer Button --}}
+                                    @if(!$checked)
+                                        <button
+                                            type="button"
+                                            @click="showAnswer = !showAnswer"
+                                            class="inline-flex items-center gap-1 px-2 py-1.5 bg-blue-100 hover:bg-blue-200 text-blue-800 font-medium text-xs rounded-lg border border-blue-300 transition-colors"
+                                        >
+                                            <span class="text-sm" x-show="!showAnswer">👁️</span>
+                                            <span class="text-sm" x-show="showAnswer">🙈</span>
+                                            <span x-text="showAnswer ? '{{ __('lessons.hide_answer') }}' : '{{ __('lessons.show_answer') }}'"></span>
+                                        </button>
+                                    @endif
+                                    <livewire:lesson.lesson-speaker 
+                                        :audio_url="$audio_url" 
+                                        :key="'gap-speaker-' . $index" 
+                                    />
+                                </div>
                             </div>
                             
-                            <div class="flex flex-wrap items-center gap-2">
+                            <div class="leading-relaxed">
                                 @foreach($parts as $part_index => $part)
-                                    <span>{{ $part }}</span>
-                                    @if($part_index < count($parts) - 1)
-                                        <input
+                                    <span class="whitespace-pre-wrap">{{ $part }}</span><!--
+                                    -->@if($part_index < count($parts) - 1)<!--
+                                        --><input
                                             x-ref="gapInput"
                                             type="text"
                                             wire:model="user_answers.gap_fill.{{ $index }}"
                                             placeholder="..."
-                                            class="inline-block px-4 py-2 border-b-2 border-blue-400 bg-transparent text-center min-w-[150px] max-w-[250px] transition-all duration-200
+                                            maxlength="25"
+                                            class="inline-block px-3 py-1.5 mx-1 border-b-2 border-blue-400 bg-transparent text-center min-w-[80px] max-w-[180px] transition-all duration-200
                                                    @if(!$checked) focus:border-blue-600 focus:bg-blue-100 hover:border-blue-500 @endif
                                                    @if($checked) {{ isset($user_answers['gap_fill'][$index]) && strcasecmp(trim($user_answers['gap_fill'][$index]), trim($item['answer'] ?? '')) === 0 ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50' }} @endif"
                                             @if($checked) disabled @endif
-                                        >
-                                    @endif
+                                        ><!--
+                                    -->@endif
                                 @endforeach
                                 
                                 {{-- Hint Toggle Button --}}
-                                @if(!$checked && !empty($hint))
-                                    <button
+                                @if(!$checked && !empty($hint))<!--
+                                    --><button
                                         type="button"
                                         @click="showHint = !showHint"
-                                        class="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 hover:bg-blue-200 text-blue-700 font-medium text-sm rounded-lg border border-blue-300 transition-colors ml-2"
-                                    >
-                                        <span class="text-base" x-show="!showHint">👁️</span>
-                                        <span class="text-base" x-show="showHint">🙈</span>
-                                        <span class="text-xs" x-text="showHint ? '{{ __('lessons.hide_hint') }}' : '{{ __('lessons.show_hint') }}'"></span>
-                                    </button>
-                                    <div 
+                                        class="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 hover:bg-blue-200 text-blue-700 font-medium text-xs rounded-lg border border-blue-300 transition-colors ml-2"
+                                        x-text="showHint ? '{{ __('lessons.hide_hint') }}' : '{{ __('lessons.show_hint') }}'"
+                                    ></button><!--
+                                    --><span 
                                         x-show="showHint"
                                         x-transition:enter="transition ease-out duration-200"
                                         x-transition:enter-start="opacity-0 scale-90"
@@ -156,11 +169,23 @@
                                         x-transition:leave="transition ease-in duration-150"
                                         x-transition:leave-start="opacity-100 scale-100"
                                         x-transition:leave-end="opacity-0 scale-90"
-                                        class="text-blue-700 font-medium px-3 py-2 bg-blue-200 rounded-lg"
-                                    >
-                                        {{ $hint }}
-                                    </div>
-                                @endif
+                                        class="inline-block text-blue-800 font-medium px-2 py-1 bg-blue-100 rounded-lg border border-blue-300 text-sm ml-2"
+                                    >{{ $hint }}</span><!--
+                                -->@endif
+                                
+                                {{-- Show Answer Display --}}
+                                @if(!$checked)<!--
+                                    --><span 
+                                        x-show="showAnswer"
+                                        x-transition:enter="transition ease-out duration-200"
+                                        x-transition:enter-start="opacity-0 scale-90"
+                                        x-transition:enter-end="opacity-100 scale-100"
+                                        x-transition:leave="transition ease-in duration-150"
+                                        x-transition:leave-start="opacity-100 scale-100"
+                                        x-transition:leave-end="opacity-0 scale-90"
+                                        class="inline-block text-blue-900 font-bold px-2 py-1 bg-blue-200 rounded-lg border border-blue-400 text-sm ml-2"
+                                    >{{ $item['answer'] ?? '' }}</span><!--
+                                -->@endif
                             </div>
                         </div>
 

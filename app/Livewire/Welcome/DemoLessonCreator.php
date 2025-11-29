@@ -36,8 +36,6 @@ class DemoLessonCreator extends Component
     /** @var array<int,array{id:int,label:string}> */
     public array $keywords = [];
 
-    public string $language_level = '';
-
     public string $native_lang = '';
 
     public string $learning_lang = '';
@@ -83,7 +81,7 @@ class DemoLessonCreator extends Component
             $this->topic = $selected['label'] ?? '';
         }
 
-        $this->language_level = LanguageLevelEnum::A1->value;
+        // Demo lessons are always A1 level
         $this->native_lang = SystemLanguageEnum::VIETNAMESE->value;
         $this->learning_lang = SystemLanguageEnum::ENGLISH->value;
 
@@ -121,13 +119,10 @@ class DemoLessonCreator extends Component
     public function createDemoLesson(): void
     {
         // Validate input with comprehensive rules
-        $valid_levels = implode(',', LanguageLevelEnum::values());
-
         $this->validate([
             'native_lang' => 'required|string|in:en,vi|different:learning_lang',
             'learning_lang' => 'required|string|in:en,vi|different:native_lang',
             'topic_id' => 'required|integer|exists:topics,id',
-            'language_level' => 'required|string|in:'.$valid_levels,
             'keyword_ids' => 'nullable|array',
             'keyword_ids.*' => 'integer|exists:keywords,id',
         ], [
@@ -139,8 +134,6 @@ class DemoLessonCreator extends Component
             'learning_lang.different' => __('lessons.languages_must_be_different'),
             'topic_id.required' => __('validation.required', ['attribute' => __('lessons.topic')]),
             'topic_id.exists' => __('lessons.topic_not_found'),
-            'language_level.required' => __('validation.required', ['attribute' => __('lessons.level')]),
-            'language_level.in' => __('validation.in', ['attribute' => __('lessons.level')]),
             'keyword_ids.*.exists' => __('lessons.keyword_not_found'),
         ]);
 
@@ -157,7 +150,8 @@ class DemoLessonCreator extends Component
             }
 
             $keywords = ! empty($selected_keyword_labels) ? $selected_keyword_labels : [$this->topic];
-            $level_enum = LanguageLevelEnum::from($this->language_level);
+            // Demo lessons are always A1 level
+            $level_enum = LanguageLevelEnum::A1;
 
             $lesson_dto = new LessonDto(
                 $this->topic,

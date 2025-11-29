@@ -6,6 +6,8 @@ namespace App\Models\Lesson;
 
 use App\Enums\System\TableNameEnum;
 use App\Models\User;
+use Database\Factories\Lesson\LessonScoreFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
@@ -29,6 +31,7 @@ use Illuminate\Support\Carbon;
  * @property-read User|null $teacher
  * @property-read User $user
  *
+ * @method static LessonScoreFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonScore newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonScore newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonScore query()
@@ -50,6 +53,8 @@ use Illuminate\Support\Carbon;
  */
 class LessonScore extends Model
 {
+    use HasFactory;
+
     protected $table = TableNameEnum::LESSON_SCORES->value;
 
     protected $fillable = [

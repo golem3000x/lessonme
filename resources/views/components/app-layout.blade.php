@@ -92,18 +92,6 @@
                     <span class="hidden md:inline">{{ __('nav.help') }}</span>
                 </a>
             @endauth
-
-            <a href="{{ route('about') }}" class="group relative px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200 flex items-center gap-2 {{ request()->routeIs('about') ? 'bg-blue-50 text-blue-600' : '' }}">
-                @if(request()->routeIs('about'))
-                    <span class="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full"></span>
-                @endif
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transition-transform group-hover:scale-110" fill="none" viewBox="0 0 24 24"
-                     stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                          d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
-                <span class="hidden md:inline">{{ __('nav.about') }}</span>
-            </a>
         </div>
 
         <!-- Right side -->
@@ -224,6 +212,18 @@
                 <span class="hidden sm:inline">{{ $flag }} {{ strtoupper($target_locale) }}</span>
                 <span class="sm:hidden">{{ $flag }}</span>
             </a>
+
+            <!-- Support Project (only for authenticated users) -->
+            @auth
+                <a href="{{ route('support') }}"
+                   class="group px-3 py-2 text-sm font-medium text-pink-600 hover:text-pink-700 hover:bg-pink-50 rounded-lg flex items-center gap-1 transition-all duration-200"
+                   title="{{ __('nav.support_tooltip') }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transition-all group-hover:scale-110 duration-200" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                    </svg>
+                    <span class="hidden lg:inline text-xs">{{ __('nav.about') }}</span>
+                </a>
+            @endauth
         </div>
     </div>
 </nav>
@@ -237,9 +237,9 @@
     <livewire:notification.notifications-panel />
 @endauth
 
-<!-- Chat button - on About and Help pages -->
+<!-- Chat button - on Support and Help pages -->
 @auth
-    @if(request()->routeIs('about') || request()->is('help*'))
+    @if(request()->routeIs('support') || request()->is('help*'))
         <livewire:chat.chat-button />
         <livewire:chat.chat-panel />
     @endif

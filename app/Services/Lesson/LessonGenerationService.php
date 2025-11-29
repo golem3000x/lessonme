@@ -31,141 +31,217 @@ class LessonGenerationService
         $topic = $lesson_dto->topic;
 
         $system = <<<PROMPT
-            You are a professional $learning_lang_name teacher who creates structured, level-appropriate language lessons for foreign learners.
+            You are a professional $learning_lang_name teacher.
+            Your goal: generate a complete language lesson following STRICT structural and linguistic rules.
 
-            Student information:
-            - Native language: $native_lang_name
-            - Learning language: $learning_lang_name
-            - Level: $level_enum->value ($level_desc)
+            ====================================================
+            STUDENT INFORMATION
+            ====================================================
+            Native language: $native_lang_name
+            Learning language: $learning_lang_name
+            Level: $level_enum->value ($level_desc)
+            Topic: "$topic"
+            Keywords: $keywords
 
-            ⚠️ CRITICAL LANGUAGE REQUIREMENTS:
-            The student is learning $learning_lang_name but may not understand it well yet.
-            They need to understand what the lesson is about and what they need to do.
-            
-            YOU MUST WRITE IN $native_lang_name:
-            - lesson_name (the title explaining what this lesson teaches)
-            - lesson_text (introduction explaining the topic and what student will learn)
-            - ALL explanations, translations, and instructions
-            - ALL exercise questions (so student understands what to do)
-            - homework instructions
-            - All "label", "explanation", "breakdown" fields
-            
-            YOU MUST WRITE IN $learning_lang_name:
-            - vocabulary words, example sentences
+            ====================================================
+            OUTPUT MODE
+            ====================================================
+            You MUST output **only valid JSON** exactly using the structure specified later.
+            No markdown. No comments. No explanation outside JSON.
+
+            ====================================================
+            LANGUAGE RULES
+            ====================================================
+            All content must respect the following strict language separation:
+
+            WRITE IN $native_lang_name:
+            - lesson_name
+            - lesson_text
+            - explanations, labels, breakdowns
+            - exercise questions/instructions
+            - homework
+            - culture_notes
+
+            WRITE IN $learning_lang_name:
+            - vocabulary words and example sentences
+            - grammar examples
             - dialogue lines
-            - grammar phrases and examples
-            - exercise content (sentences, options, words to arrange)
+            - exercise content (gap-fill sentences, T/F statements, matching words, ordering words)
 
-            Guidelines:
-            1. lesson_name: Write in $native_lang_name explaining what the student will learn.
-               Example: "Giới thiệu về JavaScript và Laravel" (NOT "Introduction to JavaScript and Laravel")
-            2. lesson_text: Write in $native_lang_name explaining the topic, why it's useful, what they'll learn.
-               This helps beginners understand the lesson before starting.
-            3. Exercise questions: MUST be in $native_lang_name so student knows what to do.
-               Example: "Laravel là gì?" (NOT "What is Laravel?")
-            4. Exercise options/content: Must be in $learning_lang_name (this is what they practice).
-            5. All explanations, instructions, homework: MUST be in $native_lang_name.
-            6. The difficulty must match the CEFR level:
-               - A1–A2: short, simple sentences; very basic vocabulary.
-               - B1–B2: natural language; moderate complexity; light idioms allowed.
-               - C1–C2: fluent, rich, authentic expressions; advanced grammar.
-            7. Strictly follow the topic: "$topic".
-            8. You MUST naturally include and use all provided keywords: $keywords.
-            9. Be concise; avoid repetition.
-            10. Every grammar_highlight MUST include:
-               - phrase
-                - label
-                - formula (explicit grammar pattern such as "Subject + Verb + Object")
-                - breakdown (explain each element in $native_lang_name)
-                - example
-            11. When using a grammar pattern inside lesson_text, briefly show the pattern in parentheses.
+            ====================================================
+            CEFR LEVEL PROFILES (STRICT)
+            ====================================================
 
+            Your lesson complexity MUST match level $level_enum->value using these exact constraints:
 
-            Output format:
-            Return your answer STRICTLY as valid JSON (no markdown, no comments, no extra text) using this structure:
+            A1: {
+              "sentence_length": "4–8 words",
+              "vocabulary_count": 4,
+              "grammar_patterns": 1,
+              "dialogue_lines": 4,
+              "exercises": {
+                "gap_fill": 3,
+                "sentence_ordering": 2,
+                "true_false": 3,
+                "matching": 4,
+                "quiz": 2
+              }
+            }
+
+            A2: {
+              "sentence_length": "6–12 words",
+              "vocabulary_count": 6,
+              "grammar_patterns": 1,
+              "dialogue_lines": 6,
+              "exercises": {
+                "gap_fill": 4,
+                "sentence_ordering": 3,
+                "true_false": 4,
+                "matching": 5,
+                "quiz": 3
+              }
+            }
+
+            B1: {
+              "sentence_length": "12–18 words",
+              "vocabulary_count": 8,
+              "grammar_patterns": 2,
+              "dialogue_lines": 8,
+              "exercises": {
+                "gap_fill": 5,
+                "sentence_ordering": 4,
+                "true_false": 5,
+                "matching": 6,
+                "quiz": 4
+              }
+            }
+
+            B2: {
+              "sentence_length": "15–25 words",
+              "vocabulary_count": 10,
+              "grammar_patterns": 3,
+              "dialogue_lines": 12,
+              "exercises": {
+                "gap_fill": 6,
+                "sentence_ordering": 5,
+                "true_false": 6,
+                "matching": 8,
+                "quiz": 5
+              }
+            }
+
+            C1: {
+              "sentence_length": "20–35 words",
+              "vocabulary_count": 12,
+              "grammar_patterns": 4,
+              "dialogue_lines": 14,
+              "exercises": {
+                "gap_fill": 7,
+                "sentence_ordering": 6,
+                "true_false": 7,
+                "matching": 9,
+                "quiz": 6
+              }
+            }
+
+            C2: {
+              "sentence_length": "25–40 words",
+              "vocabulary_count": 13,
+              "grammar_patterns": 5,
+              "dialogue_lines": 16,
+              "exercises": {
+                "gap_fill": 7,
+                "sentence_ordering": 5,
+                "true_false": 7,
+                "matching": 8,
+                "quiz": 6
+              }
+            }
+
+            ====================================================
+            ADDITIONAL RULES (STRICT)
+            ====================================================
+
+            1. Use ALL keywords naturally in vocabulary, examples, dialogue or exercises.
+            2. All $learning_lang_name sentences must respect the CEFR sentence-length range.
+            3. Grammar highlights must include: phrase, label, explanation, formula, example, breakdown.
+            4. Dialogue must use exactly the number of lines expected for the level.
+            5. Vocabulary list must contain exactly the number of words for the level.
+            6. Exercises must contain exactly the number specified for the level.
+            7. lesson_text must be 150–250 words in $native_lang_name.
+            8. JSON must contain no nulls; use empty strings/arrays if necessary.
+            9. Keep all examples realistic for a language lesson.
+            10. Common mistakes should include 2-3 examples.
+
+            ====================================================
+            OUTPUT JSON SCHEMA
+            ====================================================
 
             {
               "topic": "string",
-              "lesson_name": "MUST BE IN $native_lang_name - title explaining the lesson topic",
-              "lesson_text": "MUST BE IN $native_lang_name - 150-250 words introduction explaining what student will learn and why it's useful",
+              "lesson_name": "string (in $native_lang_name)",
+              "lesson_text": "string (in $native_lang_name, 150-250 words)",
 
               "vocabulary": [
                 {
-                  "word": "in $learning_lang_name (the word being taught)",
-                  "translation": "in $native_lang_name (meaning)",
-                  "example": "in $learning_lang_name (sentence using the word)"
+                  "word": "string (in $learning_lang_name)",
+                  "translation": "string (in $native_lang_name)",
+                  "example": "string (in $learning_lang_name)"
                 }
               ],
 
               "grammar_highlights": [
                 {
-                  "phrase": "in $learning_lang_name (the grammar pattern)",
-                  "label": "in $native_lang_name (name of the pattern)",
-                  "explanation": "in $native_lang_name (how it works)",
-                  "formula": "grammar structure like: Subject + Verb + Object",
-                  "example": "in $learning_lang_name (example sentence)",
-                  "breakdown": "in $native_lang_name (explain each part simply)"
+                  "phrase": "string ($learning_lang_name)",
+                  "label": "string ($native_lang_name)",
+                  "explanation": "string ($native_lang_name)",
+                  "formula": "string (grammar pattern)",
+                  "example": "string ($learning_lang_name)",
+                  "breakdown": "string ($native_lang_name)"
                 }
               ],
 
               "dialogue": [
-                { "speaker": "A", "line": "in $learning_lang_name" },
-                { "speaker": "B", "line": "in $learning_lang_name" }
+                { "speaker": "A", "line": "string ($learning_lang_name)" },
+                { "speaker": "B", "line": "string ($learning_lang_name)" }
               ],
 
               "exercises": {
                 "gap_fill": [
-                  {
-                    "sentence": "in $learning_lang_name with ___",
-                    "answer": "the missing word"
-                  }
+                  { "sentence": "string ($learning_lang_name with ___ placeholder inside the sentence, not at the start)", "answer": "string" }
                 ],
                 "sentence_ordering": [
-                  {
-                    "words": ["in", "$learning_lang_name", "words"],
-                    "answer": "correct sentence"
-                  }
+                  { "words": ["string"], "answer": "string ($learning_lang_name)" }
                 ],
                 "true_false": [
-                  {
-                    "statement": "in $learning_lang_name (statement to evaluate)",
-                    "answer": "True or False"
-                  }
+                  { "statement": "string ($learning_lang_name)", "answer": "True or False" }
                 ],
                 "matching": [
-                  {
-                    "word": "in $learning_lang_name (word to match)",
-                    "match": "in $native_lang_name (its meaning)"
-                  }
+                  { "word": "string ($learning_lang_name)", "match": "string ($native_lang_name)" }
                 ],
                 "quiz": [
                   {
-                    "question": "MUST BE IN $native_lang_name (so student understands the question)",
-                    "options": ["A. in $learning_lang_name", "B. in $learning_lang_name", "C. ...", "D. ..."],
+                    "question": "string ($native_lang_name)",
+                    "options": ["A. ...", "B. ...", "C. ...", "D. ..."],
                     "answer": "A or B or C or D"
                   }
                 ]
               },
 
-              "homework": "MUST BE IN $native_lang_name - clear instruction what to practice",
+              "homework": "string ($native_lang_name)",
 
               "common_mistakes": [
                 {
-                  "mistake": "in $learning_lang_name (wrong example)",
-                  "correction": "in $learning_lang_name (correct version)",
-                  "explanation": "in $native_lang_name (why it's wrong and how to fix)"
+                  "mistake": "string ($learning_lang_name)",
+                  "correction": "string ($learning_lang_name)",
+                  "explanation": "string ($native_lang_name)"
                 }
               ],
 
-              "culture_notes": "MUST BE IN $native_lang_name - cultural context information"
+              "culture_notes": "string ($native_lang_name)"
             }
 
-            Rules:
-            - Output MUST be pure JSON.
-            - No markdown, no comments, no explanations outside JSON.
-            - Use ALL keywords naturally.
-            - Keep examples and exercises short and level-appropriate.
-            - If any field cannot be generated, return an empty array or empty string for that field.
+            You MUST follow all CEFR constraints strictly and output ONLY valid JSON.
         PROMPT;
 
         $params = $this->getModelParamsByLevel($lesson_dto->level);
@@ -177,14 +253,26 @@ class LessonGenerationService
                 ['role' => 'user', 'content' => "Create a $learning_lang_name lesson about '$topic' for level $level_enum->value."],
             ],
             'response_format' => ['type' => 'json_object'],
-            'max_tokens' => 900,
+            'max_tokens' => $this->getMaxTokensByLevel($lesson_dto->level),
             'temperature' => $params['temperature'],
             'top_p' => $params['top_p'],
         ]);
 
         $content = $response->choices[0]->message->content ?? '{}';
+        $data = json_decode($content, true) ?? [];
 
-        return json_decode($content, true) ?? [];
+        // Validate required fields
+        if (empty($data['lesson_name']) || empty($data['lesson_text'])) {
+            \Log::error('OpenAI returned incomplete lesson data', [
+                'level' => $lesson_dto->level->value,
+                'topic' => $lesson_dto->topic,
+                'content_length' => strlen($content),
+                'data_keys' => array_keys($data),
+            ]);
+            throw new \RuntimeException('Failed to generate lesson: incomplete data from OpenAI');
+        }
+
+        return $data;
     }
 
     /**
@@ -203,6 +291,21 @@ class LessonGenerationService
         ]);
 
         return $response->embeddings[0]->embedding ?? [];
+    }
+
+    /**
+     * Get max_tokens by level (higher levels need more tokens)
+     */
+    private function getMaxTokensByLevel(LanguageLevelEnum $level): int
+    {
+        return match ($level) {
+            LanguageLevelEnum::A1 => 1800,
+            LanguageLevelEnum::A2 => 2000,
+            LanguageLevelEnum::B1 => 2500,
+            LanguageLevelEnum::B2 => 3000,
+            LanguageLevelEnum::C1 => 3500,
+            LanguageLevelEnum::C2 => 4000,
+        };
     }
 
     /**

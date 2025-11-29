@@ -114,16 +114,6 @@
                         </div>
                     </section>
 
-                    <!-- Back button -->
-                    <div class="pt-4 flex justify-center">
-                        <a href="{{ url()->previous() }}" 
-                           class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg hover:from-blue-600 hover:to-purple-700 transition shadow-md hover:shadow-lg">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
-                            </svg>
-                            {{ __('nav.about_back') }}
-                        </a>
-                    </div>
                 </div>
             </div>
         </div>

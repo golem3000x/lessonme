@@ -6,6 +6,8 @@ namespace App\Models\Lesson;
 
 use App\Enums\System\TableNameEnum;
 use App\Models\User;
+use Database\Factories\Lesson\LessonAttemptFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -29,6 +31,7 @@ use Illuminate\Support\Carbon;
  * @property-read \App\Models\Lesson\LessonScore|null $score
  * @property-read User $user
  *
+ * @method static LessonAttemptFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAttempt newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAttempt newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAttempt query()
@@ -49,6 +52,8 @@ use Illuminate\Support\Carbon;
  */
 class LessonAttempt extends Model
 {
+    use HasFactory;
+
     protected $table = TableNameEnum::LESSON_ATTEMPTS->value;
 
     protected $fillable = [

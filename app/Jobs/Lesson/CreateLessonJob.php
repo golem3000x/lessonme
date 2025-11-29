@@ -24,6 +24,11 @@ class CreateLessonJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    /**
+     * The number of seconds the job can run before timing out.
+     */
+    public int $timeout = 180;
+
     public function __construct(
         protected int $user_id,
         protected int $topic_id,

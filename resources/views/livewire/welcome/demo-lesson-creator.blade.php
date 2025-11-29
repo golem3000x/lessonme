@@ -73,30 +73,22 @@
             </div>
         @endif
 
-        <!-- Level Selection -->
+        <!-- Level Information (A1 Only) -->
         <div class="mb-6">
             <label class="block text-sm font-semibold text-gray-700 mb-2">
                 {{ __('lessons.language_level') }}
             </label>
-            <select wire:model.live="language_level"
-                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                @foreach(\App\Enums\System\LanguageLevelEnum::cases() as $level)
-                    <option value="{{ $level->value }}">{{ $level->label() }}</option>
-                @endforeach
-            </select>
-            @if($language_level)
-                @php
-                    $selected_level = \App\Enums\System\LanguageLevelEnum::tryFrom($language_level);
-                @endphp
-                @if($selected_level)
-                    <div class="mt-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                        <p class="text-sm text-gray-700">
-                            <span class="font-semibold text-blue-700">{{ $selected_level->label() }}:</span>
-                            {{ $selected_level->description() }}
-                        </p>
-                    </div>
-                @endif
-            @endif
+            @php
+                $a1_level = \App\Enums\System\LanguageLevelEnum::A1;
+            @endphp
+            <div class="p-4 bg-blue-50 border-2 border-blue-200 rounded-lg">
+                <p class="text-base text-gray-800 mb-2">
+                    <span class="font-bold text-blue-700 text-lg">{{ $a1_level->label() }}</span>
+                </p>
+                <p class="text-sm text-gray-700">
+                    {{ $a1_level->description() }}
+                </p>
+            </div>
         </div>
 
         <!-- Submit Button -->

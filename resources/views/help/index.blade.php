@@ -110,6 +110,16 @@
                     <p class="text-gray-600 relative z-10">{{ __('help.faq_description') }}</p>
                 </a>
             </div>
+
+            {{-- Chat Contact Badge --}}
+            <div class="mt-10 flex justify-center">
+                <div class="inline-flex items-center gap-3 px-6 py-4 bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-xl shadow-md hover:shadow-lg transition-all duration-300">
+                    <span class="text-3xl">💬</span>
+                    <p class="text-gray-700 font-medium">
+                        {{ __('help.still_have_questions') }}
+                    </p>
+                </div>
+            </div>
         </div>
     </div>
 </x-app-layout>

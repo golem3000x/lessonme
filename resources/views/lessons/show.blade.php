@@ -28,7 +28,7 @@
                 
                 @if($lesson->language_level)
                     <span class="px-3 py-1 rounded-full text-sm font-semibold {{ $lesson->level_badge_color }}">
-                        {{ $lesson->language_level->label() }}
+                        {{ $lesson->language_level->value }}
                     </span>
                 @endif
                 <span>{{ __('lessons.topic') }}: {{ $lesson->topic?->title() ?? '—' }}</span>

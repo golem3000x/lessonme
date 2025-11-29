@@ -77,4 +77,5 @@ return [
 
     // Common
     'back_to_help' => 'Quay Lại Trung Tâm Trợ Giúp',
+    'still_have_questions' => 'Vẫn còn thắc mắc? Liên hệ với tôi qua chat',
 ];

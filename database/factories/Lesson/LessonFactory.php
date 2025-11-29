@@ -24,6 +24,12 @@ class LessonFactory extends Factory
      */
     public function definition(): array
     {
+        // Create 1536-dimensional embedding for pgvector
+        $embedding = [];
+        for ($i = 0; $i < 1536; $i++) {
+            $embedding[] = (float) fake()->randomFloat(4, -1, 1);
+        }
+
         return [
             'user_id' => User::factory(),
             'topic_id' => 1, // Default topic_id to avoid NOT NULL constraint
@@ -38,7 +44,7 @@ class LessonFactory extends Factory
             'homework' => '',
             'common_mistakes' => [],
             'culture_notes' => '',
-            'embedding' => [],
+            'embedding' => $embedding,
         ];
     }
 

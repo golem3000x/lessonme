@@ -8,7 +8,7 @@ use App\Dto\LessonDto;
 use App\Exceptions\LessonExistsException;
 use App\Models\Lesson\Lesson;
 
-readonly class LessonService
+class LessonService
 {
     public function __construct(
         private LessonGenerationService $generator,

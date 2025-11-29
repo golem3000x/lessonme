@@ -13,7 +13,7 @@ use Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
-readonly class LessonAudioService
+class LessonAudioService
 {
     public function __construct(
         private FptTtsService $tts_service

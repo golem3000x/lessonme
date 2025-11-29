@@ -11,6 +11,7 @@ use App\Jobs\Lesson\RegenerateLessonJob;
 use App\Models\Lesson\Lesson;
 use App\Models\User;
 use App\Notifications\Lesson\LessonCreationNotification;
+use App\Services\Lesson\LessonAudioService;
 use App\Services\Lesson\LessonGenerationService;
 use App\Services\Lesson\LessonHistoryService;
 use App\Services\Lesson\LessonService;
@@ -55,8 +56,11 @@ class RegenerateLessonJobTest extends TestCase
         $history = Mockery::mock(LessonHistoryService::class);
         $lesson_service = new LessonService($generator, $similarity, $history);
 
+        $audio_service = Mockery::mock(LessonAudioService::class);
+        $audio_service->shouldReceive('generateAudioForLesson')->never();
+
         $job = new RegenerateLessonJob(999999, $lesson_dto);
-        $job->handle($lesson_service);
+        $job->handle($lesson_service, $audio_service);
 
         Notification::assertNothingSent();
     }
@@ -83,8 +87,11 @@ class RegenerateLessonJobTest extends TestCase
 
         $lesson_service = new LessonService($generator, $similarity, $history);
 
+        $audio_service = Mockery::mock(LessonAudioService::class);
+        $audio_service->shouldReceive('generateAudioForLesson')->never();
+
         $job = new RegenerateLessonJob($lesson->id, $lesson_dto);
-        $job->handle($lesson_service);
+        $job->handle($lesson_service, $audio_service);
 
         Notification::assertSentTo(
             $user,
