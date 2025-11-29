@@ -6,6 +6,8 @@ namespace App\Models\Support;
 
 use App\Enums\System\TableNameEnum;
 use App\Models\User;
+use Database\Factories\Support\MessageFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
@@ -22,6 +24,7 @@ use Illuminate\Support\Carbon;
  * @property-read \App\Models\Support\ChatSession $chatSession
  * @property-read User $user
  *
+ * @method static MessageFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Message newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Message newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Message query()
@@ -38,6 +41,8 @@ use Illuminate\Support\Carbon;
  */
 class Message extends Model
 {
+    use HasFactory;
+
     protected $table = TableNameEnum::MESSAGES->value;
 
     /**

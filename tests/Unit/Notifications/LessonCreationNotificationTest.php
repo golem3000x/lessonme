@@ -11,6 +11,8 @@ use App\Notifications\Lesson\LessonCreationNotification;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Notifications\Messages\BroadcastMessage;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Queue;
 use Tests\TestCase;
 
 class LessonCreationNotificationTest extends TestCase
@@ -285,6 +287,9 @@ class LessonCreationNotificationTest extends TestCase
 
     public function test_notification_can_be_sent_to_user(): void
     {
+        Event::fake();
+        Queue::fake();
+        
         $notification = new LessonCreationNotification(
             $this->user,
             LessonCreationStatusEnum::SUCCESSFULLY,
@@ -301,6 +306,9 @@ class LessonCreationNotificationTest extends TestCase
 
     public function test_notification_stores_correct_data_in_database(): void
     {
+        Event::fake();
+        Queue::fake();
+        
         $notification = new LessonCreationNotification(
             $this->user,
             LessonCreationStatusEnum::SUCCESSFULLY,

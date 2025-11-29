@@ -7,6 +7,8 @@ namespace App\Models\Support;
 use App\Enums\ChatSessionStatusEnum;
 use App\Enums\System\TableNameEnum;
 use App\Models\User;
+use Database\Factories\Support\ChatSessionFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -24,6 +26,7 @@ use Illuminate\Support\Carbon;
  * @property-read int|null $messages_count
  * @property-read User $user
  *
+ * @method static ChatSessionFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ChatSession newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ChatSession newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ChatSession query()
@@ -39,6 +42,8 @@ use Illuminate\Support\Carbon;
  */
 class ChatSession extends Model
 {
+    use HasFactory;
+
     protected $table = TableNameEnum::CHAT_SESSIONS->value;
 
     /**

@@ -7,6 +7,8 @@ namespace App\Models\Lesson;
 use App\Enums\FeedbackRatingEnum;
 use App\Enums\System\TableNameEnum;
 use App\Models\User;
+use Database\Factories\Lesson\LessonFeedbackFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
@@ -22,6 +24,7 @@ use Illuminate\Support\Carbon;
  * @property-read Lesson $lesson
  * @property-read User $user
  *
+ * @method static LessonFeedbackFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonFeedback newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonFeedback newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonFeedback query()
@@ -37,6 +40,8 @@ use Illuminate\Support\Carbon;
  */
 class LessonFeedback extends Model
 {
+    use HasFactory;
+
     protected $table = TableNameEnum::LESSON_FEEDBACKS->value;
 
     /**
