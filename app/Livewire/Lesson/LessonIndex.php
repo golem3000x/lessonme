@@ -87,6 +87,10 @@ class LessonIndex extends Component
         $this->temp_search = $this->search;
         $this->temp_language_levels = $this->language_levels;
         $this->temp_lesson_languages = $this->lesson_languages;
+
+        // Restore placeholders from session
+        $this->creating_lessons_placeholders = session('lesson_placeholders.creating', []);
+        $this->regenerating_lesson_ids = session('lesson_placeholders.regenerating', []);
     }
 
     public function updated(string $property): void
@@ -111,6 +115,9 @@ class LessonIndex extends Component
         // Generate unique ID for the placeholder
         $placeholder_id = uniqid('placeholder_', true);
         $this->creating_lessons_placeholders[] = $placeholder_id;
+
+        // Save to session to persist across page reloads
+        session(['lesson_placeholders.creating' => $this->creating_lessons_placeholders]);
     }
 
     #[On('lesson-created')]
@@ -120,6 +127,9 @@ class LessonIndex extends Component
         // Clear all placeholders when lesson is created
         $this->creating_lessons_placeholders = [];
         $this->regenerating_lesson_ids = [];
+
+        // Clear placeholders from session
+        session()->forget(['lesson_placeholders.creating', 'lesson_placeholders.regenerating']);
 
         // Just refresh the component - pagination will be handled automatically
         $this->resetPage();
@@ -221,6 +231,9 @@ class LessonIndex extends Component
             // Remove from regenerating list if lesson not found
             $this->regenerating_lesson_ids = array_diff($this->regenerating_lesson_ids, [$this->lesson_to_regenerate]);
 
+            // Update session
+            session(['lesson_placeholders.regenerating' => $this->regenerating_lesson_ids]);
+
             $user->notify(new LessonCreationNotification(
                 $user,
                 LessonCreationStatusEnum::ERROR,
@@ -275,12 +288,18 @@ class LessonIndex extends Component
             // Add lesson ID to regenerating list to show placeholder
             $this->regenerating_lesson_ids[] = $this->lesson_to_regenerate;
 
+            // Save regenerating IDs to session
+            session(['lesson_placeholders.regenerating' => $this->regenerating_lesson_ids]);
+
             // Add placeholder for lesson being regenerated
             $this->addPlaceholder();
 
         } catch (\Exception $e) {
             // Remove from regenerating list on error
             $this->regenerating_lesson_ids = array_diff($this->regenerating_lesson_ids, [$this->lesson_to_regenerate]);
+
+            // Update session
+            session(['lesson_placeholders.regenerating' => $this->regenerating_lesson_ids]);
 
             $user->notify(new LessonCreationNotification(
                 $user,
