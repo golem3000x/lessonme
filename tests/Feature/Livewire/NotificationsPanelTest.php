@@ -72,7 +72,7 @@ class NotificationsPanelTest extends TestCase
                 message: 'Test message with params'
             )
             ->assertSet('notifications', function ($notifications) {
-                return count($notifications) === 1 
+                return count($notifications) === 1
                     && $notifications[0]['id'] === 'test-456'
                     && $notifications[0]['message'] === 'Test message with params';
             });
@@ -89,7 +89,7 @@ class NotificationsPanelTest extends TestCase
                 message: 'Keyword created'
             )
             ->assertSet('notifications', function ($notifications) {
-                return count($notifications) === 1 
+                return count($notifications) === 1
                     && $notifications[0]['entity'] === 'keyword';
             });
     }
@@ -240,7 +240,7 @@ class NotificationsPanelTest extends TestCase
                 message: 'No ID provided'
             )
             ->assertSet('notifications', function ($notifications) {
-                return count($notifications) === 1 
+                return count($notifications) === 1
                     && isset($notifications[0]['id'])
                     && ! empty($notifications[0]['id']);
             });
@@ -289,7 +289,8 @@ class NotificationsPanelTest extends TestCase
             ->assertSet('notifications', function ($notifications) {
                 // After filter, array may have non-zero keys
                 $notifications_array = array_values($notifications);
-                return count($notifications_array) === 1 
+
+                return count($notifications_array) === 1
                     && $notifications_array[0]['id'] === 'remove-2';
             });
     }
@@ -374,7 +375,7 @@ class NotificationsPanelTest extends TestCase
                 ],
             ])
             ->assertSet('notifications', function ($notifications) {
-                return count($notifications) === 1 
+                return count($notifications) === 1
                     && $notifications[0]['id'] === 'nested-123'
                     && $notifications[0]['message'] === 'Nested format';
             });

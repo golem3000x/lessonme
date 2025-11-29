@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Livewire;
 
-use App\Enums\System\UserRoleEnum;
 use App\Livewire\Teacher\StudentScores;
 use App\Models\Lesson\Lesson;
 use App\Models\Lesson\LessonAttempt;
@@ -19,6 +18,7 @@ class StudentScoresTest extends TestCase
     use RefreshDatabase;
 
     private User $teacher;
+
     private Lesson $lesson;
 
     protected function setUp(): void
@@ -61,7 +61,7 @@ class StudentScoresTest extends TestCase
             'lesson_id' => $this->lesson->id,
             'user_id' => $student->id,
         ]);
-        
+
         LessonScore::factory()->create([
             'lesson_id' => $this->lesson->id,
             'attempt_id' => $attempt->id,
@@ -123,7 +123,7 @@ class StudentScoresTest extends TestCase
 
         Livewire::actingAs($this->teacher)
             ->test(StudentScores::class, ['lesson_id' => $this->lesson->id])
-            ->assertViewHas('scores', function ($scores) use ($newer_score, $older_score) {
+            ->assertViewHas('scores', function ($scores) use ($newer_score) {
                 return $scores->first()->id === $newer_score->id;
             });
     }
@@ -153,7 +153,7 @@ class StudentScoresTest extends TestCase
             'lesson_id' => $this->lesson->id,
             'user_id' => $student->id,
         ]);
-        
+
         LessonScore::factory()->create([
             'lesson_id' => $this->lesson->id,
             'attempt_id' => $attempt->id,
@@ -174,7 +174,7 @@ class StudentScoresTest extends TestCase
             'lesson_id' => $this->lesson->id,
             'user_id' => $student->id,
         ]);
-        
+
         LessonScore::factory()->create([
             'lesson_id' => $this->lesson->id,
             'attempt_id' => $attempt->id,
@@ -204,7 +204,7 @@ class StudentScoresTest extends TestCase
         ]);
 
         $student = User::factory()->create();
-        
+
         // Score for our lesson
         $our_attempt = LessonAttempt::factory()->create([
             'lesson_id' => $this->lesson->id,

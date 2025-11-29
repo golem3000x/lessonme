@@ -58,6 +58,7 @@ class ModerateSlugEntityJobTest extends TestCase
             SlugModerationNotification::class,
             function ($notification) use ($user) {
                 $data = $notification->toArray($user);
+
                 return $data['status'] === ModerationStatusEnum::APPROVED->value;
             }
         );
@@ -93,6 +94,7 @@ class ModerateSlugEntityJobTest extends TestCase
             SlugModerationNotification::class,
             function ($notification) use ($user) {
                 $data = $notification->toArray($user);
+
                 return $data['status'] === ModerationStatusEnum::REJECTED->value;
             }
         );
@@ -125,6 +127,7 @@ class ModerateSlugEntityJobTest extends TestCase
             SlugModerationNotification::class,
             function ($notification) use ($user) {
                 $data = $notification->toArray($user);
+
                 return $data['status'] === ModerationStatusEnum::APPROVED->value;
             }
         );
@@ -154,6 +157,7 @@ class ModerateSlugEntityJobTest extends TestCase
             SlugModerationNotification::class,
             function ($notification) use ($user) {
                 $data = $notification->toArray($user);
+
                 return $data['status'] === ModerationStatusEnum::INVALID->value;
             }
         );
@@ -221,6 +225,7 @@ class ModerateSlugEntityJobTest extends TestCase
             SlugModerationNotification::class,
             function ($notification) use ($user) {
                 $data = $notification->toArray($user);
+
                 return $data['status'] === ModerationStatusEnum::APPROVED->value;
             }
         );

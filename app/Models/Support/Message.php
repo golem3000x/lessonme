@@ -37,10 +37,13 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Message whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Message whereUserId($value)
  *
+ * @use HasFactory<MessageFactory>
+ *
  * @mixin \Eloquent
  */
 class Message extends Model
 {
+    /** @use HasFactory<MessageFactory> */
     use HasFactory;
 
     protected $table = TableNameEnum::MESSAGES->value;

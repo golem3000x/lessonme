@@ -18,6 +18,9 @@ class FptTtsService
         $this->fpt_tts_api_key = config('services.fpt_tts.api_key');
     }
 
+    /**
+     * @return array<string, mixed>|null
+     */
     public function synthesize(string $text, string $voice): ?array
     {
         if (empty($this->fpt_tts_api_key)) {

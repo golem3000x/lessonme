@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace Tests\Feature\Livewire;
 
 use App\Enums\System\SystemLanguageEnum;
-use App\Jobs\Lesson\CreateLessonJob;
 use App\Livewire\Welcome\DemoLessonCreator;
-use App\Models\Keyword\Keyword;
 use App\Models\Lesson\Lesson;
 use App\Models\Topic\Topic;
 use App\Models\User;
@@ -155,7 +153,7 @@ class DemoLessonCreatorTest extends TestCase
             ->set('learning_lang', SystemLanguageEnum::ENGLISH->value);
 
         $component->call('createDemoLesson');
-        
+
         // Flag should be reset after job dispatch
         $component->assertSet('is_generating', false);
     }
@@ -198,9 +196,9 @@ class DemoLessonCreatorTest extends TestCase
     {
         $temp_user = User::factory()->create(['is_temp_guest' => true]);
         $lesson = Lesson::factory()->create(['user_id' => $temp_user->id]);
-        
+
         session()->put('temp_guest_user_id', $temp_user->id);
-        
+
         Topic::factory()->create(['is_system' => true, 'is_approved' => true]);
 
         Livewire::test(DemoLessonCreator::class)

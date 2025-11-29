@@ -61,7 +61,7 @@ class StudentDashboardTest extends TestCase
             'user_id' => $this->user->id,
             'lesson_id' => $lesson1->id,
         ]);
-        
+
         LessonAttempt::factory()->create([
             'user_id' => $this->user->id,
             'lesson_id' => $lesson2->id,
@@ -222,7 +222,7 @@ class StudentDashboardTest extends TestCase
         Livewire::actingAs($this->user)
             ->test(StudentDashboard::class)
             ->assertSet('recent_scores', function ($scores) {
-                return count($scores) === 1 
+                return count($scores) === 1
                     && isset($scores[0]['lesson_name'])
                     && isset($scores[0]['score_percentage'])
                     && isset($scores[0]['graded_at'])

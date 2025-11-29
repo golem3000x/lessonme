@@ -19,6 +19,7 @@ class CreateKeywordTest extends TestCase
     use RefreshDatabase;
 
     private User $user;
+
     private Topic $topic;
 
     protected function setUp(): void

@@ -38,6 +38,12 @@ class LessonAudioService
             return;
         }
 
+        if ($lesson->lesson_lang === null) {
+            Log::warning('Lesson has no language set', ['lesson_id' => $lesson->id]);
+
+            return;
+        }
+
         $voice = $this->getVoiceForLanguage($lesson->lesson_lang);
         $base_path = "lessons/$lesson->uuid/audio/vocabulary";
 
@@ -76,6 +82,12 @@ class LessonAudioService
             return;
         }
 
+        if ($lesson->lesson_lang === null) {
+            Log::warning('Lesson has no language set', ['lesson_id' => $lesson->id]);
+
+            return;
+        }
+
         $voice = $this->getVoiceForLanguage($lesson->lesson_lang);
         $base_path = "lessons/$lesson->uuid/audio/exercises";
 
@@ -91,14 +103,15 @@ class LessonAudioService
                 // Build complete sentence with answer
                 $complete_sentence = str_replace('___', $answer, $sentence);
                 // Remove hint in parentheses
-                $complete_sentence = preg_replace('/\s*\([^)]+\)/', '', $complete_sentence);
+                $clean_sentence = preg_replace('/\s*\([^)]+\)/', '', $complete_sentence);
+                $text = is_string($clean_sentence) ? $clean_sentence : $complete_sentence;
 
                 $file_name = "gap_fill_$index.mp3";
                 $file_path = "$base_path/$file_name";
 
                 $this->generateAudioFile(
                     lesson: $lesson,
-                    text: $complete_sentence,
+                    text: $text,
                     voice: $voice,
                     audio_type: 'gap_fill',
                     audio_key: (string) $index,
@@ -141,7 +154,6 @@ class LessonAudioService
         return match ($lang) {
             SystemLanguageEnum::VIETNAMESE => 'banmai',
             SystemLanguageEnum::ENGLISH => 'joanna',
-            default => 'banmai',
         };
     }
 
@@ -172,6 +184,8 @@ class LessonAudioService
     }
 
     /**
+     * @param  array<string, mixed>  $log_context
+     *
      * @throws Exception
      */
     private function generateAudioFile(

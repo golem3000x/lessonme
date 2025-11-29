@@ -44,6 +44,9 @@ class LessonAudioFile extends Model
         'status' => LessonAudioStatusEnum::class,
     ];
 
+    /**
+     * @return BelongsTo<Lesson, $this>
+     */
     public function lesson(): BelongsTo
     {
         return $this->belongsTo(Lesson::class);

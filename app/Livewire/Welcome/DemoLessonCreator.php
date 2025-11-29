@@ -29,7 +29,7 @@ class DemoLessonCreator extends Component
 
     /** @var array<int,array{id:int,label:string}> */
     public array $topics = [];
-    
+
     /** @var array<int,array<int,array{id:int,label:string}>> */
     public array $all_keywords_by_topic = [];
 
@@ -76,7 +76,7 @@ class DemoLessonCreator extends Component
                 'label' => $topic->title($locale),
             ];
         })->values()->toArray();
-        
+
         // Preload all keywords into array to survive Livewire serialization
         foreach ($this->preloaded_topics as $topic) {
             $keywords_array = [];

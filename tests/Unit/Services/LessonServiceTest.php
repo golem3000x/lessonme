@@ -9,7 +9,6 @@ use App\Enums\System\LanguageLevelEnum;
 use App\Enums\System\SystemLanguageEnum;
 use App\Exceptions\LessonExistsException;
 use App\Models\Lesson\Lesson;
-use App\Models\Topic\Topic;
 use App\Models\User;
 use App\Services\Lesson\LessonGenerationService;
 use App\Services\Lesson\LessonHistoryService;
@@ -314,10 +313,14 @@ class LessonServiceTest extends TestCase
             ->once()
             ->andReturn($this->mockGeneratedLessonData());
 
-        $this->service->regenerateLesson($lesson, $dto);
+        $updated_lesson = $this->service->regenerateLesson($lesson, $dto);
 
         // Verify snapshot was called
         $this->mock_history->shouldHaveReceived('snapshot')->once();
+        
+        // Verify lesson was updated
+        $this->assertNotNull($updated_lesson);
+        $this->assertEquals($lesson->id, $updated_lesson->id);
     }
 
     public function test_regenerate_lesson_throws_exception_when_similar_lesson_exists(): void

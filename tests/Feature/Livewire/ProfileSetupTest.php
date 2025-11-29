@@ -76,7 +76,7 @@ class ProfileSetupTest extends TestCase
         $topic = Topic::factory()->create([
             'is_system' => true,
         ]);
-        
+
         Keyword::factory()->create([
             'topic_id' => $topic->id,
             'is_system' => true,
@@ -92,7 +92,7 @@ class ProfileSetupTest extends TestCase
     public function test_add_keyword_creates_keyword_in_database(): void
     {
         Queue::fake();
-        
+
         $topic = Topic::factory()->create([
             'is_system' => true,
         ]);
@@ -113,7 +113,7 @@ class ProfileSetupTest extends TestCase
     public function test_add_keyword_creates_translation(): void
     {
         Queue::fake();
-        
+
         $topic = Topic::factory()->create([
             'is_system' => true,
         ]);
@@ -135,7 +135,7 @@ class ProfileSetupTest extends TestCase
     public function test_add_keyword_creates_visibility_record(): void
     {
         Queue::fake();
-        
+
         $topic = Topic::factory()->create([
             'is_system' => true,
         ]);
@@ -157,7 +157,7 @@ class ProfileSetupTest extends TestCase
     public function test_add_keyword_dispatches_moderation_job(): void
     {
         Queue::fake();
-        
+
         $topic = Topic::factory()->create([
             'is_system' => true,
         ]);
@@ -173,7 +173,7 @@ class ProfileSetupTest extends TestCase
     public function test_add_keyword_clears_input_field(): void
     {
         Queue::fake();
-        
+
         $topic = Topic::factory()->create([
             'is_system' => true,
         ]);
@@ -188,7 +188,7 @@ class ProfileSetupTest extends TestCase
     public function test_add_keyword_returns_early_for_empty_text(): void
     {
         Queue::fake();
-        
+
         $topic = Topic::factory()->create([
             'is_system' => true,
         ]);
@@ -204,7 +204,7 @@ class ProfileSetupTest extends TestCase
     public function test_add_keyword_returns_early_for_whitespace(): void
     {
         Queue::fake();
-        
+
         $topic = Topic::factory()->create([
             'is_system' => true,
         ]);
@@ -271,7 +271,7 @@ class ProfileSetupTest extends TestCase
     public function test_save_validates_avatar_max_size(): void
     {
         Storage::fake('public');
-        
+
         $file = UploadedFile::fake()->image('avatar.jpg')->size(3000); // 3MB
 
         Livewire::actingAs($this->user)
@@ -301,7 +301,7 @@ class ProfileSetupTest extends TestCase
     public function test_save_uploads_avatar(): void
     {
         Storage::fake('public');
-        
+
         $file = UploadedFile::fake()->image('avatar.jpg');
 
         Livewire::actingAs($this->user)
@@ -310,7 +310,7 @@ class ProfileSetupTest extends TestCase
             ->call('save');
 
         $this->user->refresh();
-        
+
         $this->assertNotNull($this->user->avatar);
         Storage::disk('public')->assertExists($this->user->avatar);
     }
@@ -318,10 +318,10 @@ class ProfileSetupTest extends TestCase
     public function test_save_deletes_old_avatar_when_uploading_new(): void
     {
         Storage::fake('public');
-        
+
         $old_avatar = 'avatars/old_avatar.jpg';
         Storage::disk('public')->put($old_avatar, 'content');
-        
+
         $this->user->update(['avatar' => $old_avatar]);
 
         $new_file = UploadedFile::fake()->image('new_avatar.jpg');
@@ -337,10 +337,10 @@ class ProfileSetupTest extends TestCase
     public function test_remove_avatar_deletes_file(): void
     {
         Storage::fake('public');
-        
+
         $avatar_path = 'avatars/avatar.jpg';
         Storage::disk('public')->put($avatar_path, 'content');
-        
+
         $this->user->update(['avatar' => $avatar_path]);
 
         Livewire::actingAs($this->user)
@@ -353,10 +353,10 @@ class ProfileSetupTest extends TestCase
     public function test_remove_avatar_sets_avatar_to_null(): void
     {
         Storage::fake('public');
-        
+
         $avatar_path = 'avatars/avatar.jpg';
         Storage::disk('public')->put($avatar_path, 'content');
-        
+
         $this->user->update(['avatar' => $avatar_path]);
 
         Livewire::actingAs($this->user)
@@ -390,7 +390,7 @@ class ProfileSetupTest extends TestCase
         $topic = Topic::factory()->create([
             'is_system' => true,
         ]);
-        
+
         $keyword = Keyword::factory()->create([
             'topic_id' => $topic->id,
             'is_system' => true,

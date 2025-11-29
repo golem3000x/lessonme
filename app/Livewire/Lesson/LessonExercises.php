@@ -224,7 +224,10 @@ class LessonExercises extends Component
                 $user_answer_clean = preg_replace('/[^\p{L}\p{N}\s]/u', '', $user_answer);
                 $correct_answer_clean = preg_replace('/[^\p{L}\p{N}\s]/u', '', $correct_answer);
 
-                if (strcasecmp(trim($user_answer_clean), trim($correct_answer_clean)) === 0) {
+                $user_clean = is_string($user_answer_clean) ? trim($user_answer_clean) : '';
+                $correct_clean = is_string($correct_answer_clean) ? trim($correct_answer_clean) : '';
+
+                if (strcasecmp($user_clean, $correct_clean) === 0) {
                     $this->scores['sentence_ordering']++;
                 }
             }

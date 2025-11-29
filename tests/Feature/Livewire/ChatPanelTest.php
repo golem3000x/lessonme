@@ -132,7 +132,7 @@ class ChatPanelTest extends TestCase
     {
         Event::fake();
         Queue::fake();
-        
+
         $chat_session = ChatSession::factory()->create([
             'user_id' => $this->user->id,
         ]);
@@ -155,7 +155,7 @@ class ChatPanelTest extends TestCase
     {
         Event::fake();
         Queue::fake();
-        
+
         $chat_session = ChatSession::factory()->create([
             'user_id' => $this->user->id,
             'last_message_at' => now()->subHour(),
@@ -191,7 +191,7 @@ class ChatPanelTest extends TestCase
     {
         Event::fake();
         Queue::fake();
-        
+
         ChatSession::factory()->create([
             'user_id' => $this->user->id,
         ]);
@@ -207,7 +207,7 @@ class ChatPanelTest extends TestCase
     {
         Event::fake();
         Queue::fake();
-        
+
         ChatSession::factory()->create([
             'user_id' => $this->user->id,
         ]);
@@ -225,7 +225,7 @@ class ChatPanelTest extends TestCase
     {
         Event::fake();
         Queue::fake();
-        
+
         ChatSession::factory()->create([
             'user_id' => $this->user->id,
         ]);

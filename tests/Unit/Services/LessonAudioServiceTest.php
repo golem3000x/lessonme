@@ -66,9 +66,9 @@ class LessonAudioServiceTest extends TestCase
 
         // Should create 2 audio file records
         $this->assertDatabaseCount('lesson_audio_files', 2);
-        
+
         $audio_files = LessonAudioFile::where('lesson_id', '=', $lesson->id)->get();
-        
+
         foreach ($audio_files as $file) {
             $this->assertEquals('vocabulary', $file->audio_type);
             $this->assertEquals(LessonAudioStatusEnum::FAILED, $file->status);
@@ -124,6 +124,20 @@ class LessonAudioServiceTest extends TestCase
 
         $this->service->generateVocabularyAudio($lesson_vietnamese);
         $this->service->generateVocabularyAudio($lesson_english);
+
+        // Verify mocks were called with correct voices
+        $this->mock_tts_service->shouldHaveReceived('synthesize')->with('xin chào', 'banmai')->once();
+        $this->mock_tts_service->shouldHaveReceived('synthesize')->with('hello', 'joanna')->once();
+        
+        // Verify audio files were created for both lessons
+        $this->assertDatabaseHas('lesson_audio_files', [
+            'lesson_id' => $lesson_vietnamese->id,
+            'audio_type' => 'vocabulary',
+        ]);
+        $this->assertDatabaseHas('lesson_audio_files', [
+            'lesson_id' => $lesson_english->id,
+            'audio_type' => 'vocabulary',
+        ]);
     }
 
     // ===== GENERATE GAP FILL AUDIO TESTS =====

@@ -17,13 +17,13 @@ class FptTtsServiceTest extends TestCase
     {
         parent::setUp();
         Config::set('services.fpt_tts.api_key', 'test-api-key');
-        $this->service = new FptTtsService();
+        $this->service = new FptTtsService;
     }
 
     public function test_synthesize_returns_null_when_api_key_not_configured(): void
     {
         Config::set('services.fpt_tts.api_key', '');
-        $service = new FptTtsService();
+        $service = new FptTtsService;
 
         $result = $service->synthesize('Hello world', 'joanna');
 

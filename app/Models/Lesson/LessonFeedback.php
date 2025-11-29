@@ -36,10 +36,13 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonFeedback whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonFeedback whereUserId($value)
  *
+ * @use HasFactory<LessonFeedbackFactory>
+ *
  * @mixin \Eloquent
  */
 class LessonFeedback extends Model
 {
+    /** @use HasFactory<LessonFeedbackFactory> */
     use HasFactory;
 
     protected $table = TableNameEnum::LESSON_FEEDBACKS->value;

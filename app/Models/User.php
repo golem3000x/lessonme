@@ -386,8 +386,8 @@ class User extends Authenticatable implements FilamentUser, HasLocalePreference
      */
     public function sendPasswordResetNotification($token): void
     {
-        // Get user's preferred locale or app locale
-        $locale = $this->preferredLocale() ?? app()->getLocale();
+        // Get user's preferred locale
+        $locale = $this->preferredLocale();
 
         // Set locale for email translation
         app()->setLocale($locale);

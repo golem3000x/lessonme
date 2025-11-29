@@ -19,7 +19,7 @@ class LessonSimilarityServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->service = new LessonSimilarityService();
+        $this->service = new LessonSimilarityService;
     }
 
     private function createEmbedding(float $base = 0.5): array
@@ -46,7 +46,7 @@ class LessonSimilarityServiceTest extends TestCase
     {
         // Verify that the similarity threshold constant is set correctly
         $this->assertEquals(0.9, Lesson::SIMILARITY_THRESHOLD);
-        
+
         // This test ensures the threshold is documented and accessible
         $this->assertIsFloat(Lesson::SIMILARITY_THRESHOLD);
         $this->assertGreaterThan(0, Lesson::SIMILARITY_THRESHOLD);
@@ -142,7 +142,7 @@ class LessonSimilarityServiceTest extends TestCase
     {
         $user = User::factory()->create();
         $embedding = $this->createEmbedding(0.5);
-        
+
         $lesson = Lesson::factory()->create([
             'user_id' => $user->id,
             'embedding' => $embedding,
@@ -205,7 +205,7 @@ class LessonSimilarityServiceTest extends TestCase
 
         $this->assertNotNull($result);
         $this->assertInstanceOf(Lesson::class, $result);
-        
+
         // The query adds similarity_score as a computed column
         // For identical embeddings, score should be very close to 1.0
         if (isset($result->similarity_score)) {

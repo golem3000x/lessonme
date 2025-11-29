@@ -14,6 +14,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
 
 /**
+ * @use HasFactory<LessonAttemptFactory>
+ *
  * @property int $id
  * @property int $lesson_id
  * @property int $user_id
@@ -52,6 +54,7 @@ use Illuminate\Support\Carbon;
  */
 class LessonAttempt extends Model
 {
+    /** @use HasFactory<LessonAttemptFactory> */
     use HasFactory;
 
     protected $table = TableNameEnum::LESSON_ATTEMPTS->value;

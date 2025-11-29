@@ -15,7 +15,7 @@ class LessonSpeaker extends Component
         $this->audio_url = $audio_url;
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\View
     {
         return view('livewire.lesson.lesson-speaker');
     }

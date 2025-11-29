@@ -17,6 +17,7 @@ class LessonFeedbackFormTest extends TestCase
     use RefreshDatabase;
 
     private User $user;
+
     private Lesson $lesson;
 
     protected function setUp(): void

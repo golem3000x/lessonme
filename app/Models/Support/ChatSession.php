@@ -38,10 +38,13 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ChatSession whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ChatSession whereUserId($value)
  *
+ * @use HasFactory<ChatSessionFactory>
+ *
  * @mixin \Eloquent
  */
 class ChatSession extends Model
 {
+    /** @use HasFactory<ChatSessionFactory> */
     use HasFactory;
 
     protected $table = TableNameEnum::CHAT_SESSIONS->value;

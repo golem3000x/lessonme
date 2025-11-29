@@ -289,7 +289,7 @@ class LessonCreationNotificationTest extends TestCase
     {
         Event::fake();
         Queue::fake();
-        
+
         $notification = new LessonCreationNotification(
             $this->user,
             LessonCreationStatusEnum::SUCCESSFULLY,
@@ -308,7 +308,7 @@ class LessonCreationNotificationTest extends TestCase
     {
         Event::fake();
         Queue::fake();
-        
+
         $notification = new LessonCreationNotification(
             $this->user,
             LessonCreationStatusEnum::SUCCESSFULLY,

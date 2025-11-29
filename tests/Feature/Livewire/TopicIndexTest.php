@@ -93,7 +93,7 @@ class TopicIndexTest extends TestCase
         $topic = Topic::factory()->create([
             'user_id' => $this->user->id,
         ]);
-        
+
         $keyword = Keyword::factory()->create([
             'topic_id' => $topic->id,
             'user_id' => $this->user->id,
@@ -200,7 +200,7 @@ class TopicIndexTest extends TestCase
         $component->call('toggleTopicVisibility', $topic->id);
 
         $component->assertSet('visible_topic_ids', function ($ids) use ($topic) {
-            return !in_array($topic->id, $ids);
+            return ! in_array($topic->id, $ids);
         });
     }
 
@@ -280,7 +280,7 @@ class TopicIndexTest extends TestCase
 
         $component->set('creating_topics_placeholders', ['placeholder1']);
         $component->set('creating_keywords_placeholders', [1 => ['placeholder1']]);
-        
+
         $component->dispatch('topic-created');
 
         $component->assertSet('creating_topics_placeholders', [])

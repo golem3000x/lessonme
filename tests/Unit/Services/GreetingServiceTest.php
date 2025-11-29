@@ -16,7 +16,7 @@ class GreetingServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->service = new GreetingService();
+        $this->service = new GreetingService;
     }
 
     public function test_get_greeting_returns_morning_greeting_for_morning_hours(): void
@@ -104,7 +104,7 @@ class GreetingServiceTest extends TestCase
 
         $this->assertNotEmpty($greeting_en);
         $this->assertNotEmpty($greeting_vi);
-        
+
         // They should be different (unless translations are missing)
         $this->assertIsString($greeting_en);
         $this->assertIsString($greeting_vi);

@@ -29,7 +29,7 @@ class LessonAttemptFactory extends Factory
             'is_completed' => fake()->boolean(70), // 70% chance of being completed
             'started_at' => now()->subMinutes(fake()->numberBetween(5, 60)),
             'completed_at' => function (array $attributes) {
-                return $attributes['is_completed'] 
+                return $attributes['is_completed']
                     ? now()->subMinutes(fake()->numberBetween(1, 30))
                     : null;
             },

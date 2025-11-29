@@ -49,10 +49,13 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonScore whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonScore whereUserId($value)
  *
+ * @use HasFactory<LessonScoreFactory>
+ *
  * @mixin \Eloquent
  */
 class LessonScore extends Model
 {
+    /** @use HasFactory<LessonScoreFactory> */
     use HasFactory;
 
     protected $table = TableNameEnum::LESSON_SCORES->value;

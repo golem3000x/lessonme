@@ -38,7 +38,7 @@ class NotificationBellTest extends TestCase
     {
         Event::fake();
         Queue::fake();
-        
+
         // Create some unread notifications
         $this->user->notify(new LessonCreationNotification(
             $this->user,
@@ -96,7 +96,7 @@ class NotificationBellTest extends TestCase
     {
         Event::fake();
         Queue::fake();
-        
+
         $this->user->notify(new LessonCreationNotification(
             $this->user,
             LessonCreationStatusEnum::SUCCESSFULLY,
@@ -117,7 +117,7 @@ class NotificationBellTest extends TestCase
     {
         Event::fake();
         Queue::fake();
-        
+
         $this->user->notify(new LessonCreationNotification(
             $this->user,
             LessonCreationStatusEnum::SUCCESSFULLY,
@@ -142,7 +142,7 @@ class NotificationBellTest extends TestCase
     {
         Event::fake();
         Queue::fake();
-        
+
         $this->user->notify(new LessonCreationNotification(
             $this->user,
             LessonCreationStatusEnum::SUCCESSFULLY,
@@ -162,7 +162,7 @@ class NotificationBellTest extends TestCase
     {
         // Use a valid UUID format
         $fake_uuid = '00000000-0000-0000-0000-000000000000';
-        
+
         Livewire::actingAs($this->user)
             ->test(NotificationBell::class)
             ->call('markAsRead', $fake_uuid)
@@ -173,7 +173,7 @@ class NotificationBellTest extends TestCase
     {
         Event::fake();
         Queue::fake();
-        
+
         $this->user->notify(new LessonCreationNotification(
             $this->user,
             LessonCreationStatusEnum::SUCCESSFULLY,
@@ -211,7 +211,7 @@ class NotificationBellTest extends TestCase
     {
         Event::fake();
         Queue::fake();
-        
+
         $this->user->notify(new LessonCreationNotification(
             $this->user,
             LessonCreationStatusEnum::SUCCESSFULLY,
@@ -231,7 +231,7 @@ class NotificationBellTest extends TestCase
     {
         Event::fake();
         Queue::fake();
-        
+
         $this->user->notify(new LessonCreationNotification(
             $this->user,
             LessonCreationStatusEnum::SUCCESSFULLY,
@@ -256,7 +256,7 @@ class NotificationBellTest extends TestCase
     {
         // Use a valid UUID format
         $fake_uuid = '00000000-0000-0000-0000-000000000000';
-        
+
         Livewire::actingAs($this->user)
             ->test(NotificationBell::class)
             ->call('deleteNotification', $fake_uuid)
@@ -267,7 +267,7 @@ class NotificationBellTest extends TestCase
     {
         Event::fake();
         Queue::fake();
-        
+
         // Create 15 notifications
         for ($i = 1; $i <= 15; $i++) {
             $this->user->notify(new LessonCreationNotification(
@@ -281,7 +281,7 @@ class NotificationBellTest extends TestCase
             ->test(NotificationBell::class);
 
         $notifications = $component->viewData('notifications');
-        
+
         // Should paginate to 10 per page
         $this->assertCount(10, $notifications);
     }
@@ -290,7 +290,7 @@ class NotificationBellTest extends TestCase
     {
         Event::fake();
         Queue::fake();
-        
+
         $this->user->notify(new LessonCreationNotification(
             $this->user,
             LessonCreationStatusEnum::SUCCESSFULLY,
@@ -309,7 +309,7 @@ class NotificationBellTest extends TestCase
             ->test(NotificationBell::class);
 
         $notifications = $component->viewData('notifications');
-        
+
         // Second notification should be first (newest first)
         // Just verify we have notifications and they're ordered
         $this->assertGreaterThan(0, $notifications->count());
@@ -357,7 +357,7 @@ class NotificationBellTest extends TestCase
     {
         Event::fake();
         Queue::fake();
-        
+
         // Create 3 notifications
         for ($i = 1; $i <= 3; $i++) {
             $this->user->notify(new LessonCreationNotification(

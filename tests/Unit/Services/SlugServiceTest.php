@@ -6,7 +6,6 @@ namespace Tests\Unit\Services;
 
 use App\Services\Slug\SlugService;
 use Mockery;
-use OpenAI\Contracts\ClientContract;
 use OpenAI\Laravel\Facades\OpenAI;
 use OpenAI\Responses\Chat\CreateResponse as ChatCreateResponse;
 use OpenAI\Responses\Meta\MetaInformation;
@@ -20,7 +19,7 @@ class SlugServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->service = new SlugService();
+        $this->service = new SlugService;
     }
 
     public function test_moderate_slug_returns_true_for_clean_content(): void

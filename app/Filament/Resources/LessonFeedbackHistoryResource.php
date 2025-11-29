@@ -58,8 +58,7 @@ class LessonFeedbackHistoryResource extends Resource
                     ->searchable()
                     ->sortable()
                     ->limit(50)
-                    ->url(fn (LessonFeedbackHistory $record): ?string => 
-                        $record->lesson ? route('lessons.show', $record->lesson->uuid) : null
+                    ->url(fn (LessonFeedbackHistory $record): string => route('lessons.show', $record->lesson->uuid)
                     )
                     ->openUrlInNewTab(),
                 Tables\Columns\TextColumn::make('lessonHistory.lesson_name')

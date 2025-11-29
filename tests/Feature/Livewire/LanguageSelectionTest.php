@@ -242,7 +242,7 @@ class LanguageSelectionTest extends TestCase
     public function test_component_initializes_with_empty_native_lang(): void
     {
         $this->setRegistrationData();
-        
+
         // Override locale to test default behavior
         app()->setLocale('unknown');
 

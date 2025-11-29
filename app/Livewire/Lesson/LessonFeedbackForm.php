@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Livewire\Lesson;
 
-use App\Enums\FeedbackRatingEnum;
 use App\Models\Lesson\Lesson;
 use App\Models\Lesson\LessonFeedback;
 use Illuminate\Contracts\View\Factory;
@@ -14,7 +13,7 @@ use Livewire\Component;
 
 class LessonFeedbackForm extends Component
 {
-    public int $lesson_id;
+    public int $lesson_id = 0;
 
     public bool $show_modal = false;
 

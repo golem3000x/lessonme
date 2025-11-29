@@ -70,6 +70,7 @@ class TranslateSlugEntityJobTest extends TestCase
             SlugTranslateNotification::class,
             function ($notification) use ($user) {
                 $data = $notification->toArray($user);
+
                 return $data['status'] === TranslateStatusEnum::SUCCESSFULLY->value;
             }
         );
@@ -128,6 +129,7 @@ class TranslateSlugEntityJobTest extends TestCase
             SlugTranslateNotification::class,
             function ($notification) use ($user) {
                 $data = $notification->toArray($user);
+
                 return $data['status'] === TranslateStatusEnum::INVALID->value;
             }
         );
@@ -157,6 +159,7 @@ class TranslateSlugEntityJobTest extends TestCase
             SlugTranslateNotification::class,
             function ($notification) use ($user) {
                 $data = $notification->toArray($user);
+
                 return $data['status'] === TranslateStatusEnum::INVALID->value;
             }
         );
@@ -186,6 +189,7 @@ class TranslateSlugEntityJobTest extends TestCase
             SlugTranslateNotification::class,
             function ($notification) use ($user) {
                 $data = $notification->toArray($user);
+
                 return $data['status'] === TranslateStatusEnum::INVALID->value;
             }
         );
