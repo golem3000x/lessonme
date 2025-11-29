@@ -29,6 +29,9 @@ class DemoLessonCreator extends Component
 
     /** @var array<int,array{id:int,label:string}> */
     public array $topics = [];
+    
+    /** @var array<int,array<int,array{id:int,label:string}>> */
+    public array $all_keywords_by_topic = [];
 
     /** @var array<int,int> */
     public array $keyword_ids = [];
@@ -73,6 +76,20 @@ class DemoLessonCreator extends Component
                 'label' => $topic->title($locale),
             ];
         })->values()->toArray();
+        
+        // Preload all keywords into array to survive Livewire serialization
+        foreach ($this->preloaded_topics as $topic) {
+            $keywords_array = [];
+            if ($topic->relationLoaded('keywords')) {
+                $keywords_array = $topic->keywords->map(function (Keyword $keyword) use ($locale) {
+                    return [
+                        'id' => $keyword->id,
+                        'label' => $keyword->value($locale),
+                    ];
+                })->values()->toArray();
+            }
+            $this->all_keywords_by_topic[$topic->id] = $keywords_array;
+        }
 
         // Set default values
         if (! empty($this->topics)) {
@@ -210,39 +227,22 @@ class DemoLessonCreator extends Component
 
     /**
      * Build keyword options for the provided topic id.
+     * Uses preloaded data to avoid additional DB queries.
      *
      * @return array<int, array{id:int,label:string}>
      */
     protected function buildKeywordsForTopic(?int $topic_id): array
     {
-        if ($topic_id === null || $this->preloaded_topics === null) {
+        if ($topic_id === null) {
             return [];
         }
 
-        $locale = app()->getLocale();
-
-        $topic = $this->preloaded_topics->firstWhere('id', '=', $topic_id);
-
-        if (! $topic) {
+        // Use preloaded array instead of Collection
+        if (! isset($this->all_keywords_by_topic[$topic_id])) {
             return [];
         }
 
-        if (! $topic->relationLoaded('keywords')) {
-            return [];
-        }
-
-        $keywords = $topic->keywords;
-
-        if ($keywords->isEmpty()) {
-            return [];
-        }
-
-        return $keywords->map(function (Keyword $keyword) use ($locale) {
-            return [
-                'id' => $keyword->id,
-                'label' => $keyword->value($locale),
-            ];
-        })->values()->toArray();
+        return $this->all_keywords_by_topic[$topic_id];
     }
 
     /**
