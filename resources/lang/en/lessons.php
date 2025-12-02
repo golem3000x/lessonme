@@ -123,6 +123,7 @@ return [
     'creation_timeout' => 'Lesson creation is taking longer than expected. Please try again.',
     'creation_failed' => 'Lesson Creation Failed',
     'try_again' => 'Try Again',
+    'generation_time_notice' => 'For higher levels (B1, B2, C1, C2), lesson generation may take more time because the content is longer and more complex.',
 
     // Exercises
     'check_answers_title' => 'Are You Ready?',

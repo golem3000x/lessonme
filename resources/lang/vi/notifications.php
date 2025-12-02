@@ -46,6 +46,12 @@ return [
     'lesson_creation_error' => 'Tạo bài học thất bại. Vui lòng thử lại.',
     'lesson_creation_exists' => 'Bài học tương tự ":name" đã tồn tại.',
 
+    // Lesson regeneration notifications
+    'lesson_regeneration_processing' => 'Đang tạo lại bài học...',
+    'lesson_regeneration_successfully' => 'Bài học ":name" đã được tạo lại thành công!',
+    'lesson_regeneration_error' => 'Tạo lại bài học thất bại. Vui lòng thử lại.',
+    'lesson_regeneration_exists' => 'Bài học ":name" đã tồn tại.',
+
     // Notification Bell
     'title' => 'Thông báo',
     'notifications' => 'Thông báo',

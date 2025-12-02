@@ -23,11 +23,24 @@
                     $selected_level = \App\Enums\System\LanguageLevelEnum::tryFrom($language_level);
                 @endphp
                 @if($selected_level)
-                    <div class="mt-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                        <p class="text-sm text-gray-700">
-                            <span class="font-semibold text-blue-700">{{ $selected_level->label() }}:</span>
-                            {{ $selected_level->description() }}
-                        </p>
+                    <div class="mt-2 space-y-2">
+                        <div class="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                            <p class="text-sm text-gray-700">
+                                <span class="font-semibold text-blue-700">{{ $selected_level->label() }}:</span>
+                                {{ $selected_level->description() }}
+                            </p>
+                        </div>
+
+                        @if(in_array($selected_level->value, ['B1','B2','C1','C2'], true))
+                            <div class="flex items-start gap-2 rounded-md border border-amber-300 bg-amber-50 px-3 py-2">
+                                <svg class="mt-0.5 h-3.5 w-3.5 text-amber-500 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-11a.75.75 0 00-1.5 0v4c0 .199.079.39.22.53l2.5 2.5a.75.75 0 101.06-1.06l-2.28-2.28V7z" clip-rule="evenodd" />
+                                </svg>
+                                <p class="text-xs font-medium text-amber-800 leading-relaxed">
+                                    {{ __('lessons.generation_time_notice') }}
+                                </p>
+                            </div>
+                        @endif
                     </div>
                 @endif
             @endif

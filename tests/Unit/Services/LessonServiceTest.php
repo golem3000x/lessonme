@@ -317,7 +317,7 @@ class LessonServiceTest extends TestCase
 
         // Verify snapshot was called
         $this->mock_history->shouldHaveReceived('snapshot')->once();
-        
+
         // Verify lesson was updated
         $this->assertNotNull($updated_lesson);
         $this->assertEquals($lesson->id, $updated_lesson->id);

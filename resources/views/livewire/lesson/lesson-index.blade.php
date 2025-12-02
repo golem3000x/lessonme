@@ -13,7 +13,7 @@
 
         <div class="flex items-center gap-2">
             {{-- Show filter and sort buttons if there are lessons OR if filters are active OR if placeholders exist --}}
-            @if(!$lessons->isEmpty() || $this->hasActiveFilters() || !empty($creating_lessons_placeholders))
+            @if(!$lessons->isEmpty() || $this->hasActiveFilters() || !empty($creating_lessons_placeholders) || !empty($regenerating_lessons_placeholders))
                 {{-- Sort dropdown --}}
                 <div class="relative" x-data="{ open: @entangle('show_sort_dropdown') }">
                     <button
@@ -80,7 +80,7 @@
             @endif
 
             {{-- Create button always visible if lessons exist or no filters applied or placeholders exist --}}
-            @if(!$lessons->isEmpty() || !$this->hasActiveFilters() || !empty($creating_lessons_placeholders))
+            @if(!$lessons->isEmpty() || !$this->hasActiveFilters() || !empty($creating_lessons_placeholders) || !empty($regenerating_lessons_placeholders))
                 <button
                         wire:click="openManageModal"
                         class="group flex items-center gap-2 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 shadow transition"
@@ -281,7 +281,7 @@
     @endif
 
     {{-- Empty list --}}
-    @if($lessons->isEmpty() && empty($creating_lessons_placeholders))
+    @if($lessons->isEmpty() && empty($creating_lessons_placeholders) && empty($regenerating_lessons_placeholders))
         <div class="text-center py-16 space-y-4">
             @if($this->hasActiveFilters())
                 {{-- No results from filters --}}
@@ -310,15 +310,12 @@
     @endif
 
     {{-- Lessons list (show if there are lessons OR placeholders) --}}
-    @if(!$lessons->isEmpty() || !empty($creating_lessons_placeholders))
+    @if(!$lessons->isEmpty() || !empty($creating_lessons_placeholders) || !empty($regenerating_lessons_placeholders))
         {{-- Lessons list --}}
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
-            {{-- Placeholder cards for lessons being created --}}
-            @foreach($creating_lessons_placeholders as $index => $placeholder_id)
-                @php
-                    $is_regenerating = $index < count($regenerating_lesson_ids);
-                @endphp
-                <div wire:key="placeholder-{{ $placeholder_id }}" class="group bg-white border border-gray-100 rounded-xl shadow-sm p-5 relative overflow-hidden animate-pulse">
+            {{-- Placeholder cards for NEW lessons being created --}}
+            @foreach($creating_lessons_placeholders as $placeholder_id)
+                <div wire:key="placeholder-new-{{ $placeholder_id }}" class="group bg-white border border-gray-100 rounded-xl shadow-sm p-5 relative overflow-hidden animate-pulse">
                     {{-- Animated gradient background --}}
                     <div class="absolute inset-0 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 opacity-50"></div>
                     
@@ -338,13 +335,44 @@
                                     <div class="h-5 w-20 bg-gray-200 rounded animate-pulse"></div>
                                 </div>
                             </div>
+                        </div>
 
-                            {{-- Loading spinner --}}
-                            <div class="ml-2">
-                                <svg class="animate-spin h-6 w-6 {{ $is_regenerating ? 'text-yellow-600' : 'text-blue-600' }}" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                </svg>
+                        {{-- Description skeleton --}}
+                        <div class="space-y-2 mb-4">
+                            <div class="h-3 bg-gray-200 rounded w-full animate-pulse"></div>
+                            <div class="h-3 bg-gray-200 rounded w-5/6 animate-pulse"></div>
+                            <div class="h-3 bg-gray-200 rounded w-4/6 animate-pulse"></div>
+                        </div>
+
+                        {{-- Creating message --}}
+                        <div class="flex items-center justify-center w-full px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-md font-medium">
+                            <span class="text-sm">{{ __('lessons.creating_lesson') }}</span>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+            
+            {{-- Placeholder cards for lessons being REGENERATED --}}
+            @foreach($regenerating_lessons_placeholders as $lesson_id => $placeholder_data)
+                <div wire:key="placeholder-regen-{{ $placeholder_data['id'] }}" class="group bg-white border border-gray-100 rounded-xl shadow-sm p-5 relative overflow-hidden animate-pulse">
+                    {{-- Animated gradient background --}}
+                    <div class="absolute inset-0 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 opacity-50"></div>
+                    
+                    {{-- Pulsing overlay animation --}}
+                    <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/60 to-transparent animate-shimmer"></div>
+                    
+                    <div class="relative">
+                        <div class="flex justify-between items-start mb-3">
+                            <div class="flex-1 space-y-3">
+                                {{-- Title skeleton --}}
+                                <div class="h-5 bg-gray-300 rounded w-3/4 animate-pulse"></div>
+                                <div class="h-4 bg-gray-300 rounded w-1/2 animate-pulse"></div>
+                                
+                                {{-- Badge and time skeleton --}}
+                                <div class="flex gap-2 mt-3">
+                                    <div class="h-5 w-16 bg-blue-200 rounded-full animate-pulse"></div>
+                                    <div class="h-5 w-20 bg-gray-200 rounded animate-pulse"></div>
+                                </div>
                             </div>
                         </div>
 
@@ -355,13 +383,9 @@
                             <div class="h-3 bg-gray-200 rounded w-4/6 animate-pulse"></div>
                         </div>
 
-                        {{-- Creating/Regenerating message --}}
-                        <div class="flex items-center justify-center gap-2 w-full px-4 py-2 bg-gradient-to-r {{ $is_regenerating ? 'from-yellow-500 to-orange-500' : 'from-blue-500 to-indigo-500' }} text-white rounded-md font-medium">
-                            <svg class="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                            </svg>
-                            <span class="text-sm">{{ $is_regenerating ? __('lessons.lesson_regeneration_in_progress') : __('lessons.creating_lesson') }}</span>
+                        {{-- Regenerating message --}}
+                        <div class="flex items-center justify-center w-full px-4 py-2 bg-gradient-to-r from-yellow-500 to-orange-500 text-white rounded-md font-medium">
+                            <span class="text-sm">{{ __('lessons.lesson_regeneration_in_progress') }}</span>
                         </div>
                     </div>
                 </div>
@@ -370,7 +394,7 @@
             {{-- Real lesson cards --}}
             @foreach($lessons as $lesson)
                 {{-- Skip lesson if it's being regenerated (placeholder will be shown instead) --}}
-                @if(in_array($lesson->id, $regenerating_lesson_ids))
+                @if(isset($regenerating_lessons_placeholders[$lesson->id]))
                     @continue
                 @endif
                 
@@ -492,6 +516,8 @@
         <div
                 x-data="{ open: true }"
                 x-show="open"
+                x-init="document.body.style.overflow = 'hidden'"
+                x-on:remove="document.body.style.overflow = 'auto'"
                 class="fixed inset-0 z-50 overflow-y-auto"
                 @click.self="$wire.closeManageModal()"
         >
@@ -502,7 +528,7 @@
             ></div>
 
             {{-- Center modal window --}}
-            <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="fixed inset-0 flex items-center justify-center p-4">
                 <div
                         class="relative bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden border border-gray-100"
                         x-show="open"

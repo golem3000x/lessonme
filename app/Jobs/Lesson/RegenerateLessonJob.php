@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\Jobs\Lesson;
 
 use App\Dto\LessonDto;
-use App\Enums\Notifications\LessonCreationStatusEnum;
+use App\Enums\Notifications\LessonRegenerationStatusEnum;
 use App\Exceptions\LessonExistsException;
 use App\Models\Lesson\Lesson;
 use App\Models\User;
-use App\Notifications\Lesson\LessonCreationNotification;
+use App\Notifications\Lesson\LessonRegenerationNotification;
 use App\Services\Lesson\LessonAudioService;
 use App\Services\Lesson\LessonService;
 use Exception;
@@ -23,6 +23,11 @@ use Illuminate\Support\Facades\Log;
 class RegenerateLessonJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+    /**
+     * The number of seconds the job can run before timing out.
+     */
+    public int $timeout = 180;
 
     public function __construct(
         protected int $lesson_id,
@@ -80,23 +85,23 @@ class RegenerateLessonJob implements ShouldQueue
                 ]);
             }
 
-            $this->notify($user, LessonCreationStatusEnum::SUCCESSFULLY, $updatedLesson->id);
+            $this->notify($user, LessonRegenerationStatusEnum::SUCCESSFULLY, $updatedLesson->id);
         } catch (LessonExistsException $e) {
-            $this->notify($user, LessonCreationStatusEnum::EXISTS, $e->lesson->id);
+            $this->notify($user, LessonRegenerationStatusEnum::EXISTS, $e->lesson->id);
         } catch (Exception $e) {
             Log::error('Lesson regeneration failed', [
                 'lesson_id' => $this->lesson_id,
                 'error' => $e->getMessage(),
             ]);
 
-            $this->notify($user, LessonCreationStatusEnum::ERROR, null);
+            $this->notify($user, LessonRegenerationStatusEnum::ERROR, $this->lesson_id);
         }
     }
 
-    private function notify(User $user, LessonCreationStatusEnum $status, ?int $lesson_id): void
+    private function notify(User $user, LessonRegenerationStatusEnum $status, ?int $lesson_id): void
     {
         $user->notify(
-            new LessonCreationNotification(
+            new LessonRegenerationNotification(
                 $user,
                 $status,
                 $lesson_id,

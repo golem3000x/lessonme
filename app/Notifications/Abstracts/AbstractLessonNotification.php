@@ -65,6 +65,7 @@ abstract class AbstractLessonNotification extends Notification implements Should
         // Include lesson details only for successfully created lessons
         if ($this->entity) {
             $data['lesson_id'] = $this->entity->uuid;
+            $data['lesson_database_id'] = $this->entity->id; // Database ID for placeholder removal
             $data['lesson_url'] = route('lessons.show', $this->entity->uuid);
             $data['lesson_name'] = $this->entity->lesson_name;
             $data['language_name'] = $this->entity->lesson_lang?->label() ?? '';

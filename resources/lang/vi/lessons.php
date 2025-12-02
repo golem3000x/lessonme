@@ -123,6 +123,7 @@ return [
     'creation_timeout' => 'Việc tạo bài học mất nhiều thời gian hơn dự kiến. Vui lòng thử lại.',
     'creation_failed' => 'Tạo Bài Học Thất Bại',
     'try_again' => 'Thử Lại',
+    'generation_time_notice' => 'Với các trình độ cao hơn (B1, B2, C1, C2), việc tạo bài học có thể mất nhiều thời gian hơn vì nội dung dài và phức tạp hơn.',
 
     // Exercises
     'check_answers_title' => 'Bạn Sẵn Sàng Chưa?',

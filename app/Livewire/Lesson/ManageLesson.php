@@ -4,6 +4,19 @@ declare(strict_types=1);
 
 namespace App\Livewire\Lesson;
 
+/**
+ * ManageLesson component for creating new lessons
+ *
+ * PLACEHOLDER FLOW:
+ * 1. Add placeholder to SESSION (persists across page reloads)
+ * 2. Dispatch 'placeholder-added' event to LessonIndex (real-time UI update)
+ *
+ * This dual approach ensures:
+ * - Placeholder shows immediately (via event)
+ * - Placeholder persists if user navigates away (via session)
+ * - PlaceholderManager cleans up via WebSocket
+ */
+
 use App\Dto\LessonDto;
 use App\Enums\Notifications\LessonCreationStatusEnum;
 use App\Enums\System\LanguageLevelEnum;
@@ -201,8 +214,14 @@ class ManageLesson extends Component
                 null,
             ));
 
-            // Dispatch event to add placeholder to parent component
-            $this->dispatch('lesson-creation-queued');
+            // Add placeholder directly to session (works even if LessonIndex is not loaded)
+            $creating_placeholders = session('lesson_placeholders_creating', []);
+            $placeholder_id = uniqid('creating_', true);
+            $creating_placeholders[] = $placeholder_id;
+            session(['lesson_placeholders_creating' => $creating_placeholders]);
+
+            // Notify LessonIndex to add placeholder to local state (for real-time update)
+            $this->dispatch('placeholder-added', placeholder_id: $placeholder_id);
 
             // Reset generating state and close modal
             $this->is_generating = false;

@@ -146,10 +146,10 @@ class KeywordSelect extends Component
     }
 
     #[On('topic-changed')]
-    public function onTopicChanged(?int $id): void
+    public function onTopicChanged(): void
     {
-        $this->topic_id = $id;
-        // Parent will send preloaded keywords separately.
+        // Parent will send preloaded keywords separately via 'keywords-preloaded' event
+        // topic_id is already synced, nothing to do here
     }
 
     /**

@@ -128,7 +128,7 @@ class LessonAudioServiceTest extends TestCase
         // Verify mocks were called with correct voices
         $this->mock_tts_service->shouldHaveReceived('synthesize')->with('xin chào', 'banmai')->once();
         $this->mock_tts_service->shouldHaveReceived('synthesize')->with('hello', 'joanna')->once();
-        
+
         // Verify audio files were created for both lessons
         $this->assertDatabaseHas('lesson_audio_files', [
             'lesson_id' => $lesson_vietnamese->id,

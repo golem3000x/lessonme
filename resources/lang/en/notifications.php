@@ -46,6 +46,12 @@ return [
     'lesson_creation_error' => 'Lesson creation failed. Please try again.',
     'lesson_creation_exists' => 'A similar lesson ":name" already exists.',
 
+    // Lesson regeneration notifications
+    'lesson_regeneration_processing' => 'Lesson regeneration in progress...',
+    'lesson_regeneration_successfully' => 'Lesson ":name" has been regenerated successfully!',
+    'lesson_regeneration_error' => 'Lesson regeneration failed. Please try again.',
+    'lesson_regeneration_exists' => 'Lesson ":name" already exists.',
+
     // Notification Bell
     'title' => 'Notifications',
     'notifications' => 'Notifications',
