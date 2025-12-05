@@ -69,9 +69,11 @@ class AuthController extends Controller
     public function register(Request $request): RedirectResponse
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
+            'date_of_birth' => 'required|date|before:today',
         ]);
 
         // Get timezone from request (if sent from browser)
@@ -79,9 +81,11 @@ class AuthController extends Controller
 
         // Save registration data to session (with hashed password)
         $request->session()->put('registration_data', [
-            'name' => $request->name,
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'date_of_birth' => $request->date_of_birth,
             'timezone' => $timezone,
         ]);
 

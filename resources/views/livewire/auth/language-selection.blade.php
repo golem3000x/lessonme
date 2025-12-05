@@ -17,7 +17,7 @@
 
         {{-- Form card --}}
         <div class="bg-white rounded-2xl shadow-xl border border-gray-100 p-8">
-            <form class="space-y-6" wire:submit="completeRegistration">
+            <form class="space-y-6" wire:submit="proceedToRoleSelection">
                 <div>
                     <label for="native_lang" class="block text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">

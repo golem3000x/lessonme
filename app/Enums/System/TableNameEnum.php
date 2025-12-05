@@ -31,4 +31,9 @@ enum TableNameEnum: string
     case LESSON_FEEDBACK_HISTORY = 'lesson_feedback_history';
     case CHAT_SESSIONS = 'chat_sessions';
     case MESSAGES = 'messages';
+    case ROLES = 'roles';
+    case ROLE_USER = 'role_user';
+    case USER_TEACHING_LANGUAGES = 'user_teaching_languages';
+    case USER_MESSAGES = 'user_messages';
+    case TEACHER_REVIEWS = 'teacher_reviews';
 }

@@ -34,23 +34,32 @@ use Illuminate\Support\Str;
 
 /**
  * @property int $id
- * @property string $name
+ * @property string $first_name
+ * @property string $last_name
  * @property string $email
  * @property Carbon|null $email_verified_at
  * @property string $password
- * @property UserRoleEnum $role
+ * @property-read Collection<int, Role> $roles
+ * @property-read int|null $roles_count
+ * @property-read Collection<int, UserTeachingLanguage> $teachingLanguages
+ * @property-read int|null $teaching_languages_count
  * @property string|null $remember_token
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property string|null $zalo_user_id
- * @property string|null $avatar
- * @property string $native_lang
- * @property string $learning_lang
  * @property string|null $facebook_id
+ * @property string|null $avatar
+ * @property Carbon $date_of_birth
+ * @property string|null $bio
+ * @property string $native_lang
+ * @property string|null $learning_lang
+ * @property bool $is_looking_for_teacher
+ * @property bool $is_accepting_students
  * @property string $timezone
  * @property bool $is_temp_guest
  * @property Carbon|null $temp_guest_expires_at
  * @property Carbon|null $first_login_completed_at
+ * @property-read string $full_name
  * @property-read Collection<int, LessonAssignment> $assignedLessons
  * @property-read int|null $assigned_lessons_count
  * @property-read Collection<int, ChatSession> $chatSessions
@@ -89,7 +98,6 @@ use Illuminate\Support\Str;
  * @method static Builder<static>|User whereNativeLang($value)
  * @method static Builder<static>|User wherePassword($value)
  * @method static Builder<static>|User whereRememberToken($value)
- * @method static Builder<static>|User whereRole($value)
  * @method static Builder<static>|User whereTempGuestExpiresAt($value)
  * @method static Builder<static>|User whereTimezone($value)
  * @method static Builder<static>|User whereUpdatedAt($value)
@@ -110,17 +118,21 @@ class User extends Authenticatable implements FilamentUser, HasLocalePreference
      * @var list<string>
      */
     protected $fillable = [
-        'name',
+        'first_name',
+        'last_name',
         'email',
         'password',
         'zalo_user_id',
         'facebook_id',
         'avatar',
+        'date_of_birth',
+        'bio',
         'native_lang',
         'learning_lang',
+        'is_looking_for_teacher',
+        'is_accepting_students',
         'timezone',
         'email_verified_at',
-        'role',
         'is_temp_guest',
         'temp_guest_expires_at',
         'first_login_completed_at',
@@ -150,6 +162,7 @@ class User extends Authenticatable implements FilamentUser, HasLocalePreference
      */
     protected $appends = [
         'avatar_url',
+        'full_name',
     ];
 
     /**
@@ -162,11 +175,21 @@ class User extends Authenticatable implements FilamentUser, HasLocalePreference
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
-            'role' => UserRoleEnum::class,
+            'date_of_birth' => 'date',
+            'is_looking_for_teacher' => 'boolean',
+            'is_accepting_students' => 'boolean',
             'is_temp_guest' => 'boolean',
             'temp_guest_expires_at' => 'datetime',
             'first_login_completed_at' => 'datetime',
         ];
+    }
+
+    /**
+     * Get the user's full name.
+     */
+    public function getFullNameAttribute(): string
+    {
+        return trim($this->first_name . ' ' . $this->last_name);
     }
 
     /**
@@ -175,6 +198,29 @@ class User extends Authenticatable implements FilamentUser, HasLocalePreference
     public function canAccessPanel(Panel $panel): bool
     {
         return $this->isAdmin();
+    }
+
+    /**
+     * Get all roles assigned to this user.
+     *
+     * @return BelongsToMany<Role, $this>
+     */
+    public function roles(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Role::class,
+            TableNameEnum::ROLE_USER->value
+        )->withTimestamps();
+    }
+
+    /**
+     * Get teaching languages for this teacher.
+     *
+     * @return HasMany<UserTeachingLanguage, $this>
+     */
+    public function teachingLanguages(): HasMany
+    {
+        return $this->hasMany(UserTeachingLanguage::class);
     }
 
     /**
@@ -280,11 +326,61 @@ class User extends Authenticatable implements FilamentUser, HasLocalePreference
     }
 
     /**
+     * Reviews received by this teacher.
+     *
+     * @return HasMany<TeacherReview, $this>
+     */
+    public function receivedReviews(): HasMany
+    {
+        return $this->hasMany(TeacherReview::class, 'teacher_id');
+    }
+
+    /**
+     * Reviews given by this student.
+     *
+     * @return HasMany<TeacherReview, $this>
+     */
+    public function givenReviews(): HasMany
+    {
+        return $this->hasMany(TeacherReview::class, 'student_id');
+    }
+
+    /**
+     * Get average rating for this teacher.
+     */
+    public function getAverageRatingAttribute(): ?float
+    {
+        if (! $this->isTeacher()) {
+            return null;
+        }
+
+        $avg = $this->receivedReviews()->avg('rating');
+
+        return $avg ? round((float) $avg, 1) : null;
+    }
+
+    /**
+     * Get reviews count for this teacher.
+     */
+    public function getReviewsCountAttribute(): int
+    {
+        return $this->receivedReviews()->count();
+    }
+
+    /**
+     * Check if user has a specific role.
+     */
+    public function hasRole(UserRoleEnum $role): bool
+    {
+        return $this->roles()->where('name', '=', $role->value)->exists();
+    }
+
+    /**
      * Check if the user is an administrator.
      */
     public function isAdmin(): bool
     {
-        return $this->role === UserRoleEnum::ADMIN;
+        return $this->hasRole(UserRoleEnum::ADMIN);
     }
 
     /**
@@ -292,7 +388,7 @@ class User extends Authenticatable implements FilamentUser, HasLocalePreference
      */
     public function isTeacher(): bool
     {
-        return $this->role === UserRoleEnum::TEACHER;
+        return $this->hasRole(UserRoleEnum::TEACHER);
     }
 
     /**
@@ -300,65 +396,134 @@ class User extends Authenticatable implements FilamentUser, HasLocalePreference
      */
     public function isStudent(): bool
     {
-        return $this->role === UserRoleEnum::STUDENT;
+        return $this->hasRole(UserRoleEnum::STUDENT);
     }
 
     /**
      * Assign a role to the user.
-     * Only for explicit administrative operations.
      *
-     * @param  UserRoleEnum  $role  New role
+     * @param  UserRoleEnum  $role_enum  Role to assign
      * @param  User|null  $actor  User performing the operation (for audit)
      */
-    public function assignRole(UserRoleEnum $role, ?User $actor = null): void
+    public function assignRole(UserRoleEnum $role_enum, ?User $actor = null): void
     {
-        $old_role = $this->role;
+        $role = Role::findByEnum($role_enum);
 
-        // Optional: logging for audit
+        if (! $role) {
+            Log::warning('Role not found', ['role' => $role_enum->value]);
+
+            return;
+        }
+
+        if ($this->roles()->where('role_id', '=', $role->id)->exists()) {
+            return;
+        }
+
         if ($actor) {
-            Log::info('User role changed', [
+            Log::info('User role assigned', [
                 'user_id' => $this->id,
                 'user_email' => $this->email,
-                'old_role' => $old_role->value,
-                'new_role' => $role->value,
-                'changed_by' => $actor->id,
-                'changed_by_email' => $actor->email,
+                'role' => $role_enum->value,
+                'assigned_by' => $actor->id,
+                'assigned_by_email' => $actor->email,
             ]);
         }
 
-        $this->role = $role;
-        $this->save();
+        $this->roles()->attach($role->id);
     }
 
     /**
-     * Make the user an administrator.
-     * Alias for assignRole(UserRoleEnum::ADMIN).
+     * Remove a role from the user.
      *
+     * @param  UserRoleEnum  $role_enum  Role to remove
      * @param  User|null  $actor  User performing the operation (for audit)
      */
-    public function makeAdmin(?User $actor = null): void
+    public function removeRole(UserRoleEnum $role_enum, ?User $actor = null): void
     {
-        $this->assignRole(UserRoleEnum::ADMIN, $actor);
+        $role = Role::findByEnum($role_enum);
+
+        if (! $role) {
+            return;
+        }
+
+        if ($actor) {
+            Log::info('User role removed', [
+                'user_id' => $this->id,
+                'user_email' => $this->email,
+                'role' => $role_enum->value,
+                'removed_by' => $actor->id,
+                'removed_by_email' => $actor->email,
+            ]);
+        }
+
+        $this->roles()->detach($role->id);
     }
 
     /**
-     * Make the user a teacher.
+     * Sync user roles.
      *
-     * @param  User|null  $actor  User performing the operation (for audit)
+     * @param  array<UserRoleEnum>  $role_enums  Roles to sync
      */
-    public function makeTeacher(?User $actor = null): void
+    public function syncRoles(array $role_enums): void
     {
-        $this->assignRole(UserRoleEnum::TEACHER, $actor);
+        $role_ids = [];
+
+        foreach ($role_enums as $role_enum) {
+            $role = Role::findByEnum($role_enum);
+            if ($role) {
+                $role_ids[] = $role->id;
+            }
+        }
+
+        $this->roles()->sync($role_ids);
     }
 
     /**
-     * Make the user a student.
-     *
-     * @param  User|null  $actor  User performing the operation (for audit)
+     * Add teaching language for this teacher.
      */
-    public function makeStudent(?User $actor = null): void
+    public function addTeachingLanguage(SystemLanguageEnum $language): void
     {
-        $this->assignRole(UserRoleEnum::STUDENT, $actor);
+        if (! $this->isTeacher()) {
+            return;
+        }
+
+        $this->teachingLanguages()->firstOrCreate([
+            'language' => $language->value,
+        ]);
+    }
+
+    /**
+     * Remove teaching language.
+     */
+    public function removeTeachingLanguage(SystemLanguageEnum $language): void
+    {
+        $this->teachingLanguages()->where('language', '=', $language->value)->delete();
+    }
+
+    /**
+     * Sync teaching languages.
+     *
+     * @param  array<string>  $languages  Language values to sync
+     */
+    public function syncTeachingLanguages(array $languages): void
+    {
+        $this->teachingLanguages()->delete();
+
+        foreach ($languages as $language) {
+            $this->teachingLanguages()->create([
+                'language' => $language,
+            ]);
+        }
+    }
+
+    /**
+     * Get teaching language values as array.
+     *
+     * @return array<string>
+     */
+    public function getTeachingLanguageValues(): array
+    {
+        return $this->teachingLanguages()->pluck('language')->toArray();
     }
 
     /**

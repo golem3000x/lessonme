@@ -8,6 +8,7 @@ return [
     'chat' => 'Chat',
     'lessons' => 'Lessons',
     'topics' => 'Topics',
+    'users' => 'Users',
     'help' => 'Help',
     'profile' => 'Profile',
     'about' => 'Support',
@@ -47,4 +48,6 @@ return [
     // Profile dropdown
     'signed_in_as' => 'Signed in as',
     'switch_language' => 'Switch language',
+    'view_profile' => 'View Profile',
+    'edit_profile' => 'Edit Profile',
 ];

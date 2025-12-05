@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Enums\System\TableNameEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -12,8 +14,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table(TableNameEnum::USERS->value, function (Blueprint $table): void {
-            $table->string('facebook_id')->nullable()->unique()->after('zalo_user_id');
+        Schema::create(TableNameEnum::ROLES->value, function (Blueprint $table): void {
+            $table->id();
+            $table->string('name')->unique();
+            $table->timestamps();
         });
     }
 
@@ -22,8 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table(TableNameEnum::USERS->value, function (Blueprint $table): void {
-            $table->dropColumn('facebook_id');
-        });
+        Schema::dropIfExists(TableNameEnum::ROLES->value);
     }
 };

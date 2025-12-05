@@ -17,16 +17,31 @@ return new class extends Migration
     {
         Schema::table(TableNameEnum::USERS->value, function (Blueprint $table): void {
             $table->string('zalo_user_id')->nullable()->unique();
+            $table->string('facebook_id')->nullable()->unique();
             $table->text('avatar')->nullable();
+            $table->date('date_of_birth');
+            $table->text('bio')->nullable();
             $table->string('native_lang')->default(SystemLanguageEnum::VIETNAMESE->value);
-            $table->string('learning_lang')->default(SystemLanguageEnum::ENGLISH->value);
+            $table->string('learning_lang')->nullable();
+            $table->boolean('is_looking_for_teacher')->default(false);
+            $table->boolean('is_accepting_students')->default(false);
         });
     }
 
     public function down(): void
     {
         Schema::table(TableNameEnum::USERS->value, function (Blueprint $table): void {
-            $table->dropColumn(['zalo_user_id', 'avatar', 'native_lang', 'learning_lang']);
+            $table->dropColumn([
+                'zalo_user_id',
+                'facebook_id',
+                'avatar',
+                'date_of_birth',
+                'bio',
+                'native_lang',
+                'learning_lang',
+                'is_looking_for_teacher',
+                'is_accepting_students',
+            ]);
         });
     }
 };

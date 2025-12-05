@@ -24,11 +24,25 @@ class ProfileSetup extends Component
 {
     use WithFileUploads;
 
-    public string $name = '';
+    public string $first_name = '';
+
+    public string $last_name = '';
+
+    public string $date_of_birth = '';
+
+    public string $bio = '';
 
     public string $native_lang = '';
 
     public string $learning_lang = '';
+
+    public bool $is_looking_for_teacher = false;
+
+    public bool $is_accepting_students = false;
+
+    public bool $is_teacher = false;
+
+    public bool $is_student = false;
 
     /** @var \Livewire\Features\SupportFileUploads\TemporaryUploadedFile|null */
     public $avatar = null;
@@ -56,9 +70,16 @@ class ProfileSetup extends Component
         /** @var User $user */
         $user = Auth::user();
 
-        $this->name = $user->name ?? '';
+        $this->first_name = $user->first_name ?? '';
+        $this->last_name = $user->last_name ?? '';
+        $this->date_of_birth = $user->date_of_birth?->format('Y-m-d') ?? '';
+        $this->bio = $user->bio ?? '';
         $this->native_lang = $user->native_lang;
-        $this->learning_lang = $user->learning_lang;
+        $this->learning_lang = $user->learning_lang ?? '';
+        $this->is_looking_for_teacher = $user->is_looking_for_teacher ?? false;
+        $this->is_accepting_students = $user->is_accepting_students ?? false;
+        $this->is_teacher = $user->isTeacher();
+        $this->is_student = $user->isStudent();
 
         $this->languages = SystemLanguageEnum::all();
 
@@ -172,12 +193,21 @@ class ProfileSetup extends Component
      */
     public function save()
     {
-        $this->validate([
-            'name' => 'required|string|max:255',
-            'native_lang' => 'required|string|different:learning_lang',
-            'learning_lang' => 'required|string|different:native_lang',
-            'avatar' => 'nullable|image|max:2048', // 2MB max
-        ], [
+        $rules = [
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'date_of_birth' => 'required|date|before:today',
+            'bio' => 'nullable|string|max:500',
+            'native_lang' => 'required|string',
+            'avatar' => 'nullable|image|max:2048',
+        ];
+
+        // Learning lang required only for students
+        if ($this->is_student && $this->learning_lang) {
+            $rules['learning_lang'] = 'required|string|different:native_lang';
+        }
+
+        $this->validate($rules, [
             'native_lang.different' => __('onboarding.languages_must_be_different'),
             'learning_lang.different' => __('onboarding.languages_must_be_different'),
             'avatar.image' => __('onboarding.avatar_must_be_image'),
@@ -188,9 +218,14 @@ class ProfileSetup extends Component
         $user = Auth::user();
 
         $data = [
-            'name' => $this->name,
+            'first_name' => $this->first_name,
+            'last_name' => $this->last_name,
+            'date_of_birth' => $this->date_of_birth,
+            'bio' => $this->bio ?: null,
             'native_lang' => $this->native_lang,
-            'learning_lang' => $this->learning_lang,
+            'learning_lang' => $this->is_student ? $this->learning_lang : null,
+            'is_looking_for_teacher' => $this->is_student ? $this->is_looking_for_teacher : false,
+            'is_accepting_students' => $this->is_teacher ? $this->is_accepting_students : false,
         ];
 
         // Handle avatar upload

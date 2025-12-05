@@ -14,7 +14,8 @@ class CreateAdminCommand extends Command
 {
     protected $signature = 'admin:create 
                             {--email= : Admin email}
-                            {--name= : Admin name}
+                            {--first-name= : Admin first name}
+                            {--last-name= : Admin last name}
                             {--password= : Admin password}
                             {--native-lang=vi : Native language (default: vi)}
                             {--learning-lang=en : Learning language (default: en)}';
@@ -24,7 +25,8 @@ class CreateAdminCommand extends Command
     public function handle(): int
     {
         $email = $this->option('email') ?? $this->ask('Admin email');
-        $name = $this->option('name') ?? $this->ask('Admin name');
+        $first_name = $this->option('first-name') ?? $this->ask('Admin first name');
+        $last_name = $this->option('last-name') ?? $this->ask('Admin last name');
         $password = $this->option('password') ?? $this->secret('Admin password');
         $native_lang = $this->option('native-lang');
         $learning_lang = $this->option('learning-lang');
@@ -32,11 +34,13 @@ class CreateAdminCommand extends Command
         // Validation
         $validator = Validator::make([
             'email' => $email,
-            'name' => $name,
+            'first_name' => $first_name,
+            'last_name' => $last_name,
             'password' => $password,
         ], [
             'email' => ['required', 'email', 'unique:users,email'],
-            'name' => ['required', 'string', 'max:255'],
+            'first_name' => ['required', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
             'password' => ['required', 'string', 'min:8'],
         ]);
 
@@ -51,24 +55,28 @@ class CreateAdminCommand extends Command
         // Create admin
         $user = User::create([
             'email' => $email,
-            'name' => $name,
+            'first_name' => $first_name,
+            'last_name' => $last_name,
             'password' => Hash::make($password),
+            'date_of_birth' => '1990-01-01',
             'email_verified_at' => now(),
             'native_lang' => $native_lang,
             'learning_lang' => $learning_lang,
-            'role' => UserRoleEnum::ADMIN->value,
         ]);
+
+        // Assign admin role
+        $user->assignRole(UserRoleEnum::ADMIN);
 
         $this->newLine();
         $this->info('✅ Admin user created successfully!');
         $this->newLine();
         $this->table(
-            ['ID', 'Name', 'Email', 'Role', 'Native Lang', 'Learning Lang'],
+            ['ID', 'Name', 'Email', 'Roles', 'Native Lang', 'Learning Lang'],
             [[
                 $user->id,
-                $user->name,
+                $user->full_name,
                 $user->email,
-                $user->role->value,
+                $user->roles->pluck('name')->implode(', '),
                 $user->native_lang,
                 $user->learning_lang,
             ]]

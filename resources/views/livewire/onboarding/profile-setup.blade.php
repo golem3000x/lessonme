@@ -86,16 +86,61 @@
         </div>
     </div>
 
-    <!-- Name -->
+    <!-- Name Fields -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+                {{ __('onboarding.first_name') }}
+            </label>
+            <input type="text"
+                   wire:model.live="first_name"
+                   placeholder="{{ __('onboarding.first_name_placeholder') }}"
+                   class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none focus:border-blue-500 transition" />
+            @error('first_name')
+            <span class="text-red-600 text-sm">{{ $message }}</span>
+            @enderror
+        </div>
+
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+                {{ __('onboarding.last_name') }}
+            </label>
+            <input type="text"
+                   wire:model.live="last_name"
+                   placeholder="{{ __('onboarding.last_name_placeholder') }}"
+                   class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none focus:border-blue-500 transition" />
+            @error('last_name')
+            <span class="text-red-600 text-sm">{{ $message }}</span>
+            @enderror
+        </div>
+    </div>
+
+    <!-- Date of Birth -->
     <div class="mb-4">
         <label class="block text-sm font-medium text-gray-700 mb-1">
-            {{ __('onboarding.name') }}
+            {{ __('onboarding.date_of_birth') }}
         </label>
-        <input type="text"
-               wire:model.live="name"
-               placeholder="{{ __('onboarding.enter_name') }}"
+        <input type="date"
+               wire:model="date_of_birth"
+               max="{{ now()->subYears(5)->format('Y-m-d') }}"
                class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none focus:border-blue-500 transition" />
-        @error('name')
+        @error('date_of_birth')
+        <span class="text-red-600 text-sm">{{ $message }}</span>
+        @enderror
+    </div>
+
+    <!-- Bio -->
+    <div class="mb-6">
+        <label class="block text-sm font-medium text-gray-700 mb-1">
+            {{ __('onboarding.bio') }}
+        </label>
+        <textarea wire:model="bio"
+                  rows="3"
+                  maxlength="500"
+                  placeholder="{{ __('onboarding.bio_placeholder') }}"
+                  class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none focus:border-blue-500 transition resize-none"></textarea>
+        <p class="text-xs text-gray-500 mt-1">{{ strlen($bio ?? '') }}/500</p>
+        @error('bio')
         <span class="text-red-600 text-sm">{{ $message }}</span>
         @enderror
     </div>
@@ -117,6 +162,7 @@
             @enderror
         </div>
 
+        @if($is_student)
         <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">
                 {{ __('onboarding.learning_language') }}
@@ -131,7 +177,45 @@
             <span class="text-red-600 text-sm">{{ $message }}</span>
             @enderror
         </div>
+        @endif
     </div>
+
+    <!-- Role-specific settings -->
+    @if($is_student)
+    <div class="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+        <h3 class="text-sm font-semibold text-blue-800 mb-3 flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+            </svg>
+            {{ __('onboarding.student_settings') }}
+        </h3>
+        <label class="flex items-center gap-3 cursor-pointer">
+            <input type="checkbox" 
+                   wire:model="is_looking_for_teacher"
+                   class="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+            <span class="text-sm text-gray-700">{{ __('onboarding.looking_for_teacher') }}</span>
+        </label>
+        <p class="text-xs text-gray-500 mt-2 ml-8">{{ __('onboarding.looking_for_teacher_hint') }}</p>
+    </div>
+    @endif
+
+    @if($is_teacher)
+    <div class="mb-6 p-4 bg-green-50 rounded-lg border border-green-200">
+        <h3 class="text-sm font-semibold text-green-800 mb-3 flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/>
+            </svg>
+            {{ __('onboarding.teacher_settings') }}
+        </h3>
+        <label class="flex items-center gap-3 cursor-pointer">
+            <input type="checkbox" 
+                   wire:model="is_accepting_students"
+                   class="w-5 h-5 text-green-600 border-gray-300 rounded focus:ring-green-500">
+            <span class="text-sm text-gray-700">{{ __('onboarding.accepting_students') }}</span>
+        </label>
+        <p class="text-xs text-gray-500 mt-2 ml-8">{{ __('onboarding.accepting_students_hint') }}</p>
+    </div>
+    @endif
 
     <!-- Save button -->
     <div class="flex justify-end">

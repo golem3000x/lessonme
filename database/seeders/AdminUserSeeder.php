@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
+use App\Enums\System\SystemLanguageEnum;
 use App\Enums\System\UserRoleEnum;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -19,21 +20,29 @@ class AdminUserSeeder extends Seeder
         $admin_email = 'admin@example.com';
 
         // Check if admin already exists
-        if (User::where('email', '=', $admin_email)->exists()) {
-            $this->command->warn('⚠️  Admin user already exists!');
+        $user = User::where('email', '=', $admin_email)->first();
+
+        if ($user) {
+            // Ensure admin role is assigned
+            $user->assignRole(UserRoleEnum::ADMIN);
+            $this->command->warn('⚠️  Admin user already exists! Role verified.');
 
             return;
         }
 
-        User::create([
-            'name' => 'Admin',
+        $user = User::create([
+            'first_name' => 'Admin',
+            'last_name' => 'User',
             'email' => $admin_email,
             'password' => Hash::make('password'),
             'email_verified_at' => now(),
-            'native_lang' => 'vi',
-            'learning_lang' => 'en',
-            'role' => UserRoleEnum::ADMIN->value,
+            'date_of_birth' => '1990-01-01',
+            'native_lang' => SystemLanguageEnum::VIETNAMESE->value,
+            'learning_lang' => SystemLanguageEnum::ENGLISH->value,
         ]);
+
+        // Assign admin role
+        $user->assignRole(UserRoleEnum::ADMIN);
 
         $this->command->info('✅ Admin user created successfully!');
         $this->command->line("   Email: {$admin_email}");

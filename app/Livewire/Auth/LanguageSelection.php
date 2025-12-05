@@ -5,10 +5,8 @@ declare(strict_types=1);
 namespace App\Livewire\Auth;
 
 use App\Enums\System\SystemLanguageEnum;
-use App\Models\User;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
-use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
 class LanguageSelection extends Component
@@ -36,7 +34,7 @@ class LanguageSelection extends Component
             : SystemLanguageEnum::ENGLISH->value;
     }
 
-    public function completeRegistration(): void
+    public function proceedToRoleSelection(): void
     {
         $this->validate([
             'native_lang' => 'required|string|in:'.implode(',', SystemLanguageEnum::values()),
@@ -50,38 +48,11 @@ class LanguageSelection extends Component
             return;
         }
 
-        // Determine learning_lang (opposite language from native_lang)
-        $learning_lang = $this->native_lang === SystemLanguageEnum::ENGLISH->value
-            ? SystemLanguageEnum::VIETNAMESE->value
-            : SystemLanguageEnum::ENGLISH->value;
+        // Save native_lang to session for next step
+        session()->put('registration_native_lang', $this->native_lang);
 
-        // Create user with selected language
-        $user = User::create([
-            'name' => $registration_data['name'],
-            'email' => $registration_data['email'],
-            'password' => $registration_data['password'], // Password already hashed in session
-            'timezone' => $registration_data['timezone'] ?? 'UTC',
-            'native_lang' => $this->native_lang,
-            'learning_lang' => $learning_lang,
-            'facebook_id' => $registration_data['facebook_id'] ?? null,
-            'zalo_user_id' => $registration_data['zalo_user_id'] ?? null,
-            'avatar' => $registration_data['avatar'] ?? null,
-            'email_verified_at' => $registration_data['email_verified_at'] ?? null,
-        ]);
-
-        // Login user
-        Auth::login($user);
-        session()->regenerate();
-
-        // Set a persistent cookie to indicate user has an account
-        // This prevents creating temp guest users after logout
-        cookie()->queue('has_account', '1', 525600); // 1 year
-
-        // Clear registration data from session
-        session()->forget('registration_data');
-
-        // Redirect to dashboard
-        redirect()->route('dashboard');
+        // Redirect to role selection
+        redirect()->route('auth.role');
     }
 
     public function render(): Factory|View|\Illuminate\View\View

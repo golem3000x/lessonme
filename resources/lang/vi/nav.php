@@ -8,6 +8,7 @@ return [
     'chat' => 'Trò chuyện',
     'lessons' => 'Bài học',
     'topics' => 'Chủ đề',
+    'users' => 'Người dùng',
     'help' => 'Trợ giúp',
     'profile' => 'Hồ sơ',
     'about' => 'Hỗ trợ',
@@ -47,4 +48,6 @@ return [
     // Profile dropdown
     'signed_in_as' => 'Đã đăng nhập với',
     'switch_language' => 'Chuyển đổi ngôn ngữ',
+    'view_profile' => 'Xem hồ sơ',
+    'edit_profile' => 'Chỉnh sửa hồ sơ',
 ];

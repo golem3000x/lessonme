@@ -40,14 +40,26 @@
                     @endif
 
                     <div class="space-y-4">
-                        <div>
-                            <label for="name" class="block text-sm font-semibold text-gray-700 mb-2">
-                                {{ __('auth.register.name_label') }}
-                            </label>
-                            <input id="name" name="name" type="text" autocomplete="name" required
-                                   value="{{ old('name') }}"
-                                   class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200"
-                                   placeholder="{{ __('auth.register.name_placeholder') }}">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label for="first_name" class="block text-sm font-semibold text-gray-700 mb-2">
+                                    {{ __('auth.register.first_name_label') }}
+                                </label>
+                                <input id="first_name" name="first_name" type="text" autocomplete="given-name" required
+                                       value="{{ old('first_name') }}"
+                                       class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200"
+                                       placeholder="{{ __('auth.register.first_name_placeholder') }}">
+                            </div>
+
+                            <div>
+                                <label for="last_name" class="block text-sm font-semibold text-gray-700 mb-2">
+                                    {{ __('auth.register.last_name_label') }}
+                                </label>
+                                <input id="last_name" name="last_name" type="text" autocomplete="family-name" required
+                                       value="{{ old('last_name') }}"
+                                       class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200"
+                                       placeholder="{{ __('auth.register.last_name_placeholder') }}">
+                            </div>
                         </div>
 
                         <div>
@@ -58,6 +70,16 @@
                                    value="{{ old('email') }}"
                                    class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200"
                                    placeholder="{{ __('auth.register.email_placeholder') }}">
+                        </div>
+
+                        <div>
+                            <label for="date_of_birth" class="block text-sm font-semibold text-gray-700 mb-2">
+                                {{ __('auth.register.date_of_birth_label') }}
+                            </label>
+                            <input id="date_of_birth" name="date_of_birth" type="date" required
+                                   value="{{ old('date_of_birth') }}"
+                                   max="{{ now()->subYears(5)->format('Y-m-d') }}"
+                                   class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200">
                         </div>
 
                         <div>

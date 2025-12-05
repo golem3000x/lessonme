@@ -9,9 +9,12 @@ use App\Http\Controllers\HelpController;
 use App\Http\Controllers\Lesson\LessonController;
 use App\Http\Middleware\EnsureTempGuestUser;
 use App\Livewire\Auth\LanguageSelection;
+use App\Livewire\Auth\RoleSelection;
 use App\Livewire\Lesson\LessonIndex;
 use App\Livewire\Onboarding\ProfileSetup;
 use App\Livewire\Topic\TopicIndex;
+use App\Livewire\User\UserList;
+use App\Livewire\User\UserProfile;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 
@@ -38,6 +41,7 @@ Route::middleware('guest')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
 
     Route::get('/auth/language', LanguageSelection::class)->name('auth.language');
+    Route::get('/auth/role', RoleSelection::class)->name('auth.role');
 
     // Password reset
     Route::get('/forgot-password', [PasswordResetController::class, 'showForgotPasswordForm'])->name('password.request');
@@ -62,6 +66,10 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('/onboarding', ProfileSetup::class)->name('onboarding.profile');
+
+    // Users / Community
+    Route::get('/users', UserList::class)->name('users.index');
+    Route::get('/profile/{user}', UserProfile::class)->name('profile.show');
 
     // Topics management
     Route::get('/manage-topics', TopicIndex::class)->name('topics.index');

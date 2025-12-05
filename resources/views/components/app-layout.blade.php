@@ -78,6 +78,17 @@
                     <span class="hidden md:inline">{{ __('nav.topics') }}</span>
                 </a>
 
+                <a href="{{ route('users.index') }}" class="group relative px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200 flex items-center gap-2 {{ request()->is('users*') || request()->is('profile*') ? 'bg-blue-50 text-blue-600' : '' }}">
+                    @if(request()->is('users*') || request()->is('profile*'))
+                        <span class="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full"></span>
+                    @endif
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transition-transform group-hover:scale-110" fill="none" viewBox="0 0 24 24"
+                         stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                    </svg>
+                    <span class="hidden md:inline">{{ __('nav.users') }}</span>
+                </a>
+
                 <a href="{{ route('help.index') }}" class="group relative px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200 flex items-center gap-2 {{ request()->is('help*') ? 'bg-blue-50 text-blue-600' : '' }}">
                     @if(request()->is('help*'))
                         <span class="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full"></span>
@@ -104,14 +115,14 @@
                             class="group flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-blue-50 transition-all duration-200">
                         @if(Auth::user()->avatar)
                             <img src="{{ Auth::user()->avatar_url }}"
-                                 alt="{{ Auth::user()->name }}"
+                                 alt="{{ Auth::user()->full_name }}"
                                  class="h-9 w-9 rounded-full ring-2 ring-gray-200 group-hover:ring-blue-400 transition-all shadow-sm object-cover">
                         @else
-                            <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name) }}&background=2563EB&color=fff"
-                                 alt="{{ Auth::user()->name }}"
+                            <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->full_name) }}&background=2563EB&color=fff"
+                                 alt="{{ Auth::user()->full_name }}"
                                  class="h-9 w-9 rounded-full ring-2 ring-gray-200 group-hover:ring-blue-400 transition-all shadow-sm">
                         @endif
-                        <span class="hidden md:inline text-sm font-medium text-gray-700 group-hover:text-blue-600 transition">{{ Auth::user()->name }}</span>
+                        <span class="hidden md:inline text-sm font-medium text-gray-700 group-hover:text-blue-600 transition">{{ Auth::user()->full_name }}</span>
                         <svg class="w-4 h-4 text-gray-500 transition-all duration-200" :class="{'rotate-180 text-blue-600': open}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                   d="M19 9l-7 7-7-7"/>
@@ -124,21 +135,21 @@
                             <div class="flex items-center gap-3 mb-2">
                                 @if(Auth::user()->avatar)
                                     <img src="{{ Auth::user()->avatar_url }}"
-                                         alt="{{ Auth::user()->name }}"
+                                         alt="{{ Auth::user()->full_name }}"
                                          class="h-10 w-10 rounded-full object-cover border-2 border-white shadow-sm">
                                 @else
-                                    <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name) }}&background=2563EB&color=fff"
-                                         alt="{{ Auth::user()->name }}"
+                                    <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->full_name) }}&background=2563EB&color=fff"
+                                         alt="{{ Auth::user()->full_name }}"
                                          class="h-10 w-10 rounded-full border-2 border-white shadow-sm">
                                 @endif
                                 <div class="flex-1 min-w-0">
-                                    <p class="text-sm font-semibold text-gray-900 truncate">{{ Auth::user()->name }}</p>
+                                    <p class="text-sm font-semibold text-gray-900 truncate">{{ Auth::user()->full_name }}</p>
                                     <p class="text-xs text-gray-500 truncate">{{ Auth::user()->email }}</p>
                                 </div>
                             </div>
                         </div>
                         
-                        <a href="/onboarding"
+                        <a href="{{ route('profile.show', Auth::user()) }}"
                            class="group flex items-center gap-3 px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-all">
                             <div class="p-1.5 rounded-lg bg-gray-100 group-hover:bg-blue-100 transition-colors">
                                 <svg xmlns="http://www.w3.org/2000/svg"
@@ -150,7 +161,22 @@
                                           d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                                 </svg>
                             </div>
-                            {{ __('nav.profile') }}
+                            {{ __('nav.view_profile') }}
+                        </a>
+
+                        <a href="/onboarding"
+                           class="group flex items-center gap-3 px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-all">
+                            <div class="p-1.5 rounded-lg bg-gray-100 group-hover:bg-blue-100 transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                     class="h-4 w-4 text-gray-600 group-hover:text-blue-600 transition"
+                                     fill="none"
+                                     viewBox="0 0 24 24"
+                                     stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                          d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                </svg>
+                            </div>
+                            {{ __('nav.edit_profile') }}
                         </a>
 
                         <div class="border-t border-gray-100 my-1"></div>
