@@ -76,8 +76,8 @@ use App\Notifications\Lesson\LessonRegenerationNotification;
 use App\Notifications\Lesson\LessonUnassignedNotification;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Computed;
@@ -354,13 +354,13 @@ class LessonIndex extends Component
                 ->toArray();
 
             $query = Lesson::whereIn('id', $assigned_lesson_ids)
-                ->with(['topic' => function (Builder $q): void {
+                ->with(['topic' => function (BelongsTo $q): void {
                     $q->with('translations');
                 }]);
         } else {
             // Get user's own lessons
             $query = Lesson::where('user_id', '=', $user->id)
-                ->with(['topic' => function (Builder $q): void {
+                ->with(['topic' => function (BelongsTo $q): void {
                     $q->with('translations');
                 }]);
         }

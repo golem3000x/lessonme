@@ -250,9 +250,17 @@
     </div>
 </nav>
 
+@if(request()->is('messages*'))
+<main class="max-w-6xl mx-auto py-4 h-[calc(100vh-64px)] overflow-hidden">
+    <div class="h-full">
+        {{ $slot }}
+    </div>
+</main>
+@else
 <main class="max-w-6xl mx-auto mt-6 p-4">
     {{ $slot }}
 </main>
+@endif
 
 <!-- Real-time notifications panel -->
 @auth

@@ -1,4 +1,4 @@
-<div class="flex h-[calc(100vh-80px)] bg-gray-100">
+<div class="flex h-full bg-gray-100">
     {{-- Conversations List --}}
     <div class="w-80 bg-white border-r border-gray-200 flex flex-col">
         {{-- Header --}}
@@ -86,10 +86,16 @@
             {{-- Messages --}}
             <div class="flex-1 overflow-y-auto p-4 space-y-4" 
                  id="messages-container"
-                 x-data
-                 x-init="$el.scrollTop = $el.scrollHeight"
-                 @dm-sent.window="$nextTick(() => $el.scrollTop = $el.scrollHeight)"
-                 @dm-received.window="$nextTick(() => $el.scrollTop = $el.scrollHeight)">
+                 x-data="{ 
+                     scrollToBottom() { 
+                         this.$el.scrollTop = this.$el.scrollHeight; 
+                     } 
+                 }"
+                 x-init="scrollToBottom()"
+                 x-on:dm-sent.window="$nextTick(() => scrollToBottom())"
+                 x-on:dm-received.window="$nextTick(() => scrollToBottom())"
+                 x-on:message-scroll.window="$nextTick(() => scrollToBottom())"
+                 wire:ignore.self>
                 @foreach($messages as $message)
                     @php
                         $is_mine = $message['sender_id'] === auth()->id();
@@ -203,3 +209,22 @@
         @endif
     </div>
 </div>
+
+@script
+<script>
+    // Auto-scroll after Livewire updates
+    Livewire.hook('morph.updated', ({ el }) => {
+        if (el.id === 'messages-container') {
+            el.scrollTop = el.scrollHeight;
+        }
+    });
+    
+    // Also scroll when component is initialized
+    $wire.on('messages-loaded', () => {
+        const container = document.getElementById('messages-container');
+        if (container) {
+            container.scrollTop = container.scrollHeight;
+        }
+    });
+</script>
+@endscript

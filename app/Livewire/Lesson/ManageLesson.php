@@ -28,8 +28,8 @@ use App\Models\Topic\Topic;
 use App\Notifications\Lesson\LessonCreationNotification;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\On;
@@ -76,7 +76,7 @@ class ManageLesson extends Component
 
         $this->preloaded_topics = Topic::with([
             'translations',
-            'keywords' => function (Builder $q) use ($user): void {
+            'keywords' => function (HasMany $q) use ($user): void {
                 $q->visibleForUser($user->id);
             },
             'keywords.translations',

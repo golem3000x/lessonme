@@ -9,6 +9,7 @@ use App\Models\User;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
 
 class EnsureTempGuestUser
@@ -66,6 +67,7 @@ class EnsureTempGuestUser
 
         // Store in session
         $request->session()->put('temp_guest_user_id', $temp_guest_user->id);
+        $request->session()->put('temp_guest_user_uuid', $temp_guest_user->uuid);
         $request->session()->save();
 
         return $next($request);

@@ -34,6 +34,7 @@ use Illuminate\Support\Str;
 
 /**
  * @property int $id
+ * @property string $uuid
  * @property string $first_name
  * @property string $last_name
  * @property string $email
@@ -115,11 +116,32 @@ class User extends Authenticatable implements FilamentUser, HasLocalePreference
     protected $table = TableNameEnum::USERS->value;
 
     /**
+     * Boot the model.
+     */
+    protected static function booted(): void
+    {
+        static::creating(function (User $user): void {
+            if (empty($user->uuid)) {
+                $user->uuid = (string) Str::uuid();
+            }
+        });
+    }
+
+    /**
+     * Get the route key for the model.
+     */
+    public function getRouteKeyName(): string
+    {
+        return 'uuid';
+    }
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var list<string>
      */
     protected $fillable = [
+        'uuid',
         'first_name',
         'last_name',
         'email',

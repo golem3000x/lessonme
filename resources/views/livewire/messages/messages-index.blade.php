@@ -1,4 +1,4 @@
-<div class="flex h-[calc(100vh-80px)] bg-gray-100">
+<div class="flex h-full bg-gray-100">
     {{-- Conversations List --}}
     <div class="w-80 bg-white border-r border-gray-200 flex flex-col">
         {{-- Header --}}
@@ -14,7 +14,7 @@
         {{-- Conversations --}}
         <div class="flex-1 overflow-y-auto">
             @forelse($conversations as $conversation)
-                <a href="{{ route('messages.chat', $conversation['user_id']) }}"
+                <a href="{{ route('messages.chat', $conversation['user']) }}"
                    class="w-full p-4 text-left hover:bg-gray-50 transition border-b border-gray-100 flex items-center gap-3">
                     @if($conversation['user']?->avatar)
                         <img src="{{ $conversation['user']->avatar_url }}" 
