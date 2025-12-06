@@ -34,7 +34,8 @@ class ProfileSetup extends Component
 
     public string $native_lang = '';
 
-    public string $learning_lang = '';
+    /** @var array<string> */
+    public array $learning_languages = [];
 
     public bool $is_looking_for_teacher = false;
 
@@ -75,7 +76,7 @@ class ProfileSetup extends Component
         $this->date_of_birth = $user->date_of_birth?->format('Y-m-d') ?? '';
         $this->bio = $user->bio ?? '';
         $this->native_lang = $user->native_lang;
-        $this->learning_lang = $user->learning_lang ?? '';
+        $this->learning_languages = $user->getLearningLanguageValues();
         $this->is_looking_for_teacher = $user->is_looking_for_teacher ?? false;
         $this->is_accepting_students = $user->is_accepting_students ?? false;
         $this->is_teacher = $user->isTeacher();
@@ -202,14 +203,16 @@ class ProfileSetup extends Component
             'avatar' => 'nullable|image|max:2048',
         ];
 
-        // Learning lang required only for students
-        if ($this->is_student && $this->learning_lang) {
-            $rules['learning_lang'] = 'required|string|different:native_lang';
+        // Learning languages required only for students
+        if ($this->is_student) {
+            $rules['learning_languages'] = 'required|array|min:1';
+            $rules['learning_languages.*'] = 'required|string|in:'.implode(',', SystemLanguageEnum::values());
         }
 
         $this->validate($rules, [
             'native_lang.different' => __('onboarding.languages_must_be_different'),
-            'learning_lang.different' => __('onboarding.languages_must_be_different'),
+            'learning_languages.required' => __('onboarding.learning_lang_required'),
+            'learning_languages.min' => __('onboarding.learning_lang_required'),
             'avatar.image' => __('onboarding.avatar_must_be_image'),
             'avatar.max' => __('onboarding.avatar_max_size'),
         ]);
@@ -223,7 +226,6 @@ class ProfileSetup extends Component
             'date_of_birth' => $this->date_of_birth,
             'bio' => $this->bio ?: null,
             'native_lang' => $this->native_lang,
-            'learning_lang' => $this->is_student ? $this->learning_lang : null,
             'is_looking_for_teacher' => $this->is_student ? $this->is_looking_for_teacher : false,
             'is_accepting_students' => $this->is_teacher ? $this->is_accepting_students : false,
         ];
@@ -242,6 +244,11 @@ class ProfileSetup extends Component
         }
 
         $user->update($data);
+
+        // Sync learning languages for students
+        if ($this->is_student) {
+            $user->syncLearningLanguages($this->learning_languages);
+        }
 
         // Refresh auth user data in session
         $user = $user->fresh();

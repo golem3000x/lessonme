@@ -7,6 +7,7 @@ namespace App\Livewire\Dashboard;
 use App\Models\Lesson\Lesson;
 use App\Models\Lesson\LessonAttempt;
 use App\Models\Lesson\LessonScore;
+use App\Models\User;
 use App\Services\GreetingService;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -17,6 +18,8 @@ use Livewire\Component;
 class StudentDashboard extends Component
 {
     public string $greeting = '';
+
+    public bool $show_greeting = true;
 
     public int $total_lessons = 0;
 
@@ -40,11 +43,15 @@ class StudentDashboard extends Component
 
     public function mount(): void
     {
+        /** @var User|null $user */
         $user = Auth::user();
 
         if (! $user) {
             return;
         }
+
+        // Check if greeting should be shown
+        $this->show_greeting = $user->shouldShowGreeting();
 
         // Get time-based greeting
         $greeting_service = app(GreetingService::class);
@@ -102,7 +109,7 @@ class StudentDashboard extends Component
             ->limit(5)
             ->get();
 
-        $this->recent_scores = $recent_scores_query->map(function ($score) {
+        $this->recent_scores = $recent_scores_query->map(function (LessonScore $score): array {
             return [
                 'lesson_name' => $score->lesson->lesson_name,
                 'score_percentage' => round($score->score_percentage, 1),
@@ -121,6 +128,11 @@ class StudentDashboard extends Component
             ->get();
 
         $this->level_stats = $level_stats->pluck('count', 'language_level')->toArray();
+    }
+
+    public function hideGreeting(): void
+    {
+        $this->show_greeting = false;
     }
 
     public function render(): Factory|View

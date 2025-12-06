@@ -52,6 +52,12 @@ return [
     'lesson_regeneration_error' => 'Lesson regeneration failed. Please try again.',
     'lesson_regeneration_exists' => 'Lesson ":name" already exists.',
 
+    // Lesson assignment notifications
+    'lesson_assigned' => ':teacher assigned you a lesson: ":lesson"',
+    'lesson_assignment_sent' => 'Lesson ":lesson" assigned to :count student(s)',
+    'lesson_unassigned' => ':teacher removed you from lesson: ":lesson"',
+    'lesson_assignment_removed' => 'Student :student removed from lesson ":lesson"',
+
     // Notification Bell
     'title' => 'Notifications',
     'notifications' => 'Notifications',

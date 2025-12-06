@@ -41,8 +41,11 @@ return [
     'welcome_to_app' => 'Welcome to AI English Buddy!',
 
     // Lessons index
+    'lessons' => 'Lessons',
     'my_lessons' => 'My Lessons',
+    'assigned_to_me' => 'Assigned to Me',
     'no_lessons_yet' => 'No lessons yet.',
+    'no_assigned_lessons' => 'No lessons assigned to you yet.',
     'create_from_lessons' => 'Create your first lesson.',
 
     // Manage lesson
@@ -199,4 +202,14 @@ return [
     'feedback_comment' => 'Your comment',
     'feedback_placeholder' => 'Tell us what you think about this lesson...',
     'submit_feedback' => 'Submit Feedback',
+
+    // Assignment
+    'assign_to' => 'Assign to...',
+    'assign_to_students' => 'Assign to Students',
+    'no_students_yet' => 'You have no students yet',
+    'add_students_hint' => 'Find students in the Users section',
+    'selected_count' => ':count selected',
+    'assign' => 'Assign',
+    'unassign' => 'Unassign',
+    'lesson_assigned_success' => 'Lesson assigned to :count student(s)',
 ];

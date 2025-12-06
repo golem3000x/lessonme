@@ -76,10 +76,16 @@
                             <label for="date_of_birth" class="block text-sm font-semibold text-gray-700 mb-2">
                                 {{ __('auth.register.date_of_birth_label') }}
                             </label>
-                            <input id="date_of_birth" name="date_of_birth" type="date" required
-                                   value="{{ old('date_of_birth') }}"
-                                   max="{{ now()->subYears(5)->format('Y-m-d') }}"
-                                   class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200">
+                            <div class="relative">
+                                <input id="date_of_birth" name="date_of_birth" type="text" required
+                                       value="{{ old('date_of_birth') }}"
+                                       placeholder="dd.mm.yyyy"
+                                       pattern="\d{4}-\d{2}-\d{2}"
+                                       onfocus="(this.type='date')"
+                                       onblur="if(!this.value)(this.type='text')"
+                                       max="{{ now()->subYears(5)->format('Y-m-d') }}"
+                                       class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200">
+                            </div>
                         </div>
 
                         <div>

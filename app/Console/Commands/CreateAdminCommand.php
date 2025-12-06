@@ -61,24 +61,26 @@ class CreateAdminCommand extends Command
             'date_of_birth' => '1990-01-01',
             'email_verified_at' => now(),
             'native_lang' => $native_lang,
-            'learning_lang' => $learning_lang,
         ]);
 
         // Assign admin role
         $user->assignRole(UserRoleEnum::ADMIN);
 
+        // Add learning languages
+        $user->syncLearningLanguages([$learning_lang]);
+
         $this->newLine();
         $this->info('✅ Admin user created successfully!');
         $this->newLine();
         $this->table(
-            ['ID', 'Name', 'Email', 'Roles', 'Native Lang', 'Learning Lang'],
+            ['ID', 'Name', 'Email', 'Roles', 'Native Lang', 'Learning Languages'],
             [[
                 $user->id,
                 $user->full_name,
                 $user->email,
                 $user->roles->pluck('name')->implode(', '),
                 $user->native_lang,
-                $user->learning_lang,
+                implode(', ', $user->getLearningLanguageValues()),
             ]]
         );
 

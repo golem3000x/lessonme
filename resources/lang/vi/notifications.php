@@ -52,6 +52,12 @@ return [
     'lesson_regeneration_error' => 'Tạo lại bài học thất bại. Vui lòng thử lại.',
     'lesson_regeneration_exists' => 'Bài học ":name" đã tồn tại.',
 
+    // Lesson assignment notifications
+    'lesson_assigned' => ':teacher đã giao cho bạn bài học: ":lesson"',
+    'lesson_assignment_sent' => 'Đã giao bài học ":lesson" cho :count học sinh',
+    'lesson_unassigned' => ':teacher đã hủy giao cho bạn bài học: ":lesson"',
+    'lesson_assignment_removed' => 'Đã hủy giao học sinh :student khỏi bài học ":lesson"',
+
     // Notification Bell
     'title' => 'Thông báo',
     'notifications' => 'Thông báo',

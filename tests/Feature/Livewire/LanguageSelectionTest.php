@@ -97,7 +97,8 @@ class LanguageSelectionTest extends TestCase
             ->call('completeRegistration');
 
         $user = User::where('email', '=', 'test@example.com')->first();
-        $this->assertEquals(SystemLanguageEnum::VIETNAMESE->value, $user->learning_lang);
+        $learning_languages = $user->getLearningLanguageValues();
+        $this->assertContains(SystemLanguageEnum::VIETNAMESE->value, $learning_languages);
     }
 
     public function test_complete_registration_with_vietnamese_native_sets_english_learning(): void
@@ -109,7 +110,8 @@ class LanguageSelectionTest extends TestCase
             ->call('completeRegistration');
 
         $user = User::where('email', '=', 'test@example.com')->first();
-        $this->assertEquals(SystemLanguageEnum::ENGLISH->value, $user->learning_lang);
+        $learning_languages = $user->getLearningLanguageValues();
+        $this->assertContains(SystemLanguageEnum::ENGLISH->value, $learning_languages);
     }
 
     public function test_complete_registration_validates_required_native_lang(): void

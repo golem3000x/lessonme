@@ -1,9 +1,19 @@
 <div class="space-y-6">
     {{-- WELCOME HEADER --}}
-    <div class="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-lg shadow-lg p-6 text-white">
-        <h1 class="text-3xl font-bold mb-2">👋 {{ $greeting }}, {{ auth()->user()->full_name }}!</h1>
-        <p class="text-blue-100">{{ __('dashboard.student_progress_overview') }}</p>
-    </div>
+    @if($show_greeting)
+        <div class="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-lg shadow-lg p-6 text-white relative">
+            <button 
+                wire:click="hideGreeting"
+                class="absolute top-3 right-3 p-1 text-white/70 hover:text-white transition-all duration-300 hover:rotate-90 hover:scale-110"
+            >
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+            <h1 class="text-3xl font-bold mb-2 pr-8">👋 {{ $greeting }}, {{ auth()->user()->full_name }}!</h1>
+            <p class="text-blue-100">{{ __('dashboard.student_progress_overview') }}</p>
+        </div>
+    @endif
 
     {{-- QUICK TOUR BANNER --}}
     <livewire:help.quick-tour-banner />

@@ -28,7 +28,7 @@ return [
     'uploading' => 'Uploading',
     'enter_name' => 'Enter your name',
     'native_language' => 'Native language',
-    'learning_language' => 'Learning language',
+    'learning_languages' => 'Learning languages',
     'new_topic' => 'New topic',
     'enter_topic_name' => 'Enter topic name',
     'topics_visibility' => '',

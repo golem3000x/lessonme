@@ -21,12 +21,14 @@ use App\Dto\LessonDto;
 use App\Enums\Notifications\LessonCreationStatusEnum;
 use App\Enums\System\LanguageLevelEnum;
 use App\Enums\System\QueueNameEnum;
+use App\Enums\System\SystemLanguageEnum;
 use App\Jobs\Lesson\CreateLessonJob;
 use App\Models\Keyword\Keyword;
 use App\Models\Topic\Topic;
 use App\Notifications\Lesson\LessonCreationNotification;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
@@ -56,6 +58,11 @@ class ManageLesson extends Component
 
     public string $language_level = '';
 
+    public string $lesson_language = '';
+
+    /** @var array<int,array{value:string,label:string,flag:string}> */
+    public array $available_languages = [];
+
     public bool $is_generating = false;
 
     public function mount(): void
@@ -69,7 +76,7 @@ class ManageLesson extends Component
 
         $this->preloaded_topics = Topic::with([
             'translations',
-            'keywords' => function ($q) use ($user) {
+            'keywords' => function (Builder $q) use ($user): void {
                 $q->visibleForUser($user->id);
             },
             'keywords.translations',
@@ -77,7 +84,7 @@ class ManageLesson extends Component
             ->visibleForUser($user->id)
             ->get();
 
-        $this->topics = $this->preloaded_topics->map(function (Topic $topic) use ($locale) {
+        $this->topics = $this->preloaded_topics->map(function (Topic $topic) use ($locale): array {
             return [
                 'id' => $topic->id,
                 'label' => $topic->title($locale),
@@ -120,6 +127,34 @@ class ManageLesson extends Component
         $this->keyword_ids = array_values(array_map('intval', (array) session('selected_keyword_ids', [])));
 
         $this->language_level = session('selected_language_level', LanguageLevelEnum::A1->value);
+
+        // Initialize available languages from user's learning languages
+        $learning_languages = $user->getLearningLanguageValues();
+        if (empty($learning_languages)) {
+            // Fallback: use all languages if user has no learning languages set
+            $learning_languages = SystemLanguageEnum::values();
+        }
+
+        $this->available_languages = collect($learning_languages)
+            ->map(function (string $lang_value) {
+                $enum = SystemLanguageEnum::tryFrom($lang_value);
+                return $enum ? [
+                    'value' => $enum->value,
+                    'label' => $enum->label(),
+                    'flag' => $enum->flag(),
+                ] : null;
+            })
+            ->filter()
+            ->values()
+            ->toArray();
+
+        // Get lesson language from session or use first available
+        $session_lang = session('selected_lesson_language');
+        if ($session_lang && in_array($session_lang, $learning_languages, true)) {
+            $this->lesson_language = $session_lang;
+        } elseif (! empty($this->available_languages)) {
+            $this->lesson_language = $this->available_languages[0]['value'];
+        }
 
         session(['selected_topic_id' => $this->topic_id]);
 
@@ -191,7 +226,7 @@ class ManageLesson extends Component
                 $this->topic,
                 $level_enum,
                 $user->native_lang,
-                $user->learning_lang,
+                $this->lesson_language,
                 $keywords
             );
 
@@ -255,6 +290,12 @@ class ManageLesson extends Component
     {
         $this->language_level = $value;
         session(['selected_language_level' => $this->language_level]);
+    }
+
+    public function updatedLessonLanguage(string $value): void
+    {
+        $this->lesson_language = $value;
+        session(['selected_lesson_language' => $this->lesson_language]);
     }
 
     #[On('reset-manage-lesson-state')]

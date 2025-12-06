@@ -13,7 +13,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table(TableNameEnum::USERS->value, function (Blueprint $table): void {
-            $table->string('timezone')->default('UTC')->after('learning_lang');
+            $table->string('timezone')->default('UTC')->after('native_lang');
         });
     }
 

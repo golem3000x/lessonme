@@ -56,13 +56,13 @@
                             {{ __('profile.edit_profile') }}
                         </a>
                     @else
-                        <button type="button"
-                                class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition">
+                        <a href="{{ route('messages.chat', $user) }}"
+                           class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
                             </svg>
                             {{ __('profile.send_message') }}
-                        </button>
+                        </a>
                     @endif
                 </div>
             </div>
@@ -105,13 +105,20 @@
                         </div>
                     </div>
 
-                    {{-- Learning language (for students) --}}
-                    @if($is_student && $user->learning_lang)
-                    <div class="flex items-center gap-3">
-                        <span class="text-2xl">{{ \App\Enums\System\SystemLanguageEnum::tryFrom($user->learning_lang)?->flag() ?? '🌐' }}</span>
+                    {{-- Learning languages (for students) --}}
+                    @if($is_student && count($learning_languages) > 0)
+                    <div class="flex items-start gap-3">
+                        <span class="text-2xl">📖</span>
                         <div>
                             <p class="text-sm text-gray-500">{{ __('profile.learning') }}</p>
-                            <p class="font-medium text-gray-900">{{ \App\Enums\System\SystemLanguageEnum::tryFrom($user->learning_lang)?->label() ?? $user->learning_lang }}</p>
+                            <div class="flex flex-wrap gap-2 mt-1">
+                                @foreach($learning_languages as $lang)
+                                    @php($lang_enum = \App\Enums\System\SystemLanguageEnum::tryFrom($lang))
+                                    <span class="inline-flex items-center gap-1 px-2 py-1 bg-blue-50 text-blue-700 text-sm rounded-lg">
+                                        {{ $lang_enum?->flag() }} {{ $lang_enum?->label() ?? $lang }}
+                                    </span>
+                                @endforeach
+                            </div>
                         </div>
                     </div>
                     @endif

@@ -11,6 +11,7 @@ use App\Models\Topic\UserTopicVisibility;
 use App\Models\User;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
@@ -135,7 +136,7 @@ class TopicIndex extends Component
             ->pluck('topic_id')
             ->toArray();
 
-        $all_topic_ids = Topic::where(function ($q) use ($user): void {
+        $all_topic_ids = Topic::where(function (Builder $q) use ($user): void {
             $q->whereNull('user_id')->orWhere('user_id', '=', $user->id);
         })
             ->pluck('id')
@@ -155,8 +156,8 @@ class TopicIndex extends Component
             ->pluck('keyword_id')
             ->toArray();
 
-        $all_keyword_ids = Keyword::whereHas('topic', function ($q) use ($user) {
-            $q->where(function ($q2) use ($user): void {
+        $all_keyword_ids = Keyword::whereHas('topic', function (Builder $q) use ($user): void {
+            $q->where(function (Builder $q2) use ($user): void {
                 $q2->whereNull('user_id')->orWhere('user_id', '=', $user->id);
             });
         })
@@ -392,7 +393,7 @@ class TopicIndex extends Component
 
         // Apply temporary search filter
         if ($this->temp_search) {
-            $query->whereHas('translations', function ($q) {
+            $query->whereHas('translations', function (Builder $q): void {
                 $q->where('value', 'like', '%'.$this->temp_search.'%');
             });
         }
@@ -434,7 +435,7 @@ class TopicIndex extends Component
 
             // Apply search filter
             if ($this->search) {
-                $query->whereHas('translations', function ($q) {
+                $query->whereHas('translations', function (Builder $q): void {
                     $q->where('value', 'like', '%'.$this->search.'%');
                 });
             }

@@ -8,6 +8,7 @@ use App\Models\Topic\Topic;
 use App\Models\User;
 use App\Notifications\Slug\Processing\SlugProcessingNotification;
 use App\Rules\IsMeaningful;
+use Closure;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
@@ -46,7 +47,7 @@ class CreateTopic extends Component
                 'string',
                 'max:255',
                 new IsMeaningful,
-                function ($attribute, $value, $fail) use ($slug, $user) {
+                function (string $attribute, mixed $value, Closure $fail) use ($slug, $user): void {
                     $exists = Topic::where('slug', '=', $slug)
                         ->where('user_id', '=', $user->id)
                         ->exists();

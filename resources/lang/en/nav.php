@@ -9,6 +9,7 @@ return [
     'lessons' => 'Lessons',
     'topics' => 'Topics',
     'users' => 'Users',
+    'messages' => 'Messages',
     'help' => 'Help',
     'profile' => 'Profile',
     'about' => 'Support',
@@ -49,5 +50,5 @@ return [
     'signed_in_as' => 'Signed in as',
     'switch_language' => 'Switch language',
     'view_profile' => 'View Profile',
-    'edit_profile' => 'Edit Profile',
+    'settings' => 'Settings',
 ];

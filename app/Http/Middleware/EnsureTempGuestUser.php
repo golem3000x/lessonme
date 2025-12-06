@@ -50,15 +50,19 @@ class EnsureTempGuestUser
         // Create a new temporary guest user only for genuinely new visitors
         $unique_id = uniqid('guest_', true);
         $temp_guest_user = User::create([
-            'name' => 'Demo Guest',
+            'first_name' => 'Demo',
+            'last_name' => 'Guest',
+            'date_of_birth' => now()->subYears(25)->toDateString(),
             'email' => 'demo_'.$unique_id.'@temp.local',
             'password' => Hash::make(bin2hex(random_bytes(32))),
             'email_verified_at' => now(),
             'native_lang' => SystemLanguageEnum::VIETNAMESE->value,
-            'learning_lang' => SystemLanguageEnum::ENGLISH->value,
             'is_temp_guest' => true,
             'temp_guest_expires_at' => now()->addHours(24),
         ]);
+
+        // Add learning languages for temp guest
+        $temp_guest_user->syncLearningLanguages([SystemLanguageEnum::ENGLISH->value]);
 
         // Store in session
         $request->session()->put('temp_guest_user_id', $temp_guest_user->id);

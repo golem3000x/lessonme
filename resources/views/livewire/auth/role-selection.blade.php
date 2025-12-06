@@ -41,6 +41,71 @@
                         </div>
                     </label>
 
+                    {{-- Teaching languages (shown only if teacher selected) --}}
+                    @if($is_teacher)
+                        <div class="space-y-2 animate-fadeIn">
+                            <label class="block text-sm font-semibold text-gray-700 flex items-center gap-2">
+                                <svg class="h-5 w-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                                {{ __('auth.role_selection.teaching_languages') }}
+                            </label>
+                            <div x-data="{ open: false }" class="relative">
+                                <button 
+                                    type="button" 
+                                    @click="open = !open" 
+                                    class="w-full border-2 border-gray-300 rounded-lg px-4 py-3 bg-white flex items-center justify-between hover:border-green-400 transition focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                                >
+                                    <span class="text-sm text-gray-700">{{ __('auth.role_selection.select_languages') }}</span>
+                                    <div class="flex items-center gap-2">
+                                        @if(count($teaching_languages) > 0)
+                                            <span class="bg-green-100 text-green-800 text-xs font-medium px-2 py-0.5 rounded-full">
+                                                {{ count($teaching_languages) }}
+                                            </span>
+                                        @else
+                                            <span class="text-gray-400 text-xs">0</span>
+                                        @endif
+                                        <svg class="h-4 w-4 text-gray-500 transition-transform" :class="{'rotate-180': open}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z" clip-rule="evenodd" />
+                                        </svg>
+                                    </div>
+                                </button>
+                                <div 
+                                    x-cloak 
+                                    x-show="open" 
+                                    @click.outside="open = false"
+                                    x-transition:enter="transition ease-out duration-200"
+                                    x-transition:enter-start="opacity-0 scale-95"
+                                    x-transition:enter-end="opacity-100 scale-100"
+                                    x-transition:leave="transition ease-in duration-150"
+                                    x-transition:leave-start="opacity-100 scale-100"
+                                    x-transition:leave-end="opacity-0 scale-95"
+                                    class="absolute left-0 right-0 z-50 mt-1 rounded-lg border border-gray-200 bg-white shadow-lg"
+                                >
+                                    <div class="p-2 space-y-1">
+                                        @foreach($languages as $language)
+                                            <label class="flex items-center space-x-3 p-2 rounded-lg cursor-pointer hover:bg-green-50 transition">
+                                                <input 
+                                                    type="checkbox" 
+                                                    value="{{ $language->value }}"
+                                                    wire:model.live="teaching_languages"
+                                                    class="w-4 h-4 rounded border-gray-300 text-green-600 focus:ring-green-500"
+                                                >
+                                                <span class="text-sm text-gray-800">{{ $language->flag() }} {{ $language->label() }}</span>
+                                            </label>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            @error('teaching_languages')
+                                <div class="p-3 bg-red-50 border-l-4 border-red-500 rounded-r-lg">
+                                    <p class="text-sm text-red-700">{{ $message }}</p>
+                                </div>
+                            @enderror
+                        </div>
+                    @endif
+
                     {{-- Student checkbox --}}
                     <label class="flex items-center p-4 border-2 rounded-lg cursor-pointer transition-all duration-200 {{ $is_student ? 'border-green-500 bg-green-50' : 'border-gray-200 hover:border-green-300' }}">
                         <input 
@@ -66,75 +131,66 @@
                     @enderror
                 </div>
 
-                {{-- Teaching languages (shown only if teacher selected) --}}
-                @if($is_teacher)
-                    <div class="space-y-3 animate-fadeIn">
-                        <label class="block text-sm font-semibold text-gray-700 flex items-center gap-2">
-                            <svg class="h-5 w-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                            </svg>
-                            {{ __('auth.role_selection.teaching_languages') }}
-                        </label>
-                        
-                        <div class="space-y-2">
-                            @foreach($languages as $language)
-                                <label class="flex items-center p-3 border rounded-lg cursor-pointer transition-all duration-200 {{ in_array($language->value, $teaching_languages) ? 'border-green-500 bg-green-50' : 'border-gray-200 hover:border-green-300' }}">
-                                    <input 
-                                        type="checkbox" 
-                                        wire:model.live="teaching_languages"
-                                        value="{{ $language->value }}"
-                                        class="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
-                                    >
-                                    <span class="ml-3 text-gray-700">
-                                        {{ $language->flag() }} {{ $language->label() }}
-                                    </span>
-                                </label>
-                            @endforeach
-                        </div>
-
-                        @error('teaching_languages')
-                            <div class="p-3 bg-red-50 border-l-4 border-red-500 rounded-r-lg">
-                                <p class="text-sm text-red-700 flex items-center gap-2">
-                                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                    </svg>
-                                    {{ $message }}
-                                </p>
-                            </div>
-                        @enderror
-                    </div>
-                @endif
-
-                {{-- Learning language (shown only if student selected) --}}
+                {{-- Learning languages (shown only if student selected) --}}
                 @if($is_student)
-                    <div class="space-y-3 animate-fadeIn">
-                        <label for="learning_lang" class="block text-sm font-semibold text-gray-700 flex items-center gap-2">
+                    <div class="space-y-2 animate-fadeIn">
+                        <label class="block text-sm font-semibold text-gray-700 flex items-center gap-2">
                             <svg class="h-5 w-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
                             </svg>
-                            {{ __('auth.role_selection.learning_language') }}
+                            {{ __('auth.role_selection.learning_languages') }}
                         </label>
-                        
-                        <select 
-                            id="learning_lang" 
-                            wire:model="learning_lang"
-                            class="w-full px-4 py-3 text-base border-2 border-gray-300 bg-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200"
-                        >
-                            @foreach($languages as $language)
-                                <option value="{{ $language->value }}">
-                                    {{ $language->flag() }} {{ $language->label() }}
-                                </option>
-                            @endforeach
-                        </select>
-
-                        @error('learning_lang')
-                            <div class="p-3 bg-red-50 border-l-4 border-red-500 rounded-r-lg">
-                                <p class="text-sm text-red-700 flex items-center gap-2">
-                                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        <div x-data="{ open: false }" class="relative">
+                            <button 
+                                type="button" 
+                                @click="open = !open" 
+                                class="w-full border-2 border-gray-300 rounded-lg px-4 py-3 bg-white flex items-center justify-between hover:border-green-400 transition focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                            >
+                                <span class="text-sm text-gray-700">{{ __('auth.role_selection.select_languages') }}</span>
+                                <div class="flex items-center gap-2">
+                                    @if(count($learning_languages) > 0)
+                                        <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-0.5 rounded-full">
+                                            {{ count($learning_languages) }}
+                                        </span>
+                                    @else
+                                        <span class="text-gray-400 text-xs">0</span>
+                                    @endif
+                                    <svg class="h-4 w-4 text-gray-500 transition-transform" :class="{'rotate-180': open}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z" clip-rule="evenodd" />
                                     </svg>
-                                    {{ $message }}
-                                </p>
+                                </div>
+                            </button>
+                            <div 
+                                x-cloak 
+                                x-show="open" 
+                                @click.outside="open = false"
+                                x-transition:enter="transition ease-out duration-200"
+                                x-transition:enter-start="opacity-0 scale-95"
+                                x-transition:enter-end="opacity-100 scale-100"
+                                x-transition:leave="transition ease-in duration-150"
+                                x-transition:leave-start="opacity-100 scale-100"
+                                x-transition:leave-end="opacity-0 scale-95"
+                                class="absolute left-0 right-0 z-50 mt-1 rounded-lg border border-gray-200 bg-white shadow-lg"
+                            >
+                                <div class="p-2 space-y-1">
+                                    @foreach($languages as $language)
+                                        <label class="flex items-center space-x-3 p-2 rounded-lg cursor-pointer hover:bg-blue-50 transition">
+                                            <input 
+                                                type="checkbox" 
+                                                value="{{ $language->value }}"
+                                                wire:model.live="learning_languages"
+                                                class="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                            >
+                                            <span class="text-sm text-gray-800">{{ $language->flag() }} {{ $language->label() }}</span>
+                                        </label>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                        
+                        @error('learning_languages')
+                            <div class="p-3 bg-red-50 border-l-4 border-red-500 rounded-r-lg">
+                                <p class="text-sm text-red-700">{{ $message }}</p>
                             </div>
                         @enderror
                     </div>

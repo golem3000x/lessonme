@@ -9,6 +9,7 @@ return [
     'lessons' => 'Bài học',
     'topics' => 'Chủ đề',
     'users' => 'Người dùng',
+    'messages' => 'Tin nhắn',
     'help' => 'Trợ giúp',
     'profile' => 'Hồ sơ',
     'about' => 'Hỗ trợ',
@@ -49,5 +50,5 @@ return [
     'signed_in_as' => 'Đã đăng nhập với',
     'switch_language' => 'Chuyển đổi ngôn ngữ',
     'view_profile' => 'Xem hồ sơ',
-    'edit_profile' => 'Chỉnh sửa hồ sơ',
+    'settings' => 'Cài đặt',
 ];

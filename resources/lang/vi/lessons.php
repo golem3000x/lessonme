@@ -41,8 +41,11 @@ return [
     'welcome_to_app' => 'Chào mừng đến với AI English Buddy!',
 
     // Lessons index
+    'lessons' => 'Bài học',
     'my_lessons' => 'Bài học của tôi',
+    'assigned_to_me' => 'Được giao cho tôi',
     'no_lessons_yet' => 'Chưa có bài học nào.',
+    'no_assigned_lessons' => 'Chưa có bài học nào được giao cho bạn.',
     'create_from_lessons' => 'Tạo bài học đầu tiên của bạn.',
 
     // Manage lesson
@@ -199,4 +202,14 @@ return [
     'feedback_comment' => 'Nhận xét của bạn',
     'feedback_placeholder' => 'Cho chúng tôi biết bạn nghĩ gì về bài học này...',
     'submit_feedback' => 'Gửi Phản Hồi',
+
+    // Assignment
+    'assign_to' => 'Giao cho...',
+    'assign_to_students' => 'Giao Cho Học Sinh',
+    'no_students_yet' => 'Bạn chưa có học sinh nào',
+    'add_students_hint' => 'Tìm học sinh trong phần Người dùng',
+    'selected_count' => 'Đã chọn :count',
+    'assign' => 'Giao',
+    'unassign' => 'Hủy giao',
+    'lesson_assigned_success' => 'Đã giao bài học cho :count học sinh',
 ];

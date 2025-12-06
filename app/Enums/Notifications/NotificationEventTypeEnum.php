@@ -10,4 +10,5 @@ enum NotificationEventTypeEnum: string
     case TRANSLATE = 'translate';
     case CREATION = 'creation';
     case REGENERATION = 'regeneration';
+    case ASSIGNMENT = 'assignment';
 }

@@ -207,7 +207,63 @@ if (userId) {
         });
     });
 
-    // Chat channel
+    // Lesson assignment notification (for student - receiving assignment)
+    channel.listen('.lesson.assignment.assigned', (notification) => {
+        console.log('🔥 Lesson assigned:', notification);
+        Livewire.dispatch('lesson-notification', {
+            id: notification.id,
+            entity: notification.entity,
+            status: notification.status,
+            message: notification.message,
+            lesson_id: notification.lesson_id,
+            lesson_url: notification.lesson_url,
+            lesson_name: notification.lesson_name
+        });
+    });
+
+    // Lesson assignment sent notification (for teacher - confirmation)
+    channel.listen('.lesson.assignment.sent', (notification) => {
+        console.log('🔥 Lesson assignment sent:', notification);
+        Livewire.dispatch('lesson-notification', {
+            id: notification.id,
+            entity: notification.entity,
+            status: notification.status,
+            message: notification.message,
+            lesson_id: notification.lesson_id,
+            lesson_url: notification.lesson_url,
+            lesson_name: notification.lesson_name
+        });
+    });
+
+    // Lesson unassigned notification (for student - removed from lesson)
+    channel.listen('.lesson.assignment.unassigned', (notification) => {
+        console.log('🔥 Lesson unassigned:', notification);
+        Livewire.dispatch('lesson-notification', {
+            id: notification.id,
+            entity: notification.entity,
+            status: notification.status,
+            message: notification.message,
+            lesson_id: notification.lesson_id,
+            lesson_url: notification.lesson_url,
+            lesson_name: notification.lesson_name
+        });
+    });
+
+    // Lesson assignment removed notification (for teacher - confirmation)
+    channel.listen('.lesson.assignment.removed', (notification) => {
+        console.log('🔥 Lesson assignment removed:', notification);
+        Livewire.dispatch('lesson-notification', {
+            id: notification.id,
+            entity: notification.entity,
+            status: notification.status,
+            message: notification.message,
+            lesson_id: notification.lesson_id,
+            lesson_url: notification.lesson_url,
+            lesson_name: notification.lesson_name
+        });
+    });
+
+    // Chat channel (Support)
     const chatChannel = window.Echo.private(`chat.${userId}`);
     
     chatChannel.listen('.message.sent', (message) => {
@@ -222,6 +278,23 @@ if (userId) {
             created_at: message.created_at,
             user_name: message.user_name,
             user_avatar: message.user_avatar
+        });
+    });
+
+    // Direct Messages channel
+    const dmChannel = window.Echo.private(`dm.${userId}`);
+    
+    dmChannel.listen('.dm.sent', (message) => {
+        console.log('🔥 DM received:', message);
+        Livewire.dispatch('dm-received', {
+            id: message.id,
+            sender_id: message.sender_id,
+            recipient_id: message.recipient_id,
+            content: message.content,
+            read_at: message.read_at,
+            created_at: message.created_at,
+            sender_name: message.sender_name,
+            sender_avatar: message.sender_avatar
         });
     });
 }

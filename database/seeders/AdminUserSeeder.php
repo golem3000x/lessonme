@@ -38,11 +38,13 @@ class AdminUserSeeder extends Seeder
             'email_verified_at' => now(),
             'date_of_birth' => '1990-01-01',
             'native_lang' => SystemLanguageEnum::VIETNAMESE->value,
-            'learning_lang' => SystemLanguageEnum::ENGLISH->value,
         ]);
 
         // Assign admin role
         $user->assignRole(UserRoleEnum::ADMIN);
+
+        // Add learning languages
+        $user->syncLearningLanguages([SystemLanguageEnum::ENGLISH->value]);
 
         $this->command->info('✅ Admin user created successfully!');
         $this->command->line("   Email: {$admin_email}");

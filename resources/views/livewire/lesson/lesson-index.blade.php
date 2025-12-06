@@ -1,15 +1,34 @@
 @php use Illuminate\Support\Str; @endphp
 <div class="max-w-6xl mx-auto p-6 space-y-8">
-    {{-- Header --}}
-    <div class="flex items-center justify-between">
-        <h2 class="text-3xl font-bold text-gray-900 flex items-center gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-blue-600 drop-shadow-md" fill="none" viewBox="0 0 24 24"
-                 stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                      d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
-            </svg>
-            {{ __('lessons.my_lessons') }}
-        </h2>
+    {{-- Header with Tabs --}}
+    <div class="flex flex-col gap-4">
+        <div class="flex items-center justify-between">
+            <h2 class="text-3xl font-bold text-gray-900 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-blue-600 drop-shadow-md" fill="none" viewBox="0 0 24 24"
+                     stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                          d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                </svg>
+                {{ __('lessons.lessons') }}
+            </h2>
+        </div>
+
+        {{-- View Mode Tabs --}}
+        <div class="flex items-center justify-between">
+            <div class="flex gap-1 p-1 bg-gray-100 rounded-lg">
+                <button
+                    wire:click="setViewMode('my_lessons')"
+                    class="px-4 py-2 text-sm font-medium rounded-md transition {{ $view_mode === 'my_lessons' ? 'bg-white text-blue-600 shadow' : 'text-gray-600 hover:text-gray-900' }}"
+                >
+                    {{ __('lessons.my_lessons') }}
+                </button>
+                <button
+                    wire:click="setViewMode('assigned')"
+                    class="px-4 py-2 text-sm font-medium rounded-md transition {{ $view_mode === 'assigned' ? 'bg-white text-blue-600 shadow' : 'text-gray-600 hover:text-gray-900' }}"
+                >
+                    {{ __('lessons.assigned_to_me') }}
+                </button>
+            </div>
 
         <div class="flex items-center gap-2">
             {{-- Show filter and sort buttons if there are lessons OR if filters are active OR if placeholders exist --}}
@@ -79,8 +98,8 @@
                 </button>
             @endif
 
-            {{-- Create button always visible if lessons exist or no filters applied or placeholders exist --}}
-            @if(!$lessons->isEmpty() || !$this->hasActiveFilters() || !empty($creating_lessons_placeholders) || !empty($regenerating_lessons_placeholders))
+            {{-- Create button - only show in my_lessons view --}}
+            @if($view_mode === 'my_lessons' && (!$lessons->isEmpty() || !$this->hasActiveFilters() || !empty($creating_lessons_placeholders) || !empty($regenerating_lessons_placeholders)))
                 <button
                         wire:click="openManageModal"
                         class="group flex items-center gap-2 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 shadow transition"
@@ -93,6 +112,7 @@
                     <span class="hidden sm:inline">{{ __('lessons.create_new_lesson') }}</span>
                 </button>
             @endif
+        </div>
         </div>
     </div>
 
@@ -303,17 +323,22 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
                           d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
                 </svg>
-                <h3 class="text-xl font-medium text-gray-900">{{ __('lessons.no_lessons_yet') }}</h3>
-                <p class="text-sm text-gray-500">{{ __('lessons.get_started_message') }}</p>
+                @if($view_mode === 'assigned')
+                    <h3 class="text-xl font-medium text-gray-900">{{ __('lessons.no_assigned_lessons') }}</h3>
+                @else
+                    <h3 class="text-xl font-medium text-gray-900">{{ __('lessons.no_lessons_yet') }}</h3>
+                    <p class="text-sm text-gray-500">{{ __('lessons.get_started_message') }}</p>
+                @endif
             @endif
         </div>
     @endif
 
     {{-- Lessons list (show if there are lessons OR placeholders) --}}
-    @if(!$lessons->isEmpty() || !empty($creating_lessons_placeholders) || !empty($regenerating_lessons_placeholders))
+    @if(!$lessons->isEmpty() || ($view_mode === 'my_lessons' && (!empty($creating_lessons_placeholders) || !empty($regenerating_lessons_placeholders))))
         {{-- Lessons list --}}
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
-            {{-- Placeholder cards for NEW lessons being created --}}
+            {{-- Placeholder cards for NEW lessons being created (only in my_lessons view) --}}
+            @if($view_mode === 'my_lessons')
             @foreach($creating_lessons_placeholders as $placeholder_id)
                 <div wire:key="placeholder-new-{{ $placeholder_id }}" class="group bg-white border border-gray-100 rounded-xl shadow-sm p-5 relative overflow-hidden animate-pulse">
                     {{-- Animated gradient background --}}
@@ -351,7 +376,7 @@
                     </div>
                 </div>
             @endforeach
-            
+
             {{-- Placeholder cards for lessons being REGENERATED --}}
             @foreach($regenerating_lessons_placeholders as $lesson_id => $placeholder_data)
                 <div wire:key="placeholder-regen-{{ $placeholder_data['id'] }}" class="group bg-white border border-gray-100 rounded-xl shadow-sm p-5 relative overflow-hidden animate-pulse">
@@ -390,7 +415,8 @@
                     </div>
                 </div>
             @endforeach
-            
+            @endif
+
             {{-- Real lesson cards --}}
             @foreach($lessons as $lesson)
                 {{-- Skip lesson if it's being regenerated (placeholder will be shown instead) --}}
@@ -427,6 +453,8 @@
                             </div>
                         </div>
 
+                        {{-- Dropdown menu - only in my_lessons view --}}
+                        @if($view_mode === 'my_lessons')
                         <div class="relative ml-2">
                             <!-- Three dots button -->
                             <button wire:click="toggleDropdown({{ $lesson->id }})"
@@ -459,6 +487,21 @@
                                     <span class="font-medium">{{ __('lessons.regenerate_lesson') }}</span>
                                 </button>
 
+                                @if(auth()->user()->isTeacher())
+                                <div class="border-t border-gray-100"></div>
+
+                                <button wire:click="openAssignModal({{ $lesson->id }})"
+                                        class="group flex items-center gap-3 w-full px-4 py-3 text-sm text-green-600 hover:bg-green-50 transition-all duration-200 whitespace-nowrap">
+                                    <div class="p-1.5 rounded-lg bg-green-50 group-hover:bg-green-100 transition-colors">
+                                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                  d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
+                                        </svg>
+                                    </div>
+                                    <span class="font-medium">{{ __('lessons.assign_to') }}</span>
+                                </button>
+                                @endif
+
                                 <div class="border-t border-gray-100"></div>
 
                                 <a href="{{ route('lessons.history', $lesson->uuid) }}"
@@ -487,6 +530,7 @@
                             </div>
                             @endif
                         </div>
+                        @endif
                     </div>
 
                     <p class="text-sm text-gray-600 mb-4 leading-snug line-clamp-3 flex-grow">{{ $lesson->lesson_text }}</p>
@@ -582,6 +626,102 @@
             confirmMethod="regenerateLesson"
             cancelMethod="cancelRegenerate"
         />
+    @endif
+
+    {{-- Assign Lesson Modal --}}
+    @if($show_assign_modal)
+        <div
+            x-data="{ open: true }"
+            x-show="open"
+            x-init="document.body.style.overflow = 'hidden'"
+            x-on:remove="document.body.style.overflow = 'auto'"
+            class="fixed inset-0 z-50 overflow-y-auto"
+            @click.self="$wire.closeAssignModal()"
+        >
+            <div class="fixed inset-0 bg-black/50 backdrop-blur-sm" x-show="open" x-transition></div>
+
+            <div class="fixed inset-0 flex items-center justify-center p-4">
+                <div
+                    class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md max-h-[80vh] overflow-hidden"
+                    x-show="open"
+                    x-transition
+                    @click.stop
+                >
+                    {{-- Header --}}
+                    <div class="p-5 bg-gradient-to-r from-green-600 to-emerald-600 flex justify-between items-center">
+                        <div class="flex items-center gap-3">
+                            <div class="p-2 bg-white/20 rounded-lg">
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
+                                </svg>
+                            </div>
+                            <h3 class="text-lg font-semibold text-white">{{ __('lessons.assign_to_students') }}</h3>
+                        </div>
+                        <button wire:click="closeAssignModal" class="p-1.5 rounded-lg bg-white/20 hover:bg-white/30 transition">
+                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                            </svg>
+                        </button>
+                    </div>
+
+                    {{-- Content --}}
+                    <div class="p-5 overflow-y-auto max-h-[50vh]">
+                        @if($this->myStudents->isEmpty())
+                            <div class="text-center py-8">
+                                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                </svg>
+                                <p class="mt-2 text-gray-600">{{ __('lessons.no_students_yet') }}</p>
+                                <a href="{{ route('users.index') }}" class="mt-3 inline-block text-sm text-blue-600 hover:underline">
+                                    {{ __('lessons.add_students_hint') }}
+                                </a>
+                            </div>
+                        @else
+                            <div class="space-y-2">
+                                @foreach($this->myStudents as $student)
+                                    @php
+                                        $is_assigned = in_array($student->id, $this->assignedStudentIds);
+                                    @endphp
+
+                                    <div class="flex items-center gap-3 p-3 rounded-lg border {{ $is_assigned ? 'border-emerald-300 bg-emerald-50' : 'border-gray-200' }}">
+                                        <div class="flex-shrink-0">
+                                            @if($student->avatar)
+                                                <img src="{{ $student->avatar_url }}" alt="" class="w-10 h-10 rounded-full object-cover">
+                                            @else
+                                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold">
+                                                    {{ strtoupper(substr($student->first_name, 0, 1)) }}
+                                                </div>
+                                            @endif
+                                        </div>
+                                        <div class="flex-1 min-w-0">
+                                            <p class="font-medium text-gray-900 truncate">{{ $student->full_name }}</p>
+                                            <p class="text-sm text-gray-500 truncate">{{ $student->email }}</p>
+                                        </div>
+                                        <div class="flex-shrink-0">
+                                            @if($is_assigned)
+                                                <button
+                                                    wire:click="unassignStudent({{ $student->id }})"
+                                                    class="px-3 py-1.5 text-sm font-medium text-red-600 bg-red-50 hover:bg-red-100 border border-red-200 rounded-lg transition"
+                                                >
+                                                    {{ __('lessons.unassign') }}
+                                                </button>
+                                            @else
+                                                <button
+                                                    wire:click="assignSingleStudent({{ $student->id }})"
+                                                    class="px-3 py-1.5 text-sm font-medium text-green-600 bg-green-50 hover:bg-green-100 border border-green-200 rounded-lg transition"
+                                                >
+                                                    {{ __('lessons.assign') }}
+                                                </button>
+                                            @endif
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
     @endif
 </div>
 

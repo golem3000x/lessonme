@@ -25,6 +25,9 @@ class UserProfile extends Component
     /** @var array<string> */
     public array $teaching_languages = [];
 
+    /** @var array<string> */
+    public array $learning_languages = [];
+
     public int $review_rating = 5;
 
     public string $review_comment = '';
@@ -44,6 +47,10 @@ class UserProfile extends Component
 
         if ($this->is_teacher) {
             $this->teaching_languages = $user->getTeachingLanguageValues();
+        }
+
+        if ($this->is_student) {
+            $this->learning_languages = $user->getLearningLanguageValues();
         }
 
         $this->checkCanReview();

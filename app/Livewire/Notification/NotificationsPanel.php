@@ -52,7 +52,7 @@ class NotificationsPanel extends Component
 
         // Check for duplicates to avoid spam
         // For lessons, check by message and lesson_id to allow regeneration of the same lesson
-        $exists = collect($this->notifications)->contains(function ($n) use ($notification_data) {
+        $exists = collect($this->notifications)->contains(function (array $n) use ($notification_data): bool {
             $basic_match = $n['entity'] === $notification_data['entity'] &&
                           $n['status'] === $notification_data['status'] &&
                           $n['message'] === $notification_data['message'];

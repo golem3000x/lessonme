@@ -60,15 +60,24 @@ namespace App\Livewire\Lesson;
 use App\Dto\LessonDto;
 use App\Enums\Notifications\LessonCreationStatusEnum;
 use App\Enums\Notifications\LessonRegenerationStatusEnum;
+use App\Enums\System\AssignmentStatusEnum;
 use App\Enums\System\LanguageLevelEnum;
 use App\Enums\System\QueueNameEnum;
 use App\Enums\System\SystemLanguageEnum;
 use App\Jobs\Lesson\RegenerateLessonJob;
 use App\Models\Lesson\Lesson;
+use App\Models\Lesson\LessonAssignment;
+use App\Models\User;
+use App\Notifications\Lesson\LessonAssignedNotification;
+use App\Notifications\Lesson\LessonAssignmentRemovedNotification;
+use App\Notifications\Lesson\LessonAssignmentSentNotification;
 use App\Notifications\Lesson\LessonCreationNotification;
 use App\Notifications\Lesson\LessonRegenerationNotification;
+use App\Notifications\Lesson\LessonUnassignedNotification;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Computed;
@@ -92,6 +101,13 @@ class LessonIndex extends Component
     public bool $show_regenerate_confirm = false;
 
     public ?int $lesson_to_regenerate = null;
+
+    public bool $show_assign_modal = false;
+
+    public ?int $lesson_to_assign = null;
+
+    /** @var array<int, int> */
+    public array $selected_students = [];
 
     /**
      * Placeholders for NEW lessons being created (simple flat array of placeholder IDs)
@@ -143,6 +159,9 @@ class LessonIndex extends Component
     public array $lesson_languages = [];
 
     public string $sort = 'newest';
+
+    // View mode: 'my_lessons' or 'assigned'
+    public string $view_mode = 'my_lessons';
 
     public function mount(): void
     {
@@ -281,26 +300,27 @@ class LessonIndex extends Component
         $current_time = time();
         $max_placeholder_age = 300; // 5 minutes
         $current_page_lesson_ids = $lessons->pluck('id')->toArray();
-        
+
         foreach ($this->regenerating_lessons_placeholders as $lesson_id => $placeholder_data) {
             $age = $current_time - $placeholder_data['timestamp'];
-            
+
             // Check if lesson exists on current page
             if (in_array($lesson_id, $current_page_lesson_ids, true)) {
                 // Get lesson's updated_at timestamp
                 $lesson = $lessons->firstWhere('id', $lesson_id);
-                
+
                 if ($lesson && $lesson->updated_at) {
                     $lesson_updated_timestamp = $lesson->updated_at->timestamp;
-                    
+
                     // If lesson was updated AFTER placeholder was created, regeneration is complete
                     if ($lesson_updated_timestamp > $placeholder_data['timestamp']) {
                         unset($this->regenerating_lessons_placeholders[$lesson_id]);
+
                         continue;
                     }
                 }
             }
-            
+
             // Remove if placeholder is very old (5+ minutes) - likely stuck/error
             if ($age > $max_placeholder_age) {
                 unset($this->regenerating_lessons_placeholders[$lesson_id]);
@@ -323,10 +343,27 @@ class LessonIndex extends Component
      */
     protected function getLessonsQuery(): \Illuminate\Database\Eloquent\Builder
     {
-        $query = Lesson::where('user_id', '=', Auth::id())
-            ->with(['topic' => function ($q) {
-                $q->with('translations');
-            }]);
+        /** @var User $user */
+        $user = Auth::user();
+
+        if ($this->view_mode === 'assigned') {
+            // Get lessons assigned to the current user (student view)
+            $assigned_lesson_ids = LessonAssignment::query()
+                ->where('student_id', '=', $user->id)
+                ->pluck('lesson_id')
+                ->toArray();
+
+            $query = Lesson::whereIn('id', $assigned_lesson_ids)
+                ->with(['topic' => function (Builder $q): void {
+                    $q->with('translations');
+                }]);
+        } else {
+            // Get user's own lessons
+            $query = Lesson::where('user_id', '=', $user->id)
+                ->with(['topic' => function (Builder $q): void {
+                    $q->with('translations');
+                }]);
+        }
 
         // Apply search filter
         if ($this->search) {
@@ -351,6 +388,12 @@ class LessonIndex extends Component
         }
 
         return $query;
+    }
+
+    public function setViewMode(string $mode): void
+    {
+        $this->view_mode = $mode;
+        $this->resetPage();
     }
 
     public function openManageModal(): void
@@ -446,7 +489,7 @@ class LessonIndex extends Component
                 $topic_name,
                 $lesson->language_level,
                 $user->native_lang,
-                $user->learning_lang,
+                $lesson->lesson_lang->value,
                 $keywords
             );
 
@@ -513,6 +556,202 @@ class LessonIndex extends Component
         }
 
         $this->cancelDelete();
+    }
+
+    public function openAssignModal(int $lesson_id): void
+    {
+        $this->lesson_to_assign = $lesson_id;
+        $this->selected_students = [];
+        $this->show_assign_modal = true;
+        $this->closeDropdown($lesson_id);
+    }
+
+    public function closeAssignModal(): void
+    {
+        $this->show_assign_modal = false;
+        $this->lesson_to_assign = null;
+        $this->selected_students = [];
+    }
+
+    public function toggleStudentSelection(int $student_id): void
+    {
+        if (in_array($student_id, $this->selected_students)) {
+            $this->selected_students = array_values(array_diff($this->selected_students, [$student_id]));
+        } else {
+            $this->selected_students[] = $student_id;
+        }
+    }
+
+    public function assignLesson(): void
+    {
+        if ($this->lesson_to_assign === null || empty($this->selected_students)) {
+            return;
+        }
+
+        /** @var User $teacher */
+        $teacher = Auth::user();
+
+        if (! $teacher->isTeacher()) {
+            return;
+        }
+
+        $lesson = Lesson::find($this->lesson_to_assign);
+
+        if (! $lesson) {
+            return;
+        }
+
+        $assigned_count = 0;
+
+        foreach ($this->selected_students as $student_id) {
+            // Check if already assigned
+            $exists = LessonAssignment::query()
+                ->where('lesson_id', '=', $lesson->id)
+                ->where('student_id', '=', $student_id)
+                ->exists();
+
+            if ($exists) {
+                continue;
+            }
+
+            // Create assignment
+            $assignment = LessonAssignment::create([
+                'lesson_id' => $lesson->id,
+                'teacher_id' => $teacher->id,
+                'student_id' => $student_id,
+                'assigned_at' => now(),
+                'status' => AssignmentStatusEnum::PENDING->value,
+            ]);
+
+            // Send notification to student
+            /** @var User $student */
+            $student = User::find($student_id);
+
+            if ($student) {
+                $student->notify(new LessonAssignedNotification($assignment));
+            }
+
+            $assigned_count++;
+        }
+
+        if ($assigned_count > 0) {
+            // Send notification to teacher (current user)
+            $teacher->notify(new LessonAssignmentSentNotification($teacher, $lesson, $assigned_count));
+        }
+
+        $this->closeAssignModal();
+    }
+
+    /**
+     * Get list of teacher's students.
+     *
+     * @return Collection<int, User>
+     */
+    #[Computed]
+    public function myStudents(): Collection
+    {
+        /** @var User $user */
+        $user = Auth::user();
+
+        return $user->students()->get();
+    }
+
+    /**
+     * Get IDs of students already assigned to the current lesson.
+     *
+     * @return array<int>
+     */
+    #[Computed]
+    public function assignedStudentIds(): array
+    {
+        if ($this->lesson_to_assign === null) {
+            return [];
+        }
+
+        return LessonAssignment::query()
+            ->where('lesson_id', '=', $this->lesson_to_assign)
+            ->pluck('student_id')
+            ->toArray();
+    }
+
+    public function assignSingleStudent(int $student_id): void
+    {
+        if ($this->lesson_to_assign === null) {
+            return;
+        }
+
+        /** @var User $teacher */
+        $teacher = Auth::user();
+
+        if (! $teacher->isTeacher()) {
+            return;
+        }
+
+        $lesson = Lesson::find($this->lesson_to_assign);
+        $student = User::find($student_id);
+
+        if (! $lesson || ! $student) {
+            return;
+        }
+
+        // Check if already assigned
+        $exists = LessonAssignment::query()
+            ->where('lesson_id', '=', $lesson->id)
+            ->where('student_id', '=', $student_id)
+            ->exists();
+
+        if ($exists) {
+            return;
+        }
+
+        // Create assignment
+        $assignment = LessonAssignment::create([
+            'lesson_id' => $lesson->id,
+            'teacher_id' => $teacher->id,
+            'student_id' => $student_id,
+            'assigned_at' => now(),
+            'status' => AssignmentStatusEnum::PENDING->value,
+        ]);
+
+        // Notify student
+        $student->notify(new LessonAssignedNotification($assignment));
+
+        // Notify teacher (confirmation)
+        $teacher->notify(new LessonAssignmentSentNotification($teacher, $lesson, 1));
+
+        // Clear computed cache
+        unset($this->assignedStudentIds);
+    }
+
+    public function unassignStudent(int $student_id): void
+    {
+        if ($this->lesson_to_assign === null) {
+            return;
+        }
+
+        /** @var User $teacher */
+        $teacher = Auth::user();
+
+        $lesson = Lesson::find($this->lesson_to_assign);
+        $student = User::find($student_id);
+
+        if (! $lesson || ! $student) {
+            return;
+        }
+
+        LessonAssignment::query()
+            ->where('lesson_id', '=', $this->lesson_to_assign)
+            ->where('student_id', '=', $student_id)
+            ->delete();
+
+        // Notify student that they were unassigned
+        $student->notify(new LessonUnassignedNotification($student, $lesson, $teacher->full_name));
+
+        // Notify teacher (confirmation)
+        $teacher->notify(new LessonAssignmentRemovedNotification($teacher, $lesson, $student->full_name));
+
+        // Clear computed cache
+        unset($this->assignedStudentIds);
     }
 
     public function toggleFilters(): void

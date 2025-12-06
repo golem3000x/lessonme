@@ -27,7 +27,7 @@ return [
     'uploading' => 'Đang tải lên',
     'enter_name' => 'Nhập tên của bạn',
     'native_language' => 'Ngôn ngữ mẹ đẻ',
-    'learning_language' => 'Ngôn ngữ đang học',
+    'learning_languages' => 'Ngôn ngữ đang học',
     'save' => 'Lưu',
     'new_topic' => 'Chủ đề mới',
     'enter_topic_name' => 'Nhập tên chủ đề',

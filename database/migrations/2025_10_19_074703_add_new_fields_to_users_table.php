@@ -22,9 +22,9 @@ return new class extends Migration
             $table->date('date_of_birth');
             $table->text('bio')->nullable();
             $table->string('native_lang')->default(SystemLanguageEnum::VIETNAMESE->value);
-            $table->string('learning_lang')->nullable();
             $table->boolean('is_looking_for_teacher')->default(false);
             $table->boolean('is_accepting_students')->default(false);
+            $table->json('settings')->nullable();
         });
     }
 
@@ -38,9 +38,9 @@ return new class extends Migration
                 'date_of_birth',
                 'bio',
                 'native_lang',
-                'learning_lang',
                 'is_looking_for_teacher',
                 'is_accepting_students',
+                'settings',
             ]);
         });
     }

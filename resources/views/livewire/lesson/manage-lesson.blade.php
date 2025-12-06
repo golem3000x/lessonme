@@ -1,6 +1,28 @@
 @php use App\Enums\System\LanguageLevelEnum; @endphp
 <div class="space-y-5">
     <div class="flex flex-col space-y-5">
+        {{-- Language Selection (only show if user has multiple learning languages) --}}
+        @if(count($available_languages) > 1)
+            <div class="group">
+                <label for="lesson-language-select" class="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-2">
+                    <svg class="h-4 w-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/>
+                    </svg>
+                    {{ __('lessons.lesson_language') }}
+                </label>
+                <select
+                        id="lesson-language-select"
+                        wire:model.live="lesson_language"
+                        class="w-full border-2 border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200 bg-white hover:border-purple-400"
+                >
+                    @foreach($available_languages as $lang)
+                        <option value="{{ $lang['value'] }}">{{ $lang['flag'] }} {{ $lang['label'] }}</option>
+                    @endforeach
+                </select>
+            </div>
+        @endif
+
         <div class="group">
             <label for="language-level-select" class="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-2">
                 <svg class="h-4 w-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">

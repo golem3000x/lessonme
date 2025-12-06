@@ -8,6 +8,7 @@ use App\Models\Keyword\Keyword;
 use App\Models\User;
 use App\Notifications\Slug\Processing\SlugProcessingNotification;
 use App\Rules\IsMeaningful;
+use Closure;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
@@ -50,7 +51,7 @@ class CreateKeyword extends Component
                 'string',
                 'max:255',
                 new IsMeaningful,
-                function ($attribute, $value, $fail) use ($slug) {
+                function (string $attribute, mixed $value, Closure $fail) use ($slug): void {
                     // Check if keyword with same slug already exists in this topic
                     $exists = Keyword::where('slug', '=', $slug)
                         ->where('topic_id', '=', $this->topic_id)

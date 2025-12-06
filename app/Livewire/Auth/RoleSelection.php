@@ -21,7 +21,8 @@ class RoleSelection extends Component
     /** @var array<string> */
     public array $teaching_languages = [];
 
-    public string $learning_lang = '';
+    /** @var array<string> */
+    public array $learning_languages = [];
 
     /** @var SystemLanguageEnum[] */
     public array $languages = [];
@@ -39,9 +40,10 @@ class RoleSelection extends Component
 
         // Set default learning language (opposite of native)
         $native_lang = session()->get('registration_native_lang');
-        $this->learning_lang = $native_lang === SystemLanguageEnum::ENGLISH->value
+        $default_learning = $native_lang === SystemLanguageEnum::ENGLISH->value
             ? SystemLanguageEnum::VIETNAMESE->value
             : SystemLanguageEnum::ENGLISH->value;
+        $this->learning_languages = [$default_learning];
     }
 
     /**
@@ -59,12 +61,13 @@ class RoleSelection extends Component
         // If teacher, at least one teaching language required
         if ($this->is_teacher) {
             $rules['teaching_languages'] = 'required|array|min:1';
-            $rules['teaching_languages.*'] = 'required|string|in:' . implode(',', SystemLanguageEnum::values());
+            $rules['teaching_languages.*'] = 'required|string|in:'.implode(',', SystemLanguageEnum::values());
         }
 
-        // If student, learning language required
+        // If student, at least one learning language required
         if ($this->is_student) {
-            $rules['learning_lang'] = 'required|string|in:' . implode(',', SystemLanguageEnum::values());
+            $rules['learning_languages'] = 'required|array|min:1';
+            $rules['learning_languages.*'] = 'required|string|in:'.implode(',', SystemLanguageEnum::values());
         }
 
         return $rules;
@@ -79,7 +82,8 @@ class RoleSelection extends Component
             'is_teacher.accepted' => __('auth.role_selection.at_least_one_role'),
             'teaching_languages.required' => __('auth.role_selection.teaching_lang_required'),
             'teaching_languages.min' => __('auth.role_selection.teaching_lang_required'),
-            'learning_lang.required' => __('auth.role_selection.learning_lang_required'),
+            'learning_languages.required' => __('auth.role_selection.learning_lang_required'),
+            'learning_languages.min' => __('auth.role_selection.learning_lang_required'),
         ];
     }
 
@@ -112,7 +116,6 @@ class RoleSelection extends Component
             'date_of_birth' => $registration_data['date_of_birth'],
             'timezone' => $registration_data['timezone'] ?? 'UTC',
             'native_lang' => $native_lang,
-            'learning_lang' => $this->is_student ? $this->learning_lang : null,
             'facebook_id' => $registration_data['facebook_id'] ?? null,
             'zalo_user_id' => $registration_data['zalo_user_id'] ?? null,
             'avatar' => $registration_data['avatar'] ?? null,
@@ -134,6 +137,14 @@ class RoleSelection extends Component
 
         if ($this->is_student) {
             $user->assignRole(UserRoleEnum::STUDENT);
+
+            // Add learning languages
+            foreach ($this->learning_languages as $language) {
+                $lang_enum = SystemLanguageEnum::tryFrom($language);
+                if ($lang_enum) {
+                    $user->addLearningLanguage($lang_enum);
+                }
+            }
         }
 
         // Login user

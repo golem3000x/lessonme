@@ -13,3 +13,7 @@ Broadcast::channel('chat.{userId}', function ($user, $userId) {
 Broadcast::channel('admin-chat', function ($user) {
     return $user->isAdmin();
 });
+
+Broadcast::channel('dm.{userId}', function ($user, $userId) {
+    return (int) $user->id === (int) $userId;
+});

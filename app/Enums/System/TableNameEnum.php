@@ -34,6 +34,8 @@ enum TableNameEnum: string
     case ROLES = 'roles';
     case ROLE_USER = 'role_user';
     case USER_TEACHING_LANGUAGES = 'user_teaching_languages';
+    case USER_LEARNING_LANGUAGES = 'user_learning_languages';
     case USER_MESSAGES = 'user_messages';
     case TEACHER_REVIEWS = 'teacher_reviews';
+    case TEACHER_INVITATIONS = 'teacher_invitations';
 }

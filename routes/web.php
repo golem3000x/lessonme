@@ -11,8 +11,11 @@ use App\Http\Middleware\EnsureTempGuestUser;
 use App\Livewire\Auth\LanguageSelection;
 use App\Livewire\Auth\RoleSelection;
 use App\Livewire\Lesson\LessonIndex;
+use App\Livewire\Messages\DirectMessages;
+use App\Livewire\Messages\MessagesIndex;
 use App\Livewire\Onboarding\ProfileSetup;
 use App\Livewire\Topic\TopicIndex;
+use App\Livewire\Settings\UserSettings;
 use App\Livewire\User\UserList;
 use App\Livewire\User\UserProfile;
 use Illuminate\Support\Facades\Route;
@@ -70,6 +73,13 @@ Route::middleware('auth')->group(function () {
     // Users / Community
     Route::get('/users', UserList::class)->name('users.index');
     Route::get('/profile/{user}', UserProfile::class)->name('profile.show');
+
+    // Settings
+    Route::get('/settings', UserSettings::class)->name('settings.index');
+
+    // Direct Messages
+    Route::get('/messages', MessagesIndex::class)->name('messages.index');
+    Route::get('/messages/{user}', DirectMessages::class)->name('messages.chat');
 
     // Topics management
     Route::get('/manage-topics', TopicIndex::class)->name('topics.index');

@@ -43,6 +43,8 @@ use Illuminate\Support\Str;
  * @property-read int|null $roles_count
  * @property-read Collection<int, UserTeachingLanguage> $teachingLanguages
  * @property-read int|null $teaching_languages_count
+ * @property-read Collection<int, UserLearningLanguage> $learningLanguages
+ * @property-read int|null $learning_languages_count
  * @property string|null $remember_token
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
@@ -52,13 +54,13 @@ use Illuminate\Support\Str;
  * @property Carbon $date_of_birth
  * @property string|null $bio
  * @property string $native_lang
- * @property string|null $learning_lang
  * @property bool $is_looking_for_teacher
  * @property bool $is_accepting_students
  * @property string $timezone
  * @property bool $is_temp_guest
  * @property Carbon|null $temp_guest_expires_at
  * @property Carbon|null $first_login_completed_at
+ * @property array|null $settings
  * @property-read string $full_name
  * @property-read Collection<int, LessonAssignment> $assignedLessons
  * @property-read int|null $assigned_lessons_count
@@ -128,7 +130,6 @@ class User extends Authenticatable implements FilamentUser, HasLocalePreference
         'date_of_birth',
         'bio',
         'native_lang',
-        'learning_lang',
         'is_looking_for_teacher',
         'is_accepting_students',
         'timezone',
@@ -136,6 +137,7 @@ class User extends Authenticatable implements FilamentUser, HasLocalePreference
         'is_temp_guest',
         'temp_guest_expires_at',
         'first_login_completed_at',
+        'settings',
     ];
 
     /**
@@ -181,6 +183,7 @@ class User extends Authenticatable implements FilamentUser, HasLocalePreference
             'is_temp_guest' => 'boolean',
             'temp_guest_expires_at' => 'datetime',
             'first_login_completed_at' => 'datetime',
+            'settings' => 'array',
         ];
     }
 
@@ -189,7 +192,34 @@ class User extends Authenticatable implements FilamentUser, HasLocalePreference
      */
     public function getFullNameAttribute(): string
     {
-        return trim($this->first_name . ' ' . $this->last_name);
+        return trim($this->first_name.' '.$this->last_name);
+    }
+
+    /**
+     * Get a specific setting value.
+     */
+    public function getSetting(string $key, mixed $default = null): mixed
+    {
+        return $this->settings[$key] ?? $default;
+    }
+
+    /**
+     * Set a specific setting value.
+     */
+    public function setSetting(string $key, mixed $value): void
+    {
+        $settings = $this->settings ?? [];
+        $settings[$key] = $value;
+        $this->settings = $settings;
+        $this->save();
+    }
+
+    /**
+     * Check if greeting should be shown.
+     */
+    public function shouldShowGreeting(): bool
+    {
+        return $this->getSetting('show_greeting', true);
     }
 
     /**
@@ -221,6 +251,16 @@ class User extends Authenticatable implements FilamentUser, HasLocalePreference
     public function teachingLanguages(): HasMany
     {
         return $this->hasMany(UserTeachingLanguage::class);
+    }
+
+    /**
+     * Get learning languages for this student.
+     *
+     * @return HasMany<UserLearningLanguage, $this>
+     */
+    public function learningLanguages(): HasMany
+    {
+        return $this->hasMany(UserLearningLanguage::class);
     }
 
     /**
@@ -527,6 +567,54 @@ class User extends Authenticatable implements FilamentUser, HasLocalePreference
     }
 
     /**
+     * Add learning language for this student.
+     */
+    public function addLearningLanguage(SystemLanguageEnum $language): void
+    {
+        if (! $this->isStudent()) {
+            return;
+        }
+
+        $this->learningLanguages()->firstOrCreate([
+            'language' => $language->value,
+        ]);
+    }
+
+    /**
+     * Remove learning language.
+     */
+    public function removeLearningLanguage(SystemLanguageEnum $language): void
+    {
+        $this->learningLanguages()->where('language', '=', $language->value)->delete();
+    }
+
+    /**
+     * Sync learning languages.
+     *
+     * @param  array<string>  $languages  Language values to sync
+     */
+    public function syncLearningLanguages(array $languages): void
+    {
+        $this->learningLanguages()->delete();
+
+        foreach ($languages as $language) {
+            $this->learningLanguages()->create([
+                'language' => $language,
+            ]);
+        }
+    }
+
+    /**
+     * Get learning language values as array.
+     *
+     * @return array<string>
+     */
+    public function getLearningLanguageValues(): array
+    {
+        return $this->learningLanguages()->pluck('language')->toArray();
+    }
+
+    /**
      * Get the full URL for the user's avatar.
      * Handles both local storage paths and external URLs (Facebook, Zalo, etc.)
      */
@@ -558,5 +646,23 @@ class User extends Authenticatable implements FilamentUser, HasLocalePreference
         app()->setLocale($locale);
 
         $this->notify(new ResetPasswordNotification($token));
+    }
+
+    /**
+     * Add a student to this teacher's list.
+     */
+    public function addStudent(User $student): void
+    {
+        if (! $this->students()->where('student_id', '=', $student->id)->exists()) {
+            $this->students()->attach($student->id);
+        }
+    }
+
+    /**
+     * Remove a student from this teacher's list.
+     */
+    public function removeStudent(User $student): void
+    {
+        $this->students()->detach($student->id);
     }
 }

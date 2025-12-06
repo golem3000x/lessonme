@@ -46,27 +46,29 @@ class ModerateKeywordJob implements ShouldQueue
         // Approve the keyword
         $keyword->update(['is_approved' => true]);
 
-        // Get target language (user's learning language)
+        // Get target languages (user's learning languages)
         if (! $keyword->user) {
             return;
         }
 
-        $learning_lang = $keyword->user->learning_lang;
+        $learning_languages = $keyword->user->getLearningLanguageValues();
 
         // Translate to all languages
         $translations = $open_ai_service->translateSlugAllLanguages($original_value);
 
-        // Create translation for learning language if it doesn't exist
-        if (isset($translations[$learning_lang])) {
-            KeywordTranslation::updateOrCreate(
-                [
-                    'keyword_id' => $keyword->id,
-                    'language_code' => $learning_lang,
-                ],
-                [
-                    'value' => $translations[$learning_lang],
-                ]
-            );
+        // Create translations for each learning language if it doesn't exist
+        foreach ($learning_languages as $learning_lang) {
+            if (isset($translations[$learning_lang])) {
+                KeywordTranslation::updateOrCreate(
+                    [
+                        'keyword_id' => $keyword->id,
+                        'language_code' => $learning_lang,
+                    ],
+                    [
+                        'value' => $translations[$learning_lang],
+                    ]
+                );
+            }
         }
     }
 }
