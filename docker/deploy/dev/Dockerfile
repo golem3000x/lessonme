@@ -29,6 +29,8 @@ COPY . .
 
 RUN composer install --no-dev --optimize-autoloader
 
+# Supervisor конфигурация
 COPY docker/deploy/dev/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-CMD ["/usr/bin/supervisord"]
+# Запуск: миграции + supervisor
+CMD ["sh", "-c", "php artisan migrate --force && exec /usr/bin/supervisord"]
