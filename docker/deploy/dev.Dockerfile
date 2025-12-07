@@ -67,8 +67,8 @@ RUN apt-get update && apt-get upgrade -y \
 RUN setcap "cap_net_bind_service=+ep" /usr/bin/php8.4
 
 RUN userdel -r ubuntu || true
-RUN groupadd --force -g $WWWGROUP sail
-RUN useradd -ms /bin/bash --no-user-group -g $WWWGROUP -u 1337 sail
+RUN groupadd -g 1337 sail \
+    && useradd -ms /bin/bash -u 1337 -g sail sail
 RUN git config --global --add safe.directory /var/www/html
 
 # --------- PHP.ini (inline, вместо COPY php.ini) ----------
