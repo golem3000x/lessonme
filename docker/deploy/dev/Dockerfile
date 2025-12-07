@@ -18,7 +18,7 @@ COPY . .
 RUN composer install --no-dev --optimize-autoloader
 
 # Supervisor конфигурация
-COPY ./supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY docker/deploy/dev/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # PHP уже исполняемый — не трогаем!
 # RUN chmod +x /usr/bin/php   # ← НЕ НУЖНО, ОПАСНО
