@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 return [
-    'app_name' => 'AI English Buddy',
+    'app_name' => 'LessonMe',
     'dashboard' => 'Bảng điều khiển',
     'chat' => 'Trò chuyện',
     'lessons' => 'Bài học',

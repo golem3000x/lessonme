@@ -26,16 +26,16 @@
                     </div>
                     <div class="p-6 space-y-6">
                         <div>
-                            <h3 class="text-lg font-bold text-gray-900 mb-2">What is English Buddy?</h3>
-                            <p class="text-gray-600">English Buddy is an interactive language learning platform that helps you learn English and Vietnamese through AI-generated lessons and various exercise types.</p>
+                            <h3 class="text-lg font-bold text-gray-900 mb-2">What is LessonMe?</h3>
+                            <p class="text-gray-600">LessonMe is an interactive language learning platform that helps you learn English and Vietnamese through AI-generated lessons and various exercise types.</p>
                         </div>
                         <div>
-                            <h3 class="text-lg font-bold text-gray-900 mb-2">Is English Buddy free to use?</h3>
-                            <p class="text-gray-600">Yes, English Buddy offers free access to its core features including lesson browsing, creation, and progress tracking.</p>
+                            <h3 class="text-lg font-bold text-gray-900 mb-2">Is LessonMe free to use?</h3>
+                            <p class="text-gray-600">Yes, LessonMe offers free access to its core features including lesson browsing, creation, and progress tracking.</p>
                         </div>
                         <div>
                             <h3 class="text-lg font-bold text-gray-900 mb-2">What languages are supported?</h3>
-                            <p class="text-gray-600">Currently, English Buddy supports English and Vietnamese. You can learn either language and use either as your interface language.</p>
+                            <p class="text-gray-600">Currently, LessonMe supports English and Vietnamese. You can learn either language and use either as your interface language.</p>
                         </div>
                     </div>
                 </div>

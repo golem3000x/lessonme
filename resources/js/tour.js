@@ -106,7 +106,7 @@ export function initTour() {
     // Step 1: Welcome
     tour.addStep({
         id: 'welcome',
-        title: window.tourTranslations?.welcome_title || 'Welcome to English Buddy!',
+        title: window.tourTranslations?.welcome_title || 'Welcome to LessonMe!',
         text: window.tourTranslations?.welcome_text || 'Let\'s take a quick tour to help you get started with the platform.',
         buttons: [
             {

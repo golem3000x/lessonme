@@ -38,7 +38,7 @@ return [
 
     // Welcome page
     'welcome' => 'Welcome',
-    'welcome_to_app' => 'Welcome to AI English Buddy!',
+    'welcome_to_app' => 'Welcome to LessonMe!',
 
     // Lessons index
     'lessons' => 'Lessons',

@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 return [
     // Quick Tour Banner
-    'banner_title' => 'New to English Buddy?',
+    'banner_title' => 'New to LessonMe?',
     'banner_message' => 'Take a quick interactive tour to learn how to use the platform and get the most out of your learning experience!',
     'start_tour' => 'Start Tour',
     'maybe_later' => 'Maybe Later',
     'dont_show_again' => "Don't Show Again",
 
     // Tour Steps
-    'welcome_title' => 'Welcome to English Buddy!',
+    'welcome_title' => 'Welcome to LessonMe!',
     'welcome_text' => "Let's take a quick tour to help you get started with the platform.",
     'dashboard_title' => 'Your Dashboard',
     'dashboard_text' => 'This is your personal dashboard. Here you can track your progress, see recent scores, and monitor your learning statistics.',
@@ -34,7 +34,7 @@ return [
 
     // Help Center
     'help_center' => 'Help Center',
-    'help_description' => 'Find answers and learn how to use English Buddy effectively',
+    'help_description' => 'Find answers and learn how to use LessonMe effectively',
     'search_help' => 'Search help articles...',
     'restart_tour' => 'Restart Interactive Tour',
     'restart_tour_description' => 'Take the interactive tour again to refresh your knowledge',

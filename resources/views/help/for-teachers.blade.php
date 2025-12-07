@@ -51,7 +51,7 @@
                 <section class="bg-white rounded-lg shadow-md border border-gray-200 p-6">
                     <h2 class="text-2xl font-bold text-gray-900 mb-4">{{ __('help.understanding_grading') }}</h2>
                     <div class="prose prose-blue max-w-none">
-                        <p>English Buddy uses a comprehensive grading system based on accuracy and completeness.</p>
+                        <p>LessonMe uses a comprehensive grading system based on accuracy and completeness.</p>
                         <h3>Grading Scale:</h3>
                         <ul>
                             <li><strong>A (90-100%):</strong> Excellent understanding</li>

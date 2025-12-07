@@ -38,7 +38,7 @@ return [
 
     // Welcome page
     'welcome' => 'Chào mừng',
-    'welcome_to_app' => 'Chào mừng đến với AI English Buddy!',
+    'welcome_to_app' => 'Chào mừng đến với LessonMe!',
 
     // Lessons index
     'lessons' => 'Bài học',

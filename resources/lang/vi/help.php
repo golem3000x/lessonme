@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 return [
     // Quick Tour Banner
-    'banner_title' => 'Mới tham gia English Buddy?',
+    'banner_title' => 'Mới tham gia LessonMe?',
     'banner_message' => 'Tham gia tour hướng dẫn tương tác để tìm hiểu cách sử dụng nền tảng và tận dụng tối đa trải nghiệm học tập của bạn!',
     'start_tour' => 'Bắt Đầu Tour',
     'maybe_later' => 'Để Sau',
     'dont_show_again' => 'Không Hiển Thị Nữa',
 
     // Tour Steps
-    'welcome_title' => 'Chào Mừng Đến Với English Buddy!',
+    'welcome_title' => 'Chào Mừng Đến Với LessonMe!',
     'welcome_text' => 'Hãy cùng tham gia tour hướng dẫn nhanh để bắt đầu với nền tảng.',
     'dashboard_title' => 'Bảng Điều Khiển',
     'dashboard_text' => 'Đây là bảng điều khiển cá nhân của bạn. Tại đây bạn có thể theo dõi tiến độ, xem điểm gần đây và giám sát thống kê học tập.',
@@ -34,7 +34,7 @@ return [
 
     // Help Center
     'help_center' => 'Trung Tâm Trợ Giúp',
-    'help_description' => 'Tìm câu trả lời và học cách sử dụng English Buddy hiệu quả',
+    'help_description' => 'Tìm câu trả lời và học cách sử dụng LessonMe hiệu quả',
     'search_help' => 'Tìm kiếm bài viết trợ giúp...',
     'restart_tour' => 'Bắt Đầu Lại Tour Tương Tác',
     'restart_tour_description' => 'Tham gia lại tour tương tác để làm mới kiến thức của bạn',

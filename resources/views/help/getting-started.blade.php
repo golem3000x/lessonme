@@ -29,7 +29,7 @@
                         {{ __('help.welcome_tour') }}
                     </h2>
                     <div class="prose prose-blue max-w-none">
-                        <p>The Welcome Tour is an interactive guide that helps you familiarize yourself with the English Buddy platform. It walks you through the main features and interface elements.</p>
+                        <p>The Welcome Tour is an interactive guide that helps you familiarize yourself with the LessonMe platform. It walks you through the main features and interface elements.</p>
                         <h3>What you'll learn:</h3>
                         <ul>
                             <li>How to navigate the Dashboard</li>
@@ -56,7 +56,7 @@
                         {{ __('help.account_setup') }}
                     </h2>
                     <div class="prose prose-blue max-w-none">
-                        <p>Set up your account to personalize your learning experience on English Buddy.</p>
+                        <p>Set up your account to personalize your learning experience on LessonMe.</p>
                         <h3>Steps to configure your account:</h3>
                         <ol>
                             <li><strong>Profile Settings:</strong> Click your profile avatar in the top-right corner and select "Profile" to update your personal information.</li>
@@ -74,7 +74,7 @@
                         {{ __('help.understanding_levels') }}
                     </h2>
                     <div class="prose prose-blue max-w-none">
-                        <p>English Buddy uses the Common European Framework of Reference (CEFR) for language levels.</p>
+                        <p>LessonMe uses the Common European Framework of Reference (CEFR) for language levels.</p>
                         <h3>Language Levels:</h3>
                         <ul>
                             <li><strong>A1 - Beginner:</strong> Basic phrases and simple expressions</li>
