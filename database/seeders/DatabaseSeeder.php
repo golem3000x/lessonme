@@ -22,7 +22,6 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             SystemTopicsSeeder::class,
             SystemKeywordsSeeder::class,
-            AdminUserSeeder::class,
         ]);
     }
 }
