@@ -27,7 +27,7 @@ RUN curl -sS https://getcomposer.org/installer | php \
 
 COPY . .
 
-RUN composer install --no-dev --optimize-autoloader
+RUN composer install --no-dev --optimize-autoloader --no-scripts
 
 COPY docker/deploy/dev/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
