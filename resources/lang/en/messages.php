@@ -23,4 +23,41 @@ return [
     'invitation_accepted_status' => 'Invitation accepted',
     'invitation_declined_status' => 'Invitation declined',
     'invitation_pending_status' => 'Waiting for response',
+
+    // Actions
+    'actions' => 'Actions',
+    'delete_conversation' => 'Delete conversation',
+    'delete_conversation_title' => 'Delete Conversation',
+    'delete_conversation_message' => 'Are you sure you want to delete this conversation? All messages will be permanently removed.',
+    'conversation_deleted' => 'Conversation deleted successfully.',
+    'delete' => 'Delete',
+    'cancel' => 'Cancel',
+
+    // Block
+    'block_user' => 'Block user',
+    'block_user_title' => 'Block User',
+    'block_user_message' => 'Are you sure you want to block this user? You will no longer receive messages from them.',
+    'user_blocked' => 'User has been blocked.',
+    'block' => 'Block',
+
+    // Report
+    'report_user' => 'Report user',
+    'report_user_title' => 'Report User',
+    'report_user_message' => 'Please select a reason and provide details about why you are reporting this user.',
+    'report_reason' => 'Reason',
+    'select_reason' => 'Select a reason...',
+    'report_description' => 'Additional details',
+    'report_description_placeholder' => 'Please provide more details about the issue...',
+    'submit_report' => 'Submit Report',
+    'report_submitted' => 'Your report has been submitted. We will review it shortly.',
+
+    // Report reasons
+    'report_reason_spam' => 'Spam or advertising',
+    'report_reason_harassment' => 'Harassment or bullying',
+    'report_reason_inappropriate_content' => 'Inappropriate content',
+    'report_reason_fake_profile' => 'Fake profile',
+    'report_reason_scam' => 'Scam or fraud',
+    'report_reason_offensive_language' => 'Offensive language',
+    'report_reason_unprofessional_behavior' => 'Unprofessional behavior',
+    'report_reason_other' => 'Other',
 ];

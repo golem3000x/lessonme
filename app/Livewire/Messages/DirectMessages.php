@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace App\Livewire\Messages;
 
+use App\Enums\System\ReportReasonEnum;
 use App\Events\UserMessageSent;
 use App\Models\TeacherInvitation;
 use App\Models\User;
+use App\Models\UserBlock;
 use App\Models\UserMessage;
+use App\Models\UserReport;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
@@ -29,6 +32,16 @@ class DirectMessages extends Component
     public array $conversations = [];
 
     public int $unread_count = 0;
+
+    public bool $show_delete_modal = false;
+
+    public bool $show_block_modal = false;
+
+    public bool $show_report_modal = false;
+
+    public string $report_reason = '';
+
+    public string $report_description = '';
 
     public function mount(?User $user = null): void
     {
@@ -264,8 +277,151 @@ class DirectMessages extends Component
         session()->flash('message', __('messages.invitation_declined'));
     }
 
+    public function showDeleteModal(): void
+    {
+        $this->show_delete_modal = true;
+    }
+
+    public function closeDeleteModal(): void
+    {
+        $this->show_delete_modal = false;
+    }
+
+    public function deleteConversation(): void
+    {
+        if (! $this->selected_user) {
+            return;
+        }
+
+        /** @var User $current_user */
+        $current_user = Auth::user();
+
+        UserMessage::query()
+            ->where(function (Builder $query) use ($current_user): void {
+                $query->where('sender_id', '=', $current_user->id)
+                    ->where('recipient_id', '=', $this->selected_user->id);
+            })
+            ->orWhere(function (Builder $query) use ($current_user): void {
+                $query->where('sender_id', '=', $this->selected_user->id)
+                    ->where('recipient_id', '=', $current_user->id);
+            })
+            ->delete();
+
+        $this->show_delete_modal = false;
+        $this->selected_user = null;
+        $this->messages = [];
+        $this->loadConversations();
+        $this->loadUnreadCount();
+
+        session()->flash('message', __('messages.conversation_deleted'));
+    }
+
+    public function showBlockModal(): void
+    {
+        $this->show_block_modal = true;
+    }
+
+    public function closeBlockModal(): void
+    {
+        $this->show_block_modal = false;
+    }
+
+    public function blockUser(): void
+    {
+        if (! $this->selected_user) {
+            return;
+        }
+
+        /** @var User $current_user */
+        $current_user = Auth::user();
+
+        UserBlock::firstOrCreate([
+            'user_id' => $current_user->id,
+            'blocked_user_id' => $this->selected_user->id,
+        ]);
+
+        $this->show_block_modal = false;
+        $this->selected_user = null;
+        $this->messages = [];
+        $this->loadConversations();
+
+        session()->flash('message', __('messages.user_blocked'));
+    }
+
+    public function showReportModal(): void
+    {
+        $this->report_reason = '';
+        $this->report_description = '';
+        $this->show_report_modal = true;
+    }
+
+    public function closeReportModal(): void
+    {
+        $this->show_report_modal = false;
+        $this->report_reason = '';
+        $this->report_description = '';
+    }
+
+    public function submitReport(): void
+    {
+        if (! $this->selected_user) {
+            return;
+        }
+
+        $this->validate([
+            'report_reason' => 'required|string',
+            'report_description' => 'nullable|string|max:1000',
+        ]);
+
+        /** @var User $current_user */
+        $current_user = Auth::user();
+
+        UserReport::create([
+            'reporter_id' => $current_user->id,
+            'reported_user_id' => $this->selected_user->id,
+            'reason' => $this->report_reason,
+            'description' => $this->report_description ?: null,
+        ]);
+
+        $this->show_report_modal = false;
+        $this->report_reason = '';
+        $this->report_description = '';
+
+        session()->flash('message', __('messages.report_submitted'));
+    }
+
+    /**
+     * Check if the selected user is blocked.
+     */
+    public function isUserBlocked(): bool
+    {
+        if (! $this->selected_user) {
+            return false;
+        }
+
+        /** @var User $current_user */
+        $current_user = Auth::user();
+
+        return UserBlock::where('user_id', '=', $current_user->id)
+            ->where('blocked_user_id', '=', $this->selected_user->id)
+            ->exists();
+    }
+
+    /**
+     * Get report reason options.
+     *
+     * @return array<string, string>
+     */
+    public function getReportReasons(): array
+    {
+        return ReportReasonEnum::options();
+    }
+
     public function render(): Factory|View|\Illuminate\View\View
     {
-        return view('livewire.messages.direct-messages');
+        return view('livewire.messages.direct-messages', [
+            'is_blocked' => $this->isUserBlocked(),
+            'report_reasons' => $this->getReportReasons(),
+        ]);
     }
 }

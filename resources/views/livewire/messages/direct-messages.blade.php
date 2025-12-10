@@ -63,23 +63,89 @@
     <div class="flex-1 flex flex-col">
         @if($selected_user)
             {{-- Chat Header --}}
-            <div class="bg-white border-b border-gray-200 p-4 flex items-center gap-3">
-                @if($selected_user->avatar)
-                    <img src="{{ $selected_user->avatar_url }}" 
-                         alt="{{ $selected_user->full_name }}"
-                         class="w-10 h-10 rounded-full object-cover">
-                @else
-                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
-                        <span class="text-sm font-bold text-white">
-                            {{ strtoupper(substr($selected_user->first_name, 0, 1) . substr($selected_user->last_name, 0, 1)) }}
-                        </span>
+            <div class="bg-white border-b border-gray-200 p-4 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    @if($selected_user->avatar)
+                        <img src="{{ $selected_user->avatar_url }}" 
+                             alt="{{ $selected_user->full_name }}"
+                             class="w-10 h-10 rounded-full object-cover">
+                    @else
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
+                            <span class="text-sm font-bold text-white">
+                                {{ strtoupper(substr($selected_user->first_name, 0, 1) . substr($selected_user->last_name, 0, 1)) }}
+                            </span>
+                        </div>
+                    @endif
+                    <div>
+                        <h3 class="font-semibold text-gray-900">{{ $selected_user->full_name }}</h3>
+                        <a href="{{ route('profile.show', $selected_user) }}" class="text-sm text-blue-600 hover:underline">
+                            {{ __('messages.view_profile') }}
+                        </a>
                     </div>
-                @endif
-                <div>
-                    <h3 class="font-semibold text-gray-900">{{ $selected_user->full_name }}</h3>
-                    <a href="{{ route('profile.show', $selected_user) }}" class="text-sm text-blue-600 hover:underline">
-                        {{ __('messages.view_profile') }}
-                    </a>
+                </div>
+                
+                {{-- Actions dropdown --}}
+                <div class="relative" x-data="{ open: false }">
+                    <button @click="open = !open"
+                            class="group p-2 rounded-lg text-gray-500 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200"
+                            :class="{ 'bg-blue-50 text-blue-600': open }"
+                            title="{{ __('messages.actions') }}">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transition-transform group-hover:scale-110" fill="none"
+                             viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"/>
+                        </svg>
+                    </button>
+
+                    {{-- Dropdown menu --}}
+                    <div x-show="open"
+                         @click.outside="open = false"
+                         x-transition:enter="transition ease-out duration-200"
+                         x-transition:enter-start="opacity-0 scale-95"
+                         x-transition:enter-end="opacity-100 scale-100"
+                         x-transition:leave="transition ease-in duration-150"
+                         x-transition:leave-start="opacity-100 scale-100"
+                         x-transition:leave-end="opacity-0 scale-95"
+                         class="absolute right-0 mt-2 w-56 bg-white border border-gray-200 rounded-xl shadow-2xl z-50 overflow-hidden"
+                         x-cloak>
+                        
+                        {{-- Report --}}
+                        <button wire:click="showReportModal" @click="open = false"
+                                class="group flex items-center gap-3 w-full px-4 py-3 text-sm text-orange-600 hover:bg-orange-50 transition-all duration-200">
+                            <div class="p-1.5 rounded-lg bg-orange-50 group-hover:bg-orange-100 transition-colors">
+                                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                                </svg>
+                            </div>
+                            <span class="font-medium">{{ __('messages.report_user') }}</span>
+                        </button>
+
+                        <div class="border-t border-gray-100"></div>
+
+                        {{-- Block --}}
+                        <button wire:click="showBlockModal" @click="open = false"
+                                class="group flex items-center gap-3 w-full px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition-all duration-200">
+                            <div class="p-1.5 rounded-lg bg-red-50 group-hover:bg-red-100 transition-colors">
+                                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/>
+                                </svg>
+                            </div>
+                            <span class="font-medium">{{ __('messages.block_user') }}</span>
+                        </button>
+
+                        <div class="border-t border-gray-100"></div>
+
+                        {{-- Delete --}}
+                        <button wire:click="showDeleteModal" @click="open = false"
+                                class="group flex items-center gap-3 w-full px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition-all duration-200">
+                            <div class="p-1.5 rounded-lg bg-red-50 group-hover:bg-red-100 transition-colors">
+                                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                </svg>
+                            </div>
+                            <span class="font-medium">{{ __('messages.delete_conversation') }}</span>
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -208,6 +274,106 @@
             </div>
         @endif
     </div>
+
+    {{-- Delete Conversation Modal --}}
+    @if($show_delete_modal)
+        <x-confirm-modal-livewire
+            icon="delete"
+            :title="__('messages.delete_conversation_title')"
+            :message="__('messages.delete_conversation_message')"
+            :confirmText="__('messages.delete')"
+            :cancelText="__('messages.cancel')"
+            confirmMethod="deleteConversation"
+            cancelMethod="closeDeleteModal"
+        />
+    @endif
+
+    {{-- Block User Modal --}}
+    @if($show_block_modal)
+        <x-confirm-modal-livewire
+            icon="danger"
+            :title="__('messages.block_user_title')"
+            :message="__('messages.block_user_message')"
+            :confirmText="__('messages.block')"
+            :cancelText="__('messages.cancel')"
+            confirmMethod="blockUser"
+            cancelMethod="closeBlockModal"
+        />
+    @endif
+
+    {{-- Report User Modal --}}
+    @if($show_report_modal)
+        <div class="fixed inset-0 z-50 overflow-y-auto" @click.self="$wire.closeReportModal()">
+            <div class="fixed inset-0 bg-black/50 backdrop-blur-sm"></div>
+            <div class="flex items-center justify-center min-h-screen p-4">
+                <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden border border-gray-100" @click.stop>
+                    {{-- Icon --}}
+                    <div class="flex justify-center pt-8 pb-4">
+                        <div class="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-orange-100 to-yellow-100 rounded-full">
+                            <svg class="h-10 w-10 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    {{-- Content --}}
+                    <div class="px-6 pb-6">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-3 text-center">
+                            {{ __('messages.report_user_title') }}
+                        </h3>
+                        <p class="text-sm text-gray-600 mb-6 text-center">
+                            {{ __('messages.report_user_message') }}
+                        </p>
+
+                        {{-- Report Form --}}
+                        <div class="space-y-4">
+                            {{-- Reason Select --}}
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    {{ __('messages.report_reason') }} <span class="text-red-500">*</span>
+                                </label>
+                                <select wire:model="report_reason"
+                                        class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-orange-500 focus:border-orange-500">
+                                    <option value="">{{ __('messages.select_reason') }}</option>
+                                    @foreach($report_reasons as $value => $label)
+                                        <option value="{{ $value }}">{{ $label }}</option>
+                                    @endforeach
+                                </select>
+                                @error('report_reason')
+                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            {{-- Description --}}
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    {{ __('messages.report_description') }}
+                                </label>
+                                <textarea wire:model="report_description"
+                                          rows="3"
+                                          maxlength="1000"
+                                          placeholder="{{ __('messages.report_description_placeholder') }}"
+                                          class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 resize-none"></textarea>
+                                <p class="text-xs text-gray-500 mt-1">{{ strlen($report_description) }}/1000</p>
+                            </div>
+                        </div>
+
+                        {{-- Buttons --}}
+                        <div class="flex gap-3 mt-6">
+                            <button wire:click="closeReportModal"
+                                    class="flex-1 px-6 py-3 bg-gray-100 text-gray-700 font-semibold rounded-xl hover:bg-gray-200 transition-all duration-200">
+                                {{ __('messages.cancel') }}
+                            </button>
+                            <button wire:click="submitReport"
+                                    class="flex-1 px-6 py-3 bg-gradient-to-r from-orange-600 to-yellow-600 text-white font-semibold rounded-xl hover:from-orange-700 hover:to-yellow-700 shadow-md hover:shadow-lg transition-all duration-200">
+                                {{ __('messages.submit_report') }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
 </div>
 
 @script
