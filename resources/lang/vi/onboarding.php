@@ -49,4 +49,5 @@ return [
     'manage_topics' => 'Quản lý Chủ đề',
     'next_step_message' => 'Sau khi lưu hồ sơ của bạn, nhấp vào nút "Quản lý Chủ đề" để tạo và cấu hình các chủ đề và từ khóa của bạn.',
     'languages_must_be_different' => 'Ngôn ngữ mẹ đẻ và ngôn ngữ đang học phải khác nhau.',
+    'back_to_profile' => 'Quay lại Hồ sơ',
 ];

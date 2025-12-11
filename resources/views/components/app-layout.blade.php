@@ -55,41 +55,85 @@
                     <span class="hidden md:inline">{{ __('nav.dashboard') }}</span>
                 </a>
 
-                <a href="/lessons" class="group relative px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200 flex items-center gap-2 {{ request()->is('lessons*') ? 'bg-blue-50 text-blue-600' : '' }}">
-                    @if(request()->is('lessons*'))
-                        <span class="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full"></span>
-                    @endif
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transition-transform group-hover:scale-110" fill="none" viewBox="0 0 24 24"
-                         stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
-                    </svg>
-                    <span class="hidden md:inline">{{ __('nav.lessons') }}</span>
-                </a>
+                {{-- Education Dropdown --}}
+                <div x-data="{ open: false }" class="relative">
+                    <button @click="open = !open"
+                            class="group relative px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200 flex items-center gap-2 {{ request()->is('lessons*') || request()->is('manage-topics*') || request()->is('courses*') ? 'bg-blue-50 text-blue-600' : '' }}">
+                        @if(request()->is('lessons*') || request()->is('manage-topics*') || request()->is('courses*'))
+                            <span class="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full"></span>
+                        @endif
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transition-transform group-hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                        </svg>
+                        <span class="hidden md:inline">{{ __('nav.education') }}</span>
+                        <svg class="w-4 h-4 text-gray-500 transition-all duration-200" :class="{'rotate-180 text-blue-600': open}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </button>
 
-                <a href="/manage-topics" class="group relative px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200 flex items-center gap-2 {{ request()->is('manage-topics*') ? 'bg-blue-50 text-blue-600' : '' }}">
-                    @if(request()->is('manage-topics*'))
-                        <span class="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full"></span>
-                    @endif
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transition-transform group-hover:scale-110" fill="none" viewBox="0 0 24 24"
-                         stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
-                    </svg>
-                    <span class="hidden md:inline">{{ __('nav.topics') }}</span>
-                </a>
+                    <div x-show="open" x-cloak @click.away="open=false" x-transition
+                         class="absolute left-0 mt-2 w-48 bg-white border border-gray-200 rounded-xl shadow-2xl py-2 z-50 overflow-hidden">
+                        <a href="/lessons"
+                           class="group flex items-center gap-3 px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-all {{ request()->is('lessons*') ? 'bg-blue-50 text-blue-600' : '' }}">
+                            <div class="p-1.5 rounded-lg bg-gray-100 group-hover:bg-blue-100 transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-600 group-hover:text-blue-600 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                                </svg>
+                            </div>
+                            {{ __('nav.lessons') }}
+                        </a>
+                        <a href="/manage-topics"
+                           class="group flex items-center gap-3 px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-all {{ request()->is('manage-topics*') ? 'bg-blue-50 text-blue-600' : '' }}">
+                            <div class="p-1.5 rounded-lg bg-gray-100 group-hover:bg-blue-100 transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-600 group-hover:text-blue-600 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                                </svg>
+                            </div>
+                            {{ __('nav.topics') }}
+                        </a>
+                        <a href="{{ route('courses.index') }}"
+                           class="group flex items-center gap-3 px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-all {{ request()->is('courses*') ? 'bg-blue-50 text-blue-600' : '' }}">
+                            <div class="p-1.5 rounded-lg bg-gray-100 group-hover:bg-blue-100 transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-600 group-hover:text-blue-600 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                                </svg>
+                            </div>
+                            {{ __('nav.courses') }}
+                        </a>
+                    </div>
+                </div>
 
-                <a href="{{ route('users.index') }}" class="group relative px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200 flex items-center gap-2 {{ request()->is('users*') || request()->is('profile*') ? 'bg-blue-50 text-blue-600' : '' }}">
-                    @if(request()->is('users*') || request()->is('profile*'))
-                        <span class="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full"></span>
-                    @endif
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transition-transform group-hover:scale-110" fill="none" viewBox="0 0 24 24"
-                         stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
-                    </svg>
-                    <span class="hidden md:inline">{{ __('nav.users') }}</span>
-                </a>
+                {{-- Community Dropdown --}}
+                <div x-data="{ open: false }" class="relative">
+                    <button @click="open = !open"
+                            class="group relative px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200 flex items-center gap-2 {{ request()->is('users*') || request()->is('profile*') || request()->is('messages*') ? 'bg-blue-50 text-blue-600' : '' }}">
+                        @if(request()->is('users*') || request()->is('profile*') || request()->is('messages*'))
+                            <span class="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full"></span>
+                        @endif
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transition-transform group-hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                        </svg>
+                        <span class="hidden md:inline">{{ __('nav.community') }}</span>
+                        @livewire('messages.unread-messages-badge')
+                        <svg class="w-4 h-4 text-gray-500 transition-all duration-200" :class="{'rotate-180 text-blue-600': open}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </button>
 
-                @livewire('messages.unread-messages-counter')
+                    <div x-show="open" x-cloak @click.away="open=false" x-transition
+                         class="absolute left-0 mt-2 w-48 bg-white border border-gray-200 rounded-xl shadow-2xl py-2 z-50 overflow-hidden">
+                        <a href="{{ route('users.index') }}"
+                           class="group flex items-center gap-3 px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-all {{ request()->is('users*') ? 'bg-blue-50 text-blue-600' : '' }}">
+                            <div class="p-1.5 rounded-lg bg-gray-100 group-hover:bg-blue-100 transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-600 group-hover:text-blue-600 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                                </svg>
+                            </div>
+                            {{ __('nav.users') }}
+                        </a>
+                        @livewire('messages.unread-messages-dropdown-item')
+                    </div>
+                </div>
 
                 <a href="{{ route('help.index') }}" class="group relative px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200 flex items-center gap-2 {{ request()->is('help*') ? 'bg-blue-50 text-blue-600' : '' }}">
                     @if(request()->is('help*'))

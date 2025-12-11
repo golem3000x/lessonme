@@ -810,7 +810,9 @@ class LessonIndex extends Component
         /** @var User $user */
         $user = Auth::user();
 
-        $course = Course::where('id', $this->selected_course_id)
+        $course_id = (int) $this->selected_course_id;
+
+        $course = Course::where('id', $course_id)
             ->where('user_id', $user->id)
             ->first();
 
@@ -820,6 +822,7 @@ class LessonIndex extends Component
 
         // Check if already in course
         if ($course->lessons()->where('lessons.id', $this->lesson_for_course)->exists()) {
+            session()->flash('error', __('lessons.lesson_already_in_course'));
             $this->closeCourseModal();
             return;
         }

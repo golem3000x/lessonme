@@ -499,6 +499,7 @@
                                 x-transition
                                 class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-xl shadow-2xl z-50 overflow-hidden"
                             >
+                                @if($lesson->isAiGenerated())
                                 <button wire:click="confirmRegenerate({{ $lesson->id }})"
                                         class="group flex items-center gap-3 w-full px-4 py-3 text-sm text-yellow-600 hover:bg-yellow-50 transition-all duration-200 whitespace-nowrap">
                                     <div class="p-1.5 rounded-lg bg-yellow-50 group-hover:bg-yellow-100 transition-colors">
@@ -509,9 +510,12 @@
                                     </div>
                                     <span class="font-medium">{{ __('lessons.regenerate_lesson') }}</span>
                                 </button>
+                                @endif
 
                                 @if(auth()->user()->isTeacher())
+                                @if($lesson->isAiGenerated())
                                 <div class="border-t border-gray-100"></div>
+                                @endif
 
                                 <button wire:click="openAssignModal({{ $lesson->id }})"
                                         class="group flex items-center gap-3 w-full px-4 py-3 text-sm text-green-600 hover:bg-green-50 transition-all duration-200 whitespace-nowrap">
@@ -536,6 +540,7 @@
                                 </button>
                                 @endif
 
+                                @if($lesson->isAiGenerated())
                                 <div class="border-t border-gray-100"></div>
 
                                 <a href="{{ route('lessons.history', $lesson->uuid) }}"
@@ -548,6 +553,7 @@
                                     </div>
                                     <span class="font-medium">{{ __('lessons.history') }}</span>
                                 </a>
+                                @endif
 
                                 <div class="border-t border-gray-100"></div>
 
@@ -796,8 +802,8 @@
                             <div class="space-y-2 max-h-64 overflow-y-auto">
                                 @foreach($available_courses as $course)
                                     <label class="flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition
-                                        {{ $selected_course_id === $course['id'] ? 'border-purple-500 bg-purple-50' : 'border-gray-200 hover:border-purple-300' }}">
-                                        <input type="radio" wire:model="selected_course_id" value="{{ $course['id'] }}" class="text-purple-600 focus:ring-purple-500">
+                                        {{ (int)$selected_course_id === $course['id'] ? 'border-purple-500 bg-purple-50' : 'border-gray-200 hover:border-purple-300' }}">
+                                        <input type="radio" wire:model.live="selected_course_id" value="{{ $course['id'] }}" class="text-purple-600 focus:ring-purple-500">
                                         <div class="flex-1">
                                             <p class="font-medium text-gray-900">{{ $course['title'] }}</p>
                                             <p class="text-sm text-gray-500">{{ trans_choice('lessons.lessons_in_course', $course['lessons_count'], ['count' => $course['lessons_count']]) }}</p>

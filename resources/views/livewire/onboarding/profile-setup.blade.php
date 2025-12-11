@@ -1,15 +1,24 @@
 <div class="max-w-3xl mx-auto p-8 bg-white rounded-2xl shadow-lg">
     <!-- Header -->
     <div class="flex items-center justify-between mb-6 border-b pb-3">
-        <h2 class="text-2xl font-semibold text-gray-800 flex items-center gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg"
-                 class="h-6 w-6 text-blue-600"
-                 fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M5.121 17.804A3 3 0 016 17h12a3 3 0 01.879.804M12 14a5 5 0 100-10 5 5 0 000 10z"/>
-            </svg>
-            {{ __('onboarding.profile_setup') }}
-        </h2>
+        <div class="flex items-center gap-4">
+            <a href="{{ route('profile.show', auth()->user()) }}" 
+               class="p-2 hover:bg-gray-100 rounded-lg transition text-gray-600 hover:text-gray-900"
+               title="{{ __('onboarding.back_to_profile') }}">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                </svg>
+            </a>
+            <h2 class="text-2xl font-semibold text-gray-800 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     class="h-6 w-6 text-blue-600"
+                     fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M5.121 17.804A3 3 0 016 17h12a3 3 0 01.879.804M12 14a5 5 0 100-10 5 5 0 000 10z"/>
+                </svg>
+                {{ __('onboarding.profile_setup') }}
+            </h2>
+        </div>
     </div>
 
     <!-- Flash messages -->

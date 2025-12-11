@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Auth\SocialAuthController;
 use App\Http\Controllers\Auth\ZaloController;
 use App\Http\Controllers\HelpController;
+use App\Http\Controllers\Course\CourseController;
 use App\Http\Controllers\Lesson\LessonController;
 use App\Http\Middleware\EnsureTempGuestUser;
 use App\Livewire\Auth\LanguageSelection;
@@ -75,7 +76,7 @@ Route::middleware('auth')->group(function () {
     })->name('dashboard');
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-    Route::get('/onboarding', ProfileSetup::class)->name('onboarding.profile');
+    Route::get('/profile/edit', ProfileSetup::class)->name('profile.edit');
 
     // Users / Community
     Route::get('/users', UserList::class)->name('users.index');
@@ -95,13 +96,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/lessons', LessonIndex::class)->name('lessons.index');
     Route::get('/lessons/create', ManualLessonCreator::class)->name('lessons.create');
 
-    // Courses management (teachers only)
-    Route::middleware('teacher')->group(function () {
-        Route::get('/courses', CourseIndex::class)->name('courses.index');
-        Route::get('/courses/create', CourseCreator::class)->name('courses.create');
-        Route::get('/courses/{course}/edit', CourseCreator::class)->name('courses.edit');
-    });
-    Route::get('/courses/{course}', CourseShow::class)->name('courses.show');
+    // Courses management
+    Route::get('/courses', CourseIndex::class)->name('courses.index');
+    Route::get('/courses/create', [CourseController::class, 'create'])->name('courses.create')->middleware('teacher');
+    Route::get('/courses/{course}/edit', [CourseController::class, 'edit'])->name('courses.edit')->middleware('teacher');
+    Route::get('/courses/{course}', [CourseController::class, 'show'])->name('courses.show');
 
     // Protected lesson routes - require ownership
     Route::middleware('lesson.owner')->group(function () {
@@ -118,5 +117,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/for-teachers', [HelpController::class, 'forTeachers'])->name('for-teachers');
         Route::get('/exercise-types', [HelpController::class, 'exerciseTypes'])->name('exercise-types');
         Route::get('/faq', [HelpController::class, 'faq'])->name('faq');
+        Route::get('/courses', [HelpController::class, 'courses'])->name('courses');
+        Route::get('/find-users', [HelpController::class, 'findUsers'])->name('find-users');
+        Route::get('/ai-generation', [HelpController::class, 'aiGeneration'])->name('ai-generation');
     });
 });

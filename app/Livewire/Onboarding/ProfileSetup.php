@@ -186,7 +186,7 @@ class ProfileSetup extends Component
 
         session()->flash('message', __('onboarding.avatar_removed'));
 
-        return redirect()->route('onboarding.profile');
+        return redirect()->route('profile.edit');
     }
 
     /**

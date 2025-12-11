@@ -55,4 +55,28 @@ class HelpController extends Controller
     {
         return view('help.faq');
     }
+
+    /**
+     * Display Courses section
+     */
+    public function courses(): View
+    {
+        return view('help.courses');
+    }
+
+    /**
+     * Display Find Users section
+     */
+    public function findUsers(): View
+    {
+        return view('help.find-users');
+    }
+
+    /**
+     * Display AI Generation section
+     */
+    public function aiGeneration(): View
+    {
+        return view('help.ai-generation');
+    }
 }

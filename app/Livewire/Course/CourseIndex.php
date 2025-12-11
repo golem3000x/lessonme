@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Livewire\Course;
 
+use App\Enums\System\UserRoleEnum;
 use App\Models\Course\Course;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Collection;
@@ -18,8 +19,19 @@ class CourseIndex extends Component
 
     public ?int $course_to_delete = null;
 
+    public function isTeacher(): bool
+    {
+        $user = Auth::user();
+
+        return $user && $user->hasRole(UserRoleEnum::TEACHER);
+    }
+
     public function confirmDelete(int $course_id): void
     {
+        if (! $this->isTeacher()) {
+            return;
+        }
+
         $this->course_to_delete = $course_id;
         $this->show_delete_confirm = true;
     }
@@ -32,7 +44,7 @@ class CourseIndex extends Component
 
     public function deleteCourse(): void
     {
-        if ($this->course_to_delete === null) {
+        if (! $this->isTeacher() || $this->course_to_delete === null) {
             return;
         }
 
@@ -51,6 +63,10 @@ class CourseIndex extends Component
 
     public function togglePublish(int $course_id): void
     {
+        if (! $this->isTeacher()) {
+            return;
+        }
+
         $user = Auth::user();
         $course = Course::where('id', $course_id)
             ->where('user_id', $user->id)
@@ -72,7 +88,15 @@ class CourseIndex extends Component
     {
         $user = Auth::user();
 
-        return Course::where('user_id', $user->id)
+        if ($this->isTeacher()) {
+            return Course::where('user_id', $user->id)
+                ->withCount('lessons')
+                ->orderBy('created_at', 'desc')
+                ->get();
+        }
+
+        return Course::where('is_published', true)
+            ->with('user')
             ->withCount('lessons')
             ->orderBy('created_at', 'desc')
             ->get();
@@ -82,6 +106,7 @@ class CourseIndex extends Component
     {
         return view('livewire.course.course-index', [
             'courses' => $this->getCourses(),
+            'is_teacher' => $this->isTeacher(),
         ]);
     }
 }

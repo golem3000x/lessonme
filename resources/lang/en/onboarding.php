@@ -49,4 +49,5 @@ return [
     'manage_topics' => 'Manage Topics',
     'next_step_message' => 'After saving your profile, click "Manage Topics" button to create and configure your topics and keywords.',
     'languages_must_be_different' => 'Native language and learning language must be different.',
+    'back_to_profile' => 'Back to Profile',
 ];

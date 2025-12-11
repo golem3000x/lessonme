@@ -97,6 +97,44 @@
                     <p class="text-gray-600 relative z-10">{{ __('help.exercise_types_description') }}</p>
                 </a>
 
+                {{-- Courses --}}
+                <a href="{{ route('help.courses') }}" 
+                   class="help-card group bg-white rounded-xl shadow-lg border-2 border-gray-200 hover:border-cyan-500 hover:shadow-2xl p-6 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-cyan-100 to-transparent rounded-bl-full opacity-50"></div>
+                    <div class="flex items-center gap-3 mb-3 relative z-10">
+                        <span class="help-card-icon text-5xl">📋</span>
+                        <h3 class="text-xl font-bold text-gray-900 group-hover:text-cyan-600 transition-colors">
+                            {{ __('help.courses') }}
+                        </h3>
+                    </div>
+                    <p class="text-gray-600 relative z-10">{{ __('help.courses_description') }}</p>
+                </a>
+
+                {{-- Find Users --}}
+                <a href="{{ route('help.find-users') }}" 
+                   class="help-card group bg-white rounded-xl shadow-lg border-2 border-gray-200 hover:border-teal-500 hover:shadow-2xl p-6 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-teal-100 to-transparent rounded-bl-full opacity-50"></div>
+                    <div class="flex items-center gap-3 mb-3 relative z-10">
+                        <span class="help-card-icon text-5xl">🔍</span>
+                        <h3 class="text-xl font-bold text-gray-900 group-hover:text-teal-600 transition-colors">
+                            {{ __('help.find_users') }}
+                        </h3>
+                    </div>
+                    <p class="text-gray-600 relative z-10">{{ __('help.find_users_description') }}</p>
+                </a>
+
+                {{-- AI Generation --}}
+                <a href="{{ route('help.ai-generation') }}" class="help-card group bg-white rounded-xl shadow-lg border-2 border-gray-200 hover:border-indigo-500 hover:shadow-2xl p-6 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-indigo-100 to-transparent rounded-bl-full opacity-50"></div>
+                    <div class="flex items-center gap-3 mb-3 relative z-10">
+                        <span class="help-card-icon text-5xl">🤖</span>
+                        <h3 class="text-xl font-bold text-gray-900 group-hover:text-indigo-600 transition-colors">
+                            {{ __('help.ai_generation') }}
+                        </h3>
+                    </div>
+                    <p class="text-gray-600 relative z-10">{{ __('help.ai_generation_description') }}</p>
+                </a>
+
                 {{-- FAQ --}}
                 <a href="{{ route('help.faq') }}" 
                    class="help-card group bg-white rounded-xl shadow-lg border-2 border-gray-200 hover:border-pink-500 hover:shadow-2xl p-6 relative overflow-hidden">

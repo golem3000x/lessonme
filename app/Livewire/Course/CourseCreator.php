@@ -11,10 +11,8 @@ use App\Models\Lesson\Lesson;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
-use Livewire\Attributes\Layout;
 use Livewire\Component;
 
-#[Layout('components.app-layout')]
 class CourseCreator extends Component
 {
     public ?Course $course = null;
