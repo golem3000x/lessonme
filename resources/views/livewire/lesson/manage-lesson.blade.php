@@ -1,6 +1,54 @@
 @php use App\Enums\System\LanguageLevelEnum; @endphp
 <div class="space-y-5">
+    {{-- Step 1: Creation Type Selection --}}
+    @if(empty($creation_type))
+        <div class="space-y-4">
+            <p class="text-center text-gray-600 mb-6">{{ __('lessons.choose_creation_method') }}</p>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {{-- AI Option --}}
+                <button wire:click="selectCreationType('ai')"
+                        class="group relative flex flex-col items-center p-6 bg-gradient-to-br from-violet-50 to-purple-50 border-2 border-violet-200 rounded-xl hover:border-violet-400 hover:shadow-lg transition-all duration-300">
+                    <div class="w-16 h-16 bg-gradient-to-br from-violet-500 to-purple-600 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-800 mb-2">{{ __('lessons.create_with_ai') }}</h3>
+                    <p class="text-sm text-gray-600 text-center">{{ __('lessons.create_with_ai_desc') }}</p>
+                </button>
+
+                {{-- Manual Option --}}
+                <button wire:click="selectCreationType('manual')"
+                        class="group relative flex flex-col items-center p-6 bg-gradient-to-br from-amber-50 to-orange-50 border-2 border-amber-200 rounded-xl hover:border-amber-400 hover:shadow-lg transition-all duration-300">
+                    <div class="w-16 h-16 bg-gradient-to-br from-amber-500 to-orange-600 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-800 mb-2">{{ __('lessons.create_manually') }}</h3>
+                    <p class="text-sm text-gray-600 text-center">{{ __('lessons.create_manually_desc') }}</p>
+                </button>
+            </div>
+
+            <div class="flex justify-end pt-4 border-t border-gray-200">
+                <button wire:click="$parent.closeManageModal"
+                        class="px-5 py-2.5 border-2 border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 font-medium">
+                    {{ __('lessons.cancel') }}
+                </button>
+            </div>
+        </div>
+    @else
+    {{-- Step 2: AI Creation Form --}}
     <div class="flex flex-col space-y-5">
+        {{-- Back button --}}
+        <button wire:click="backToSelection" class="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 transition mb-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+            </svg>
+            {{ __('lessons.back_to_selection') }}
+        </button>
+
         {{-- Language Selection (only show if user has multiple learning languages) --}}
         @if(count($available_languages) > 1)
             <div class="group">
@@ -149,4 +197,5 @@
             </button>
         </div>
     </div>
+    @endif
 </div>

@@ -2,6 +2,7 @@
 
 use App\Http\Middleware\EnsureLessonAccess;
 use App\Http\Middleware\EnsureLessonBelongsToUser;
+use App\Http\Middleware\EnsureUserIsTeacher;
 use App\Http\Middleware\SetLocale;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -20,6 +21,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'lesson.owner' => EnsureLessonBelongsToUser::class,
             'lesson.access' => EnsureLessonAccess::class,
+            'teacher' => EnsureUserIsTeacher::class,
         ]);
     })
     ->withProviders([

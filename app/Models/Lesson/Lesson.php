@@ -8,12 +8,14 @@ use App\Enums\Lesson\LessonAudioStatusEnum;
 use App\Enums\System\LanguageLevelEnum;
 use App\Enums\System\TableNameEnum;
 use App\Models\Abstracts\Lesson\BaseLesson;
+use App\Models\Course\Course;
 use App\Models\Topic\Topic;
 use App\Services\Lesson\LessonAudioService;
 use Database\Factories\Lesson\LessonFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 
@@ -156,6 +158,16 @@ class Lesson extends BaseLesson
     public function feedbacks(): HasMany
     {
         return $this->hasMany(LessonFeedback::class);
+    }
+
+    /**
+     * @return BelongsToMany<Course, $this>
+     */
+    public function courses(): BelongsToMany
+    {
+        return $this->belongsToMany(Course::class, TableNameEnum::COURSE_LESSONS->value)
+            ->withPivot(['order', 'is_required'])
+            ->withTimestamps();
     }
 
     public function getVocabularyAudio(string $word): ?LessonAudioFile

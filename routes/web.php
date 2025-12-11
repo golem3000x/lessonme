@@ -10,7 +10,11 @@ use App\Http\Controllers\Lesson\LessonController;
 use App\Http\Middleware\EnsureTempGuestUser;
 use App\Livewire\Auth\LanguageSelection;
 use App\Livewire\Auth\RoleSelection;
+use App\Livewire\Course\CourseCreator;
+use App\Livewire\Course\CourseIndex;
+use App\Livewire\Course\CourseShow;
 use App\Livewire\Lesson\LessonIndex;
+use App\Livewire\Lesson\ManualLessonCreator;
 use App\Livewire\Messages\DirectMessages;
 use App\Livewire\Messages\MessagesIndex;
 use App\Livewire\Onboarding\ProfileSetup;
@@ -60,7 +64,10 @@ Route::middleware('guest')->group(function () {
 });
 
 // Lesson show route - accessible without auth for demo lessons
-Route::get('/lessons/{lesson}', [LessonController::class, 'show'])->name('lessons.show');
+// Use UUID constraint to avoid catching /lessons/create
+Route::get('/lessons/{lesson}', [LessonController::class, 'show'])
+    ->name('lessons.show')
+    ->whereUuid('lesson');
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', function () {
@@ -86,6 +93,15 @@ Route::middleware('auth')->group(function () {
 
     // Lessons management
     Route::get('/lessons', LessonIndex::class)->name('lessons.index');
+    Route::get('/lessons/create', ManualLessonCreator::class)->name('lessons.create');
+
+    // Courses management (teachers only)
+    Route::middleware('teacher')->group(function () {
+        Route::get('/courses', CourseIndex::class)->name('courses.index');
+        Route::get('/courses/create', CourseCreator::class)->name('courses.create');
+        Route::get('/courses/{course}/edit', CourseCreator::class)->name('courses.edit');
+    });
+    Route::get('/courses/{course}', CourseShow::class)->name('courses.show');
 
     // Protected lesson routes - require ownership
     Route::middleware('lesson.owner')->group(function () {

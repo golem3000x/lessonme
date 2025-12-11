@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models\Abstracts\Lesson;
 
 use App\Casts\EmbeddingCast;
+use App\Enums\Lesson\LessonCreationTypeEnum;
 use App\Enums\System\LanguageLevelEnum;
 use App\Enums\System\SystemLanguageEnum;
 use App\Models\Abstracts\BaseModel;
@@ -21,9 +22,11 @@ use Illuminate\Support\Carbon;
  * @property int $user_id
  * @property int|null $topic_id
  * @property string $lesson_name
- * @property string $lesson_text
+ * @property string|null $lesson_text
  * @property LanguageLevelEnum|null $language_level
  * @property SystemLanguageEnum|null $lesson_lang
+ * @property LessonCreationTypeEnum $creation_type
+ * @property bool $is_draft
  * @property array<array-key, mixed>|null $grammar_data
  * @property array<array-key, mixed>|null $vocabulary
  * @property array<array-key, mixed>|null $dialogue
@@ -49,6 +52,8 @@ abstract class BaseLesson extends BaseModel
         'lesson_text',
         'language_level',
         'lesson_lang',
+        'creation_type',
+        'is_draft',
         'grammar_data',
         'vocabulary',
         'dialogue',
@@ -62,6 +67,8 @@ abstract class BaseLesson extends BaseModel
     protected $casts = [
         'language_level' => LanguageLevelEnum::class,
         'lesson_lang' => SystemLanguageEnum::class,
+        'creation_type' => LessonCreationTypeEnum::class,
+        'is_draft' => 'boolean',
         'grammar_data' => 'array',
         'vocabulary' => 'array',
         'dialogue' => 'array',
@@ -122,5 +129,33 @@ abstract class BaseLesson extends BaseModel
     public function uniqueIds(): array
     {
         return ['uuid'];
+    }
+
+    /**
+     * Check if this is an AI-generated lesson.
+     */
+    public function isAiGenerated(): bool
+    {
+        return $this->creation_type === LessonCreationTypeEnum::AI;
+    }
+
+    /**
+     * Check if this is a manually created lesson.
+     */
+    public function isManuallyCreated(): bool
+    {
+        return $this->creation_type === LessonCreationTypeEnum::MANUAL;
+    }
+
+    /**
+     * Get creation type badge color.
+     */
+    public function getCreationTypeBadgeColorAttribute(): string
+    {
+        return match ($this->creation_type) {
+            LessonCreationTypeEnum::AI => 'bg-violet-100 text-violet-700',
+            LessonCreationTypeEnum::MANUAL => 'bg-amber-100 text-amber-700',
+            default => 'bg-gray-100 text-gray-700',
+        };
     }
 }

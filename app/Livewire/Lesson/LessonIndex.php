@@ -65,6 +65,7 @@ use App\Enums\System\LanguageLevelEnum;
 use App\Enums\System\QueueNameEnum;
 use App\Enums\System\SystemLanguageEnum;
 use App\Jobs\Lesson\RegenerateLessonJob;
+use App\Models\Course\Course;
 use App\Models\Lesson\Lesson;
 use App\Models\Lesson\LessonAssignment;
 use App\Models\User;
@@ -108,6 +109,15 @@ class LessonIndex extends Component
 
     /** @var array<int, int> */
     public array $selected_students = [];
+
+    public bool $show_course_modal = false;
+
+    public ?int $lesson_for_course = null;
+
+    public ?int $selected_course_id = null;
+
+    /** @var array<int, array{id: int, title: string, lessons_count: int}> */
+    public array $available_courses = [];
 
     /**
      * Placeholders for NEW lessons being created (simple flat array of placeholder IDs)
@@ -752,6 +762,79 @@ class LessonIndex extends Component
 
         // Clear computed cache
         unset($this->assignedStudentIds);
+    }
+
+    // Course modal methods
+    public function openAddToCourseModal(int $lesson_id): void
+    {
+        /** @var User $user */
+        $user = Auth::user();
+
+        if (! $user->isTeacher()) {
+            return;
+        }
+
+        $this->lesson_for_course = $lesson_id;
+        $this->selected_course_id = null;
+
+        // Load user's courses
+        $this->available_courses = Course::query()
+            ->where('user_id', $user->id)
+            ->withCount('lessons')
+            ->get()
+            ->map(fn (Course $c) => [
+                'id' => $c->id,
+                'title' => $c->title,
+                'lessons_count' => $c->lessons_count,
+            ])
+            ->toArray();
+
+        $this->show_course_modal = true;
+        $this->closeDropdown($lesson_id);
+    }
+
+    public function closeCourseModal(): void
+    {
+        $this->show_course_modal = false;
+        $this->lesson_for_course = null;
+        $this->selected_course_id = null;
+        $this->available_courses = [];
+    }
+
+    public function addLessonToCourse(): void
+    {
+        if ($this->lesson_for_course === null || $this->selected_course_id === null) {
+            return;
+        }
+
+        /** @var User $user */
+        $user = Auth::user();
+
+        $course = Course::where('id', $this->selected_course_id)
+            ->where('user_id', $user->id)
+            ->first();
+
+        if (! $course) {
+            return;
+        }
+
+        // Check if already in course
+        if ($course->lessons()->where('lessons.id', $this->lesson_for_course)->exists()) {
+            $this->closeCourseModal();
+            return;
+        }
+
+        // Get max order
+        $max_order = $course->lessons()->max('order') ?? 0;
+
+        // Attach lesson to course
+        $course->lessons()->attach($this->lesson_for_course, [
+            'order' => $max_order + 1,
+            'is_required' => true,
+        ]);
+
+        session()->flash('message', __('lessons.lesson_added_to_course'));
+        $this->closeCourseModal();
     }
 
     public function toggleFilters(): void

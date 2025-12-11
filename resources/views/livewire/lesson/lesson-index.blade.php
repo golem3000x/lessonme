@@ -443,6 +443,29 @@
                                         {{ $lesson->language_level->value }}
                                     </span>
                                 @endif
+
+                                {{-- Creation type badge --}}
+                                @if($lesson->creation_type)
+                                    <span class="px-2 py-0.5 rounded-full text-xs font-medium {{ $lesson->creation_type_badge_color }} flex items-center gap-1">
+                                        @if($lesson->isAiGenerated())
+                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
+                                            </svg>
+                                        @else
+                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+                                            </svg>
+                                        @endif
+                                        {{ $lesson->creation_type->label() }}
+                                    </span>
+                                @endif
+
+                                {{-- Draft badge --}}
+                                @if($lesson->is_draft)
+                                    <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-gray-200 text-gray-600">
+                                        {{ __('lessons.draft') }}
+                                    </span>
+                                @endif
                                 
                                 <span class="text-xs text-gray-500 flex items-center gap-1">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 drop-shadow-sm" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -499,6 +522,17 @@
                                         </svg>
                                     </div>
                                     <span class="font-medium">{{ __('lessons.assign_to') }}</span>
+                                </button>
+
+                                <button wire:click="openAddToCourseModal({{ $lesson->id }})"
+                                        class="group flex items-center gap-3 w-full px-4 py-3 text-sm text-purple-600 hover:bg-purple-50 transition-all duration-200 whitespace-nowrap">
+                                    <div class="p-1.5 rounded-lg bg-purple-50 group-hover:bg-purple-100 transition-colors">
+                                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                  d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                                        </svg>
+                                    </div>
+                                    <span class="font-medium">{{ __('lessons.add_to_course') }}</span>
                                 </button>
                                 @endif
 
@@ -719,6 +753,74 @@
                             </div>
                         @endif
                     </div>
+                </div>
+            </div>
+        </div>
+    @endif
+
+    {{-- Add to Course Modal --}}
+    @if($show_course_modal)
+        <div class="fixed inset-0 z-50 overflow-y-auto" @click.self="$wire.closeCourseModal()">
+            <div class="fixed inset-0 bg-black/50 backdrop-blur-sm"></div>
+            <div class="fixed inset-0 flex items-center justify-center p-4">
+                <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden" @click.stop>
+                    {{-- Header --}}
+                    <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+                        <h3 class="text-lg font-bold text-gray-900">{{ __('lessons.add_to_course') }}</h3>
+                        <button wire:click="closeCourseModal" class="p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100 transition">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                            </svg>
+                        </button>
+                    </div>
+
+                    {{-- Content --}}
+                    <div class="p-6">
+                        @if(empty($available_courses))
+                            <div class="text-center py-8">
+                                <div class="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
+                                    <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                                    </svg>
+                                </div>
+                                <p class="text-gray-600 mb-4">{{ __('lessons.no_courses_available') }}</p>
+                                <a href="{{ route('courses.create') }}" class="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                                    </svg>
+                                    {{ __('lessons.create_course') }}
+                                </a>
+                            </div>
+                        @else
+                            <label class="block text-sm font-medium text-gray-700 mb-3">{{ __('lessons.select_course') }}</label>
+                            <div class="space-y-2 max-h-64 overflow-y-auto">
+                                @foreach($available_courses as $course)
+                                    <label class="flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition
+                                        {{ $selected_course_id === $course['id'] ? 'border-purple-500 bg-purple-50' : 'border-gray-200 hover:border-purple-300' }}">
+                                        <input type="radio" wire:model="selected_course_id" value="{{ $course['id'] }}" class="text-purple-600 focus:ring-purple-500">
+                                        <div class="flex-1">
+                                            <p class="font-medium text-gray-900">{{ $course['title'] }}</p>
+                                            <p class="text-sm text-gray-500">{{ trans_choice('lessons.lessons_in_course', $course['lessons_count'], ['count' => $course['lessons_count']]) }}</p>
+                                        </div>
+                                    </label>
+                                @endforeach
+                            </div>
+                        @endif
+                    </div>
+
+                    {{-- Footer --}}
+                    @if(!empty($available_courses))
+                        <div class="flex justify-end gap-3 px-6 py-4 border-t border-gray-100 bg-gray-50">
+                            <button wire:click="closeCourseModal" class="px-4 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-100 transition font-medium">
+                                {{ __('lessons.cancel') }}
+                            </button>
+                            <button wire:click="addLessonToCourse" 
+                                    class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition font-medium disabled:opacity-50"
+                                    {{ $selected_course_id === null ? 'disabled' : '' }}>
+                                {{ __('lessons.add_to_course') }}
+                            </button>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>

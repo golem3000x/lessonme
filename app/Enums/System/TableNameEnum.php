@@ -40,4 +40,7 @@ enum TableNameEnum: string
     case TEACHER_INVITATIONS = 'teacher_invitations';
     case USER_BLOCKS = 'user_blocks';
     case USER_REPORTS = 'user_reports';
+    case COURSES = 'courses';
+    case COURSE_LESSONS = 'course_lessons';
+    case COURSE_PROGRESS = 'course_progress';
 }

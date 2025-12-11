@@ -18,6 +18,7 @@ namespace App\Livewire\Lesson;
  */
 
 use App\Dto\LessonDto;
+use App\Enums\Lesson\LessonCreationTypeEnum;
 use App\Enums\Notifications\LessonCreationStatusEnum;
 use App\Enums\System\LanguageLevelEnum;
 use App\Enums\System\QueueNameEnum;
@@ -37,6 +38,7 @@ use Livewire\Component;
 
 class ManageLesson extends Component
 {
+    public string $creation_type = '';
     public string $topic = '';
 
     public ?int $topic_id = null;
@@ -301,8 +303,32 @@ class ManageLesson extends Component
     #[On('reset-manage-lesson-state')]
     public function resetState(): void
     {
-        $this->reset(['is_generating']);
+        $this->reset(['is_generating', 'creation_type']);
         $this->is_generating = false;
+        $this->creation_type = '';
+    }
+
+    /**
+     * Select creation type (AI or Manual).
+     */
+    public function selectCreationType(string $type): void
+    {
+        if ($type === LessonCreationTypeEnum::MANUAL->value) {
+            $this->dispatch('close-manage-modal');
+            $this->redirect(route('lessons.create'), navigate: true);
+
+            return;
+        }
+
+        $this->creation_type = $type;
+    }
+
+    /**
+     * Go back to creation type selection.
+     */
+    public function backToSelection(): void
+    {
+        $this->creation_type = '';
     }
 
     /**
