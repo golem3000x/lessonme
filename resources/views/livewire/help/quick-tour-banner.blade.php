@@ -11,56 +11,54 @@
                 </svg>
             </div>
 
-            <div class="flex items-start justify-between gap-4 relative z-10">
-                <div class="flex-1">
-                    <div class="flex items-center gap-3 mb-3">
-                        <span class="text-5xl help-icon-pulse">🎓</span>
-                        <h3 class="text-2xl font-bold drop-shadow-lg">{{ __('help.banner_title') }}</h3>
-                    </div>
-                    <p class="text-blue-50 mb-5 text-base leading-relaxed max-w-2xl">
-                        {{ __('help.banner_message') }}
-                    </p>
-                    <div class="flex flex-wrap gap-3">
-                        {{-- Start Tutorial Button --}}
-                        <button 
-                            wire:click="startTour"
-                            class="btn-shine inline-flex items-center gap-2 px-6 py-3 bg-white text-blue-700 font-semibold rounded-lg hover:bg-blue-50 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 transform">
-                            <svg class="w-5 h-5 transition-transform group-hover:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                            </svg>
-                            {{ __('help.start_tour') }}
-                        </button>
+            {{-- Close Icon (X) - absolute positioned like greeting banner --}}
+            <button 
+                wire:click="dismissPermanently"
+                class="absolute top-3 right-3 p-1 text-white/70 hover:text-white transition-all duration-300 hover:rotate-90 hover:scale-110 z-20">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
 
-                        {{-- Maybe Later Button --}}
-                        <button 
-                            wire:click="dismissTemporarily"
-                            class="inline-flex items-center gap-2 px-6 py-3 bg-white/20 backdrop-blur-sm text-white font-semibold rounded-lg hover:bg-white/30 transition-all duration-300 border-2 border-white/40 hover:border-white/60 hover:scale-105 transform shadow-md">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                            {{ __('help.maybe_later') }}
-                        </button>
-
-                        {{-- Don't Show Again Button --}}
-                        <button 
-                            wire:click="dismissPermanently"
-                            class="inline-flex items-center gap-2 px-6 py-3 bg-transparent text-white font-medium rounded-lg hover:bg-white/10 transition-all duration-300 border-2 border-white/40 hover:border-white/60 hover:scale-105 transform">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
-                            </svg>
-                            {{ __('help.dont_show_again') }}
-                        </button>
-                    </div>
+            <div class="relative z-10 pr-8">
+                <div class="flex items-center gap-3 mb-3">
+                    <span class="text-5xl help-icon-pulse">🎓</span>
+                    <h3 class="text-2xl font-bold drop-shadow-lg">{{ __('help.banner_title') }}</h3>
                 </div>
+                <p class="text-blue-50 mb-5 text-base leading-relaxed max-w-2xl">
+                    {{ __('help.banner_message') }}
+                </p>
+                <div class="flex flex-wrap gap-3">
+                    {{-- Start Tutorial Button --}}
+                    <button 
+                        wire:click="startTour"
+                        class="btn-shine inline-flex items-center gap-2 px-6 py-3 bg-white text-blue-700 font-semibold rounded-lg hover:bg-blue-50 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 transform">
+                        <svg class="w-5 h-5 transition-transform group-hover:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                        {{ __('help.start_tour') }}
+                    </button>
 
-                {{-- Close Icon (X) - same as Don't Show Again --}}
-                <button 
-                    wire:click="dismissPermanently"
-                    class="text-white/70 hover:text-white transition-all duration-300 hover:rotate-90 hover:scale-110">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
+                    {{-- Maybe Later Button --}}
+                    <button 
+                        wire:click="dismissTemporarily"
+                        class="inline-flex items-center gap-2 px-6 py-3 bg-white/20 backdrop-blur-sm text-white font-semibold rounded-lg hover:bg-white/30 transition-all duration-300 border-2 border-white/40 hover:border-white/60 hover:scale-105 transform shadow-md">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        {{ __('help.maybe_later') }}
+                    </button>
+
+                    {{-- Don't Show Again Button --}}
+                    <button 
+                        wire:click="dismissPermanently"
+                        class="inline-flex items-center gap-2 px-6 py-3 bg-transparent text-white font-medium rounded-lg hover:bg-white/10 transition-all duration-300 border-2 border-white/40 hover:border-white/60 hover:scale-105 transform">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                        </svg>
+                        {{ __('help.dont_show_again') }}
+                    </button>
+                </div>
             </div>
         </div>
     @endif

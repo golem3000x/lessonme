@@ -5,97 +5,73 @@ import 'shepherd.js/dist/css/shepherd.css';
  * Initialize and configure the interactive tour
  */
 export function initTour() {
+    const t = window.tourTranslations || {};
+    
     const tour = new Shepherd.Tour({
         useModalOverlay: true,
         defaultStepOptions: {
-            cancelIcon: {
-                enabled: true
-            },
+            cancelIcon: { enabled: true },
             classes: 'shepherd-theme-custom',
             scrollTo: { behavior: 'smooth', block: 'center' },
             arrow: false,
+            modalOverlayOpeningPadding: 12,
+            popperOptions: {
+                modifiers: [{ name: 'offset', options: { offset: [0, 20] } }]
+            },
             when: {
                 show() {
                     const currentStep = tour.getCurrentStep();
-                    const currentStepElement = currentStep.getElement();
+                    const el = currentStep?.getElement();
+                    if (!el) return;
                     
-                    // Apply custom styles directly
-                    if (currentStepElement) {
-                        // Style the modal itself
-                        currentStepElement.style.cssText = 'z-index: 9999 !important; max-width: 380px !important; border-radius: 14px !important; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important; background: linear-gradient(to bottom, #ffffff, #f8fafc) !important; border: 3px solid transparent !important;';
+                    // Style modal
+                    el.style.cssText = 'z-index: 9999 !important; max-width: 400px !important; border-radius: 16px !important; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3) !important; background: white !important;';
+                    
+                    // Style overlay
+                    const overlay = document.querySelector('.shepherd-modal-overlay-container');
+                    if (overlay) overlay.style.cssText = 'background: rgba(15, 23, 42, 0.8) !important; backdrop-filter: blur(4px) !important;';
+                    
+                    // Style shepherd-target
+                    const shepherdTarget = document.querySelector('.shepherd-target');
+                    if (shepherdTarget) shepherdTarget.style.borderRadius = '12px';
+                    
+                    // Style elements
+                    const header = el.querySelector('.shepherd-header');
+                    const title = el.querySelector('.shepherd-title');
+                    const text = el.querySelector('.shepherd-text');
+                    const content = el.querySelector('.shepherd-content');
+                    const footer = el.querySelector('.shepherd-footer');
+                    
+                    if (header) header.style.cssText = 'padding: 1rem 1.25rem 0.5rem !important; background: white !important; border: none !important;';
+                    if (title) title.style.cssText = 'font-size: 1.25rem !important; font-weight: 700 !important; background: linear-gradient(135deg, #2563eb, #7c3aed) !important; -webkit-background-clip: text !important; -webkit-text-fill-color: transparent !important; background-clip: text !important;';
+                    if (text) text.style.cssText = 'color: #4b5563 !important; font-size: 0.9rem !important; line-height: 1.5 !important;';
+                    if (content) content.style.cssText = 'padding: 0.5rem 1.25rem !important; background: white !important;';
+                    
+                    if (footer) {
+                        footer.style.cssText = 'padding: 0.75rem 1.25rem 1rem !important; background: white !important; border: none !important; display: flex !important; flex-direction: column !important; gap: 10px !important;';
                         
-                        // Style the modal overlay
-                        const overlay = document.querySelector('.shepherd-modal-overlay-container');
-                        if (overlay) {
-                            overlay.style.cssText = 'background: rgba(15, 23, 42, 0.75) !important; backdrop-filter: blur(4px) !important;';
+                        // Group buttons
+                        const buttons = footer.querySelectorAll('.shepherd-button, .shepherd-button-secondary');
+                        if (buttons.length > 0 && !footer.querySelector('.shepherd-button-group')) {
+                            const group = document.createElement('div');
+                            group.className = 'shepherd-button-group';
+                            group.style.cssText = 'display: flex !important; gap: 10px !important; justify-content: flex-end !important;';
+                            buttons.forEach(btn => {
+                                btn.style.cssText = btn.classList.contains('shepherd-button-secondary')
+                                    ? 'padding: 0.6rem 1.2rem !important; border-radius: 10px !important; font-weight: 600 !important; font-size: 0.875rem !important; background: #f3f4f6 !important; color: #374151 !important; border: 2px solid #e5e7eb !important; cursor: pointer !important;'
+                                    : 'padding: 0.6rem 1.2rem !important; border-radius: 10px !important; font-weight: 700 !important; font-size: 0.875rem !important; background: linear-gradient(135deg, #3b82f6, #6366f1) !important; color: white !important; border: none !important; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3) !important; cursor: pointer !important;';
+                                group.appendChild(btn);
+                            });
+                            footer.appendChild(group);
                         }
                         
-                        // Style the highlighted target element with rounded corners
-                        const target = currentStep.target;
-                        if (target && typeof target === 'object') {
-                            const targetElement = typeof target === 'string' ? document.querySelector(target) : target;
-                            if (targetElement) {
-                                targetElement.style.borderRadius = '12px !important';
-                                targetElement.style.transition = 'box-shadow 0.3s ease, border-radius 0.3s ease';
-                            }
-                        }
-                        
-                        // Also style shepherd-target class
-                        const shepherdTarget = document.querySelector('.shepherd-target');
-                        if (shepherdTarget) {
-                            shepherdTarget.style.borderRadius = '12px !important';
-                        }
-                        
-                        const header = currentStepElement.querySelector('.shepherd-header');
-                        const content = currentStepElement.querySelector('.shepherd-content');
-                        const footer = currentStepElement.querySelector('.shepherd-footer');
-                        const title = currentStepElement.querySelector('.shepherd-title');
-                        const text = currentStepElement.querySelector('.shepherd-text');
-                        
-                        if (header) {
-                            header.style.cssText = 'padding: 0.875rem 1.125rem !important; background: white !important; border-bottom: none !important;';
-                        }
-                        
-                        if (title) {
-                            title.style.cssText = 'font-size: 1.125rem !important; font-weight: 700 !important; margin-bottom: 0 !important; background: linear-gradient(135deg, #1e40af, #7c3aed, #db2777) !important; -webkit-background-clip: text !important; -webkit-text-fill-color: transparent !important; background-clip: text !important;';
-                        }
-                        
-                        if (text) {
-                            text.style.cssText = 'color: #374151 !important; font-size: 0.875rem !important; line-height: 1.4 !important;';
-                        }
-                        
-                        if (content) {
-                            content.style.cssText = 'padding: 0.625rem 1.125rem !important; background: white !important;';
-                        }
-                        
-                        if (footer) {
-                            footer.style.cssText = 'padding: 0.875rem 1.125rem !important; background: white !important; border-top: none !important; display: flex !important; flex-direction: column !important; gap: 8px !important;';
-                            
-                            // Wrap buttons in a group
-                            const buttons = footer.querySelectorAll('.shepherd-button, .shepherd-button-secondary');
-                            if (buttons.length > 0 && !footer.querySelector('.shepherd-button-group')) {
-                                const buttonGroup = document.createElement('div');
-                                buttonGroup.className = 'shepherd-button-group';
-                                buttonGroup.style.cssText = 'display: flex !important; gap: 10px !important; justify-content: flex-end !important;';
-                                buttons.forEach(button => {
-                                    if (button.classList.contains('shepherd-button-secondary')) {
-                                        button.style.cssText = 'padding: 0.625rem 1.25rem !important; border-radius: 10px !important; font-weight: 600 !important; font-size: 0.9375rem !important; background: #f3f4f6 !important; color: #374151 !important; border: 2px solid #d1d5db !important;';
-                                    } else {
-                                        button.style.cssText = 'padding: 0.625rem 1.25rem !important; border-radius: 10px !important; font-weight: 700 !important; font-size: 0.9375rem !important; background: linear-gradient(135deg, #3b82f6, #6366f1) !important; color: white !important; border: none !important; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1) !important;';
-                                    }
-                                    buttonGroup.appendChild(button);
-                                });
-                                footer.appendChild(buttonGroup);
-                            }
-                            
-                            // Add progress indicator
-                            if (!footer.querySelector('.shepherd-progress')) {
-                                const progress = document.createElement('div');
-                                progress.className = 'shepherd-progress';
-                                progress.style.cssText = 'margin-top: 0.5rem !important; padding-top: 0.5rem !important; font-size: 0.75rem !important; text-align: center !important; font-weight: 600 !important; color: #6b7280 !important; border-top: none !important; display: flex !important; align-items: center !important; justify-content: center !important; gap: 6px !important;';
-                                progress.innerHTML = `📍 Step ${tour.steps.indexOf(currentStep) + 1} of ${tour.steps.length}`;
-                                footer.insertBefore(progress, footer.firstChild);
-                            }
+                        // Progress indicator
+                        if (!footer.querySelector('.shepherd-progress')) {
+                            const progress = document.createElement('div');
+                            progress.className = 'shepherd-progress';
+                            progress.style.cssText = 'font-size: 0.75rem !important; text-align: center !important; font-weight: 600 !important; color: #9ca3af !important;';
+                            progress.textContent = `${tour.steps.indexOf(currentStep) + 1} / ${tour.steps.length}`;
+                            footer.insertBefore(progress, footer.firstChild);
                         }
                     }
                 }
@@ -106,202 +82,96 @@ export function initTour() {
     // Step 1: Welcome
     tour.addStep({
         id: 'welcome',
-        title: window.tourTranslations?.welcome_title || 'Welcome to LessonMe!',
-        text: window.tourTranslations?.welcome_text || 'Let\'s take a quick tour to help you get started with the platform.',
+        title: t.welcome_title || '👋 Welcome to LessonMe!',
+        text: t.welcome_text || 'Let\'s take a quick tour to help you get started. We\'ll show you all the key features of the platform.',
         buttons: [
-            {
-                text: window.tourTranslations?.skip || 'Skip',
-                action: tour.cancel,
-                classes: 'shepherd-button-secondary'
-            },
-            {
-                text: window.tourTranslations?.next || 'Next',
-                action: tour.next
-            }
+            { text: t.skip || 'Skip Tour', action: tour.cancel, classes: 'shepherd-button-secondary' },
+            { text: t.next || 'Let\'s Go! →', action: tour.next }
         ]
     });
 
-    // Step 2: Dashboard
+    // Step 2: Dashboard Navigation
     tour.addStep({
-        id: 'dashboard',
-        title: window.tourTranslations?.dashboard_title || 'Your Dashboard',
-        text: window.tourTranslations?.dashboard_text || 'This is your personal dashboard. Here you can track your progress, see recent scores, and monitor your learning statistics.',
-        attachTo: {
-            element: '.stats-cards',
-            on: 'bottom'
-        },
-        modalOverlayOpeningPadding: 12,
-        popperOptions: {
-            modifiers: [
-                {
-                    name: 'offset',
-                    options: {
-                        offset: [0, 24]
-                    }
-                }
-            ]
-        },
+        id: 'dashboard-nav',
+        title: t.dashboard_nav_title || '📊 Dashboard',
+        text: t.dashboard_nav_text || 'Your personal command center. View your learning statistics, recent scores, and track your progress here.',
+        attachTo: { element: 'a[href="/dashboard"]', on: 'bottom' },
         buttons: [
-            {
-                text: window.tourTranslations?.back || 'Back',
-                action: tour.back,
-                classes: 'shepherd-button-secondary'
-            },
-            {
-                text: window.tourTranslations?.next || 'Next',
-                action: tour.next
-            }
+            { text: t.back || '← Back', action: tour.back, classes: 'shepherd-button-secondary' },
+            { text: t.next || 'Next →', action: tour.next }
         ]
     });
 
-    // Step 3: Lessons Navigation
+    // Step 3: Education Menu
     tour.addStep({
-        id: 'lessons-nav',
-        title: window.tourTranslations?.lessons_title || 'Browse Lessons',
-        text: window.tourTranslations?.lessons_text || 'Click here to browse available lessons, create new ones, or view your lesson history.',
-        attachTo: {
-            element: 'a[href*="lessons"]',
-            on: 'bottom'
-        },
-        modalOverlayOpeningPadding: 12,
-        popperOptions: {
-            modifiers: [
-                {
-                    name: 'offset',
-                    options: {
-                        offset: [0, 24]
-                    }
-                }
-            ]
-        },
+        id: 'education-menu',
+        title: t.education_title || '📚 Education',
+        text: t.education_text || 'Access all your learning materials here: <br><br>• <b>Lessons</b> — Browse, create, or take AI-generated lessons<br>• <b>Topics</b> — Manage topics and keywords for lessons<br>• <b>Courses</b> — Organized lesson collections',
+        attachTo: { element: 'nav .relative:first-of-type button', on: 'bottom' },
         buttons: [
-            {
-                text: window.tourTranslations?.back || 'Back',
-                action: tour.back,
-                classes: 'shepherd-button-secondary'
-            },
-            {
-                text: window.tourTranslations?.next || 'Next',
-                action: tour.next
-            }
+            { text: t.back || '← Back', action: tour.back, classes: 'shepherd-button-secondary' },
+            { text: t.next || 'Next →', action: tour.next }
         ]
     });
 
-    // Step 4: Topics Navigation
+    // Step 4: Community Menu
     tour.addStep({
-        id: 'topics-nav',
-        title: window.tourTranslations?.topics_title || 'Manage Topics',
-        text: window.tourTranslations?.topics_text || 'Create and customize topics for your lessons. Topics help organize your learning materials.',
-        attachTo: {
-            element: 'a[href*="topics"]',
-            on: 'bottom'
-        },
-        modalOverlayOpeningPadding: 12,
-        popperOptions: {
-            modifiers: [
-                {
-                    name: 'offset',
-                    options: {
-                        offset: [0, 24]
-                    }
-                }
-            ]
-        },
+        id: 'community-menu',
+        title: t.community_title || '👥 Community',
+        text: t.community_text || 'Connect with others on the platform:<br><br>• <b>Users</b> — Find teachers or students<br>• <b>Messages</b> — Direct messaging with your connections',
+        attachTo: { element: 'nav .relative:nth-of-type(2) button', on: 'bottom' },
         buttons: [
-            {
-                text: window.tourTranslations?.back || 'Back',
-                action: tour.back,
-                classes: 'shepherd-button-secondary'
-            },
-            {
-                text: window.tourTranslations?.next || 'Next',
-                action: tour.next
-            }
+            { text: t.back || '← Back', action: tour.back, classes: 'shepherd-button-secondary' },
+            { text: t.next || 'Next →', action: tour.next }
         ]
     });
 
-    // Step 5: Notifications
+    // Step 5: Help Center
+    tour.addStep({
+        id: 'help-center',
+        title: t.help_title || '❓ Help Center',
+        text: t.help_text || 'Need assistance? Find guides, tutorials, and answers to frequently asked questions here.',
+        attachTo: { element: 'a[href*="help"]', on: 'bottom' },
+        buttons: [
+            { text: t.back || '← Back', action: tour.back, classes: 'shepherd-button-secondary' },
+            { text: t.next || 'Next →', action: tour.next }
+        ]
+    });
+
+    // Step 6: Notifications
     tour.addStep({
         id: 'notifications',
-        title: window.tourTranslations?.notifications_title || 'Notifications',
-        text: window.tourTranslations?.notifications_text || 'Stay updated with real-time notifications about your lessons, assignments, and progress.',
-        attachTo: {
-            element: '.notifications-panel',
-            on: 'bottom-start'
-        },
-        modalOverlayOpeningPadding: 12,
-        popperOptions: {
-            modifiers: [
-                {
-                    name: 'offset',
-                    options: {
-                        offset: [0, 24]
-                    }
-                }
-            ]
-        },
+        title: t.notifications_title || '🔔 Notifications',
+        text: t.notifications_text || 'Stay informed! Get real-time updates about new assignments, lesson completions, teacher invitations, and more.',
+        attachTo: { element: '.notifications-panel', on: 'bottom-start' },
         buttons: [
-            {
-                text: window.tourTranslations?.back || 'Back',
-                action: tour.back,
-                classes: 'shepherd-button-secondary'
-            },
-            {
-                text: window.tourTranslations?.next || 'Next',
-                action: tour.next
-            }
+            { text: t.back || '← Back', action: tour.back, classes: 'shepherd-button-secondary' },
+            { text: t.next || 'Next →', action: tour.next }
         ]
     });
 
-    // Step 6: Profile
+    // Step 7: User Profile
     tour.addStep({
-        id: 'profile',
-        title: window.tourTranslations?.profile_title || 'Your Profile',
-        text: window.tourTranslations?.profile_text || 'Access your profile settings, language preferences, and account options here.',
-        attachTo: {
-            element: '.user-menu-dropdown',
-            on: 'bottom-end'
-        },
-        modalOverlayOpeningPadding: 12,
-        popperOptions: {
-            modifiers: [
-                {
-                    name: 'offset',
-                    options: {
-                        offset: [0, 24]
-                    }
-                }
-            ]
-        },
+        id: 'user-profile',
+        title: t.profile_title || '👤 Your Profile',
+        text: t.profile_text || 'Manage your account here: view your profile, update settings, change language preferences, or log out.',
+        attachTo: { element: '.user-menu-dropdown', on: 'bottom-end' },
         buttons: [
-            {
-                text: window.tourTranslations?.back || 'Back',
-                action: tour.back,
-                classes: 'shepherd-button-secondary'
-            },
-            {
-                text: window.tourTranslations?.next || 'Next',
-                action: tour.next
-            }
+            { text: t.back || '← Back', action: tour.back, classes: 'shepherd-button-secondary' },
+            { text: t.next || 'Next →', action: tour.next }
         ]
     });
 
-    // Step 7: Final
+    // Step 8: Complete
     tour.addStep({
         id: 'complete',
-        title: window.tourTranslations?.complete_title || 'You\'re All Set!',
-        text: window.tourTranslations?.complete_text || 'You\'re ready to start your learning journey! Visit the Help Center anytime if you need assistance.',
+        title: t.complete_title || '🎉 You\'re All Set!',
+        text: t.complete_text || 'You\'re ready to start your learning journey!<br><br>Visit the <b>Help Center</b> anytime if you need assistance. Good luck!',
         buttons: [
-            {
-                text: window.tourTranslations?.finish || 'Get Started',
-                action: function() {
-                    tour.complete();
-                    // Notify server that tour is completed
-                    if (window.Livewire) {
-                        window.Livewire.dispatch('tour-completed');
-                    }
-                }
-            }
+            { text: t.finish || '🚀 Get Started!', action: () => {
+                tour.complete();
+                if (window.Livewire) window.Livewire.dispatch('tour-completed');
+            }}
         ]
     });
 
