@@ -27,6 +27,9 @@ use Illuminate\Support\Carbon;
  * @property string $lesson_name
  * @property string|null $lesson_text
  * @property LanguageLevelEnum $language_level
+ * @property \App\Enums\System\SystemLanguageEnum $lesson_lang
+ * @property \App\Enums\Lesson\LessonCreationTypeEnum $creation_type
+ * @property bool $is_draft
  * @property array<array-key, mixed>|null $grammar_data
  * @property array<array-key, mixed>|null $vocabulary
  * @property array<array-key, mixed>|null $dialogue
@@ -34,30 +37,35 @@ use Illuminate\Support\Carbon;
  * @property string|null $homework
  * @property array<array-key, mixed>|null $common_mistakes
  * @property string|null $culture_notes
- * @property array<int, float>|null $embedding
+ * @property array|null $embedding
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read Collection<int, \App\Models\Lesson\LessonAssignment> $assignments
  * @property-read int|null $assignments_count
  * @property-read Collection<int, \App\Models\Lesson\LessonAttempt> $attempts
  * @property-read int|null $attempts_count
+ * @property-read Collection<int, \App\Models\Lesson\LessonAudioFile> $audioFiles
+ * @property-read int|null $audio_files_count
+ * @property-read Collection<int, Course> $courses
+ * @property-read int|null $courses_count
+ * @property-read Collection<int, \App\Models\Lesson\LessonFeedback> $feedbacks
+ * @property-read int|null $feedbacks_count
+ * @property-read string $creation_type_badge_color
  * @property-read string $formatted_created_at
  * @property-read string $level_badge_color
  * @property-read Collection<int, \App\Models\Lesson\LessonHistory> $histories
  * @property-read int|null $histories_count
  * @property-read Collection<int, \App\Models\Lesson\LessonScore> $scores
  * @property-read int|null $scores_count
- * @property-read Collection<int, \App\Models\Lesson\LessonAudioFile> $audio_files
- * @property-read int|null $audio_files_count
  * @property-read Topic|null $topic
  * @property-read \App\Models\User $user
- *
- * @method static LessonFactory factory($count = null, $state = [])
+ * @method static \Database\Factories\Lesson\LessonFactory factory($count = null, $state = [])
  * @method static Builder<static>|Lesson newModelQuery()
  * @method static Builder<static>|Lesson newQuery()
  * @method static Builder<static>|Lesson query()
  * @method static Builder<static>|Lesson whereCommonMistakes($value)
  * @method static Builder<static>|Lesson whereCreatedAt($value)
+ * @method static Builder<static>|Lesson whereCreationType($value)
  * @method static Builder<static>|Lesson whereCultureNotes($value)
  * @method static Builder<static>|Lesson whereDialogue($value)
  * @method static Builder<static>|Lesson whereEmbedding($value)
@@ -65,7 +73,9 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|Lesson whereGrammarData($value)
  * @method static Builder<static>|Lesson whereHomework($value)
  * @method static Builder<static>|Lesson whereId($value)
+ * @method static Builder<static>|Lesson whereIsDraft($value)
  * @method static Builder<static>|Lesson whereLanguageLevel($value)
+ * @method static Builder<static>|Lesson whereLessonLang($value)
  * @method static Builder<static>|Lesson whereLessonName($value)
  * @method static Builder<static>|Lesson whereLessonText($value)
  * @method static Builder<static>|Lesson whereTopicId($value)
@@ -73,7 +83,6 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|Lesson whereUserId($value)
  * @method static Builder<static>|Lesson whereUuid($value)
  * @method static Builder<static>|Lesson whereVocabulary($value)
- *
  * @mixin \Eloquent
  */
 class Lesson extends BaseLesson

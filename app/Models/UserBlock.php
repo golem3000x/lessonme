@@ -13,10 +13,19 @@ use Illuminate\Support\Carbon;
  * @property int $id
  * @property int $user_id
  * @property int $blocked_user_id
- * @property Carbon $created_at
- * @property Carbon $updated_at
- * @property-read User $user
- * @property-read User $blockedUser
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read \App\Models\User $blockedUser
+ * @property-read \App\Models\User $user
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserBlock newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserBlock newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserBlock query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserBlock whereBlockedUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserBlock whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserBlock whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserBlock whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserBlock whereUserId($value)
+ * @mixin \Eloquent
  */
 class UserBlock extends Model
 {

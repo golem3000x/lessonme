@@ -10,12 +10,18 @@ enum SystemLanguageEnum: string
 {
     case VIETNAMESE = 'vi';
     case ENGLISH = 'en';
+    case THAI = 'th';
+    case KHMER = 'km';
+    case MALAY = 'ms';
 
     public function key(): string
     {
         return match ($this) {
             self::VIETNAMESE => 'vi',
             self::ENGLISH => 'en',
+            self::THAI => 'th',
+            self::KHMER => 'km',
+            self::MALAY => 'ms',
         };
     }
 
@@ -29,6 +35,9 @@ enum SystemLanguageEnum: string
         return match ($this) {
             self::VIETNAMESE => '🇻🇳',
             self::ENGLISH => '🇬🇧',
+            self::THAI => '🇹🇭',
+            self::KHMER => '🇰🇭',
+            self::MALAY => '🇲🇾',
         };
     }
 
@@ -40,6 +49,9 @@ enum SystemLanguageEnum: string
         return [
             self::VIETNAMESE,
             self::ENGLISH,
+            self::THAI,
+            self::KHMER,
+            self::MALAY,
         ];
     }
 
@@ -51,6 +63,9 @@ enum SystemLanguageEnum: string
         return [
             self::VIETNAMESE->name => self::VIETNAMESE->value,
             self::ENGLISH->name => self::ENGLISH->value,
+            self::THAI->name => self::THAI->value,
+            self::KHMER->name => self::KHMER->value,
+            self::MALAY->name => self::MALAY->value,
         ];
     }
 
@@ -62,6 +77,34 @@ enum SystemLanguageEnum: string
         return [
             self::VIETNAMESE->value,
             self::ENGLISH->value,
+            self::THAI->value,
+            self::KHMER->value,
+            self::MALAY->value,
+        ];
+    }
+
+    public static function flagByValue(string $value): string
+    {
+        return match ($value) {
+            'vi' => self::VIETNAMESE->flag(),
+            'en' => self::ENGLISH->flag(),
+            'th' => self::THAI->flag(),
+            'km' => self::KHMER->flag(),
+            'ms' => self::MALAY->flag(),
+            default => self::ENGLISH->flag(),
+        };
+    }
+
+    /**
+     * Languages available for learning/teaching (lessons available)
+     *
+     * @return array<int, self>
+     */
+    public static function learnable(): array
+    {
+        return [
+            self::VIETNAMESE,
+            self::ENGLISH,
         ];
     }
 }

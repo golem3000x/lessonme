@@ -15,10 +15,21 @@ use Illuminate\Support\Carbon;
  * @property int $student_id
  * @property int $rating
  * @property string|null $comment
- * @property Carbon $created_at
- * @property Carbon $updated_at
- * @property-read User $teacher
- * @property-read User $student
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read \App\Models\User $student
+ * @property-read \App\Models\User $teacher
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TeacherReview newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TeacherReview newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TeacherReview query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TeacherReview whereComment($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TeacherReview whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TeacherReview whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TeacherReview whereRating($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TeacherReview whereStudentId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TeacherReview whereTeacherId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TeacherReview whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 class TeacherReview extends Model
 {

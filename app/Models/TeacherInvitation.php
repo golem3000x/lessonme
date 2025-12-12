@@ -18,9 +18,20 @@ use Illuminate\Support\Carbon;
  * @property InvitationStatusEnum $status
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read User $teacher
- * @property-read User $student
- * @property-read UserMessage|null $message
+ * @property-read \App\Models\UserMessage|null $message
+ * @property-read \App\Models\User $student
+ * @property-read \App\Models\User $teacher
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TeacherInvitation newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TeacherInvitation newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TeacherInvitation query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TeacherInvitation whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TeacherInvitation whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TeacherInvitation whereMessageId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TeacherInvitation whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TeacherInvitation whereStudentId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TeacherInvitation whereTeacherId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TeacherInvitation whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 class TeacherInvitation extends Model
 {

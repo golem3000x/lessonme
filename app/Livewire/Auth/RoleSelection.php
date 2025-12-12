@@ -36,7 +36,7 @@ class RoleSelection extends Component
             return;
         }
 
-        $this->languages = SystemLanguageEnum::all();
+        $this->languages = SystemLanguageEnum::learnable();
 
         // Set default learning language (opposite of native)
         $native_lang = session()->get('registration_native_lang');

@@ -15,16 +15,15 @@ use Illuminate\Support\Carbon;
  * @property string $language
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read User $user
- *
+ * @property-read \App\Enums\System\SystemLanguageEnum|null $language_enum
+ * @property-read \App\Models\User $user
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserTeachingLanguage newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserTeachingLanguage newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserTeachingLanguage query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|UserTeachingLanguage whereUserId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|UserTeachingLanguage whereLanguage($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserTeachingLanguage whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserTeachingLanguage whereLanguage($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserTeachingLanguage whereUpdatedAt($value)
- *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserTeachingLanguage whereUserId($value)
  * @mixin \Eloquent
  */
 class UserTeachingLanguage extends Model

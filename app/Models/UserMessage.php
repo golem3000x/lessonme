@@ -16,14 +16,26 @@ use Illuminate\Support\Carbon;
  * @property int $sender_id
  * @property int $recipient_id
  * @property string $content
- * @property MessageTypeEnum $message_type
  * @property Carbon|null $read_at
- * @property Carbon $created_at
- * @property Carbon $updated_at
- * @property-read User $sender
- * @property-read User $recipient
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property MessageTypeEnum $message_type
  * @property-read bool $is_read
- * @property-read TeacherInvitation|null $invitation
+ * @property-read \App\Models\TeacherInvitation|null $invitation
+ * @property-read \App\Models\User $recipient
+ * @property-read \App\Models\User $sender
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserMessage newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserMessage newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserMessage query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserMessage whereContent($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserMessage whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserMessage whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserMessage whereMessageType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserMessage whereReadAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserMessage whereRecipientId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserMessage whereSenderId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserMessage whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 class UserMessage extends Model
 {

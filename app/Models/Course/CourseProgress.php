@@ -19,11 +19,24 @@ use Illuminate\Support\Carbon;
  * @property int $score
  * @property bool $is_passed
  * @property Carbon|null $completed_at
- * @property Carbon $created_at
- * @property Carbon $updated_at
- * @property-read Course $course
- * @property-read User $user
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read \App\Models\Course\Course $course
  * @property-read Lesson $lesson
+ * @property-read User $user
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CourseProgress newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CourseProgress newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CourseProgress query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CourseProgress whereCompletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CourseProgress whereCourseId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CourseProgress whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CourseProgress whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CourseProgress whereIsPassed($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CourseProgress whereLessonId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CourseProgress whereScore($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CourseProgress whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CourseProgress whereUserId($value)
+ * @mixin \Eloquent
  */
 class CourseProgress extends Model
 {

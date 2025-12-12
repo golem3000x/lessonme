@@ -27,12 +27,12 @@ use Illuminate\Support\Carbon;
  * @property AssignmentStatusEnum $status
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read Collection<int, LessonAttempt> $attempts
+ * @property-read Collection<int, \App\Models\Lesson\LessonAttempt> $attempts
  * @property-read int|null $attempts_count
- * @property-read Lesson $lesson
+ * @property-read \App\Models\Lesson\Lesson $lesson
  * @property-read User $student
  * @property-read User $teacher
- *
+ * @method static \Database\Factories\Lesson\LessonAssignmentFactory factory($count = null, $state = [])
  * @method static Builder<static>|LessonAssignment newModelQuery()
  * @method static Builder<static>|LessonAssignment newQuery()
  * @method static Builder<static>|LessonAssignment query()
@@ -46,8 +46,6 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|LessonAssignment whereStudentId($value)
  * @method static Builder<static>|LessonAssignment whereTeacherId($value)
  * @method static Builder<static>|LessonAssignment whereUpdatedAt($value)
- * @method static LessonAssignmentFactory factory($count = null, $state = [])
- *
  * @mixin \Eloquent
  */
 class LessonAssignment extends Model

@@ -6,7 +6,6 @@ namespace App\Livewire\Course;
 
 use App\Models\Course\Course;
 use App\Models\Course\CourseProgress;
-use App\Models\Lesson\Lesson;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
@@ -19,7 +18,9 @@ class CourseShow extends Component
     public array $lessons_with_progress = [];
 
     public int $completed_count = 0;
+
     public int $total_count = 0;
+
     public int $progress_percentage = 0;
 
     public function mount(Course $course): void

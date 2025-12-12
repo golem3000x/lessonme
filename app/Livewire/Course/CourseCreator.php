@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Livewire\Course;
 
-use App\Enums\System\LanguageLevelEnum;
 use App\Enums\System\SystemLanguageEnum;
 use App\Models\Course\Course;
 use App\Models\Lesson\Lesson;
@@ -18,9 +17,13 @@ class CourseCreator extends Component
     public ?Course $course = null;
 
     public string $title = '';
+
     public string $description = '';
+
     public string $language_level = '';
+
     public string $lesson_lang = '';
+
     public int $passing_score = 70;
 
     /** @var array<int,array{value:string,label:string,flag:string}> */
@@ -42,6 +45,7 @@ class CourseCreator extends Component
         $this->available_languages = collect($teaching_languages)
             ->map(function (string $lang_value) {
                 $enum = SystemLanguageEnum::tryFrom($lang_value);
+
                 return $enum ? [
                     'value' => $enum->value,
                     'label' => $enum->label(),
@@ -117,7 +121,7 @@ class CourseCreator extends Component
         }
 
         $this->course->lessons()->detach($lesson_id);
-        
+
         // Reload lessons
         $this->course_lessons = $this->course->lessons()
             ->orderByPivot('order')

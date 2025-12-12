@@ -28,12 +28,29 @@ use Illuminate\Support\Carbon;
  * @property string|null $cover_image
  * @property bool $is_published
  * @property int $passing_score
- * @property Carbon $created_at
- * @property Carbon $updated_at
- * @property-read User $user
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  * @property-read Collection<int, Lesson> $lessons
- * @property-read Collection<int, CourseProgress> $progress
  * @property-read int|null $lessons_count
+ * @property-read Collection<int, \App\Models\Course\CourseProgress> $progress
+ * @property-read int|null $progress_count
+ * @property-read User $user
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Course newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Course newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Course query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Course whereCoverImage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Course whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Course whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Course whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Course whereIsPublished($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Course whereLanguageLevel($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Course whereLessonLang($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Course wherePassingScore($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Course whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Course whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Course whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Course whereUuid($value)
+ * @mixin \Eloquent
  */
 class Course extends Model
 {

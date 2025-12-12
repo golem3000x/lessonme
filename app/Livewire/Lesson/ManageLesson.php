@@ -39,6 +39,7 @@ use Livewire\Component;
 class ManageLesson extends Component
 {
     public string $creation_type = '';
+
     public string $topic = '';
 
     public ?int $topic_id = null;
@@ -140,6 +141,7 @@ class ManageLesson extends Component
         $this->available_languages = collect($learning_languages)
             ->map(function (string $lang_value) {
                 $enum = SystemLanguageEnum::tryFrom($lang_value);
+
                 return $enum ? [
                     'value' => $enum->value,
                     'label' => $enum->label(),

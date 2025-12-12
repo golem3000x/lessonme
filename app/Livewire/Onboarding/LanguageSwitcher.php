@@ -4,18 +4,25 @@ declare(strict_types=1);
 
 namespace App\Livewire\Onboarding;
 
+use App\Enums\System\SystemLanguageEnum;
 use Livewire\Component;
 
 class LanguageSwitcher extends Component
 {
     public string $current_locale = '';
 
-    public string $target_locale = '';
+    /** @var SystemLanguageEnum[] */
+    public array $languages = [];
 
     public function mount(): void
     {
         $this->current_locale = app()->getLocale();
-        $this->target_locale = $this->current_locale === 'vi' ? 'en' : 'vi';
+        $this->languages = SystemLanguageEnum::all();
+    }
+
+    public function getCurrentFlag(): string
+    {
+        return SystemLanguageEnum::flagByValue($this->current_locale);
     }
 
     public function render(): \Illuminate\View\View

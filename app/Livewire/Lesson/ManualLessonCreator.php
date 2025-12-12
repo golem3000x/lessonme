@@ -5,18 +5,15 @@ declare(strict_types=1);
 namespace App\Livewire\Lesson;
 
 use App\Enums\Lesson\LessonCreationTypeEnum;
-use App\Enums\System\LanguageLevelEnum;
 use App\Enums\System\SystemLanguageEnum;
 use App\Models\Keyword\Keyword;
 use App\Models\Lesson\Lesson;
 use App\Models\Topic\Topic;
 use Illuminate\Contracts\View\View;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Layout;
-use Livewire\Attributes\On;
 use Livewire\Component;
 
 #[Layout('components.app-layout')]
@@ -26,9 +23,13 @@ class ManualLessonCreator extends Component
 
     // Basic info
     public string $lesson_name = '';
+
     public string $lesson_text = '';
+
     public ?int $topic_id = null;
+
     public string $language_level = 'A1';
+
     public string $lesson_language = '';
 
     /** @var array<int,array{id:int,label:string}> */
@@ -73,6 +74,7 @@ class ManualLessonCreator extends Component
 
     // Other
     public string $homework = '';
+
     public string $culture_notes = '';
 
     /** @var array<int,array{mistake:string,correction:string,explanation:string}> */
@@ -111,6 +113,7 @@ class ManualLessonCreator extends Component
         $this->available_languages = collect($learning_languages)
             ->map(function (string $lang_value) {
                 $enum = SystemLanguageEnum::tryFrom($lang_value);
+
                 return $enum ? [
                     'value' => $enum->value,
                     'label' => $enum->label(),
@@ -136,6 +139,7 @@ class ManualLessonCreator extends Component
     {
         if (! $this->topic_id) {
             $this->keywords = [];
+
             return;
         }
 

@@ -13,11 +13,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 
 /**
+ * @use HasFactory<LessonScoreFactory>
  * @property int $id
  * @property int $attempt_id
  * @property int $lesson_id
  * @property int $user_id
- * @property int|null $teacher_id
+ * @property int|null $teacher_id For manual grading by teacher
  * @property int $total_questions
  * @property int $correct_answers
  * @property float $score_percentage 0.00 to 100.00
@@ -30,8 +31,7 @@ use Illuminate\Support\Carbon;
  * @property-read \App\Models\Lesson\Lesson $lesson
  * @property-read User|null $teacher
  * @property-read User $user
- *
- * @method static LessonScoreFactory factory($count = null, $state = [])
+ * @method static \Database\Factories\Lesson\LessonScoreFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonScore newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonScore newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonScore query()
@@ -48,9 +48,6 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonScore whereTotalQuestions($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonScore whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonScore whereUserId($value)
- *
- * @use HasFactory<LessonScoreFactory>
- *
  * @mixin \Eloquent
  */
 class LessonScore extends Model

@@ -18,12 +18,25 @@ use Illuminate\Support\Carbon;
  * @property int $user_id
  * @property FeedbackRatingEnum $rating
  * @property string|null $comment
- * @property int|null $original_feedback_id
- * @property Carbon|null $original_created_at
- * @property Carbon|null $archived_at
- * @property-read Lesson $lesson
- * @property-read LessonHistory|null $lessonHistory
+ * @property int|null $original_feedback_id ID of original feedback before archiving
+ * @property Carbon|null $original_created_at Original creation timestamp
+ * @property Carbon $archived_at When feedback was moved to history
+ * @property-read \App\Models\Lesson\Lesson $lesson
+ * @property-read \App\Models\Lesson\LessonHistory|null $lessonHistory
  * @property-read User $user
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonFeedbackHistory newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonFeedbackHistory newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonFeedbackHistory query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonFeedbackHistory whereArchivedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonFeedbackHistory whereComment($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonFeedbackHistory whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonFeedbackHistory whereLessonHistoryId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonFeedbackHistory whereLessonId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonFeedbackHistory whereOriginalCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonFeedbackHistory whereOriginalFeedbackId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonFeedbackHistory whereRating($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonFeedbackHistory whereUserId($value)
+ * @mixin \Eloquent
  */
 class LessonFeedbackHistory extends Model
 {

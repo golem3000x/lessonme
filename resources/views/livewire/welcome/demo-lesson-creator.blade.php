@@ -4,31 +4,65 @@
 
         <!-- Language Selection -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-            <div>
+            {{-- Native Language --}}
+            <div x-data="{ open: false }">
                 <label class="block text-sm font-semibold text-gray-700 mb-2">
                     {{ __('lessons.native_language') }}
                 </label>
-                <select wire:model.live="native_lang"
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('native_lang') border-red-500 @enderror">
-                    @foreach(\App\Enums\System\SystemLanguageEnum::cases() as $lang)
-                        <option value="{{ $lang->value }}">{{ $lang->flag() }} {{ $lang->label() }}</option>
-                    @endforeach
-                </select>
+                <div class="relative">
+                    <button type="button" @click="open = !open"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-white flex items-center justify-between hover:border-blue-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('native_lang') border-red-500 @enderror">
+                        <span class="flex items-center gap-2">
+                            <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/{{ $native_lang === 'vi' ? '1f1fb-1f1f3' : '1f1ec-1f1e7' }}.png" class="w-5 h-5" alt="">
+                            <span>{{ \App\Enums\System\SystemLanguageEnum::tryFrom($native_lang)?->label() }}</span>
+                        </span>
+                        <svg class="w-4 h-4 text-gray-500" :class="{ 'rotate-180': open }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </button>
+                    <div x-show="open" x-cloak @click.outside="open = false"
+                         x-transition class="absolute z-50 mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg">
+                        @foreach(\App\Enums\System\SystemLanguageEnum::learnable() as $lang)
+                            <button type="button" wire:click="$set('native_lang', '{{ $lang->value }}')" @click="open = false"
+                                    class="w-full px-4 py-2 flex items-center gap-2 hover:bg-blue-50 {{ $native_lang === $lang->value ? 'bg-blue-50 text-blue-600' : 'text-gray-700' }}">
+                                <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/{{ $lang->value === 'vi' ? '1f1fb-1f1f3' : '1f1ec-1f1e7' }}.png" class="w-5 h-5" alt="">
+                                <span>{{ $lang->label() }}</span>
+                            </button>
+                        @endforeach
+                    </div>
+                </div>
                 @error('native_lang')
                 <span class="text-red-600 text-sm mt-1 block">{{ $message }}</span>
                 @enderror
             </div>
 
-            <div>
+            {{-- Learning Language --}}
+            <div x-data="{ open: false }">
                 <label class="block text-sm font-semibold text-gray-700 mb-2">
                     {{ __('lessons.learning_language') }}
                 </label>
-                <select wire:model.live="learning_lang"
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('learning_lang') border-red-500 @enderror">
-                    @foreach(\App\Enums\System\SystemLanguageEnum::cases() as $lang)
-                        <option value="{{ $lang->value }}">{{ $lang->flag() }} {{ $lang->label() }}</option>
-                    @endforeach
-                </select>
+                <div class="relative">
+                    <button type="button" @click="open = !open"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-white flex items-center justify-between hover:border-blue-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('learning_lang') border-red-500 @enderror">
+                        <span class="flex items-center gap-2">
+                            <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/{{ $learning_lang === 'vi' ? '1f1fb-1f1f3' : '1f1ec-1f1e7' }}.png" class="w-5 h-5" alt="">
+                            <span>{{ \App\Enums\System\SystemLanguageEnum::tryFrom($learning_lang)?->label() }}</span>
+                        </span>
+                        <svg class="w-4 h-4 text-gray-500" :class="{ 'rotate-180': open }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </button>
+                    <div x-show="open" x-cloak @click.outside="open = false"
+                         x-transition class="absolute z-50 mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg">
+                        @foreach(\App\Enums\System\SystemLanguageEnum::learnable() as $lang)
+                            <button type="button" wire:click="$set('learning_lang', '{{ $lang->value }}')" @click="open = false"
+                                    class="w-full px-4 py-2 flex items-center gap-2 hover:bg-blue-50 {{ $learning_lang === $lang->value ? 'bg-blue-50 text-blue-600' : 'text-gray-700' }}">
+                                <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/{{ $lang->value === 'vi' ? '1f1fb-1f1f3' : '1f1ec-1f1e7' }}.png" class="w-5 h-5" alt="">
+                                <span>{{ $lang->label() }}</span>
+                            </button>
+                        @endforeach
+                    </div>
+                </div>
                 @error('learning_lang')
                 <span class="text-red-600 text-sm mt-1 block">{{ $message }}</span>
                 @enderror

@@ -22,7 +22,17 @@
     <!-- Alpine.js x-cloak -->
     <style>
         [x-cloak] { display: none !important; }
+        /* Twemoji emoji sizing */
+        img.emoji {
+            height: 1.2em;
+            width: 1.2em;
+            margin: 0 .05em 0 .1em;
+            vertical-align: -0.15em;
+            display: inline-block;
+        }
     </style>
+    <!-- Twemoji for consistent flag rendering across all locales -->
+    <script src="https://cdn.jsdelivr.net/npm/twemoji@14.0.2/dist/twemoji.min.js" crossorigin="anonymous"></script>
 
     @livewireStyles
 </head>
@@ -270,14 +280,43 @@
 
             <!-- Language switcher -->
             @php($current_locale = app()->getLocale())
-            @php($target_locale = $current_locale === 'vi' ? 'en' : 'vi')
-            @php($flag = $target_locale === 'vi' ? '🇻🇳' : '🇬🇧')
-            <a href="{{ route('locale.switch', $target_locale) }}"
-               class="group px-3 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg flex items-center gap-2 transition-all duration-200"
-               title="{{ __('nav.switch_language') }}">
-                <span class="hidden sm:inline">{{ $flag }} {{ strtoupper($target_locale) }}</span>
-                <span class="sm:hidden">{{ $flag }}</span>
-            </a>
+            @php($languages = \App\Enums\System\SystemLanguageEnum::all())
+            @php($currentFlag = \App\Enums\System\SystemLanguageEnum::flagByValue($current_locale))
+            <div class="relative" x-data="{ open: false }">
+                <button @click="open = !open"
+                        class="group px-3 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg flex items-center gap-2 transition-all duration-200"
+                        title="{{ __('nav.switch_language') }}">
+                    <span>{{ $currentFlag }}</span>
+                    <span class="hidden sm:inline uppercase font-semibold">{{ $current_locale }}</span>
+                    <svg class="w-4 h-4 transition-transform" :class="{ 'rotate-180': open }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                    </svg>
+                </button>
+                
+                <div x-show="open" 
+                     x-cloak
+                     @click.outside="open = false"
+                     x-transition:enter="transition ease-out duration-100"
+                     x-transition:enter-start="opacity-0 scale-95"
+                     x-transition:enter-end="opacity-100 scale-100"
+                     x-transition:leave="transition ease-in duration-75"
+                     x-transition:leave-start="opacity-100 scale-100"
+                     x-transition:leave-end="opacity-0 scale-95"
+                     class="absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50">
+                    @foreach($languages as $language)
+                        <a href="{{ route('locale.switch', $language->value) }}"
+                           class="flex items-center gap-2 px-4 py-2 text-sm {{ $current_locale === $language->value ? 'bg-blue-50 text-blue-600' : 'text-gray-700 hover:bg-gray-100' }} transition-colors">
+                            <span>{{ $language->flag() }}</span>
+                            <span>{{ $language->label() }}</span>
+                            @if($current_locale === $language->value)
+                                <svg class="w-4 h-4 ml-auto text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                </svg>
+                            @endif
+                        </a>
+                    @endforeach
+                </div>
+            </div>
 
             <!-- Support Project (only for authenticated users) -->
             @auth
@@ -359,6 +398,26 @@
         history.replaceState 
             ? history.replaceState(null, null, window.location.href.split('#')[0])
             : window.location.hash = '';
+    }
+</script>
+
+{{-- Parse emoji flags with Twemoji for consistent rendering --}}
+<script>
+    function parseEmoji() {
+        if (typeof twemoji !== 'undefined') {
+            twemoji.parse(document.body, {
+                folder: 'svg',
+                ext: '.svg',
+                className: 'emoji'
+            });
+        }
+    }
+    document.addEventListener('DOMContentLoaded', parseEmoji);
+    document.addEventListener('livewire:navigated', parseEmoji);
+    document.addEventListener('livewire:morph', parseEmoji);
+    // Re-parse after any Livewire update
+    if (typeof Livewire !== 'undefined') {
+        Livewire.hook('morph.updated', parseEmoji);
     }
 </script>
 </body>

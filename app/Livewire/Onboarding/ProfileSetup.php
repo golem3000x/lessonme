@@ -51,6 +51,9 @@ class ProfileSetup extends Component
     /** @var SystemLanguageEnum[] */
     public array $languages = [];
 
+    /** @var SystemLanguageEnum[] */
+    public array $nativeLanguages = [];
+
     /** @var array<int, string> */
     public array $new_keyword_by_topic = [];
 
@@ -82,7 +85,8 @@ class ProfileSetup extends Component
         $this->is_teacher = $user->isTeacher();
         $this->is_student = $user->isStudent();
 
-        $this->languages = SystemLanguageEnum::all();
+        $this->languages = SystemLanguageEnum::learnable();
+        $this->nativeLanguages = SystemLanguageEnum::all();
 
         $this->loadTopicsAndKeywords();
     }

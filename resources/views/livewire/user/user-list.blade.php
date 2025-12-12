@@ -106,6 +106,13 @@
                                     {{ __('profile.student') }}
                                 </span>
                             @endif
+                            {{-- Native Language --}}
+                            @if($user->native_lang)
+                                <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-gray-100 text-gray-700 text-xs font-medium rounded-full">
+                                    {{ \App\Enums\System\SystemLanguageEnum::flagByValue($user->native_lang) }}
+                                    {{ \App\Enums\System\SystemLanguageEnum::tryFrom($user->native_lang)?->label() }}
+                                </span>
+                            @endif
                         </div>
 
                         {{-- Availability status (only in all tab) --}}

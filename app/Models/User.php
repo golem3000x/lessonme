@@ -40,13 +40,8 @@ use Illuminate\Support\Str;
  * @property string $email
  * @property Carbon|null $email_verified_at
  * @property string $password
- * @property-read Collection<int, Role> $roles
- * @property-read int|null $roles_count
- * @property-read Collection<int, UserTeachingLanguage> $teachingLanguages
- * @property-read int|null $teaching_languages_count
- * @property-read Collection<int, UserLearningLanguage> $learningLanguages
- * @property-read int|null $learning_languages_count
  * @property string|null $remember_token
+ * @property Carbon|null $first_login_completed_at
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property string|null $zalo_user_id
@@ -57,17 +52,22 @@ use Illuminate\Support\Str;
  * @property string $native_lang
  * @property bool $is_looking_for_teacher
  * @property bool $is_accepting_students
+ * @property array<array-key, mixed>|null $settings
  * @property string $timezone
  * @property bool $is_temp_guest
  * @property Carbon|null $temp_guest_expires_at
- * @property Carbon|null $first_login_completed_at
- * @property array|null $settings
- * @property-read string $full_name
  * @property-read Collection<int, LessonAssignment> $assignedLessons
  * @property-read int|null $assigned_lessons_count
  * @property-read Collection<int, ChatSession> $chatSessions
  * @property-read int|null $chat_sessions_count
  * @property-read string|null $avatar_url
+ * @property-read float|null $average_rating
+ * @property-read string $full_name
+ * @property-read int $reviews_count
+ * @property-read Collection<int, \App\Models\TeacherReview> $givenReviews
+ * @property-read int|null $given_reviews_count
+ * @property-read Collection<int, \App\Models\UserLearningLanguage> $learningLanguages
+ * @property-read int|null $learning_languages_count
  * @property-read Collection<int, LessonAttempt> $lessonAttempts
  * @property-read int|null $lesson_attempts_count
  * @property-read Collection<int, Lesson> $lessons
@@ -78,34 +78,45 @@ use Illuminate\Support\Str;
  * @property-read int|null $my_assignments_count
  * @property-read DatabaseNotificationCollection<int, DatabaseNotification> $notifications
  * @property-read int|null $notifications_count
+ * @property-read Collection<int, \App\Models\TeacherReview> $receivedReviews
+ * @property-read int|null $received_reviews_count
+ * @property-read Collection<int, \App\Models\Role> $roles
+ * @property-read int|null $roles_count
  * @property-read Collection<int, LessonScore> $scores
  * @property-read int|null $scores_count
  * @property-read Collection<int, User> $students
  * @property-read int|null $students_count
  * @property-read Collection<int, User> $teachers
  * @property-read int|null $teachers_count
- *
+ * @property-read Collection<int, \App\Models\UserTeachingLanguage> $teachingLanguages
+ * @property-read int|null $teaching_languages_count
  * @method static \Database\Factories\UserFactory factory($count = null, $state = [])
  * @method static Builder<static>|User newModelQuery()
  * @method static Builder<static>|User newQuery()
  * @method static Builder<static>|User query()
  * @method static Builder<static>|User whereAvatar($value)
+ * @method static Builder<static>|User whereBio($value)
  * @method static Builder<static>|User whereCreatedAt($value)
+ * @method static Builder<static>|User whereDateOfBirth($value)
  * @method static Builder<static>|User whereEmail($value)
  * @method static Builder<static>|User whereEmailVerifiedAt($value)
  * @method static Builder<static>|User whereFacebookId($value)
+ * @method static Builder<static>|User whereFirstLoginCompletedAt($value)
+ * @method static Builder<static>|User whereFirstName($value)
  * @method static Builder<static>|User whereId($value)
+ * @method static Builder<static>|User whereIsAcceptingStudents($value)
+ * @method static Builder<static>|User whereIsLookingForTeacher($value)
  * @method static Builder<static>|User whereIsTempGuest($value)
- * @method static Builder<static>|User whereLearningLang($value)
- * @method static Builder<static>|User whereName($value)
+ * @method static Builder<static>|User whereLastName($value)
  * @method static Builder<static>|User whereNativeLang($value)
  * @method static Builder<static>|User wherePassword($value)
  * @method static Builder<static>|User whereRememberToken($value)
+ * @method static Builder<static>|User whereSettings($value)
  * @method static Builder<static>|User whereTempGuestExpiresAt($value)
  * @method static Builder<static>|User whereTimezone($value)
  * @method static Builder<static>|User whereUpdatedAt($value)
+ * @method static Builder<static>|User whereUuid($value)
  * @method static Builder<static>|User whereZaloUserId($value)
- *
  * @mixin \Eloquent
  */
 class User extends Authenticatable implements FilamentUser, HasLocalePreference

@@ -21,7 +21,22 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string|null $error_message
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read Lesson $lesson
+ * @property-read \App\Models\Lesson\Lesson $lesson
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAudioFile newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAudioFile newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAudioFile query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAudioFile whereAudioKey($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAudioFile whereAudioType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAudioFile whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAudioFile whereDuration($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAudioFile whereErrorMessage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAudioFile whereFilePath($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAudioFile whereFileSize($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAudioFile whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAudioFile whereLessonId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAudioFile whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAudioFile whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 class LessonAudioFile extends Model
 {

@@ -824,6 +824,7 @@ class LessonIndex extends Component
         if ($course->lessons()->where('lessons.id', $this->lesson_for_course)->exists()) {
             session()->flash('error', __('lessons.lesson_already_in_course'));
             $this->closeCourseModal();
+
             return;
         }
 

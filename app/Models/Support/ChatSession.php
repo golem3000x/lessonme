@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 
 /**
+ * @use HasFactory<ChatSessionFactory>
  * @property int $id
  * @property int $user_id
  * @property Carbon|null $last_message_at
@@ -25,8 +26,7 @@ use Illuminate\Support\Carbon;
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Support\Message> $messages
  * @property-read int|null $messages_count
  * @property-read User $user
- *
- * @method static ChatSessionFactory factory($count = null, $state = [])
+ * @method static \Database\Factories\Support\ChatSessionFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ChatSession newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ChatSession newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ChatSession query()
@@ -37,9 +37,6 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ChatSession whereUnreadCount($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ChatSession whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ChatSession whereUserId($value)
- *
- * @use HasFactory<ChatSessionFactory>
- *
  * @mixin \Eloquent
  */
 class ChatSession extends Model
