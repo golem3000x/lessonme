@@ -1,4 +1,26 @@
-<div class="flex h-full bg-gray-100">
+<div class="flex flex-col h-full bg-gray-100">
+    {{-- Safety Warning Banner --}}
+    @if($show_safety_warning)
+        <div class="bg-gradient-to-r from-amber-500 to-orange-500 p-4 text-white relative">
+            <button 
+                wire:click="hideSafetyWarning"
+                class="absolute top-3 right-3 p-1 text-white/70 hover:text-white transition-all duration-300 hover:rotate-90 hover:scale-110"
+            >
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+            <div class="flex items-start gap-3 pr-8">
+                <span class="text-2xl">🛡️</span>
+                <div>
+                    <h3 class="font-bold text-lg">{{ __('messages.safety_title') }}</h3>
+                    <p class="text-amber-100 text-sm">{{ __('messages.safety_description') }}</p>
+                </div>
+            </div>
+        </div>
+    @endif
+
+    <div class="flex flex-1 min-h-0">
     {{-- Conversations List --}}
     <div class="w-80 bg-white border-r border-gray-200 flex flex-col">
         {{-- Header --}}
@@ -63,5 +85,6 @@
             <h3 class="text-lg font-medium text-gray-900 mb-2">{{ __('messages.select_conversation') }}</h3>
             <p class="text-gray-500">{{ __('messages.select_conversation_hint') }}</p>
         </div>
+    </div>
     </div>
 </div>

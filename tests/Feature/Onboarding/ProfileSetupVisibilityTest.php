@@ -39,8 +39,8 @@ class ProfileSetupVisibilityTest extends TestCase
     {
         $user = User::factory()->create([
             'native_lang' => 'en',
-            'learning_lang' => 'vi',
         ]);
+        $user->syncLearningLanguages(['vi']);
         $this->actingAs($user);
 
         $visible_topic = $this->createSystemTopic('Business');

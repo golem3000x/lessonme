@@ -65,4 +65,45 @@ return [
     'no_history_link' => 'Không có liên kết lịch sử',
     'original_date' => 'Ngày gốc',
     'archived_at' => 'Đã lưu trữ lúc',
+
+    // User Reports
+    'reports' => 'Báo cáo vi phạm',
+    'report' => 'Báo cáo',
+    'reporter' => 'Người báo cáo',
+    'reported_user' => 'Người bị báo cáo',
+    'reason' => 'Lý do',
+    'description' => 'Mô tả',
+    'resolved' => 'Đã xử lý',
+    'is_resolved' => 'Đã xử lý',
+    'resolved_at' => 'Xử lý lúc',
+    'resolved_by' => 'Xử lý bởi',
+    'report_details' => 'Chi tiết báo cáo',
+    'resolution' => 'Kết quả xử lý',
+
+    // Report Filters
+    'filter_resolved' => 'Trạng thái xử lý',
+    'filter_all' => 'Tất cả',
+    'filter_resolved_yes' => 'Đã xử lý',
+    'filter_resolved_no' => 'Chưa xử lý',
+
+    // Report Actions
+    'action_resolve' => 'Xử lý',
+    'action_resolve_selected' => 'Xử lý các mục đã chọn',
+    'resolve_report_title' => 'Xử lý báo cáo',
+    'resolve_report_description' => 'Bạn có chắc chắn muốn đánh dấu báo cáo này là đã xử lý?',
+    'report_resolved' => 'Báo cáo đã được xử lý',
+    'reports_resolved' => 'Các báo cáo đã chọn đã được xử lý',
+
+    // Report Notifications
+    'new_report_notification' => 'Báo cáo vi phạm mới',
+    'new_report_body' => ':reporter đã báo cáo :reported vì :reason',
+
+    // Ban Actions
+    'action_ban_user' => 'Cấm người dùng',
+    'ban_user_title' => 'Cấm người dùng',
+    'ban_user_description' => 'Điều này sẽ chặn người dùng truy cập hệ thống.',
+    'ban_reason' => 'Lý do cấm',
+    'ban_expires_at' => 'Hết hạn cấm',
+    'ban_expires_hint' => 'Để trống để cấm vĩnh viễn',
+    'user_banned' => 'Người dùng đã bị cấm',
 ];

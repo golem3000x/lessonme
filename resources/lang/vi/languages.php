@@ -8,4 +8,5 @@ return [
     'th' => 'Tiếng Thái',
     'km' => 'Tiếng Khmer',
     'ms' => 'Tiếng Mã Lai',
+    'my' => 'Tiếng Miến Điện',
 ];

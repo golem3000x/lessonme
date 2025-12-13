@@ -49,12 +49,12 @@
                                     <div class="flex items-center">
                                         <div class="flex-shrink-0 h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
                                             <span class="text-blue-600 font-semibold text-sm">
-                                                {{ strtoupper(substr($score->user->name, 0, 2)) }}
+                                                {{ strtoupper(substr($score->user->full_name, 0, 2)) }}
                                             </span>
                                         </div>
                                         <div class="ml-4">
                                             <div class="text-sm font-medium text-gray-900">
-                                                {{ $score->user->name }}
+                                                {{ $score->user->full_name }}
                                             </div>
                                             <div class="text-sm text-gray-500">
                                                 {{ $score->user->email }}

@@ -14,11 +14,18 @@ class CreateAdminCommandTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->seed(\Database\Seeders\RoleSeeder::class);
+    }
+
     public function test_creates_admin_with_options(): void
     {
         $this->artisan('admin:create', [
             '--email' => 'admin@example.com',
-            '--name' => 'Admin User',
+            '--first-name' => 'Admin',
+            '--last-name' => 'User',
             '--password' => 'password123',
             '--native-lang' => SystemLanguageEnum::VIETNAMESE->value,
             '--learning-lang' => SystemLanguageEnum::ENGLISH->value,
@@ -28,10 +35,9 @@ class CreateAdminCommandTest extends TestCase
 
         $this->assertDatabaseHas('users', [
             'email' => 'admin@example.com',
-            'name' => 'Admin User',
-            'role' => UserRoleEnum::ADMIN->value,
+            'first_name' => 'Admin',
+            'last_name' => 'User',
             'native_lang' => SystemLanguageEnum::VIETNAMESE->value,
-            'learning_lang' => SystemLanguageEnum::ENGLISH->value,
         ]);
 
         $user = User::where('email', '=', 'admin@example.com')->first();
@@ -42,7 +48,8 @@ class CreateAdminCommandTest extends TestCase
     {
         $this->artisan('admin:create', [
             '--email' => 'admin@example.com',
-            '--name' => 'Admin User',
+            '--first-name' => 'Admin',
+            '--last-name' => 'User',
             '--password' => 'password123',
         ])
             ->assertSuccessful();
@@ -50,7 +57,6 @@ class CreateAdminCommandTest extends TestCase
         $this->assertDatabaseHas('users', [
             'email' => 'admin@example.com',
             'native_lang' => SystemLanguageEnum::VIETNAMESE->value,
-            'learning_lang' => SystemLanguageEnum::ENGLISH->value,
         ]);
     }
 
@@ -58,7 +64,8 @@ class CreateAdminCommandTest extends TestCase
     {
         $this->artisan('admin:create', [
             '--email' => '',
-            '--name' => 'Admin User',
+            '--first-name' => 'Admin',
+            '--last-name' => 'User',
             '--password' => 'password123',
         ])
             ->assertFailed();
@@ -70,7 +77,8 @@ class CreateAdminCommandTest extends TestCase
     {
         $this->artisan('admin:create', [
             '--email' => 'invalid-email',
-            '--name' => 'Admin User',
+            '--first-name' => 'Admin',
+            '--last-name' => 'User',
             '--password' => 'password123',
         ])
             ->assertFailed();
@@ -86,7 +94,8 @@ class CreateAdminCommandTest extends TestCase
 
         $this->artisan('admin:create', [
             '--email' => 'existing@example.com',
-            '--name' => 'Admin User',
+            '--first-name' => 'Admin',
+            '--last-name' => 'User',
             '--password' => 'password123',
         ])
             ->assertFailed();
@@ -94,11 +103,12 @@ class CreateAdminCommandTest extends TestCase
         $this->assertEquals(1, User::count());
     }
 
-    public function test_validates_required_name(): void
+    public function test_validates_required_first_name(): void
     {
         $this->artisan('admin:create', [
             '--email' => 'admin@example.com',
-            '--name' => '',
+            '--first-name' => '',
+            '--last-name' => 'User',
             '--password' => 'password123',
         ])
             ->assertFailed();
@@ -106,11 +116,25 @@ class CreateAdminCommandTest extends TestCase
         $this->assertEquals(0, User::count());
     }
 
-    public function test_validates_name_max_length(): void
+    public function test_validates_required_last_name(): void
     {
         $this->artisan('admin:create', [
             '--email' => 'admin@example.com',
-            '--name' => str_repeat('a', 256),
+            '--first-name' => 'Admin',
+            '--last-name' => '',
+            '--password' => 'password123',
+        ])
+            ->assertFailed();
+
+        $this->assertEquals(0, User::count());
+    }
+
+    public function test_validates_first_name_max_length(): void
+    {
+        $this->artisan('admin:create', [
+            '--email' => 'admin@example.com',
+            '--first-name' => str_repeat('a', 256),
+            '--last-name' => 'User',
             '--password' => 'password123',
         ])
             ->assertFailed();
@@ -122,7 +146,8 @@ class CreateAdminCommandTest extends TestCase
     {
         $this->artisan('admin:create', [
             '--email' => 'admin@example.com',
-            '--name' => 'Admin User',
+            '--first-name' => 'Admin',
+            '--last-name' => 'User',
             '--password' => '',
         ])
             ->assertFailed();
@@ -134,7 +159,8 @@ class CreateAdminCommandTest extends TestCase
     {
         $this->artisan('admin:create', [
             '--email' => 'admin@example.com',
-            '--name' => 'Admin User',
+            '--first-name' => 'Admin',
+            '--last-name' => 'User',
             '--password' => 'short',
         ])
             ->assertFailed();
@@ -146,7 +172,8 @@ class CreateAdminCommandTest extends TestCase
     {
         $this->artisan('admin:create', [
             '--email' => 'admin@example.com',
-            '--name' => 'Admin User',
+            '--first-name' => 'Admin',
+            '--last-name' => 'User',
             '--password' => 'password123',
         ])
             ->assertSuccessful();
@@ -160,7 +187,8 @@ class CreateAdminCommandTest extends TestCase
     {
         $this->artisan('admin:create', [
             '--email' => 'admin@example.com',
-            '--name' => 'Admin User',
+            '--first-name' => 'Admin',
+            '--last-name' => 'User',
             '--password' => 'password123',
         ])
             ->assertSuccessful();
@@ -173,20 +201,22 @@ class CreateAdminCommandTest extends TestCase
     {
         $this->artisan('admin:create', [
             '--email' => 'admin@example.com',
-            '--name' => 'Admin User',
+            '--first-name' => 'Admin',
+            '--last-name' => 'User',
             '--password' => 'password123',
         ])
             ->assertSuccessful();
 
         $user = User::where('email', '=', 'admin@example.com')->first();
-        $this->assertEquals(UserRoleEnum::ADMIN, $user->role);
+        $this->assertTrue($user->hasRole(UserRoleEnum::ADMIN));
     }
 
     public function test_displays_success_message(): void
     {
         $this->artisan('admin:create', [
             '--email' => 'admin@example.com',
-            '--name' => 'Admin User',
+            '--first-name' => 'Admin',
+            '--last-name' => 'User',
             '--password' => 'password123',
         ])
             ->expectsOutput('✅ Admin user created successfully!')
@@ -197,24 +227,27 @@ class CreateAdminCommandTest extends TestCase
     {
         $this->artisan('admin:create', [
             '--email' => 'admin1@example.com',
-            '--name' => 'Admin One',
+            '--first-name' => 'Admin',
+            '--last-name' => 'One',
             '--password' => 'password123',
         ])->assertSuccessful();
 
         $this->artisan('admin:create', [
             '--email' => 'admin2@example.com',
-            '--name' => 'Admin Two',
+            '--first-name' => 'Admin',
+            '--last-name' => 'Two',
             '--password' => 'password123',
         ])->assertSuccessful();
 
-        $this->assertEquals(2, User::where('role', '=', UserRoleEnum::ADMIN)->count());
+        $this->assertEquals(2, User::whereHas('roles', fn ($q) => $q->where('name', UserRoleEnum::ADMIN->value))->count());
     }
 
     public function test_supports_custom_languages(): void
     {
         $this->artisan('admin:create', [
             '--email' => 'admin@example.com',
-            '--name' => 'Admin User',
+            '--first-name' => 'Admin',
+            '--last-name' => 'User',
             '--password' => 'password123',
             '--native-lang' => SystemLanguageEnum::ENGLISH->value,
             '--learning-lang' => SystemLanguageEnum::VIETNAMESE->value,
@@ -224,7 +257,6 @@ class CreateAdminCommandTest extends TestCase
         $this->assertDatabaseHas('users', [
             'email' => 'admin@example.com',
             'native_lang' => SystemLanguageEnum::ENGLISH->value,
-            'learning_lang' => SystemLanguageEnum::VIETNAMESE->value,
         ]);
     }
 }

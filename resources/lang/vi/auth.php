@@ -108,4 +108,8 @@ return [
     // Welcome messages
     'welcome_message' => ':greeting, :name! Chào mừng bạn trở lại!',
     'registration_message' => ':greeting, :name! Chào mừng bạn đến với nền tảng của chúng tôi!',
+
+    // Ban messages
+    'banned' => 'Tài khoản của bạn đã bị cấm. Lý do: :reason',
+    'no_reason' => 'Không có lý do',
 ];

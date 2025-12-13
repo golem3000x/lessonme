@@ -178,4 +178,8 @@ return [
     'ai_sentence_order_text' => 'Susun perkataan untuk membentuk ayat yang betul',
     'ai_quiz' => 'Kuiz',
     'ai_quiz_text' => 'Soalan pilihan berganda tentang pelajaran',
+
+    // FAQ
+    'faq_languages_question' => 'Mengapa saya hanya boleh belajar bahasa Vietnam atau bahasa Inggeris?',
+    'faq_languages_answer' => 'Pencipta tidak yakin dengan kualiti pelajaran yang dijana AI untuk bahasa bukan Eropah dan kini berada di Vietnam. Bahasa Inggeris adalah bahasa paling popular untuk dipelajari, dan AI tidak sepatutnya mempunyai masalah mencipta pelajaran yang mematuhi CEFR. Lebih banyak bahasa mungkin ditambah pada masa hadapan selepas pengesahan kualiti.',
 ];

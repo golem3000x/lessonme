@@ -13,6 +13,7 @@ enum SystemLanguageEnum: string
     case THAI = 'th';
     case KHMER = 'km';
     case MALAY = 'ms';
+    case BURMESE = 'my';
 
     public function key(): string
     {
@@ -22,6 +23,7 @@ enum SystemLanguageEnum: string
             self::THAI => 'th',
             self::KHMER => 'km',
             self::MALAY => 'ms',
+            self::BURMESE => 'my',
         };
     }
 
@@ -38,6 +40,7 @@ enum SystemLanguageEnum: string
             self::THAI => '🇹🇭',
             self::KHMER => '🇰🇭',
             self::MALAY => '🇲🇾',
+            self::BURMESE => '🇲🇲',
         };
     }
 
@@ -52,6 +55,7 @@ enum SystemLanguageEnum: string
             self::THAI,
             self::KHMER,
             self::MALAY,
+            self::BURMESE,
         ];
     }
 
@@ -66,6 +70,7 @@ enum SystemLanguageEnum: string
             self::THAI->name => self::THAI->value,
             self::KHMER->name => self::KHMER->value,
             self::MALAY->name => self::MALAY->value,
+            self::BURMESE->name => self::BURMESE->value,
         ];
     }
 
@@ -80,6 +85,7 @@ enum SystemLanguageEnum: string
             self::THAI->value,
             self::KHMER->value,
             self::MALAY->value,
+            self::BURMESE->value,
         ];
     }
 
@@ -91,6 +97,7 @@ enum SystemLanguageEnum: string
             'th' => self::THAI->flag(),
             'km' => self::KHMER->flag(),
             'ms' => self::MALAY->flag(),
+            'my' => self::BURMESE->flag(),
             default => self::ENGLISH->flag(),
         };
     }

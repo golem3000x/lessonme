@@ -29,10 +29,12 @@ class CreateLessonJobTest extends TestCase
 
     protected function createUser(): User
     {
-        return User::factory()->create([
+        $user = User::factory()->create([
             'native_lang' => SystemLanguageEnum::ENGLISH->value,
-            'learning_lang' => SystemLanguageEnum::VIETNAMESE->value,
         ]);
+        $user->syncLearningLanguages([SystemLanguageEnum::VIETNAMESE->value]);
+
+        return $user;
     }
 
     protected function createTopic(): Topic

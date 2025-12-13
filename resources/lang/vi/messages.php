@@ -60,4 +60,8 @@ return [
     'report_reason_offensive_language' => 'Ngôn ngữ xúc phạm',
     'report_reason_unprofessional_behavior' => 'Hành vi thiếu chuyên nghiệp',
     'report_reason_other' => 'Khác',
+
+    // Safety warning
+    'safety_title' => 'Giữ An Toàn Khi Nhắn Tin',
+    'safety_description' => 'Không chia sẻ thông tin cá nhân như mật khẩu, tài khoản ngân hàng hoặc địa chỉ nhà với người lạ. Hãy cẩn thận với người liên hệ không quen biết và báo cáo hành vi đáng ngờ.',
 ];

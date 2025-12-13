@@ -58,8 +58,8 @@ class ProfileSetupKeywordVisibilityTest extends TestCase
     {
         $user = User::factory()->create([
             'native_lang' => 'en',
-            'learning_lang' => 'vi',
         ]);
+        $user->syncLearningLanguages(['vi']);
         $this->actingAs($user);
 
         $topic = $this->createSystemTopic('Travel');
@@ -93,8 +93,8 @@ class ProfileSetupKeywordVisibilityTest extends TestCase
     {
         $user = User::factory()->create([
             'native_lang' => 'en',
-            'learning_lang' => 'vi',
         ]);
+        $user->syncLearningLanguages(['vi']);
         $this->actingAs($user);
 
         $topic = $this->createSystemTopic('Business');
@@ -123,8 +123,8 @@ class ProfileSetupKeywordVisibilityTest extends TestCase
     {
         $user = User::factory()->create([
             'native_lang' => 'en',
-            'learning_lang' => 'vi',
         ]);
+        $user->syncLearningLanguages(['vi']);
         $this->actingAs($user);
 
         $topic = $this->createSystemTopic('Culture');

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\CheckBanned;
 use App\Http\Middleware\EnsureLessonAccess;
 use App\Http\Middleware\EnsureLessonBelongsToUser;
 use App\Http\Middleware\EnsureUserIsTeacher;
@@ -18,6 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->appendToGroup('web', SetLocale::class);
+        $middleware->appendToGroup('web', CheckBanned::class);
         $middleware->alias([
             'lesson.owner' => EnsureLessonBelongsToUser::class,
             'lesson.access' => EnsureLessonAccess::class,

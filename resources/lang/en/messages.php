@@ -60,4 +60,8 @@ return [
     'report_reason_offensive_language' => 'Offensive language',
     'report_reason_unprofessional_behavior' => 'Unprofessional behavior',
     'report_reason_other' => 'Other',
+
+    // Safety warning
+    'safety_title' => 'Stay Safe When Chatting',
+    'safety_description' => 'Never share personal information like passwords, bank details, or home address with people you don\'t know. Be cautious with unknown contacts and report suspicious behavior.',
 ];

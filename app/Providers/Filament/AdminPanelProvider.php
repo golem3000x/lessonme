@@ -29,7 +29,7 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
-            ->login()
+            // ->login() // Temporarily disabled
             ->colors([
                 'primary' => Color::Amber,
             ])

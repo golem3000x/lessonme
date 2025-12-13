@@ -108,4 +108,8 @@ return [
     // Welcome messages
     'welcome_message' => ':greeting, :name! Welcome back!',
     'registration_message' => ':greeting, :name! Welcome to our platform!',
+
+    // Ban messages
+    'banned' => 'Your account has been banned. Reason: :reason',
+    'no_reason' => 'No reason provided',
 ];

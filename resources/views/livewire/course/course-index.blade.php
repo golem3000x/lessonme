@@ -6,10 +6,30 @@
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-purple-600 drop-shadow-md" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
                 </svg>
-                {{ $is_teacher ? __('lessons.my_courses') : __('lessons.available_courses') }}
+                {{ __('lessons.courses') }}
             </h2>
-            
-            @if($is_teacher)
+        </div>
+
+        {{-- View Mode Tabs --}}
+        <div class="flex items-center justify-between">
+            <div class="flex gap-1 p-1 bg-gray-100 rounded-lg">
+                @if($is_teacher)
+                    <button
+                        wire:click="setViewMode('my_courses')"
+                        class="px-4 py-2 text-sm font-medium rounded-md transition {{ $view_mode === 'my_courses' ? 'bg-white text-purple-600 shadow' : 'text-gray-600 hover:text-gray-900' }}"
+                    >
+                        {{ __('lessons.my_courses') }}
+                    </button>
+                @endif
+                <button
+                    wire:click="setViewMode('available')"
+                    class="px-4 py-2 text-sm font-medium rounded-md transition {{ $view_mode === 'available' || !$is_teacher ? 'bg-white text-purple-600 shadow' : 'text-gray-600 hover:text-gray-900' }}"
+                >
+                    {{ __('lessons.available_courses') }}
+                </button>
+            </div>
+
+            @if($is_teacher && $view_mode === 'my_courses')
                 <a href="{{ route('courses.create') }}" 
                    class="group flex items-center gap-2 px-4 py-2 bg-purple-600 text-white text-sm font-medium rounded-lg hover:bg-purple-700 shadow transition">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 transition-transform group-hover:rotate-90" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -50,14 +70,19 @@
             <svg class="mx-auto h-14 w-14 text-gray-400 drop-shadow-md" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
             </svg>
-            <h3 class="text-xl font-medium text-gray-900">{{ $is_teacher ? __('lessons.no_courses') : __('lessons.no_published_courses') }}</h3>
-            <p class="text-sm text-gray-500">{{ $is_teacher ? __('lessons.no_courses_hint') : __('lessons.no_published_courses_hint') }}</p>
+            @if($view_mode === 'my_courses' && $is_teacher)
+                <h3 class="text-xl font-medium text-gray-900">{{ __('lessons.no_courses') }}</h3>
+                <p class="text-sm text-gray-500">{{ __('lessons.no_courses_hint') }}</p>
+            @else
+                <h3 class="text-xl font-medium text-gray-900">{{ __('lessons.no_published_courses') }}</h3>
+                <p class="text-sm text-gray-500">{{ __('lessons.no_published_courses_hint') }}</p>
+            @endif
         </div>
     @else
         {{-- Courses Grid --}}
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
             @foreach($courses as $course)
-                <div class="group bg-white border border-gray-100 rounded-xl shadow-sm hover:shadow-md hover:-translate-y-1 transition p-5 relative overflow-hidden flex flex-col h-full">
+                <div class="group bg-white border border-gray-100 rounded-xl shadow-sm hover:shadow-md hover:-translate-y-1 transition p-5 relative flex flex-col h-full">
                     <div class="absolute inset-0 bg-gradient-to-br from-purple-50/20 to-transparent opacity-0 group-hover:opacity-100 transition pointer-events-none"></div>
                     
                     <div class="flex justify-between items-start mb-3">
@@ -77,7 +102,7 @@
                                     </span>
                                 @endif
 
-                                @if($is_teacher)
+                                @if($view_mode === 'my_courses' && $is_teacher)
                                     <span class="px-2 py-0.5 rounded-full text-xs font-medium {{ $course->is_published ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-600' }}">
                                         {{ $course->is_published ? __('lessons.course_published') : __('lessons.draft') }}
                                     </span>
@@ -92,8 +117,8 @@
                             </div>
                         </div>
 
-                        @if($is_teacher)
-                            {{-- Dropdown menu --}}
+                        @if($view_mode === 'my_courses' && $is_teacher)
+                            {{-- Dropdown menu - only for own courses --}}
                             <div class="relative ml-2" x-data="{ open: false }">
                                 <button @click="open = !open"
                                         class="group p-2 rounded-lg text-gray-500 hover:text-purple-600 hover:bg-purple-50 transition-all duration-200"

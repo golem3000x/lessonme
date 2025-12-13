@@ -19,8 +19,8 @@ class LessonRelationTest extends TestCase
     {
         $user = User::factory()->create([
             'native_lang' => 'en',
-            'learning_lang' => 'vi',
         ]);
+        $user->syncLearningLanguages(['vi']);
 
         $topic = Topic::factory()->create();
 

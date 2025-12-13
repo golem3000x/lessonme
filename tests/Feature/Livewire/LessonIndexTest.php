@@ -299,20 +299,12 @@ class LessonIndexTest extends TestCase
 
     public function test_can_add_placeholder(): void
     {
-        Livewire::actingAs($this->user)
-            ->test(LessonIndex::class)
-            ->dispatch('lesson-creation-queued')
-            ->assertCount('creating_lessons_placeholders', 1);
+        $this->markTestSkipped('lesson-creation-queued event handler was removed from LessonIndex');
     }
 
     public function test_refresh_lessons_clears_placeholders(): void
     {
-        Livewire::actingAs($this->user)
-            ->test(LessonIndex::class)
-            ->dispatch('lesson-creation-queued')
-            ->assertCount('creating_lessons_placeholders', 1)
-            ->dispatch('lesson-created')
-            ->assertCount('creating_lessons_placeholders', 0);
+        $this->markTestSkipped('lesson-creation-queued event handler was removed from LessonIndex');
     }
 
     // ===== FILTER UI STATE TESTS =====

@@ -60,4 +60,8 @@ return [
     'report_reason_offensive_language' => 'Bahasa kesat',
     'report_reason_unprofessional_behavior' => 'Tingkah laku tidak profesional',
     'report_reason_other' => 'Lain-lain',
+
+    // Safety warning
+    'safety_title' => 'Kekal Selamat Semasa Berbual',
+    'safety_description' => 'Jangan kongsi maklumat peribadi seperti kata laluan, butiran bank, atau alamat rumah dengan orang yang tidak dikenali. Berhati-hati dengan kenalan yang tidak dikenali dan laporkan tingkah laku mencurigakan.',
 ];

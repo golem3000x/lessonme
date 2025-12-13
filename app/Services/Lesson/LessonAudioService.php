@@ -154,6 +154,7 @@ class LessonAudioService
         return match ($lang) {
             SystemLanguageEnum::VIETNAMESE => 'banmai',
             SystemLanguageEnum::ENGLISH => 'joanna',
+            default => 'joanna',
         };
     }
 

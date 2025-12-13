@@ -16,9 +16,22 @@ class MessagesIndex extends Component
     /** @var array<int, array<string, mixed>> */
     public array $conversations = [];
 
+    public bool $show_safety_warning = true;
+
     public function mount(): void
     {
+        /** @var User $user */
+        $user = Auth::user();
+        $this->show_safety_warning = $user->getSetting('show_safety_warning', true);
         $this->loadConversations();
+    }
+
+    public function hideSafetyWarning(): void
+    {
+        /** @var User $user */
+        $user = Auth::user();
+        $user->setSetting('show_safety_warning', false);
+        $this->show_safety_warning = false;
     }
 
     public function loadConversations(): void

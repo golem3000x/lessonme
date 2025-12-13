@@ -11,6 +11,7 @@ use App\Models\Lesson\Lesson;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -54,6 +55,7 @@ use Illuminate\Support\Carbon;
  */
 class Course extends Model
 {
+    use HasFactory;
     use HasUuids;
 
     protected $table = TableNameEnum::COURSES->value;

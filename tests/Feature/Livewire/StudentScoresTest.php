@@ -148,7 +148,7 @@ class StudentScoresTest extends TestCase
 
     public function test_render_includes_user_relationship(): void
     {
-        $student = User::factory()->create(['name' => 'Test Student']);
+        $student = User::factory()->create(['first_name' => 'Test', 'last_name' => 'Student']);
         $attempt = LessonAttempt::factory()->create([
             'lesson_id' => $this->lesson->id,
             'user_id' => $student->id,

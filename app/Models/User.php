@@ -17,6 +17,7 @@ use App\Models\Support\Message;
 use App\Notifications\ResetPasswordNotification;
 use Database\Factories\UserFactory;
 use Filament\Models\Contracts\FilamentUser;
+use Filament\Models\Contracts\HasName;
 use Filament\Panel;
 use Illuminate\Contracts\Translation\HasLocalePreference;
 use Illuminate\Database\Eloquent\Builder;
@@ -119,7 +120,7 @@ use Illuminate\Support\Str;
  * @method static Builder<static>|User whereZaloUserId($value)
  * @mixin \Eloquent
  */
-class User extends Authenticatable implements FilamentUser, HasLocalePreference
+class User extends Authenticatable implements FilamentUser, HasLocalePreference, HasName
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
@@ -171,6 +172,11 @@ class User extends Authenticatable implements FilamentUser, HasLocalePreference
         'temp_guest_expires_at',
         'first_login_completed_at',
         'settings',
+        'is_banned',
+        'banned_at',
+        'banned_by',
+        'ban_reason',
+        'ban_expires_at',
     ];
 
     /**
@@ -217,6 +223,9 @@ class User extends Authenticatable implements FilamentUser, HasLocalePreference
             'temp_guest_expires_at' => 'datetime',
             'first_login_completed_at' => 'datetime',
             'settings' => 'array',
+            'is_banned' => 'boolean',
+            'banned_at' => 'datetime',
+            'ban_expires_at' => 'datetime',
         ];
     }
 
@@ -261,6 +270,14 @@ class User extends Authenticatable implements FilamentUser, HasLocalePreference
     public function canAccessPanel(Panel $panel): bool
     {
         return $this->isAdmin();
+    }
+
+    /**
+     * Get the name to display in Filament admin panel.
+     */
+    public function getFilamentName(): string
+    {
+        return $this->full_name;
     }
 
     /**
@@ -697,5 +714,62 @@ class User extends Authenticatable implements FilamentUser, HasLocalePreference
     public function removeStudent(User $student): void
     {
         $this->students()->detach($student->id);
+    }
+
+    /**
+     * Get the admin who banned this user.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User, $this>
+     */
+    public function bannedByUser(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(User::class, 'banned_by');
+    }
+
+    /**
+     * Check if user is currently banned.
+     */
+    public function isBanned(): bool
+    {
+        if (! $this->is_banned) {
+            return false;
+        }
+
+        // Check if ban has expired
+        if ($this->ban_expires_at && $this->ban_expires_at->isPast()) {
+            $this->unban();
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Ban the user.
+     */
+    public function ban(?string $reason = null, ?Carbon $expires_at = null, ?int $banned_by = null): void
+    {
+        $this->update([
+            'is_banned' => true,
+            'banned_at' => now(),
+            'banned_by' => $banned_by,
+            'ban_reason' => $reason,
+            'ban_expires_at' => $expires_at,
+        ]);
+    }
+
+    /**
+     * Unban the user.
+     */
+    public function unban(): void
+    {
+        $this->update([
+            'is_banned' => false,
+            'banned_at' => null,
+            'banned_by' => null,
+            'ban_reason' => null,
+            'ban_expires_at' => null,
+        ]);
     }
 }

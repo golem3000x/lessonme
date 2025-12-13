@@ -19,6 +19,14 @@ class CourseIndex extends Component
 
     public ?int $course_to_delete = null;
 
+    // View mode: 'my_courses' or 'available'
+    public string $view_mode = 'my_courses';
+
+    public function setViewMode(string $mode): void
+    {
+        $this->view_mode = $mode;
+    }
+
     public function isTeacher(): bool
     {
         $user = Auth::user();
@@ -88,13 +96,16 @@ class CourseIndex extends Component
     {
         $user = Auth::user();
 
-        if ($this->isTeacher()) {
+        if ($this->view_mode === 'my_courses' && $this->isTeacher()) {
+            // My Courses: Teacher sees their own courses (including drafts)
             return Course::where('user_id', $user->id)
+                ->with('user')
                 ->withCount('lessons')
                 ->orderBy('created_at', 'desc')
                 ->get();
         }
 
+        // Available Courses: All published courses (for students and teachers in 'available' mode)
         return Course::where('is_published', true)
             ->with('user')
             ->withCount('lessons')
@@ -107,6 +118,7 @@ class CourseIndex extends Component
         return view('livewire.course.course-index', [
             'courses' => $this->getCourses(),
             'is_teacher' => $this->isTeacher(),
+            'view_mode' => $this->view_mode,
         ]);
     }
 }

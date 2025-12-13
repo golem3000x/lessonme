@@ -178,4 +178,8 @@ return [
     'ai_sentence_order_text' => 'Sắp xếp các từ để tạo thành câu đúng',
     'ai_quiz' => 'Trắc Nghiệm',
     'ai_quiz_text' => 'Câu hỏi nhiều lựa chọn về bài học',
+
+    // FAQ
+    'faq_languages_question' => 'Tại sao tôi chỉ có thể học tiếng Việt hoặc tiếng Anh?',
+    'faq_languages_answer' => 'Tác giả không tự tin về chất lượng bài học do AI tạo cho các ngôn ngữ không thuộc châu Âu và hiện đang sống tại Việt Nam. Tiếng Anh đơn giản là ngôn ngữ phổ biến nhất để học, và AI không gặp vấn đề gì khi tạo bài học tuân thủ CEFR cho nó. Thêm ngôn ngữ có thể được bổ sung trong tương lai sau khi xác minh chất lượng.',
 ];

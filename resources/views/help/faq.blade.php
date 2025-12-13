@@ -37,6 +37,10 @@
                             <h3 class="text-lg font-bold text-gray-900 mb-2">What languages are supported?</h3>
                             <p class="text-gray-600">Currently, LessonMe supports English and Vietnamese. You can learn either language and use either as your interface language.</p>
                         </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-gray-900 mb-2">{{ __('help.faq_languages_question') }}</h3>
+                            <p class="text-gray-600">{{ __('help.faq_languages_answer') }}</p>
+                        </div>
                     </div>
                 </div>
 

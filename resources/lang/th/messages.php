@@ -60,4 +60,8 @@ return [
     'report_reason_offensive_language' => 'ภาษาที่ไม่เหมาะสม',
     'report_reason_unprofessional_behavior' => 'พฤติกรรมไม่เป็นมืออาชีพ',
     'report_reason_other' => 'อื่นๆ',
+
+    // Safety warning
+    'safety_title' => 'ระวังตัวเมื่อแชท',
+    'safety_description' => 'อย่าแชร์ข้อมูลส่วนตัว เช่น รหัสผ่าน รายละเอียดธนาคาร หรือที่อยู่บ้านกับคนที่ไม่รู้จัก ระวังผู้ติดต่อที่ไม่รู้จักและรายงานพฤติกรรมที่น่าสงสัย',
 ];

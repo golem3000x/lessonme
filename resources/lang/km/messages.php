@@ -60,4 +60,8 @@ return [
     'report_reason_offensive_language' => 'ភាសាមិនសមរម្យ',
     'report_reason_unprofessional_behavior' => 'ឥរិយាបថមិនវិជ្ជាជីវៈ',
     'report_reason_other' => 'ផ្សេងទៀត',
+
+    // Safety warning
+    'safety_title' => 'រក្សាសុវត្ថិភាពពេលជជែក',
+    'safety_description' => 'កុំចែករំលែកព័ត៌មានផ្ទាល់ខ្លួនដូចជាពាក្យសម្ងាត់ ព័ត៌មានធនាគារ ឬអាសយដ្ឋានផ្ទះជាមួយអ្នកដែលអ្នកមិនស្គាល់។ សូមប្រយ័ត្នជាមួយទំនាក់ទំនងមិនស្គាល់ និងរាយការណ៍អំពើគួរឱ្យសង្ស័យ។',
 ];

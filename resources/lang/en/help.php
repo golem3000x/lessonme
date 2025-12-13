@@ -178,4 +178,8 @@ return [
     'ai_sentence_order_text' => 'Arrange words to form correct sentences',
     'ai_quiz' => 'Quiz',
     'ai_quiz_text' => 'Multiple choice questions about the lesson',
+
+    // FAQ
+    'faq_languages_question' => 'Why can I only learn Vietnamese or English?',
+    'faq_languages_answer' => 'The author is not confident in the quality of AI-generated lessons for non-European languages and is currently based in Vietnam. English is simply the most popular language for learning, and AI should have no issues creating CEFR-compliant lessons for it. More languages may be added in the future after quality verification.',
 ];
