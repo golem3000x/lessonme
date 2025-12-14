@@ -230,22 +230,24 @@ class LessonIndex extends Component
     #[On('lesson-created')]
     public function lessonCreated(?int $lesson_database_id = null, bool $force_cleanup = false): void
     {
-        // If forced cleanup (EXISTS or ERROR) - remove placeholder immediately
-        if ($force_cleanup) {
-            if ($lesson_database_id !== null && isset($this->regenerating_lessons_placeholders[$lesson_database_id])) {
-                // Regeneration failed/exists
-                unset($this->regenerating_lessons_placeholders[$lesson_database_id]);
-                session(['lesson_placeholders_regenerating' => $this->regenerating_lessons_placeholders]);
-            } else {
-                // Creation failed/exists - remove first placeholder
+        // Check if this is a regeneration (has lesson_database_id in regenerating placeholders)
+        if ($lesson_database_id !== null && isset($this->regenerating_lessons_placeholders[$lesson_database_id])) {
+            // Regeneration completed or failed - remove specific placeholder
+            unset($this->regenerating_lessons_placeholders[$lesson_database_id]);
+            session(['lesson_placeholders_regenerating' => $this->regenerating_lessons_placeholders]);
+        } else {
+            // New lesson creation - remove first placeholder (FIFO)
+            if (! empty($this->creating_lessons_placeholders)) {
+                array_shift($this->creating_lessons_placeholders);
                 if (! empty($this->creating_lessons_placeholders)) {
-                    array_shift($this->creating_lessons_placeholders);
                     session(['lesson_placeholders_creating' => $this->creating_lessons_placeholders]);
+                } else {
+                    session()->forget('lesson_placeholders_creating');
                 }
             }
         }
 
-        // Trigger re-render - normal cleanup will happen in detectAndCleanPlaceholders()
+        // Trigger re-render to show updated lessons list
         $this->resetPage();
     }
 

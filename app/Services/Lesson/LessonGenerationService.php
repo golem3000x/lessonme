@@ -282,9 +282,8 @@ class LessonGenerationService
      */
     public function createEmbedding(LessonDto $lesson_dto): array
     {
-        $level_value = $lesson_dto->levelValue();
         $keywords_str = $lesson_dto->getKeywordsAsString();
-        $input = "$lesson_dto->learning_lang $level_value $lesson_dto->topic $keywords_str";
+        $input = "$lesson_dto->learning_lang $lesson_dto->topic $keywords_str";
         $response = OpenAI::embeddings()->create([
             'model' => OpenAiModelEnum::TEXT_EMBEDDING_THREE_SMALL->value,
             'input' => trim($input),

@@ -357,8 +357,6 @@
         <livewire:chat.chat-panel />
     @endif
     
-    {{-- Global placeholder manager - updates session even when user is on another page --}}
-    <livewire:lesson.placeholder-manager />
 @endauth
 
 @livewireScripts

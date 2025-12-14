@@ -23,7 +23,7 @@ class LessonService
     {
         $embedding = $this->generator->createEmbedding($dto);
 
-        $similar_lesson = $this->similarity->findSimilar($user_id, $embedding);
+        $similar_lesson = $this->similarity->findSimilar($user_id, $embedding, $dto);
         if ($similar_lesson) {
             throw new LessonExistsException($similar_lesson);
         }
