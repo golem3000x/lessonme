@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\Jobs\Lesson;
 
 use App\Dto\LessonDto;
-use App\Enums\Notifications\LessonRegenerationStatusEnum;
+use App\Enums\Notifications\LessonCreationStatusEnum;
 use App\Exceptions\LessonExistsException;
 use App\Models\Lesson\Lesson;
 use App\Models\User;
-use App\Notifications\Lesson\LessonRegenerationNotification;
+use App\Notifications\Lesson\LessonCreationNotification;
 use App\Services\Lesson\LessonAudioService;
 use App\Services\Lesson\LessonService;
 use Exception;
@@ -51,8 +51,6 @@ class RegenerateLessonJob implements ShouldQueue
             return;
         }
 
-        // Security check: Ensure lesson belongs to the user
-        // This is a safety measure in case the job is dispatched incorrectly
         if ($lesson->user_id !== $user->id) {
             Log::error('Security: Lesson does not belong to user', [
                 'lesson_id' => $lesson->id,
@@ -73,7 +71,6 @@ class RegenerateLessonJob implements ShouldQueue
                 ]);
             }
 
-            // Feedbacks are automatically archived to history in regenerateLesson -> snapshot()
             $updatedLesson = $lessonService->regenerateLesson($lesson, $this->lesson_dto);
 
             try {
@@ -85,23 +82,25 @@ class RegenerateLessonJob implements ShouldQueue
                 ]);
             }
 
-            $this->notify($user, LessonRegenerationStatusEnum::SUCCESSFULLY, $updatedLesson->id);
+            $this->notify($user, LessonCreationStatusEnum::CREATED, $updatedLesson->id);
         } catch (LessonExistsException $e) {
-            $this->notify($user, LessonRegenerationStatusEnum::EXISTS, $e->lesson->id);
+            $this->notify($user, LessonCreationStatusEnum::EXISTS, $e->lesson->id);
         } catch (Exception $e) {
             Log::error('Lesson regeneration failed', [
                 'lesson_id' => $this->lesson_id,
                 'error' => $e->getMessage(),
             ]);
 
-            $this->notify($user, LessonRegenerationStatusEnum::ERROR, $this->lesson_id);
+            $lesson->update(['status' => LessonCreationStatusEnum::CREATED]);
+
+            $this->notify($user, LessonCreationStatusEnum::ERROR, $lesson->id);
         }
     }
 
-    private function notify(User $user, LessonRegenerationStatusEnum $status, ?int $lesson_id): void
+    private function notify(User $user, LessonCreationStatusEnum $status, int $lesson_id): void
     {
         $user->notify(
-            new LessonRegenerationNotification(
+            new LessonCreationNotification(
                 $user,
                 $status,
                 $lesson_id,

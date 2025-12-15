@@ -59,7 +59,7 @@ class NotificationsPanel extends Component
 
             // For lesson entity with processing status, don't check as duplicate
             // to allow multiple regenerations
-            if ($notification_data['entity'] === 'lesson' && $notification_data['status'] === LessonCreationStatusEnum::PROCESSING->value) {
+            if ($notification_data['entity'] === 'lesson' && $notification_data['status'] === LessonCreationStatusEnum::CREATION->value) {
                 return false;
             }
 

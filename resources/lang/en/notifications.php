@@ -41,16 +41,11 @@ return [
     'user_auth_registered' => 'Welcome to our platform, :name!',
 
     // Lesson creation notifications
-    'lesson_creation_processing' => 'Lesson creation in progress...',
-    'lesson_creation_successfully' => 'Lesson ":name" has been created successfully!',
+    'lesson_creation_creation' => 'Lesson creation in progress...',
+    'lesson_creation_created' => 'Lesson ":name" has been created successfully!',
+    'lesson_creation_regeneration' => 'Lesson regeneration in progress...',
     'lesson_creation_error' => 'Lesson creation failed. Please try again.',
     'lesson_creation_exists' => 'A similar lesson ":name" already exists.',
-
-    // Lesson regeneration notifications
-    'lesson_regeneration_processing' => 'Lesson regeneration in progress...',
-    'lesson_regeneration_successfully' => 'Lesson ":name" has been regenerated successfully!',
-    'lesson_regeneration_error' => 'Lesson regeneration failed. Please try again.',
-    'lesson_regeneration_exists' => 'Lesson ":name" already exists.',
 
     // Lesson assignment notifications
     'lesson_assigned' => ':teacher assigned you a lesson: ":lesson"',

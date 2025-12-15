@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services\Lesson;
 
 use App\Dto\LessonDto;
+use App\Enums\Notifications\LessonCreationStatusEnum;
 use App\Exceptions\LessonExistsException;
 use App\Models\Lesson\Lesson;
 
@@ -17,26 +18,24 @@ class LessonService
     ) {}
 
     /**
+     * Fill existing lesson (placeholder) with generated content.
+     *
      * @throws LessonExistsException
      */
-    public function createLesson(int $user_id, int $topic_id, LessonDto $dto): Lesson
+    public function fillLessonContent(Lesson $lesson, LessonDto $dto): Lesson
     {
         $embedding = $this->generator->createEmbedding($dto);
 
-        $similar_lesson = $this->similarity->findSimilar($user_id, $embedding, $dto);
-        if ($similar_lesson) {
+        $similar_lesson = $this->similarity->findSimilar($lesson->user_id, $embedding, $dto);
+        if ($similar_lesson && $similar_lesson->id !== $lesson->id) {
             throw new LessonExistsException($similar_lesson);
         }
 
         $data = $this->generator->generateLesson($dto);
 
-        return Lesson::create([
-            'user_id' => $user_id,
-            'topic_id' => $topic_id,
+        $lesson->update([
             'lesson_name' => $data['lesson_name'],
             'lesson_text' => $data['lesson_text'],
-            'language_level' => $dto->level,
-            'lesson_lang' => $dto->learning_lang,
             'grammar_data' => $data['grammar_highlights'],
             'vocabulary' => $data['vocabulary'],
             'dialogue' => $data['dialogue'] ?? [],
@@ -45,7 +44,10 @@ class LessonService
             'common_mistakes' => $data['common_mistakes'] ?? [],
             'culture_notes' => $data['culture_notes'] ?? null,
             'embedding' => $embedding,
+            'status' => LessonCreationStatusEnum::CREATED,
         ]);
+
+        return $lesson;
     }
 
     /**
@@ -57,8 +59,9 @@ class LessonService
 
         $new_embedding = $this->generator->createEmbedding($dto);
 
-        $similar_lesson = $this->similarity->findSimilar($lesson->user_id, $new_embedding);
+        $similar_lesson = $this->similarity->findSimilar($lesson->user_id, $new_embedding, $dto);
         if ($similar_lesson && $similar_lesson->id !== $lesson->id) {
+            $lesson->update(['status' => LessonCreationStatusEnum::CREATED]);
             throw new LessonExistsException($similar_lesson);
         }
 
@@ -77,6 +80,7 @@ class LessonService
             'common_mistakes' => $new_data['common_mistakes'] ?? [],
             'culture_notes' => $new_data['culture_notes'] ?? null,
             'embedding' => $new_embedding,
+            'status' => LessonCreationStatusEnum::CREATED,
         ]);
 
         return $lesson;

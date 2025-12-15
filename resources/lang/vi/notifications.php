@@ -41,16 +41,11 @@ return [
     'user_auth_registered' => 'Chào mừng bạn đến với nền tảng của chúng tôi, :name!',
 
     // Lesson creation notifications
-    'lesson_creation_processing' => 'Đang tạo bài học...',
-    'lesson_creation_successfully' => 'Bài học ":name" đã được tạo thành công!',
+    'lesson_creation_creation' => 'Đang tạo bài học...',
+    'lesson_creation_created' => 'Bài học ":name" đã được tạo thành công!',
+    'lesson_creation_regeneration' => 'Đang tạo lại bài học...',
     'lesson_creation_error' => 'Tạo bài học thất bại. Vui lòng thử lại.',
     'lesson_creation_exists' => 'Bài học tương tự ":name" đã tồn tại.',
-
-    // Lesson regeneration notifications
-    'lesson_regeneration_processing' => 'Đang tạo lại bài học...',
-    'lesson_regeneration_successfully' => 'Bài học ":name" đã được tạo lại thành công!',
-    'lesson_regeneration_error' => 'Tạo lại bài học thất bại. Vui lòng thử lại.',
-    'lesson_regeneration_exists' => 'Bài học ":name" đã tồn tại.',
 
     // Lesson assignment notifications
     'lesson_assigned' => ':teacher đã giao cho bạn bài học: ":lesson"',

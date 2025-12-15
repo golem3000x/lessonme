@@ -86,18 +86,19 @@ if (userId) {
     });
 
     // Lesson creation notifications
-    channel.listen('.lesson.creation.processing', (notification) => {
-        console.log('🔥 Lesson creation processing:', notification);
+    channel.listen('.lesson.creation.creation', (notification) => {
+        console.log('🔥 Lesson creation started:', notification);
         Livewire.dispatch('lesson-notification', {
             id: notification.id,
             entity: notification.entity,
             status: notification.status,
             message: notification.message
         });
+        Livewire.dispatch('lesson-updated');
     });
 
-    channel.listen('.lesson.creation.successfully', (notification) => {
-        console.log('🔥 Lesson creation success:', notification);
+    channel.listen('.lesson.creation.created', (notification) => {
+        console.log('🔥 Lesson created:', notification);
         Livewire.dispatch('lesson-notification', {
             id: notification.id,
             entity: notification.entity,
@@ -107,14 +108,22 @@ if (userId) {
             lesson_url: notification.lesson_url,
             lesson_name: notification.lesson_name
         });
-        // Reload lessons list and clear placeholders
-        Livewire.dispatch('lesson-created', {
-            lesson_database_id: notification.lesson_database_id
+        Livewire.dispatch('lesson-updated');
+    });
+
+    channel.listen('.lesson.creation.regeneration', (notification) => {
+        console.log('🔥 Lesson regeneration started:', notification);
+        Livewire.dispatch('lesson-notification', {
+            id: notification.id,
+            entity: notification.entity,
+            status: notification.status,
+            message: notification.message
         });
+        Livewire.dispatch('lesson-updated');
     });
 
     channel.listen('.lesson.creation.exists', (notification) => {
-        console.log('🔥 Lesson creation exists:', notification);
+        console.log('🔥 Lesson exists:', notification);
         Livewire.dispatch('lesson-notification', {
             id: notification.id,
             entity: notification.entity,
@@ -124,11 +133,7 @@ if (userId) {
             lesson_url: notification.lesson_url,
             lesson_name: notification.lesson_name
         });
-        // Clear placeholders when lesson already exists (count won't increase!)
-        Livewire.dispatch('lesson-created', {
-            lesson_database_id: notification.lesson_database_id,
-            force_cleanup: true  // Force cleanup since count won't change
-        });
+        Livewire.dispatch('lesson-updated');
     });
 
     channel.listen('.lesson.creation.error', (notification) => {
@@ -139,72 +144,7 @@ if (userId) {
             status: notification.status,
             message: notification.message
         });
-        // Clear placeholders on error (count won't increase!)
-        Livewire.dispatch('lesson-created', {
-            lesson_database_id: notification.lesson_database_id,
-            force_cleanup: true  // Force cleanup since count won't change
-        });
-    });
-
-    // Lesson regeneration notifications
-    channel.listen('.lesson.regeneration.processing', (notification) => {
-        console.log('🔥 Lesson regeneration processing:', notification);
-        Livewire.dispatch('lesson-notification', {
-            id: notification.id,
-            entity: notification.entity,
-            status: notification.status,
-            message: notification.message
-        });
-    });
-
-    channel.listen('.lesson.regeneration.successfully', (notification) => {
-        console.log('🔥 Lesson regeneration success:', notification);
-        Livewire.dispatch('lesson-notification', {
-            id: notification.id,
-            entity: notification.entity,
-            status: notification.status,
-            message: notification.message,
-            lesson_id: notification.lesson_id,
-            lesson_url: notification.lesson_url,
-            lesson_name: notification.lesson_name
-        });
-        // Reload lesson details if on show page
-        Livewire.dispatch('lesson-regenerated', {
-            lesson_database_id: notification.lesson_database_id
-        });
-    });
-
-    channel.listen('.lesson.regeneration.exists', (notification) => {
-        console.log('🔥 Lesson regeneration exists:', notification);
-        Livewire.dispatch('lesson-notification', {
-            id: notification.id,
-            entity: notification.entity,
-            status: notification.status,
-            message: notification.message,
-            lesson_id: notification.lesson_id,
-            lesson_url: notification.lesson_url,
-            lesson_name: notification.lesson_name
-        });
-        // Clear placeholders when lesson already exists
-        Livewire.dispatch('lesson-regenerated', {
-            lesson_database_id: notification.lesson_database_id,
-            force_cleanup: true
-        });
-    });
-
-    channel.listen('.lesson.regeneration.error', (notification) => {
-        console.log('🔥 Lesson regeneration error:', notification);
-        Livewire.dispatch('lesson-notification', {
-            id: notification.id,
-            entity: notification.entity,
-            status: notification.status,
-            message: notification.message
-        });
-        // Clear placeholders on error
-        Livewire.dispatch('lesson-regenerated', {
-            lesson_database_id: notification.lesson_database_id,
-            force_cleanup: true
-        });
+        Livewire.dispatch('lesson-updated');
     });
 
     // Lesson assignment notification (for student - receiving assignment)

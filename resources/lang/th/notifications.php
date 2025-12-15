@@ -41,16 +41,11 @@ return [
     'user_auth_registered' => 'ยินดีต้อนรับสู่แพลตฟอร์มของเรา :name!',
 
     // Lesson creation notifications
-    'lesson_creation_processing' => 'กำลังสร้างบทเรียน...',
-    'lesson_creation_successfully' => 'บทเรียน ":name" ถูกสร้างสำเร็จ!',
+    'lesson_creation_creation' => 'กำลังสร้างบทเรียน...',
+    'lesson_creation_created' => 'บทเรียน ":name" ถูกสร้างสำเร็จ!',
+    'lesson_creation_regeneration' => 'กำลังสร้างบทเรียนใหม่...',
     'lesson_creation_error' => 'การสร้างบทเรียนล้มเหลว กรุณาลองใหม่',
     'lesson_creation_exists' => 'บทเรียนที่คล้ายกัน ":name" มีอยู่แล้ว',
-
-    // Lesson regeneration notifications
-    'lesson_regeneration_processing' => 'กำลังสร้างบทเรียนใหม่...',
-    'lesson_regeneration_successfully' => 'บทเรียน ":name" ถูกสร้างใหม่สำเร็จ!',
-    'lesson_regeneration_error' => 'การสร้างบทเรียนใหม่ล้มเหลว กรุณาลองใหม่',
-    'lesson_regeneration_exists' => 'บทเรียน ":name" มีอยู่แล้ว',
 
     // Lesson assignment notifications
     'lesson_assigned' => ':teacher มอบหมายบทเรียนให้คุณ: ":lesson"',

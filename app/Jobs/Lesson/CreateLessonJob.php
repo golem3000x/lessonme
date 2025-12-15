@@ -30,8 +30,7 @@ class CreateLessonJob implements ShouldQueue
     public int $timeout = 180;
 
     public function __construct(
-        protected int $user_id,
-        protected int $topic_id,
+        protected int $lesson_id,
         protected LessonDto $lesson_dto
     ) {}
 
@@ -41,8 +40,23 @@ class CreateLessonJob implements ShouldQueue
      */
     public function handle(LessonService $service, LessonAudioService $audio_service): void
     {
+        $lesson = Lesson::find($this->lesson_id);
+
+        if (! $lesson) {
+            Log::error('Lesson not found for creation', ['lesson_id' => $this->lesson_id]);
+
+            return;
+        }
+
+        $user = User::find($lesson->user_id);
+        if (! $user) {
+            Log::error('User not found for lesson', ['lesson_id' => $this->lesson_id]);
+
+            return;
+        }
+
         try {
-            $lesson = $service->createLesson($this->user_id, $this->topic_id, $this->lesson_dto);
+            $lesson = $service->fillLessonContent($lesson, $this->lesson_dto);
 
             try {
                 $audio_service->generateAudioForLesson($lesson);
@@ -53,39 +67,32 @@ class CreateLessonJob implements ShouldQueue
                 ]);
             }
 
-            $this->notify($lesson, LessonCreationStatusEnum::SUCCESSFULLY);
+            $this->notify($user, LessonCreationStatusEnum::CREATED, $lesson->id);
         } catch (LessonExistsException $e) {
-            Log::error('Lesson already exists', [
-                'user_id' => $this->user_id,
-                'topic_id' => $this->topic_id,
-                'lesson_id' => $e->lesson->id,
+            Log::info('Similar lesson already exists', [
+                'lesson_id' => $this->lesson_id,
+                'similar_lesson_id' => $e->lesson->id,
             ]);
-            $this->notify($e->lesson, LessonCreationStatusEnum::EXISTS);
+            $lesson->delete();
+            $this->notify($user, LessonCreationStatusEnum::EXISTS, $e->lesson->id);
         } catch (Throwable $e) {
             Log::error('Lesson creation failed', [
-                'user_id' => $this->user_id,
-                'topic_id' => $this->topic_id,
+                'lesson_id' => $this->lesson_id,
                 'error' => $e->getMessage(),
             ]);
-            $this->notify(new Lesson, LessonCreationStatusEnum::ERROR);
+            $lesson->delete();
+            $this->notify($user, LessonCreationStatusEnum::ERROR, null);
             throw $e;
         }
     }
 
-    private function notify(Lesson $lesson, LessonCreationStatusEnum $status): void
+    private function notify(User $user, LessonCreationStatusEnum $status, ?int $lesson_id): void
     {
-        $user = User::find($this->user_id);
-        if (! $user) {
-            Log::warning('User not found for notification', ['user_id' => $this->user_id]);
-
-            return;
-        }
-
         $user->notify(
             new LessonCreationNotification(
                 $user,
                 $status,
-                $lesson->id,
+                $lesson_id,
             )
         );
     }

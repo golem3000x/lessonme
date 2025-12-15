@@ -4,19 +4,6 @@ declare(strict_types=1);
 
 namespace App\Livewire\Lesson;
 
-/**
- * ManageLesson component for creating new lessons
- *
- * PLACEHOLDER FLOW:
- * 1. Add placeholder to SESSION (persists across page reloads)
- * 2. Dispatch 'placeholder-added' event to LessonIndex (real-time UI update)
- *
- * This dual approach ensures:
- * - Placeholder shows immediately (via event)
- * - Placeholder persists if user navigates away (via session)
- * - PlaceholderManager cleans up via WebSocket
- */
-
 use App\Dto\LessonDto;
 use App\Enums\Lesson\LessonCreationTypeEnum;
 use App\Enums\Notifications\LessonCreationStatusEnum;
@@ -25,6 +12,7 @@ use App\Enums\System\QueueNameEnum;
 use App\Enums\System\SystemLanguageEnum;
 use App\Jobs\Lesson\CreateLessonJob;
 use App\Models\Keyword\Keyword;
+use App\Models\Lesson\Lesson;
 use App\Models\Topic\Topic;
 use App\Notifications\Lesson\LessonCreationNotification;
 use Illuminate\Contracts\View\Factory;
@@ -239,32 +227,32 @@ class ManageLesson extends Component
                 throw new \RuntimeException('Topic ID is required');
             }
 
-            // Dispatch job for async lesson creation
+            // Create lesson in DB with CREATION status (placeholder)
+            $lesson = Lesson::create([
+                'user_id' => $user->id,
+                'topic_id' => $this->topic_id,
+                'lesson_name' => $this->topic,
+                'language_level' => $level_enum,
+                'lesson_lang' => $this->lesson_language,
+                'status' => LessonCreationStatusEnum::CREATION,
+            ]);
+
+            $user->notify(new LessonCreationNotification(
+                $user,
+                LessonCreationStatusEnum::CREATION,
+                $lesson->id,
+            ));
+
+            // Dispatch job to fill lesson content
             CreateLessonJob::dispatch(
-                $user->id,
-                $this->topic_id,
+                $lesson->id,
                 $lesson_dto
             )
                 ->onQueue(QueueNameEnum::LESSON->value);
 
-            $user->notify(new LessonCreationNotification(
-                $user,
-                LessonCreationStatusEnum::PROCESSING,
-                null,
-            ));
-
-            // Add placeholder directly to session (works even if LessonIndex is not loaded)
-            $creating_placeholders = session('lesson_placeholders_creating', []);
-            $placeholder_id = uniqid('creating_', true);
-            $creating_placeholders[] = $placeholder_id;
-            session(['lesson_placeholders_creating' => $creating_placeholders]);
-
-            // Notify LessonIndex to add placeholder to local state (for real-time update)
-            $this->dispatch('placeholder-added', placeholder_id: $placeholder_id);
-
             // Reset generating state and close modal
             $this->is_generating = false;
-            $this->dispatch('close-manage-modal');
+            $this->dispatch('close-manage-modal')->to(\App\Livewire\Lesson\LessonIndex::class);
 
         } catch (\Exception $e) {
             $this->is_generating = false;
@@ -316,7 +304,7 @@ class ManageLesson extends Component
     public function selectCreationType(string $type): void
     {
         if ($type === LessonCreationTypeEnum::MANUAL->value) {
-            $this->dispatch('close-manage-modal');
+            $this->dispatch('close-manage-modal')->to(\App\Livewire\Lesson\LessonIndex::class);
             $this->redirect(route('lessons.create'), navigate: true);
 
             return;

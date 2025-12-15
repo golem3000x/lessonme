@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services\Lesson;
 
+use App\Enums\Notifications\LessonCreationStatusEnum;
 use App\Models\Lesson\Lesson;
 use App\Models\Lesson\LessonFeedbackHistory;
 use App\Models\Lesson\LessonHistory;
@@ -28,6 +29,7 @@ class LessonHistoryService
             'common_mistakes' => $lesson->common_mistakes,
             'culture_notes' => $lesson->culture_notes,
             'embedding' => $lesson->embedding,
+            'status' => LessonCreationStatusEnum::ARCHIVED,
         ]);
 
         // Archive current feedbacks to history

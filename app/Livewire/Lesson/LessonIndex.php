@@ -4,62 +4,8 @@ declare(strict_types=1);
 
 namespace App\Livewire\Lesson;
 
-/**
- * PLACEHOLDER SYSTEM EXPLANATION:
- *
- * This component uses TWO simple arrays stored in session to track lessons being created/regenerated:
- *
- * 1. creating_lessons_placeholders (flat array)
- *    - Stores placeholder IDs for NEW lessons being created
- *    - Not linked to any lesson ID (lessons don't exist yet)
- *    - When notification arrives, removes FIRST element (FIFO)
- *    - Example: ['creating_123', 'creating_456']
- *
- * 2. regenerating_lessons_placeholders (associative array)
- *    - Stores placeholder IDs for lessons being REGENERATED
- *    - Key: lesson database ID, Value: placeholder ID
- *    - When notification arrives with lesson_database_id, removes SPECIFIC element
- *    - Example: [42 => 'regenerating_789', 55 => 'regenerating_012']
- *
- * FLOW FOR CREATING NEW LESSON:
- * 1. User clicks create → ManageLesson.createLesson()
- * 2. Placeholder added to session + dispatch('placeholder-added')
- * 3. LessonIndex catches 'placeholder-added' → adds to local state (REAL-TIME!)
- * 4. Job dispatched → lesson created in DB
- * 5. WebSocket notification → component refreshes
- * 6. render() gets TOTAL COUNT → if increased → remove placeholder(s)
- *
- * FLOW FOR REGENERATING LESSON:
- * 1. User clicks regenerate → LessonIndex.regenerateLesson()
- * 2. Placeholder added to session with lesson_id as key
- * 3. Job dispatched → lesson updated in DB (count doesn't change!)
- * 4. WebSocket notification → component refreshes
- * 5. render() checks if lesson_id appears on current page → removes placeholder
- *
- * SIMPLE APPROACH:
- * - creating: if total_count > previous_count → remove placeholder (FIFO)
- * - regenerating: if lesson_id is on current page → remove placeholder
- *
- * FIRST RENDER LOGIC:
- * - When page loads: previous_count = 0, but lessons already exist
- * - Don't clean placeholders! Just initialize: previous_count = current_count
- * - This prevents false "new lesson" detection on page load
- *
- * EDGE CASES (count doesn't increase):
- * - EXISTS: lesson already exists → count unchanged → use force_cleanup flag
- * - ERROR: creation failed → count unchanged → use force_cleanup flag
- * echo.js sends force_cleanup=true for these cases
- *
- * WHY IT WORKS:
- * - Total count is independent of pagination/filters
- * - First render initializes baseline, subsequent renders detect changes
- * - Regenerating lessons don't change count, so we check by ID presence
- * - Force cleanup handles cases where count won't increase but placeholder must go
- */
-
 use App\Dto\LessonDto;
 use App\Enums\Notifications\LessonCreationStatusEnum;
-use App\Enums\Notifications\LessonRegenerationStatusEnum;
 use App\Enums\System\AssignmentStatusEnum;
 use App\Enums\System\LanguageLevelEnum;
 use App\Enums\System\QueueNameEnum;
@@ -73,7 +19,6 @@ use App\Notifications\Lesson\LessonAssignedNotification;
 use App\Notifications\Lesson\LessonAssignmentRemovedNotification;
 use App\Notifications\Lesson\LessonAssignmentSentNotification;
 use App\Notifications\Lesson\LessonCreationNotification;
-use App\Notifications\Lesson\LessonRegenerationNotification;
 use App\Notifications\Lesson\LessonUnassignedNotification;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -91,6 +36,8 @@ class LessonIndex extends Component
     use WithPagination;
 
     public bool $show_manage_modal = false;
+
+    public int $manage_modal_key = 0;
 
     /** @var array<int, bool> */
     public array $open_dropdowns = [];
@@ -118,28 +65,6 @@ class LessonIndex extends Component
 
     /** @var array<int, array{id: int, title: string, lessons_count: int}> */
     public array $available_courses = [];
-
-    /**
-     * Placeholders for NEW lessons being created (simple flat array of placeholder IDs)
-     * Each element is just a unique string ID
-     *
-     * @var array<int, string>
-     */
-    public array $creating_lessons_placeholders = [];
-
-    /**
-     * Placeholders for lessons being REGENERATED (associative array)
-     * Key: lesson database ID, Value: ['id' => placeholder_id, 'timestamp' => time()]
-     *
-     * @var array<int, array{id: string, timestamp: int}>
-     */
-    public array $regenerating_lessons_placeholders = [];
-
-    /**
-     * Track total lessons count from previous render
-     * MUST be public so Livewire persists it between renders
-     */
-    public int $previous_lessons_count = 0;
 
     // Filters UI state
     public bool $show_filters = false;
@@ -185,10 +110,6 @@ class LessonIndex extends Component
         $this->temp_search = $this->search;
         $this->temp_language_levels = $this->language_levels;
         $this->temp_lesson_languages = $this->lesson_languages;
-
-        // Restore placeholders from session
-        $this->creating_lessons_placeholders = session('lesson_placeholders_creating', []);
-        $this->regenerating_lessons_placeholders = session('lesson_placeholders_regenerating', []);
     }
 
     public function updated(string $property): void
@@ -208,146 +129,13 @@ class LessonIndex extends Component
     }
 
     /**
-     * Add placeholder to local state when user creates new lesson
-     * Called from ManageLesson after adding to session
-     *
-     * @param  string  $placeholder_id  - Unique placeholder ID
+     * Handle lesson creation/regeneration notification from WebSocket
+     * Refreshes the lesson list
      */
-    #[On('placeholder-added')]
-    public function placeholderAdded(string $placeholder_id): void
+    #[On('lesson-updated')]
+    public function lessonUpdated(): void
     {
-        // Add to local state for immediate UI update
-        $this->creating_lessons_placeholders[] = $placeholder_id;
-        // Session already updated by ManageLesson
-    }
-
-    /**
-     * Handle lesson creation notification from WebSocket
-     *
-     * @param  int|null  $lesson_database_id  - Database ID if lesson exists/created, null on error
-     * @param  bool  $force_cleanup  - Force cleanup even if count didn't increase (for EXISTS/ERROR cases)
-     */
-    #[On('lesson-created')]
-    public function lessonCreated(?int $lesson_database_id = null, bool $force_cleanup = false): void
-    {
-        // Check if this is a regeneration (has lesson_database_id in regenerating placeholders)
-        if ($lesson_database_id !== null && isset($this->regenerating_lessons_placeholders[$lesson_database_id])) {
-            // Regeneration completed or failed - remove specific placeholder
-            unset($this->regenerating_lessons_placeholders[$lesson_database_id]);
-            session(['lesson_placeholders_regenerating' => $this->regenerating_lessons_placeholders]);
-        } else {
-            // New lesson creation - remove first placeholder (FIFO)
-            if (! empty($this->creating_lessons_placeholders)) {
-                array_shift($this->creating_lessons_placeholders);
-                if (! empty($this->creating_lessons_placeholders)) {
-                    session(['lesson_placeholders_creating' => $this->creating_lessons_placeholders]);
-                } else {
-                    session()->forget('lesson_placeholders_creating');
-                }
-            }
-        }
-
-        // Trigger re-render to show updated lessons list
         $this->resetPage();
-    }
-
-    /**
-     * Handle lesson regeneration event from WebSocket
-     * Removes placeholder for specific regenerated lesson
-     *
-     * @param  int|null  $lesson_database_id  - Database ID of regenerated lesson
-     * @param  bool  $force_cleanup  - Force cleanup on error/exists
-     */
-    #[On('lesson-regenerated')]
-    public function lessonRegenerated(?int $lesson_database_id = null, bool $force_cleanup = false): void
-    {
-        // Remove placeholder for specific regenerated lesson
-        if ($lesson_database_id !== null && isset($this->regenerating_lessons_placeholders[$lesson_database_id])) {
-            unset($this->regenerating_lessons_placeholders[$lesson_database_id]);
-            session(['lesson_placeholders_regenerating' => $this->regenerating_lessons_placeholders]);
-        }
-
-        // Trigger re-render to refresh lesson data
-        $this->resetPage();
-    }
-
-    /**
-     * Detect new lessons and clean placeholders
-     * Simple approach: if total count increased → remove placeholder
-     *
-     * @param  int  $current_total_count  - Total lessons count
-     * @param  \Illuminate\Contracts\Pagination\LengthAwarePaginator  $lessons  - Paginated lessons
-     */
-    private function detectAndCleanPlaceholders(int $current_total_count, $lessons): void
-    {
-        // On FIRST RENDER: just initialize count, don't clean placeholders
-        if ($this->previous_lessons_count === 0 && $current_total_count > 0) {
-            $this->previous_lessons_count = $current_total_count;
-            // Don't clean - user just loaded the page, these are existing lessons
-        }
-        // On SUBSEQUENT RENDERS: check if count increased
-        elseif ($current_total_count > $this->previous_lessons_count) {
-            $lessons_added = $current_total_count - $this->previous_lessons_count;
-
-            // Remove placeholders for new lessons
-            for ($i = 0; $i < $lessons_added; $i++) {
-                if (! empty($this->creating_lessons_placeholders)) {
-                    array_shift($this->creating_lessons_placeholders);
-                }
-            }
-
-            if (! empty($this->creating_lessons_placeholders)) {
-                session(['lesson_placeholders_creating' => $this->creating_lessons_placeholders]);
-            } else {
-                session()->forget('lesson_placeholders_creating');
-            }
-
-            // Update count after cleanup
-            $this->previous_lessons_count = $current_total_count;
-        }
-
-        // Clean regenerating placeholders intelligently:
-        // 1. Remove if lesson was updated AFTER placeholder creation (regeneration completed, WebSocket missed)
-        // 2. Remove if placeholder is very old (>5 min) - stuck/stale
-        $current_time = time();
-        $max_placeholder_age = 300; // 5 minutes
-        $current_page_lesson_ids = $lessons->pluck('id')->toArray();
-
-        foreach ($this->regenerating_lessons_placeholders as $lesson_id => $placeholder_data) {
-            $age = $current_time - $placeholder_data['timestamp'];
-
-            // Check if lesson exists on current page
-            if (in_array($lesson_id, $current_page_lesson_ids, true)) {
-                // Get lesson's updated_at timestamp
-                $lesson = $lessons->firstWhere('id', $lesson_id);
-
-                if ($lesson && $lesson->updated_at) {
-                    $lesson_updated_timestamp = $lesson->updated_at->timestamp;
-
-                    // If lesson was updated AFTER placeholder was created, regeneration is complete
-                    if ($lesson_updated_timestamp > $placeholder_data['timestamp']) {
-                        unset($this->regenerating_lessons_placeholders[$lesson_id]);
-
-                        continue;
-                    }
-                }
-            }
-
-            // Remove if placeholder is very old (5+ minutes) - likely stuck/error
-            if ($age > $max_placeholder_age) {
-                unset($this->regenerating_lessons_placeholders[$lesson_id]);
-            }
-        }
-
-        // Update session if placeholders changed
-        if (! empty($this->regenerating_lessons_placeholders)) {
-            session(['lesson_placeholders_regenerating' => $this->regenerating_lessons_placeholders]);
-        } else {
-            session()->forget('lesson_placeholders_regenerating');
-        }
-
-        // Update count for next render
-        $this->previous_lessons_count = $current_total_count;
     }
 
     /**
@@ -410,15 +198,17 @@ class LessonIndex extends Component
 
     public function openManageModal(): void
     {
+        $this->manage_modal_key++;
         $this->show_manage_modal = true;
         // Dispatch event to reset manage lesson component state
         $this->dispatch('reset-manage-lesson-state');
     }
 
+    #[On('close-manage-modal')]
     public function closeManageModal(): void
     {
+        $this->js('document.body.style.overflow = "auto"');
         $this->show_manage_modal = false;
-        $this->js('document.body.style.overflow = "auto";');
     }
 
     public function toggleDropdown(int $lesson_id): void
@@ -505,10 +295,13 @@ class LessonIndex extends Component
                 $keywords
             );
 
-            $user->notify(new LessonRegenerationNotification(
+            // Set lesson status to REGENERATION
+            $lesson->update(['status' => LessonCreationStatusEnum::REGENERATION]);
+
+            $user->notify(new LessonCreationNotification(
                 $user,
-                LessonRegenerationStatusEnum::PROCESSING,
-                null,
+                LessonCreationStatusEnum::REGENERATION,
+                $lesson->id,
             ));
 
             // Dispatch job for async lesson regeneration
@@ -518,19 +311,10 @@ class LessonIndex extends Component
             )
                 ->onQueue(QueueNameEnum::LESSON->value);
 
-            // Add placeholder for regeneration (linked to lesson ID)
-            // Placeholder updates immediately since we're in same component
-            $placeholder_id = uniqid('regenerating_', true);
-            $this->regenerating_lessons_placeholders[$this->lesson_to_regenerate] = [
-                'id' => $placeholder_id,
-                'timestamp' => time(),
-            ];
-            session(['lesson_placeholders_regenerating' => $this->regenerating_lessons_placeholders]);
-
         } catch (\Exception $e) {
-            $user->notify(new LessonRegenerationNotification(
+            $user->notify(new LessonCreationNotification(
                 $user,
-                LessonRegenerationStatusEnum::ERROR,
+                LessonCreationStatusEnum::ERROR,
                 null,
             ));
         }
@@ -580,6 +364,7 @@ class LessonIndex extends Component
 
     public function closeAssignModal(): void
     {
+        $this->js('document.body.style.overflow = "auto"');
         $this->show_assign_modal = false;
         $this->lesson_to_assign = null;
         $this->selected_students = [];
@@ -963,14 +748,7 @@ class LessonIndex extends Component
 
     public function render(): Factory|View
     {
-        // Get total count BEFORE pagination
-        $total_count = $this->getLessonsQuery()->count();
-
-        // Get paginated lessons
         $lessons = $this->getLessonsQuery()->paginate(12);
-
-        // Detect new lessons and clean placeholders
-        $this->detectAndCleanPlaceholders($total_count, $lessons);
 
         return view('livewire.lesson.lesson-index', [
             'lessons' => $lessons,

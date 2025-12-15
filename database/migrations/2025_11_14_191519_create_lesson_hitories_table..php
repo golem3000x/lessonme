@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Enums\Notifications\LessonCreationStatusEnum;
 use App\Enums\System\TableNameEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -26,6 +27,7 @@ return new class extends Migration
             $table->string('language_level', 2);
             $table->string('lesson_lang');
             $table->string('creation_type')->default('ai');
+            $table->enum('status', LessonCreationStatusEnum::values())->default(LessonCreationStatusEnum::ARCHIVED->value);
             $table->json('grammar_data')->nullable();
             $table->json('vocabulary')->nullable();
             $table->json('dialogue')->nullable();

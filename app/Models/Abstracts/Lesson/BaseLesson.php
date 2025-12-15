@@ -6,6 +6,7 @@ namespace App\Models\Abstracts\Lesson;
 
 use App\Casts\EmbeddingCast;
 use App\Enums\Lesson\LessonCreationTypeEnum;
+use App\Enums\Notifications\LessonCreationStatusEnum;
 use App\Enums\System\LanguageLevelEnum;
 use App\Enums\System\SystemLanguageEnum;
 use App\Models\Abstracts\BaseModel;
@@ -26,6 +27,7 @@ use Illuminate\Support\Carbon;
  * @property LanguageLevelEnum|null $language_level
  * @property SystemLanguageEnum|null $lesson_lang
  * @property LessonCreationTypeEnum $creation_type
+ * @property LessonCreationStatusEnum $status
  * @property bool $is_draft
  * @property array<array-key, mixed>|null $grammar_data
  * @property array<array-key, mixed>|null $vocabulary
@@ -53,6 +55,7 @@ abstract class BaseLesson extends BaseModel
         'language_level',
         'lesson_lang',
         'creation_type',
+        'status',
         'is_draft',
         'grammar_data',
         'vocabulary',
@@ -68,6 +71,7 @@ abstract class BaseLesson extends BaseModel
         'language_level' => LanguageLevelEnum::class,
         'lesson_lang' => SystemLanguageEnum::class,
         'creation_type' => LessonCreationTypeEnum::class,
+        'status' => LessonCreationStatusEnum::class,
         'is_draft' => 'boolean',
         'grammar_data' => 'array',
         'vocabulary' => 'array',
