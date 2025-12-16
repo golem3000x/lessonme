@@ -82,6 +82,9 @@ class RegenerateLessonJob implements ShouldQueue
                 ]);
             }
 
+            // Set status to CREATED only after all operations complete (content + audio)
+            $updatedLesson->update(['status' => LessonCreationStatusEnum::CREATED]);
+
             $this->notify($user, LessonCreationStatusEnum::CREATED, $updatedLesson->id);
         } catch (LessonExistsException $e) {
             $this->notify($user, LessonCreationStatusEnum::EXISTS, $e->lesson->id);

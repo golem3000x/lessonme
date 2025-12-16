@@ -44,7 +44,7 @@ class LessonService
             'common_mistakes' => $data['common_mistakes'] ?? [],
             'culture_notes' => $data['culture_notes'] ?? null,
             'embedding' => $embedding,
-            'status' => LessonCreationStatusEnum::CREATED,
+            // Note: status is NOT set here - it should be set by the job after all operations complete
         ]);
 
         return $lesson;
@@ -80,7 +80,7 @@ class LessonService
             'common_mistakes' => $new_data['common_mistakes'] ?? [],
             'culture_notes' => $new_data['culture_notes'] ?? null,
             'embedding' => $new_embedding,
-            'status' => LessonCreationStatusEnum::CREATED,
+            // Note: status is NOT set here - it should be set by the job after all operations complete
         ]);
 
         return $lesson;

@@ -67,6 +67,9 @@ class CreateLessonJob implements ShouldQueue
                 ]);
             }
 
+            // Set status to CREATED only after all operations complete (content + audio)
+            $lesson->update(['status' => LessonCreationStatusEnum::CREATED]);
+
             $this->notify($user, LessonCreationStatusEnum::CREATED, $lesson->id);
         } catch (LessonExistsException $e) {
             Log::info('Similar lesson already exists', [

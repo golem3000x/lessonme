@@ -94,7 +94,9 @@ if (userId) {
             status: notification.status,
             message: notification.message
         });
-        Livewire.dispatch('lesson-updated');
+        // Note: Don't dispatch 'lesson-updated' here - the component already updates when modal closes,
+        // and placeholder with wire:poll.5s handles status checking. Dispatching here can cause race
+        // condition where this notification arrives after the job completes, showing finished card too early.
     });
 
     channel.listen('.lesson.creation.created', (notification) => {
@@ -119,7 +121,8 @@ if (userId) {
             status: notification.status,
             message: notification.message
         });
-        Livewire.dispatch('lesson-updated');
+        // Note: Same as creation - don't dispatch 'lesson-updated' to avoid race condition.
+        // The status is already set in DB and wire:poll.5s handles checking.
     });
 
     channel.listen('.lesson.creation.exists', (notification) => {

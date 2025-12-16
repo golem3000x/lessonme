@@ -9,4 +9,5 @@ return [
     'km' => 'Khmer',
     'ms' => 'Malay',
     'my' => 'Burmese',
+    'lo' => 'Lao',
 ];
