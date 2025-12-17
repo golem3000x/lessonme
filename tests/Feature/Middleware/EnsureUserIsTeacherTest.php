@@ -30,7 +30,7 @@ class EnsureUserIsTeacherTest extends TestCase
 
         $this->actingAs($teacher);
 
-        $middleware = new EnsureUserIsTeacher();
+        $middleware = new EnsureUserIsTeacher;
         $request = Request::create('/test', 'GET');
 
         $response = $middleware->handle($request, fn () => response('OK'));
@@ -45,7 +45,7 @@ class EnsureUserIsTeacherTest extends TestCase
 
         $this->actingAs($student);
 
-        $middleware = new EnsureUserIsTeacher();
+        $middleware = new EnsureUserIsTeacher;
         $request = Request::create('/test', 'GET');
 
         $this->expectException(HttpException::class);
@@ -55,7 +55,7 @@ class EnsureUserIsTeacherTest extends TestCase
 
     public function test_guest_cannot_access(): void
     {
-        $middleware = new EnsureUserIsTeacher();
+        $middleware = new EnsureUserIsTeacher;
         $request = Request::create('/test', 'GET');
 
         $this->expectException(HttpException::class);
@@ -71,7 +71,7 @@ class EnsureUserIsTeacherTest extends TestCase
 
         $this->actingAs($user);
 
-        $middleware = new EnsureUserIsTeacher();
+        $middleware = new EnsureUserIsTeacher;
         $request = Request::create('/test', 'GET');
 
         $response = $middleware->handle($request, fn () => response('OK'));
@@ -86,7 +86,7 @@ class EnsureUserIsTeacherTest extends TestCase
 
         $this->actingAs($admin);
 
-        $middleware = new EnsureUserIsTeacher();
+        $middleware = new EnsureUserIsTeacher;
         $request = Request::create('/test', 'GET');
 
         $this->expectException(HttpException::class);
@@ -101,7 +101,7 @@ class EnsureUserIsTeacherTest extends TestCase
 
         $this->actingAs($student);
 
-        $middleware = new EnsureUserIsTeacher();
+        $middleware = new EnsureUserIsTeacher;
         $request = Request::create('/test', 'GET');
 
         try {

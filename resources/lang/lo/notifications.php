@@ -53,6 +53,12 @@ return [
     'lesson_unassigned' => ':teacher ລຶບທ່ານອອກຈາກບົດຮຽນ: ":lesson"',
     'lesson_assignment_removed' => 'ນັກຮຽນ :student ຖືກລຶບອອກຈາກບົດຮຽນ ":lesson"',
 
+    // Course assignment notifications
+    'course_assigned' => ':teacher ມອບໝາຍຫຼັກສູດໃຫ້ທ່ານ: ":course"',
+    'course_assignment_sent' => 'ຫຼັກສູດ ":course" ໄດ້ມອບໝາຍໃຫ້ :count ນັກຮຽນ',
+    'course_unassigned' => ':teacher ລຶບທ່ານອອກຈາກຫຼັກສູດ: ":course"',
+    'course_assignment_removed' => 'ນັກຮຽນ :student ຖືກລຶບອອກຈາກຫຼັກສູດ ":course"',
+
     // Notification Bell
     'title' => 'ການແຈ້ງເຕືອນ',
     'notifications' => 'ການແຈ້ງເຕືອນ',

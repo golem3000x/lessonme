@@ -35,7 +35,7 @@ class EnsureLessonAccessTest extends TestCase
         parent::setUp();
         $this->seed(RoleSeeder::class);
 
-        $this->middleware = new EnsureLessonAccess();
+        $this->middleware = new EnsureLessonAccess;
 
         $this->owner = User::factory()->create();
         $this->owner->assignRole(UserRoleEnum::TEACHER);

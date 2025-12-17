@@ -206,6 +206,7 @@ return [
     // Assignment
     'assign_to' => 'Assign to...',
     'assign_to_students' => 'Assign to Students',
+    'assign_course_to_students' => 'Assign Course to Students',
     'no_students_yet' => 'You have no students yet',
     'add_students_hint' => 'Find students in the Users section',
     'selected_count' => ':count selected',
@@ -282,6 +283,8 @@ return [
     'delete_course_confirm' => 'Are you sure you want to delete this course?',
     'no_courses' => 'No courses yet',
     'no_courses_hint' => 'Create your first course to organize lessons',
+    'no_assigned_courses' => 'No courses assigned to you yet',
+    'no_assigned_courses_hint' => 'Your teacher will assign courses to you',
     'lessons_in_course' => ':count lesson|:count lessons',
     'add_to_course' => 'Add to Course',
     'remove_from_course' => 'Remove from Course',

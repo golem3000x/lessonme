@@ -206,6 +206,7 @@ return [
     // Assignment
     'assign_to' => 'ចាត់តាំងទៅ...',
     'assign_to_students' => 'ចាត់តាំងទៅសិស្ស',
+    'assign_course_to_students' => 'ចាត់តាំងវគ្គសិក្សាទៅសិស្ស',
     'no_students_yet' => 'អ្នកមិនមានសិស្សនៅឡើយទេ',
     'add_students_hint' => 'ស្វែងរកសិស្សក្នុងផ្នែកអ្នកប្រើ',
     'selected_count' => 'បានជ្រើសរើស :count',

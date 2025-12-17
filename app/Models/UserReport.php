@@ -24,6 +24,7 @@ use Illuminate\Support\Carbon;
  * @property-read \App\Models\User $reportedUser
  * @property-read \App\Models\User $reporter
  * @property-read \App\Models\User|null $resolvedBy
+ *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserReport newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserReport newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserReport query()
@@ -37,6 +38,7 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserReport whereResolvedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserReport whereResolvedBy($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserReport whereUpdatedAt($value)
+ *
  * @mixin \Eloquent
  */
 class UserReport extends Model

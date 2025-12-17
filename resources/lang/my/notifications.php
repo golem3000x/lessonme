@@ -58,6 +58,12 @@ return [
     'lesson_unassigned' => ':teacher က သင့်ကို သင်ခန်းစာမှ ဖယ်ရှားခဲ့သည်: ":lesson"',
     'lesson_assignment_removed' => 'ကျောင်းသား :student ကို ":lesson" သင်ခန်းစာမှ ဖယ်ရှားခဲ့သည်',
 
+    // Course assignment notifications
+    'course_assigned' => ':teacher က သင့်ကို သင်တန်းတာဝန်ပေးခဲ့သည်: ":course"',
+    'course_assignment_sent' => '":course" သင်တန်းကို ကျောင်းသား :count ဦးသို့ တာဝန်ပေးခဲ့သည်',
+    'course_unassigned' => ':teacher က သင့်ကို သင်တန်းမှ ဖယ်ရှားခဲ့သည်: ":course"',
+    'course_assignment_removed' => 'ကျောင်းသား :student ကို ":course" သင်တန်းမှ ဖယ်ရှားခဲ့သည်',
+
     // Notification Bell
     'title' => 'အသိပေးချက်များ',
     'notifications' => 'အသိပေးချက်များ',

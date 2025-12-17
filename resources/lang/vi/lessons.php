@@ -206,6 +206,7 @@ return [
     // Assignment
     'assign_to' => 'Giao cho...',
     'assign_to_students' => 'Giao Cho Học Sinh',
+    'assign_course_to_students' => 'Giao Khóa Học Cho Học Sinh',
     'no_students_yet' => 'Bạn chưa có học sinh nào',
     'add_students_hint' => 'Tìm học sinh trong phần Người dùng',
     'selected_count' => 'Đã chọn :count',

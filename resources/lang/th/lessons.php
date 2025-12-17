@@ -206,6 +206,7 @@ return [
     // Assignment
     'assign_to' => 'มอบหมายให้...',
     'assign_to_students' => 'มอบหมายให้นักเรียน',
+    'assign_course_to_students' => 'มอบหมายคอร์สให้นักเรียน',
     'no_students_yet' => 'คุณยังไม่มีนักเรียน',
     'add_students_hint' => 'ค้นหานักเรียนในส่วนผู้ใช้',
     'selected_count' => 'เลือก :count คน',

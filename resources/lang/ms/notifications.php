@@ -58,6 +58,12 @@ return [
     'lesson_unassigned' => ':teacher mengalih keluar anda dari pelajaran: ":lesson"',
     'lesson_assignment_removed' => 'Pelajar :student dialih keluar dari pelajaran ":lesson"',
 
+    // Course assignment notifications
+    'course_assigned' => ':teacher menugaskan kursus kepada anda: ":course"',
+    'course_assignment_sent' => 'Kursus ":course" ditugaskan kepada :count pelajar',
+    'course_unassigned' => ':teacher mengalih keluar anda dari kursus: ":course"',
+    'course_assignment_removed' => 'Pelajar :student dialih keluar dari kursus ":course"',
+
     // Notification Bell
     'title' => 'Pemberitahuan',
     'notifications' => 'Pemberitahuan',

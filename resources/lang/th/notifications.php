@@ -53,6 +53,12 @@ return [
     'lesson_unassigned' => ':teacher ลบคุณออกจากบทเรียน: ":lesson"',
     'lesson_assignment_removed' => 'นักเรียน :student ถูกลบออกจากบทเรียน ":lesson"',
 
+    // Course assignment notifications
+    'course_assigned' => ':teacher มอบหมายคอร์สให้คุณ: ":course"',
+    'course_assignment_sent' => 'มอบหมายคอร์ส ":course" ให้นักเรียน :count คน',
+    'course_unassigned' => ':teacher ลบคุณออกจากคอร์ส: ":course"',
+    'course_assignment_removed' => 'นักเรียน :student ถูกลบออกจากคอร์ส ":course"',
+
     // Notification Bell
     'title' => 'การแจ้งเตือน',
     'notifications' => 'การแจ้งเตือน',

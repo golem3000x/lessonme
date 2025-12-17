@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Filament\Resources\UserReportResource\Pages;
 
 use App\Filament\Resources\UserReportResource;
-use App\Models\UserReport;
 use Filament\Actions;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ViewRecord;

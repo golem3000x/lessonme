@@ -206,6 +206,7 @@ return [
     // Assignment
     'assign_to' => 'Tugaskan kepada...',
     'assign_to_students' => 'Tugaskan kepada Pelajar',
+    'assign_course_to_students' => 'Tugaskan Kursus kepada Pelajar',
     'no_students_yet' => 'Anda belum mempunyai pelajar',
     'add_students_hint' => 'Cari pelajar di bahagian Pengguna',
     'selected_count' => ':count dipilih',

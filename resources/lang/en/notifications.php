@@ -53,6 +53,12 @@ return [
     'lesson_unassigned' => ':teacher removed you from lesson: ":lesson"',
     'lesson_assignment_removed' => 'Student :student removed from lesson ":lesson"',
 
+    // Course assignment notifications
+    'course_assigned' => ':teacher assigned you a course: ":course"',
+    'course_assignment_sent' => 'Course ":course" assigned to :count student(s)',
+    'course_unassigned' => ':teacher removed you from course: ":course"',
+    'course_assignment_removed' => 'Student :student removed from course ":course"',
+
     // Notification Bell
     'title' => 'Notifications',
     'notifications' => 'Notifications',

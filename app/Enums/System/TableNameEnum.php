@@ -43,4 +43,5 @@ enum TableNameEnum: string
     case COURSES = 'courses';
     case COURSE_LESSONS = 'course_lessons';
     case COURSE_PROGRESS = 'course_progress';
+    case COURSE_ASSIGNMENTS = 'course_assignments';
 }

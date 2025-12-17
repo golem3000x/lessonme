@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace App\Livewire\Course;
 
 use App\Models\Course\Course;
+use App\Models\Course\CourseAssignment;
 use App\Models\Course\CourseProgress;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class CourseShow extends Component
 {
@@ -25,6 +27,19 @@ class CourseShow extends Component
 
     public function mount(Course $course): void
     {
+        $user = Auth::user();
+
+        // Check if user has access to this course
+        $is_owner = $course->user_id === $user->id;
+        $is_assigned = CourseAssignment::query()
+            ->where('course_id', '=', $course->id)
+            ->where('student_id', '=', $user->id)
+            ->exists();
+
+        if (! $is_owner && ! $is_assigned) {
+            throw new NotFoundHttpException();
+        }
+
         $this->course = $course;
         $this->loadProgress();
     }

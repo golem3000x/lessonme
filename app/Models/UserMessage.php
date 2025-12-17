@@ -24,6 +24,7 @@ use Illuminate\Support\Carbon;
  * @property-read \App\Models\TeacherInvitation|null $invitation
  * @property-read \App\Models\User $recipient
  * @property-read \App\Models\User $sender
+ *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserMessage newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserMessage newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserMessage query()
@@ -35,6 +36,7 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserMessage whereRecipientId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserMessage whereSenderId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserMessage whereUpdatedAt($value)
+ *
  * @mixin \Eloquent
  */
 class UserMessage extends Model

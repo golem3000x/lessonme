@@ -32,7 +32,7 @@ class EnsureLessonBelongsToUserTest extends TestCase
         parent::setUp();
         $this->seed(RoleSeeder::class);
 
-        $this->middleware = new EnsureLessonBelongsToUser();
+        $this->middleware = new EnsureLessonBelongsToUser;
 
         $this->owner = User::factory()->create();
         $this->owner->assignRole(UserRoleEnum::TEACHER);

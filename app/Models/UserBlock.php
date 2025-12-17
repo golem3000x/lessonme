@@ -17,6 +17,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $updated_at
  * @property-read \App\Models\User $blockedUser
  * @property-read \App\Models\User $user
+ *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserBlock newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserBlock newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserBlock query()
@@ -25,6 +26,7 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserBlock whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserBlock whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserBlock whereUserId($value)
+ *
  * @mixin \Eloquent
  */
 class UserBlock extends Model

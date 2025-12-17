@@ -17,6 +17,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $updated_at
  * @property-read \App\Enums\System\SystemLanguageEnum|null $language_enum
  * @property-read \App\Models\User $user
+ *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserLearningLanguage newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserLearningLanguage newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserLearningLanguage query()
@@ -24,6 +25,7 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserLearningLanguage whereLanguage($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserLearningLanguage whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserLearningLanguage whereUserId($value)
+ *
  * @mixin \Eloquent
  */
 class UserLearningLanguage extends Model

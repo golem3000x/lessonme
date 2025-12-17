@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @extends SlugTranslation<Keyword>
+ *
  * @property int $id
  * @property int $keyword_id
  * @property string $language_code
@@ -19,6 +20,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string|null $updated_at
  * @property-read \App\Models\Keyword\Keyword $entity
  * @property-read \App\Models\Keyword\Keyword $keyword
+ *
  * @method static Builder<static>|KeywordTranslation newModelQuery()
  * @method static Builder<static>|KeywordTranslation newQuery()
  * @method static Builder<static>|KeywordTranslation query()
@@ -28,6 +30,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static Builder<static>|KeywordTranslation whereLanguageCode($value)
  * @method static Builder<static>|KeywordTranslation whereUpdatedAt($value)
  * @method static Builder<static>|KeywordTranslation whereValue($value)
+ *
  * @mixin \Eloquent
  */
 class KeywordTranslation extends SlugTranslation

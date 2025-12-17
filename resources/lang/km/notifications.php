@@ -53,6 +53,12 @@ return [
     'lesson_unassigned' => ':teacher បានដកអ្នកចេញពីមេរៀន: ":lesson"',
     'lesson_assignment_removed' => 'សិស្ស :student ត្រូវបានដកចេញពីមេរៀន ":lesson"',
 
+    // Course assignment notifications
+    'course_assigned' => ':teacher បានផ្តល់វគ្គសិក្សាមួយដល់អ្នក: ":course"',
+    'course_assignment_sent' => 'វគ្គសិក្សា ":course" ត្រូវបានផ្តល់ទៅ :count សិស្ស',
+    'course_unassigned' => ':teacher បានដកអ្នកចេញពីវគ្គសិក្សា: ":course"',
+    'course_assignment_removed' => 'សិស្ស :student ត្រូវបានដកចេញពីវគ្គសិក្សា ":course"',
+
     // Notification Bell
     'title' => 'ការជូនដំណឹង',
     'notifications' => 'ការជូនដំណឹង',

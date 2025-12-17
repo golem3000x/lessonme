@@ -36,6 +36,7 @@ use Illuminate\Support\Carbon;
  * @property-read Collection<int, \App\Models\Course\CourseProgress> $progress
  * @property-read int|null $progress_count
  * @property-read User $user
+ *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Course newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Course newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Course query()
@@ -51,6 +52,7 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Course whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Course whereUserId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Course whereUuid($value)
+ *
  * @mixin \Eloquent
  */
 class Course extends Model
@@ -120,6 +122,14 @@ class Course extends Model
     public function progress(): HasMany
     {
         return $this->hasMany(CourseProgress::class);
+    }
+
+    /**
+     * @return HasMany<CourseAssignment, $this>
+     */
+    public function assignments(): HasMany
+    {
+        return $this->hasMany(CourseAssignment::class);
     }
 
     /**

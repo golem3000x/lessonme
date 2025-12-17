@@ -7,7 +7,6 @@ namespace Tests\Feature\Livewire;
 use App\Enums\System\SystemLanguageEnum;
 use App\Enums\System\UserRoleEnum;
 use App\Livewire\Lesson\ManualLessonCreator;
-use App\Models\Lesson\Lesson;
 use App\Models\Topic\Topic;
 use App\Models\User;
 use Database\Seeders\RoleSeeder;

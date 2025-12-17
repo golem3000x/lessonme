@@ -53,6 +53,12 @@ return [
     'lesson_unassigned' => ':teacher đã hủy giao cho bạn bài học: ":lesson"',
     'lesson_assignment_removed' => 'Đã hủy giao học sinh :student khỏi bài học ":lesson"',
 
+    // Course assignment notifications
+    'course_assigned' => ':teacher đã giao cho bạn khóa học: ":course"',
+    'course_assignment_sent' => 'Đã giao khóa học ":course" cho :count học sinh',
+    'course_unassigned' => ':teacher đã hủy giao cho bạn khóa học: ":course"',
+    'course_assignment_removed' => 'Đã hủy giao học sinh :student khỏi khóa học ":course"',
+
     // Notification Bell
     'title' => 'Thông báo',
     'notifications' => 'Thông báo',

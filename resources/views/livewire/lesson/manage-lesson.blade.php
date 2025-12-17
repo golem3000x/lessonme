@@ -41,13 +41,15 @@
     @else
     {{-- Step 2: AI Creation Form --}}
     <div class="flex flex-col space-y-5">
-        {{-- Back button --}}
-        <button wire:click="backToSelection" class="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 transition mb-2">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
-            </svg>
-            {{ __('lessons.back_to_selection') }}
-        </button>
+        {{-- Back button (hidden for student-only users) --}}
+        @if(!$is_student_only)
+            <button wire:click="backToSelection" class="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 transition mb-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                </svg>
+                {{ __('lessons.back_to_selection') }}
+            </button>
+        @endif
 
         {{-- Language Selection (only show if user has multiple learning languages) --}}
         @if(count($available_languages) > 1)

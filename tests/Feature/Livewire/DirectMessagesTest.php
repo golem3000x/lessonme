@@ -11,7 +11,6 @@ use App\Models\TeacherInvitation;
 use App\Models\User;
 use App\Models\UserBlock;
 use App\Models\UserMessage;
-use App\Models\UserReport;
 use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;

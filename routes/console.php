@@ -13,4 +13,3 @@ Schedule::command('guests:cleanup --force')
     ->daily()
     ->at('03:00')
     ->description('Clean up expired temporary guest users');
-

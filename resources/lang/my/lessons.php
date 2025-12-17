@@ -206,6 +206,7 @@ return [
     // Assignment
     'assign_to' => 'တာဝန်ပေးရန်...',
     'assign_to_students' => 'ကျောင်းသားများသို့တာဝန်ပေးပါ',
+    'assign_course_to_students' => 'ကျောင်းသားများသို့ သင်တန်းတာဝန်ပေးပါ',
     'no_students_yet' => 'သင့်တွင် ကျောင်းသားများမရှိသေးပါ',
     'add_students_hint' => 'အသုံးပြုသူများကဏ္ဍတွင် ကျောင်းသားများရှာဖွေပါ',
     'selected_count' => ':count ရွေးချယ်ထား',

@@ -6,7 +6,6 @@ namespace App\Filament\Resources;
 
 use App\Enums\System\ReportReasonEnum;
 use App\Filament\Resources\UserReportResource\Pages;
-use App\Models\User;
 use App\Models\UserReport;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -14,7 +13,6 @@ use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 
 class UserReportResource extends Resource

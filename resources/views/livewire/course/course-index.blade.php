@@ -22,10 +22,10 @@
                     </button>
                 @endif
                 <button
-                    wire:click="setViewMode('available')"
-                    class="px-4 py-2 text-sm font-medium rounded-md transition {{ $view_mode === 'available' || !$is_teacher ? 'bg-white text-purple-600 shadow' : 'text-gray-600 hover:text-gray-900' }}"
+                    wire:click="setViewMode('assigned')"
+                    class="px-4 py-2 text-sm font-medium rounded-md transition {{ $view_mode === 'assigned' || !$is_teacher ? 'bg-white text-purple-600 shadow' : 'text-gray-600 hover:text-gray-900' }}"
                 >
-                    {{ __('lessons.available_courses') }}
+                    {{ __('lessons.assigned_to_me') }}
                 </button>
             </div>
 
@@ -74,8 +74,8 @@
                 <h3 class="text-xl font-medium text-gray-900">{{ __('lessons.no_courses') }}</h3>
                 <p class="text-sm text-gray-500">{{ __('lessons.no_courses_hint') }}</p>
             @else
-                <h3 class="text-xl font-medium text-gray-900">{{ __('lessons.no_published_courses') }}</h3>
-                <p class="text-sm text-gray-500">{{ __('lessons.no_published_courses_hint') }}</p>
+                <h3 class="text-xl font-medium text-gray-900">{{ __('lessons.no_assigned_courses') }}</h3>
+                <p class="text-sm text-gray-500">{{ __('lessons.no_assigned_courses_hint') }}</p>
             @endif
         </div>
     @else
@@ -102,12 +102,6 @@
                                     </span>
                                 @endif
 
-                                @if($view_mode === 'my_courses' && $is_teacher)
-                                    <span class="px-2 py-0.5 rounded-full text-xs font-medium {{ $course->is_published ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-600' }}">
-                                        {{ $course->is_published ? __('lessons.course_published') : __('lessons.draft') }}
-                                    </span>
-                                @endif
-                                
                                 <span class="text-xs text-gray-500 flex items-center gap-1">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 drop-shadow-sm" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
@@ -139,22 +133,16 @@
                                         </div>
                                         {{ __('lessons.edit_course') }}
                                     </a>
-                                    
-                                    <button wire:click="togglePublish({{ $course->id }})"
-                                            class="group flex items-center gap-3 w-full px-4 py-3 text-sm {{ $course->is_published ? 'text-orange-600 hover:bg-orange-50' : 'text-green-600 hover:bg-green-50' }} transition-all">
-                                        <div class="p-1.5 rounded-lg {{ $course->is_published ? 'bg-orange-50 group-hover:bg-orange-100' : 'bg-green-50 group-hover:bg-green-100' }} transition-colors">
-                                            @if($course->is_published)
-                                                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>
-                                                </svg>
-                                            @else
-                                                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                                                </svg>
-                                            @endif
+
+                                    <button wire:click="openAssignModal({{ $course->id }})"
+                                            @click="open = false"
+                                            class="group flex items-center gap-3 w-full px-4 py-3 text-sm text-blue-600 hover:bg-blue-50 transition-all">
+                                        <div class="p-1.5 rounded-lg bg-blue-50 group-hover:bg-blue-100 transition-colors">
+                                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
+                                            </svg>
                                         </div>
-                                        {{ $course->is_published ? __('lessons.unpublish_course') : __('lessons.publish_course') }}
+                                        {{ __('lessons.assign_to_students') }}
                                     </button>
 
                                     <div class="border-t border-gray-100"></div>
@@ -217,5 +205,98 @@
             confirmMethod="deleteCourse"
             cancelMethod="cancelDelete"
         />
+    @endif
+
+    {{-- Assign Course Modal --}}
+    @if($show_assign_modal)
+        <div
+            x-data
+            x-init="document.body.style.overflow = 'hidden'"
+            class="fixed inset-0 z-50 overflow-y-auto"
+            @click.self="$wire.closeAssignModal()"
+        >
+            <div class="fixed inset-0 bg-black/50 backdrop-blur-sm" x-transition></div>
+
+            <div class="fixed inset-0 flex items-center justify-center p-4">
+                <div
+                    class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md max-h-[80vh] overflow-hidden"
+                    x-transition
+                    @click.stop
+                >
+                    {{-- Header --}}
+                    <div class="p-5 bg-gradient-to-r from-purple-600 to-indigo-600 flex justify-between items-center">
+                        <div class="flex items-center gap-3">
+                            <div class="p-2 bg-white/20 rounded-lg">
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
+                                </svg>
+                            </div>
+                            <h3 class="text-lg font-semibold text-white">{{ __('lessons.assign_course_to_students') }}</h3>
+                        </div>
+                        <button wire:click="closeAssignModal" class="p-1.5 rounded-lg bg-white/20 hover:bg-white/30 transition">
+                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                            </svg>
+                        </button>
+                    </div>
+
+                    {{-- Content --}}
+                    <div class="p-5 overflow-y-auto max-h-[50vh]">
+                        @if($this->myStudents->isEmpty())
+                            <div class="text-center py-8">
+                                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                </svg>
+                                <p class="mt-2 text-gray-600">{{ __('lessons.no_students_yet') }}</p>
+                                <a href="{{ route('users.index') }}" class="mt-3 inline-block text-sm text-blue-600 hover:underline">
+                                    {{ __('lessons.add_students_hint') }}
+                                </a>
+                            </div>
+                        @else
+                            <div class="space-y-2">
+                                @foreach($this->myStudents as $student)
+                                    @php
+                                        $is_assigned = in_array($student->id, $this->assignedStudentIds);
+                                    @endphp
+
+                                    <div class="flex items-center gap-3 p-3 rounded-lg border {{ $is_assigned ? 'border-purple-300 bg-purple-50' : 'border-gray-200' }}">
+                                        <div class="flex-shrink-0">
+                                            @if($student->avatar)
+                                                <img src="{{ $student->avatar_url }}" alt="" class="w-10 h-10 rounded-full object-cover">
+                                            @else
+                                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center text-white font-bold">
+                                                    {{ strtoupper(substr($student->first_name, 0, 1)) }}
+                                                </div>
+                                            @endif
+                                        </div>
+                                        <div class="flex-1 min-w-0">
+                                            <p class="font-medium text-gray-900 truncate">{{ $student->full_name }}</p>
+                                            <p class="text-sm text-gray-500 truncate">{{ $student->email }}</p>
+                                        </div>
+                                        <div class="flex-shrink-0">
+                                            @if($is_assigned)
+                                                <button
+                                                    wire:click="unassignStudent({{ $student->id }})"
+                                                    class="px-3 py-1.5 text-sm font-medium text-red-600 bg-red-50 hover:bg-red-100 border border-red-200 rounded-lg transition"
+                                                >
+                                                    {{ __('lessons.unassign') }}
+                                                </button>
+                                            @else
+                                                <button
+                                                    wire:click="assignSingleStudent({{ $student->id }})"
+                                                    class="px-3 py-1.5 text-sm font-medium text-purple-600 bg-purple-50 hover:bg-purple-100 border border-purple-200 rounded-lg transition"
+                                                >
+                                                    {{ __('lessons.assign') }}
+                                                </button>
+                                            @endif
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
     @endif
 </div>

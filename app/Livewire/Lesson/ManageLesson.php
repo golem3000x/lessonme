@@ -56,6 +56,8 @@ class ManageLesson extends Component
 
     public bool $is_generating = false;
 
+    public bool $is_student_only = false;
+
     public function mount(): void
     {
         $user = Auth::user();
@@ -149,6 +151,14 @@ class ManageLesson extends Component
         }
 
         session(['selected_topic_id' => $this->topic_id]);
+
+        // Check if user has only student role (not teacher or admin)
+        $this->is_student_only = $user->isStudent() && ! $user->isTeacher() && ! $user->isAdmin();
+
+        // Auto-select AI creation type for student-only users
+        if ($this->is_student_only) {
+            $this->creation_type = LessonCreationTypeEnum::AI->value;
+        }
 
         $this->keywords = $this->buildKeywordsForTopic($this->topic_id);
         $this->dispatch('keywords-preloaded',
