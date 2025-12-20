@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Controllers;
 
+use App\Enums\System\AssignmentStatusEnum;
 use App\Enums\System\UserRoleEnum;
 use App\Models\Course\Course;
+use App\Models\Course\CourseAssignment;
 use App\Models\User;
 use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -35,6 +37,15 @@ class CourseControllerTest extends TestCase
     {
         $course = Course::factory()->published()->create([
             'user_id' => $this->teacher->id,
+        ]);
+
+        // Assign student to the course
+        CourseAssignment::create([
+            'course_id' => $course->id,
+            'teacher_id' => $this->teacher->id,
+            'student_id' => $this->student->id,
+            'assigned_at' => now(),
+            'status' => AssignmentStatusEnum::PENDING,
         ]);
 
         $response = $this->actingAs($this->student)

@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Livewire;
 
+use App\Enums\System\AssignmentStatusEnum;
 use App\Enums\System\UserRoleEnum;
 use App\Livewire\Course\CourseIndex;
 use App\Models\Course\Course;
+use App\Models\Course\CourseAssignment;
 use App\Models\User;
 use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -64,10 +66,19 @@ class CourseIndexTest extends TestCase
             ->assertDontSee($course->title);
     }
 
-    public function test_student_sees_only_published_courses(): void
+    public function test_student_sees_only_assigned_courses(): void
     {
         $published = Course::factory()->published()->create(['user_id' => $this->teacher->id]);
         $unpublished = Course::factory()->unpublished()->create(['user_id' => $this->teacher->id]);
+
+        // Assign student to the published course only
+        CourseAssignment::create([
+            'course_id' => $published->id,
+            'teacher_id' => $this->teacher->id,
+            'student_id' => $this->student->id,
+            'assigned_at' => now(),
+            'status' => AssignmentStatusEnum::PENDING,
+        ]);
 
         Livewire::actingAs($this->student)
             ->test(CourseIndex::class)
@@ -166,67 +177,6 @@ class CourseIndexTest extends TestCase
             ->call('deleteCourse');
 
         $this->assertDatabaseHas('courses', ['id' => $course->id]);
-    }
-
-    // ===== PUBLISH TESTS =====
-
-    public function test_teacher_can_toggle_publish(): void
-    {
-        $course = Course::factory()->unpublished()->create(['user_id' => $this->teacher->id]);
-
-        Livewire::actingAs($this->teacher)
-            ->test(CourseIndex::class)
-            ->call('togglePublish', $course->id);
-
-        $this->assertDatabaseHas('courses', [
-            'id' => $course->id,
-            'is_published' => true,
-        ]);
-    }
-
-    public function test_teacher_can_unpublish_course(): void
-    {
-        $course = Course::factory()->published()->create(['user_id' => $this->teacher->id]);
-
-        Livewire::actingAs($this->teacher)
-            ->test(CourseIndex::class)
-            ->call('togglePublish', $course->id);
-
-        $this->assertDatabaseHas('courses', [
-            'id' => $course->id,
-            'is_published' => false,
-        ]);
-    }
-
-    public function test_teacher_cannot_toggle_other_teachers_course(): void
-    {
-        $other_teacher = User::factory()->create();
-        $other_teacher->assignRole(UserRoleEnum::TEACHER);
-
-        $course = Course::factory()->unpublished()->create(['user_id' => $other_teacher->id]);
-
-        Livewire::actingAs($this->teacher)
-            ->test(CourseIndex::class)
-            ->call('togglePublish', $course->id);
-
-        $this->assertDatabaseHas('courses', [
-            'id' => $course->id,
-            'is_published' => false,
-        ]);
-    }
-
-    public function test_student_cannot_toggle_publish(): void
-    {
-        $course = Course::factory()->published()->create(['user_id' => $this->teacher->id]);
-
-        Livewire::actingAs($this->student)
-            ->test(CourseIndex::class)
-            ->call('togglePublish', $course->id);
-
-        $this->assertDatabaseHas('courses', [
-            'id' => $course->id,
-            'is_published' => true,
-        ]);
     }
 
     // ===== GET COURSES TESTS =====

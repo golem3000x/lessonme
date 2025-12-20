@@ -315,6 +315,11 @@
                                 </button>
 
                                 @if(isset($open_tooltips[$user->id]))
+                                    @php
+                                        // Check if user is available for contact
+                                        $is_available = ($user->isTeacher() && $user->is_accepting_students) 
+                                                     || ($user->isStudent() && $user->is_looking_for_teacher);
+                                    @endphp
                                     <div 
                                         x-data="{ show: true }"
                                         x-show="show"
@@ -322,18 +327,22 @@
                                         x-transition
                                         class="absolute right-0 bottom-full mb-2 w-48 bg-white border border-gray-200 rounded-xl shadow-2xl z-50 overflow-hidden"
                                     >
-                                        <a href="{{ route('messages.chat', $user) }}"
-                                           class="group flex items-center gap-3 w-full px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition">
-                                            <div class="p-1.5 rounded-lg bg-gray-100 group-hover:bg-blue-100 transition-colors">
-                                                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
-                                                </svg>
-                                            </div>
-                                            <span class="font-medium">{{ __('users.send_message') }}</span>
-                                        </a>
+                                        @if($is_available)
+                                            <a href="{{ route('messages.chat', $user) }}"
+                                               class="group flex items-center gap-3 w-full px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition">
+                                                <div class="p-1.5 rounded-lg bg-gray-100 group-hover:bg-blue-100 transition-colors">
+                                                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                                                    </svg>
+                                                </div>
+                                                <span class="font-medium">{{ __('users.send_message') }}</span>
+                                            </a>
+                                        @endif
 
                                         @if(auth()->user()->isTeacher() && $user->isStudent() && $user->is_looking_for_teacher)
-                                            <div class="border-t border-gray-100"></div>
+                                            @if($is_available)
+                                                <div class="border-t border-gray-100"></div>
+                                            @endif
                                             <button wire:click="inviteStudent({{ $user->id }})"
                                                     class="group flex items-center gap-3 w-full px-4 py-3 text-sm text-green-600 hover:bg-green-50 transition">
                                                 <div class="p-1.5 rounded-lg bg-green-50 group-hover:bg-green-100 transition-colors">

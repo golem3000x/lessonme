@@ -99,11 +99,12 @@ class LessonServiceTest extends TestCase
         ];
     }
 
-    // ===== CREATE LESSON TESTS =====
+    // ===== FILL LESSON CONTENT TESTS =====
 
-    public function test_create_lesson_successfully_creates_new_lesson(): void
+    public function test_fill_lesson_content_successfully_fills_lesson(): void
     {
         $user = User::factory()->create();
+        $lesson = Lesson::factory()->create(['user_id' => $user->id]);
         $dto = $this->createLessonDto();
         $embedding = $this->createEmbedding(0.5);
         $generated_data = $this->mockGeneratedLessonData();
@@ -117,7 +118,7 @@ class LessonServiceTest extends TestCase
         $this->mock_similarity
             ->shouldReceive('findSimilar')
             ->once()
-            ->with($user->id, $embedding)
+            ->with($user->id, $embedding, Mockery::type(LessonDto::class))
             ->andReturn(null);
 
         $this->mock_generator
@@ -126,30 +127,24 @@ class LessonServiceTest extends TestCase
             ->with($dto)
             ->andReturn($generated_data);
 
-        $lesson = $this->service->createLesson($user->id, 1, $dto);
+        $result = $this->service->fillLessonContent($lesson, $dto);
 
-        $this->assertInstanceOf(Lesson::class, $lesson);
-        $this->assertEquals($user->id, $lesson->user_id);
-        $this->assertEquals(1, $lesson->topic_id);
-        $this->assertEquals('Business Communication Lesson', $lesson->lesson_name);
-        $this->assertEquals(LanguageLevelEnum::B1, $lesson->language_level);
-        $this->assertEquals(SystemLanguageEnum::VIETNAMESE, $lesson->lesson_lang);
-        $this->assertEquals($embedding, $lesson->embedding);
+        $this->assertInstanceOf(Lesson::class, $result);
+        $this->assertEquals($lesson->id, $result->id);
+        $this->assertEquals('Business Communication Lesson', $result->lesson_name);
         $this->assertDatabaseHas('lessons', [
-            'user_id' => $user->id,
+            'id' => $lesson->id,
             'lesson_name' => 'Business Communication Lesson',
         ]);
     }
 
-    public function test_create_lesson_throws_exception_when_similar_lesson_exists(): void
+    public function test_fill_lesson_content_throws_exception_when_similar_lesson_exists(): void
     {
         $user = User::factory()->create();
+        $lesson = Lesson::factory()->create(['user_id' => $user->id]);
+        $existing_lesson = Lesson::factory()->create(['user_id' => $user->id]);
         $dto = $this->createLessonDto();
         $embedding = $this->createEmbedding(0.5);
-
-        $existing_lesson = Lesson::factory()->create([
-            'user_id' => $user->id,
-        ]);
 
         $this->mock_generator
             ->shouldReceive('createEmbedding')
@@ -160,7 +155,7 @@ class LessonServiceTest extends TestCase
         $this->mock_similarity
             ->shouldReceive('findSimilar')
             ->once()
-            ->with($user->id, $embedding)
+            ->with($user->id, $embedding, Mockery::type(LessonDto::class))
             ->andReturn($existing_lesson);
 
         $this->mock_generator
@@ -168,12 +163,13 @@ class LessonServiceTest extends TestCase
 
         $this->expectException(LessonExistsException::class);
 
-        $this->service->createLesson($user->id, 1, $dto);
+        $this->service->fillLessonContent($lesson, $dto);
     }
 
-    public function test_create_lesson_stores_all_generated_data_fields(): void
+    public function test_fill_lesson_content_stores_all_generated_data_fields(): void
     {
         $user = User::factory()->create();
+        $lesson = Lesson::factory()->create(['user_id' => $user->id]);
         $dto = $this->createLessonDto();
         $embedding = $this->createEmbedding(0.5);
         $generated_data = $this->mockGeneratedLessonData();
@@ -186,6 +182,7 @@ class LessonServiceTest extends TestCase
         $this->mock_similarity
             ->shouldReceive('findSimilar')
             ->once()
+            ->with(Mockery::any(), Mockery::any(), Mockery::type(LessonDto::class))
             ->andReturn(null);
 
         $this->mock_generator
@@ -193,22 +190,23 @@ class LessonServiceTest extends TestCase
             ->once()
             ->andReturn($generated_data);
 
-        $lesson = $this->service->createLesson($user->id, 1, $dto);
+        $result = $this->service->fillLessonContent($lesson, $dto);
 
-        $this->assertNotEmpty($lesson->grammar_data);
-        $this->assertNotEmpty($lesson->vocabulary);
-        $this->assertNotEmpty($lesson->dialogue);
-        $this->assertNotEmpty($lesson->exercises);
-        $this->assertNotEmpty($lesson->homework);
-        $this->assertNotEmpty($lesson->common_mistakes);
-        $this->assertNotEmpty($lesson->culture_notes);
-        $this->assertEquals(2, count($lesson->vocabulary));
-        $this->assertEquals(2, count($lesson->dialogue));
+        $this->assertNotEmpty($result->grammar_data);
+        $this->assertNotEmpty($result->vocabulary);
+        $this->assertNotEmpty($result->dialogue);
+        $this->assertNotEmpty($result->exercises);
+        $this->assertNotEmpty($result->homework);
+        $this->assertNotEmpty($result->common_mistakes);
+        $this->assertNotEmpty($result->culture_notes);
+        $this->assertEquals(2, count($result->vocabulary));
+        $this->assertEquals(2, count($result->dialogue));
     }
 
-    public function test_create_lesson_uses_dto_level_and_language(): void
+    public function test_fill_lesson_content_allows_same_lesson_as_similar(): void
     {
         $user = User::factory()->create();
+        $lesson = Lesson::factory()->create(['user_id' => $user->id]);
         $dto = $this->createLessonDto();
         $embedding = $this->createEmbedding(0.5);
         $generated_data = $this->mockGeneratedLessonData();
@@ -218,21 +216,22 @@ class LessonServiceTest extends TestCase
             ->once()
             ->andReturn($embedding);
 
+        // Similarity service returns the same lesson
         $this->mock_similarity
             ->shouldReceive('findSimilar')
             ->once()
-            ->andReturn(null);
+            ->with(Mockery::any(), Mockery::any(), Mockery::type(LessonDto::class))
+            ->andReturn($lesson);
 
         $this->mock_generator
             ->shouldReceive('generateLesson')
             ->once()
             ->andReturn($generated_data);
 
-        $lesson = $this->service->createLesson($user->id, 1, $dto);
+        // Should NOT throw exception
+        $result = $this->service->fillLessonContent($lesson, $dto);
 
-        // Verify DTO values are used
-        $this->assertEquals(LanguageLevelEnum::B1, $lesson->language_level);
-        $this->assertEquals(SystemLanguageEnum::VIETNAMESE, $lesson->lesson_lang);
+        $this->assertEquals($lesson->id, $result->id);
     }
 
     // ===== REGENERATE LESSON TESTS =====
@@ -263,7 +262,7 @@ class LessonServiceTest extends TestCase
         $this->mock_similarity
             ->shouldReceive('findSimilar')
             ->once()
-            ->with($user->id, $new_embedding)
+            ->with($user->id, $new_embedding, Mockery::type(LessonDto::class))
             ->andReturn(null);
 
         $this->mock_generator
@@ -306,6 +305,7 @@ class LessonServiceTest extends TestCase
         $this->mock_similarity
             ->shouldReceive('findSimilar')
             ->once()
+            ->with(Mockery::any(), Mockery::any(), Mockery::type(LessonDto::class))
             ->andReturn(null);
 
         $this->mock_generator
@@ -344,7 +344,7 @@ class LessonServiceTest extends TestCase
         $this->mock_similarity
             ->shouldReceive('findSimilar')
             ->once()
-            ->with($user->id, $new_embedding)
+            ->with($user->id, $new_embedding, Mockery::type(LessonDto::class))
             ->andReturn($other_lesson);
 
         $this->mock_generator
@@ -375,7 +375,7 @@ class LessonServiceTest extends TestCase
         $this->mock_similarity
             ->shouldReceive('findSimilar')
             ->once()
-            ->with($user->id, $new_embedding)
+            ->with($user->id, $new_embedding, Mockery::type(LessonDto::class))
             ->andReturn($lesson);
 
         $this->mock_generator

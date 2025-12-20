@@ -42,7 +42,7 @@ class NotificationBellTest extends TestCase
         // Create some unread notifications
         $this->user->notify(new LessonCreationNotification(
             $this->user,
-            LessonCreationStatusEnum::SUCCESSFULLY,
+            LessonCreationStatusEnum::CREATED,
             1
         ));
 
@@ -99,7 +99,7 @@ class NotificationBellTest extends TestCase
 
         $this->user->notify(new LessonCreationNotification(
             $this->user,
-            LessonCreationStatusEnum::SUCCESSFULLY,
+            LessonCreationStatusEnum::CREATED,
             1
         ));
 
@@ -120,12 +120,12 @@ class NotificationBellTest extends TestCase
 
         $this->user->notify(new LessonCreationNotification(
             $this->user,
-            LessonCreationStatusEnum::SUCCESSFULLY,
+            LessonCreationStatusEnum::CREATED,
             1
         ));
         $this->user->notify(new LessonCreationNotification(
             $this->user,
-            LessonCreationStatusEnum::SUCCESSFULLY,
+            LessonCreationStatusEnum::CREATED,
             2
         ));
 
@@ -145,7 +145,7 @@ class NotificationBellTest extends TestCase
 
         $this->user->notify(new LessonCreationNotification(
             $this->user,
-            LessonCreationStatusEnum::SUCCESSFULLY,
+            LessonCreationStatusEnum::CREATED,
             1
         ));
 
@@ -176,17 +176,17 @@ class NotificationBellTest extends TestCase
 
         $this->user->notify(new LessonCreationNotification(
             $this->user,
-            LessonCreationStatusEnum::SUCCESSFULLY,
+            LessonCreationStatusEnum::CREATED,
             1
         ));
         $this->user->notify(new LessonCreationNotification(
             $this->user,
-            LessonCreationStatusEnum::SUCCESSFULLY,
+            LessonCreationStatusEnum::CREATED,
             2
         ));
         $this->user->notify(new LessonCreationNotification(
             $this->user,
-            LessonCreationStatusEnum::SUCCESSFULLY,
+            LessonCreationStatusEnum::CREATED,
             3
         ));
 
@@ -214,7 +214,7 @@ class NotificationBellTest extends TestCase
 
         $this->user->notify(new LessonCreationNotification(
             $this->user,
-            LessonCreationStatusEnum::SUCCESSFULLY,
+            LessonCreationStatusEnum::CREATED,
             1
         ));
 
@@ -234,12 +234,12 @@ class NotificationBellTest extends TestCase
 
         $this->user->notify(new LessonCreationNotification(
             $this->user,
-            LessonCreationStatusEnum::SUCCESSFULLY,
+            LessonCreationStatusEnum::CREATED,
             1
         ));
         $this->user->notify(new LessonCreationNotification(
             $this->user,
-            LessonCreationStatusEnum::SUCCESSFULLY,
+            LessonCreationStatusEnum::CREATED,
             2
         ));
 
@@ -272,7 +272,7 @@ class NotificationBellTest extends TestCase
         for ($i = 1; $i <= 15; $i++) {
             $this->user->notify(new LessonCreationNotification(
                 $this->user,
-                LessonCreationStatusEnum::SUCCESSFULLY,
+                LessonCreationStatusEnum::CREATED,
                 $i
             ));
         }
@@ -293,7 +293,7 @@ class NotificationBellTest extends TestCase
 
         $this->user->notify(new LessonCreationNotification(
             $this->user,
-            LessonCreationStatusEnum::SUCCESSFULLY,
+            LessonCreationStatusEnum::CREATED,
             1
         ));
 
@@ -301,7 +301,7 @@ class NotificationBellTest extends TestCase
 
         $this->user->notify(new LessonCreationNotification(
             $this->user,
-            LessonCreationStatusEnum::SUCCESSFULLY,
+            LessonCreationStatusEnum::CREATED,
             2
         ));
 
@@ -362,7 +362,7 @@ class NotificationBellTest extends TestCase
         for ($i = 1; $i <= 3; $i++) {
             $this->user->notify(new LessonCreationNotification(
                 $this->user,
-                LessonCreationStatusEnum::SUCCESSFULLY,
+                LessonCreationStatusEnum::CREATED,
                 $i
             ));
         }

@@ -39,6 +39,7 @@ class UserFactory extends Factory
             'native_lang' => 'en',
             'timezone' => 'UTC',
             'first_login_completed_at' => now(),
+            'is_banned' => false,
         ];
     }
 

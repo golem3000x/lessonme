@@ -40,7 +40,7 @@ class LessonCreationNotificationTest extends TestCase
     {
         $notification = new LessonCreationNotification(
             $this->user,
-            LessonCreationStatusEnum::PROCESSING,
+            LessonCreationStatusEnum::CREATION,
             $this->lesson->id
         );
 
@@ -64,7 +64,7 @@ class LessonCreationNotificationTest extends TestCase
     {
         $notification = new LessonCreationNotification(
             $this->user,
-            LessonCreationStatusEnum::PROCESSING,
+            LessonCreationStatusEnum::CREATION,
             null
         );
 
@@ -80,7 +80,7 @@ class LessonCreationNotificationTest extends TestCase
     {
         $notification = new LessonCreationNotification(
             $this->user,
-            LessonCreationStatusEnum::PROCESSING,
+            LessonCreationStatusEnum::CREATION,
             null
         );
 
@@ -95,13 +95,13 @@ class LessonCreationNotificationTest extends TestCase
     {
         $notification = new LessonCreationNotification(
             $this->user,
-            LessonCreationStatusEnum::SUCCESSFULLY,
+            LessonCreationStatusEnum::CREATED,
             null
         );
 
         $event_name = $notification->broadcastAs();
 
-        $this->assertSame('lesson.creation.successfully', $event_name);
+        $this->assertSame('lesson.creation.created', $event_name);
     }
 
     public function test_broadcast_as_includes_status(): void
@@ -121,7 +121,7 @@ class LessonCreationNotificationTest extends TestCase
     {
         $notification = new LessonCreationNotification(
             $this->user,
-            LessonCreationStatusEnum::PROCESSING,
+            LessonCreationStatusEnum::CREATION,
             null
         );
 
@@ -136,7 +136,7 @@ class LessonCreationNotificationTest extends TestCase
     {
         $notification = new LessonCreationNotification(
             $this->user,
-            LessonCreationStatusEnum::PROCESSING,
+            LessonCreationStatusEnum::CREATION,
             null
         );
 
@@ -152,20 +152,20 @@ class LessonCreationNotificationTest extends TestCase
     {
         $notification = new LessonCreationNotification(
             $this->user,
-            LessonCreationStatusEnum::SUCCESSFULLY,
+            LessonCreationStatusEnum::CREATED,
             null
         );
 
         $array = $notification->toArray();
 
-        $this->assertSame(LessonCreationStatusEnum::SUCCESSFULLY->value, $array['status']);
+        $this->assertSame(LessonCreationStatusEnum::CREATED->value, $array['status']);
     }
 
     public function test_to_array_entity_is_lesson(): void
     {
         $notification = new LessonCreationNotification(
             $this->user,
-            LessonCreationStatusEnum::PROCESSING,
+            LessonCreationStatusEnum::CREATION,
             null
         );
 
@@ -178,7 +178,7 @@ class LessonCreationNotificationTest extends TestCase
     {
         $notification = new LessonCreationNotification(
             $this->user,
-            LessonCreationStatusEnum::PROCESSING,
+            LessonCreationStatusEnum::CREATION,
             null
         );
 
@@ -191,7 +191,7 @@ class LessonCreationNotificationTest extends TestCase
     {
         $notification = new LessonCreationNotification(
             $this->user,
-            LessonCreationStatusEnum::SUCCESSFULLY,
+            LessonCreationStatusEnum::CREATED,
             $this->lesson->id
         );
 
@@ -225,7 +225,7 @@ class LessonCreationNotificationTest extends TestCase
     {
         $notification = new LessonCreationNotification(
             $this->user,
-            LessonCreationStatusEnum::PROCESSING,
+            LessonCreationStatusEnum::CREATION,
             null
         );
 
@@ -240,7 +240,7 @@ class LessonCreationNotificationTest extends TestCase
     {
         $notification = new LessonCreationNotification(
             $this->user,
-            LessonCreationStatusEnum::SUCCESSFULLY,
+            LessonCreationStatusEnum::CREATED,
             $this->lesson->id
         );
 
@@ -292,7 +292,7 @@ class LessonCreationNotificationTest extends TestCase
 
         $notification = new LessonCreationNotification(
             $this->user,
-            LessonCreationStatusEnum::SUCCESSFULLY,
+            LessonCreationStatusEnum::CREATED,
             $this->lesson->id
         );
 
@@ -311,7 +311,7 @@ class LessonCreationNotificationTest extends TestCase
 
         $notification = new LessonCreationNotification(
             $this->user,
-            LessonCreationStatusEnum::SUCCESSFULLY,
+            LessonCreationStatusEnum::CREATED,
             $this->lesson->id
         );
 
@@ -323,7 +323,7 @@ class LessonCreationNotificationTest extends TestCase
         $this->assertArrayHasKey('status', $stored->data);
         $this->assertArrayHasKey('entity', $stored->data);
         $this->assertArrayHasKey('message', $stored->data);
-        $this->assertSame(LessonCreationStatusEnum::SUCCESSFULLY->value, $stored->data['status']);
+        $this->assertSame(LessonCreationStatusEnum::CREATED->value, $stored->data['status']);
         $this->assertSame('lesson', $stored->data['entity']);
     }
 
@@ -331,7 +331,7 @@ class LessonCreationNotificationTest extends TestCase
     {
         $notification = new LessonCreationNotification(
             $this->user,
-            LessonCreationStatusEnum::PROCESSING,
+            LessonCreationStatusEnum::CREATION,
             $this->lesson->id
         );
 
@@ -351,7 +351,7 @@ class LessonCreationNotificationTest extends TestCase
     {
         $notification = new LessonCreationNotification(
             $this->user,
-            LessonCreationStatusEnum::SUCCESSFULLY,
+            LessonCreationStatusEnum::CREATED,
             99999 // Non-existent
         );
 
@@ -366,7 +366,7 @@ class LessonCreationNotificationTest extends TestCase
     {
         $notification = new LessonCreationNotification(
             $this->user,
-            LessonCreationStatusEnum::PROCESSING,
+            LessonCreationStatusEnum::CREATION,
             null
         );
 

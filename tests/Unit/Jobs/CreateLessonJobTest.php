@@ -74,10 +74,18 @@ class CreateLessonJobTest extends TestCase
         $topic = $this->createTopic();
         $lesson_dto = $this->createLessonDto();
 
+        // Create an existing lesson that will be found as similar
         $existing_lesson = Lesson::factory()->create([
             'user_id' => $user->id,
             'topic_id' => $topic->id,
-            'language_level' => LanguageLevelEnum::B1->value,
+            'language_level' => LanguageLevelEnum::B1,
+        ]);
+
+        // Create a placeholder lesson that the job will try to fill
+        $placeholder_lesson = Lesson::factory()->create([
+            'user_id' => $user->id,
+            'topic_id' => $topic->id,
+            'language_level' => LanguageLevelEnum::B1,
         ]);
 
         // Mock dependencies
@@ -94,7 +102,7 @@ class CreateLessonJobTest extends TestCase
         $audio_service = Mockery::mock(LessonAudioService::class);
         $audio_service->shouldReceive('generateAudioForLesson')->never();
 
-        $job = new CreateLessonJob($user->id, $topic->id, $lesson_dto);
+        $job = new CreateLessonJob($placeholder_lesson->id, $lesson_dto);
         $job->handle($lesson_service, $audio_service);
 
         Notification::assertSentTo(
@@ -102,7 +110,9 @@ class CreateLessonJobTest extends TestCase
             LessonCreationNotification::class
         );
 
-        // Should not create a new lesson
+        // Placeholder lesson should be deleted, only existing lesson remains
         $this->assertDatabaseCount('lessons', 1);
+        $this->assertDatabaseHas('lessons', ['id' => $existing_lesson->id]);
+        $this->assertDatabaseMissing('lessons', ['id' => $placeholder_lesson->id]);
     }
 }

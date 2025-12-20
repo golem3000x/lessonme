@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Services;
 
+use App\Dto\LessonDto;
+use App\Enums\System\LanguageLevelEnum;
+use App\Enums\System\SystemLanguageEnum;
 use App\Models\Lesson\Lesson;
 use App\Models\User;
 use App\Services\Lesson\LessonSimilarityService;
@@ -22,6 +25,17 @@ class LessonSimilarityServiceTest extends TestCase
         $this->service = new LessonSimilarityService;
     }
 
+    private function createLessonDto(): LessonDto
+    {
+        return new LessonDto(
+            topic: 'Business Communication',
+            level: LanguageLevelEnum::B1,
+            native_lang: SystemLanguageEnum::ENGLISH->value,
+            learning_lang: SystemLanguageEnum::VIETNAMESE->value,
+            keywords: ['meeting', 'presentation']
+        );
+    }
+
     private function createEmbedding(float $base = 0.5): array
     {
         $embedding = [];
@@ -36,8 +50,9 @@ class LessonSimilarityServiceTest extends TestCase
     {
         $user = User::factory()->create();
         $embedding = $this->createEmbedding();
+        $dto = $this->createLessonDto();
 
-        $result = $this->service->findSimilar($user->id, $embedding);
+        $result = $this->service->findSimilar($user->id, $embedding, $dto);
 
         $this->assertNull($result);
     }
@@ -57,15 +72,17 @@ class LessonSimilarityServiceTest extends TestCase
     {
         $user = User::factory()->create();
         $embedding = $this->createEmbedding(0.5);
+        $dto = $this->createLessonDto();
 
         $lesson = Lesson::factory()->create([
             'user_id' => $user->id,
             'lesson_name' => 'Similar Lesson',
             'embedding' => $embedding,
+            'language_level' => LanguageLevelEnum::B1,
         ]);
 
         // Search with same embedding
-        $result = $this->service->findSimilar($user->id, $embedding);
+        $result = $this->service->findSimilar($user->id, $embedding, $dto);
 
         $this->assertNotNull($result);
         $this->assertEquals($lesson->id, $result->id);
@@ -76,10 +93,12 @@ class LessonSimilarityServiceTest extends TestCase
     {
         $user = User::factory()->create();
         $base_embedding = $this->createEmbedding(0.5);
+        $dto = $this->createLessonDto();
 
         $lesson = Lesson::factory()->create([
             'user_id' => $user->id,
             'embedding' => $base_embedding,
+            'language_level' => LanguageLevelEnum::B1,
         ]);
 
         // Create slightly modified embedding (very similar)
@@ -87,7 +106,7 @@ class LessonSimilarityServiceTest extends TestCase
             return $val + 0.001;
         }, $base_embedding);
 
-        $result = $this->service->findSimilar($user->id, $similar_embedding);
+        $result = $this->service->findSimilar($user->id, $similar_embedding, $dto);
 
         $this->assertNotNull($result);
         $this->assertEquals($lesson->id, $result->id);
@@ -98,15 +117,17 @@ class LessonSimilarityServiceTest extends TestCase
         $user1 = User::factory()->create();
         $user2 = User::factory()->create();
         $embedding = $this->createEmbedding(0.5);
+        $dto = $this->createLessonDto();
 
         // Create lesson for user2
         Lesson::factory()->create([
             'user_id' => $user2->id,
             'embedding' => $embedding,
+            'language_level' => LanguageLevelEnum::B1,
         ]);
 
         // Search for user1 with same embedding
-        $result = $this->service->findSimilar($user1->id, $embedding);
+        $result = $this->service->findSimilar($user1->id, $embedding, $dto);
 
         // Should not find user2's lesson
         $this->assertNull($result);
@@ -116,21 +137,24 @@ class LessonSimilarityServiceTest extends TestCase
     {
         $user = User::factory()->create();
         $search_embedding = $this->createEmbedding(0.5);
+        $dto = $this->createLessonDto();
 
         // Create multiple lessons with varying similarity
         $lesson_very_similar = Lesson::factory()->create([
             'user_id' => $user->id,
             'lesson_name' => 'Very Similar',
             'embedding' => array_map(fn ($v) => $v + 0.001, $search_embedding),
+            'language_level' => LanguageLevelEnum::B1,
         ]);
 
         $lesson_less_similar = Lesson::factory()->create([
             'user_id' => $user->id,
             'lesson_name' => 'Less Similar',
             'embedding' => array_map(fn ($v) => $v + 0.02, $search_embedding),
+            'language_level' => LanguageLevelEnum::B1,
         ]);
 
-        $result = $this->service->findSimilar($user->id, $search_embedding);
+        $result = $this->service->findSimilar($user->id, $search_embedding, $dto);
 
         // Should return the most similar one
         $this->assertNotNull($result);
@@ -142,14 +166,16 @@ class LessonSimilarityServiceTest extends TestCase
     {
         $user = User::factory()->create();
         $embedding = $this->createEmbedding(0.5);
+        $dto = $this->createLessonDto();
 
         $lesson = Lesson::factory()->create([
             'user_id' => $user->id,
             'embedding' => $embedding,
+            'language_level' => LanguageLevelEnum::B1,
         ]);
 
         // Execute the query and verify it completes successfully
-        $result = $this->service->findSimilar($user->id, $embedding);
+        $result = $this->service->findSimilar($user->id, $embedding, $dto);
 
         // The query uses pgvector <=> operator for cosine distance
         // If it executes without error, the operator is working correctly
@@ -160,6 +186,7 @@ class LessonSimilarityServiceTest extends TestCase
     public function test_find_similar_works_with_different_embedding_sizes(): void
     {
         $user = User::factory()->create();
+        $dto = $this->createLessonDto();
 
         // Standard 1536-dimensional embedding
         $embedding_1536 = $this->createEmbedding(0.5);
@@ -167,9 +194,10 @@ class LessonSimilarityServiceTest extends TestCase
         $lesson = Lesson::factory()->create([
             'user_id' => $user->id,
             'embedding' => $embedding_1536,
+            'language_level' => LanguageLevelEnum::B1,
         ]);
 
-        $result = $this->service->findSimilar($user->id, $embedding_1536);
+        $result = $this->service->findSimilar($user->id, $embedding_1536, $dto);
 
         $this->assertNotNull($result);
         $this->assertEquals($lesson->id, $result->id);
@@ -178,30 +206,34 @@ class LessonSimilarityServiceTest extends TestCase
     public function test_find_similar_handles_empty_embedding_with_exception(): void
     {
         $user = User::factory()->create();
+        $dto = $this->createLessonDto();
 
         Lesson::factory()->create([
             'user_id' => $user->id,
             'embedding' => $this->createEmbedding(),
+            'language_level' => LanguageLevelEnum::B1,
         ]);
 
         // PostgreSQL pgvector will throw exception for empty embedding
         $this->expectException(\Illuminate\Database\QueryException::class);
         $this->expectExceptionMessage('vector must have at least 1 dimension');
 
-        $this->service->findSimilar($user->id, []);
+        $this->service->findSimilar($user->id, [], $dto);
     }
 
     public function test_find_similar_returns_lesson_object_with_similarity_score(): void
     {
         $user = User::factory()->create();
         $embedding = $this->createEmbedding(0.5);
+        $dto = $this->createLessonDto();
 
         $lesson = Lesson::factory()->create([
             'user_id' => $user->id,
             'embedding' => $embedding,
+            'language_level' => LanguageLevelEnum::B1,
         ]);
 
-        $result = $this->service->findSimilar($user->id, $embedding);
+        $result = $this->service->findSimilar($user->id, $embedding, $dto);
 
         $this->assertNotNull($result);
         $this->assertInstanceOf(Lesson::class, $result);

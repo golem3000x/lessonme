@@ -174,14 +174,14 @@ class NotificationsPanelTest extends TestCase
         $component->dispatch('lesson-notification',
             id: 'proc-1',
             entity: 'lesson',
-            status: LessonCreationStatusEnum::PROCESSING->value,
+            status: LessonCreationStatusEnum::CREATION->value,
             message: 'Processing lesson'
         );
 
         $component->dispatch('lesson-notification',
             id: 'proc-2',
             entity: 'lesson',
-            status: LessonCreationStatusEnum::PROCESSING->value,
+            status: LessonCreationStatusEnum::CREATION->value,
             message: 'Processing lesson'
         );
 
