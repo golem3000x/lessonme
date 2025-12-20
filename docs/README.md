@@ -14,6 +14,13 @@
 - [GRADING_SYSTEM_IMPLEMENTATION.md](./GRADING_SYSTEM_IMPLEMENTATION.md) - Система оценивания и отслеживания прогресса
 - [STUDENT_DASHBOARD_SUMMARY.md](./STUDENT_DASHBOARD_SUMMARY.md) - Дашборд студента
 - [DEMO_GUEST_SYSTEM.md](./DEMO_GUEST_SYSTEM.md) - Демо-система для гостей
+- [LESSON_UPDATE_SUMMARY.md](./LESSON_UPDATE_SUMMARY.md) - Обновления уроков
+- [LANGUAGE_SELECTION_FEATURE.md](./LANGUAGE_SELECTION_FEATURE.md) - Выбор языка
+- [PASSWORD_RESET_SETUP.md](./PASSWORD_RESET_SETUP.md) - Сброс пароля
+
+### 💬 Чат
+- [CHAT_README.md](./CHAT_README.md) - Чат пользователей
+- [ADMIN_CHAT_README.md](./ADMIN_CHAT_README.md) - Админ чат
 
 ### 🔒 Безопасность
 - [CHAT_SECURITY.md](./CHAT_SECURITY.md) - Безопасность чата и WebSocket
