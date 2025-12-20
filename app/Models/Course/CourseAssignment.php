@@ -7,6 +7,8 @@ namespace App\Models\Course;
 use App\Enums\System\AssignmentStatusEnum;
 use App\Enums\System\TableNameEnum;
 use App\Models\User\User;
+use Database\Factories\Course\CourseAssignmentFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
@@ -27,7 +29,18 @@ use Illuminate\Support\Carbon;
  */
 class CourseAssignment extends Model
 {
+    /** @use HasFactory<CourseAssignmentFactory> */
+    use HasFactory;
+
     protected $table = TableNameEnum::COURSE_ASSIGNMENTS->value;
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): CourseAssignmentFactory
+    {
+        return CourseAssignmentFactory::new();
+    }
 
     protected $fillable = [
         'course_id',

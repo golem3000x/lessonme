@@ -138,6 +138,14 @@ class User extends Authenticatable implements FilamentUser, HasLocalePreference,
     protected $table = TableNameEnum::USERS->value;
 
     /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): UserFactory
+    {
+        return UserFactory::new();
+    }
+
+    /**
      * Boot the model.
      */
     protected static function booted(): void
