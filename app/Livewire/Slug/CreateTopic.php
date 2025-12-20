@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Livewire\Slug;
 
 use App\Models\Topic\Topic;
-use App\Models\User;
+use App\Models\User\User;
 use App\Notifications\Slug\Processing\SlugProcessingNotification;
 use App\Rules\IsMeaningful;
 use Closure;

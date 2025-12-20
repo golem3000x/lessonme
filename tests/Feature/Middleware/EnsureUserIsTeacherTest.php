@@ -6,7 +6,7 @@ namespace Tests\Feature\Middleware;
 
 use App\Enums\System\UserRoleEnum;
 use App\Http\Middleware\EnsureUserIsTeacher;
-use App\Models\User;
+use App\Models\User\User;
 use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Request;

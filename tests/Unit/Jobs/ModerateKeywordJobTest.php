@@ -10,7 +10,7 @@ use App\Models\Keyword\Keyword;
 use App\Models\Keyword\KeywordTranslation;
 use App\Models\Topic\Topic;
 use App\Models\Topic\TopicTranslation;
-use App\Models\User;
+use App\Models\User\User;
 use App\Services\Slug\SlugService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Mockery;

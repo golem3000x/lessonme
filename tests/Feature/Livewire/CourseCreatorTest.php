@@ -10,7 +10,7 @@ use App\Enums\System\UserRoleEnum;
 use App\Livewire\Course\CourseCreator;
 use App\Models\Course\Course;
 use App\Models\Lesson\Lesson;
-use App\Models\User;
+use App\Models\User\User;
 use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;

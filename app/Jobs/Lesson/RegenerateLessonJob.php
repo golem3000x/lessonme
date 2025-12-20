@@ -8,7 +8,7 @@ use App\Dto\LessonDto;
 use App\Enums\Notifications\LessonCreationStatusEnum;
 use App\Exceptions\LessonExistsException;
 use App\Models\Lesson\Lesson;
-use App\Models\User;
+use App\Models\User\User;
 use App\Notifications\Lesson\LessonCreationNotification;
 use App\Services\Lesson\LessonAudioService;
 use App\Services\Lesson\LessonService;

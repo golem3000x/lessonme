@@ -7,7 +7,7 @@ namespace Database\Factories\Course;
 use App\Enums\System\LanguageLevelEnum;
 use App\Enums\System\SystemLanguageEnum;
 use App\Models\Course\Course;
-use App\Models\User;
+use App\Models\User\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 

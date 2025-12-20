@@ -36,6 +36,7 @@
 **ВАЖНО:** Временные гости **НЕ логинятся** для безопасности!
 
 **routes/channels.php:**
+
 ```php
 Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
     // Regular users
@@ -46,7 +47,7 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
     // Temp guests (NOT logged in, use session)
     $temp_guest_user_id = session('temp_guest_user_id');
     if ($temp_guest_user_id && (int) $temp_guest_user_id === (int) $id) {
-        $temp_user = \App\Models\User::where('id', '=', $id)
+        $temp_user = \App\Models\User\User::where('id', '=', $id)
             ->where('is_temp_guest', '=', true)
             ->where('temp_guest_expires_at', '>', now())
             ->first();
@@ -169,6 +170,7 @@ auth()->login($temp_guest_user);
 ### ✅ Правильное решение - Session-based авторизация
 
 **Только для WebSocket канала:**
+
 ```php
 // routes/channels.php
 Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
@@ -181,7 +183,7 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
     $temp_guest_user_id = session('temp_guest_user_id');
     if ($temp_guest_user_id && (int) $temp_guest_user_id === (int) $id) {
         // Дополнительная проверка безопасности
-        $temp_user = \App\Models\User::where('id', '=', $id)
+        $temp_user = \App\Models\User\User::where('id', '=', $id)
             ->where('is_temp_guest', '=', true)
             ->where('temp_guest_expires_at', '>', now())
             ->first();

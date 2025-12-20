@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Traits;
 
 use App\Enums\System\TableNameEnum;
-use App\Models\User;
+use App\Models\User\User;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**

@@ -8,7 +8,7 @@ use App\Models\Keyword\Keyword;
 use App\Models\Keyword\UserKeywordVisibility;
 use App\Models\Topic\Topic;
 use App\Models\Topic\UserTopicVisibility;
-use App\Models\User;
+use App\Models\User\User;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;

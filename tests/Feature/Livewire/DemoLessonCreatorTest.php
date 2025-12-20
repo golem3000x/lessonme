@@ -8,7 +8,7 @@ use App\Enums\System\SystemLanguageEnum;
 use App\Livewire\Welcome\DemoLessonCreator;
 use App\Models\Lesson\Lesson;
 use App\Models\Topic\Topic;
-use App\Models\User;
+use App\Models\User\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Queue;
 use Livewire\Livewire;

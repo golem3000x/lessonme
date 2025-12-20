@@ -9,7 +9,7 @@ use App\Enums\System\LanguageLevelEnum;
 use App\Enums\System\SystemLanguageEnum;
 use App\Exceptions\LessonExistsException;
 use App\Models\Lesson\Lesson;
-use App\Models\User;
+use App\Models\User\User;
 use App\Services\Lesson\LessonGenerationService;
 use App\Services\Lesson\LessonHistoryService;
 use App\Services\Lesson\LessonService;

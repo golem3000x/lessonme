@@ -9,7 +9,7 @@ use App\Events\MessageSent;
 use App\Livewire\Chat\ChatPanel;
 use App\Models\Support\ChatSession;
 use App\Models\Support\Message;
-use App\Models\User;
+use App\Models\User\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Queue;

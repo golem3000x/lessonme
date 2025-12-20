@@ -6,7 +6,7 @@ namespace Tests\Feature\Middleware;
 
 use App\Enums\System\SystemLanguageEnum;
 use App\Http\Middleware\SetFilamentLocale;
-use App\Models\User;
+use App\Models\User\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Request;
 use Tests\TestCase;

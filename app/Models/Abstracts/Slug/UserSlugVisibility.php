@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Models\Abstracts\Slug;
 
 use App\Models\Abstracts\BaseModel;
-use App\Models\User;
+use App\Models\User\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 

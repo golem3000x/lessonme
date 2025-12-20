@@ -7,7 +7,7 @@ namespace Database\Factories\Lesson;
 use App\Enums\System\AssignmentStatusEnum;
 use App\Models\Lesson\Lesson;
 use App\Models\Lesson\LessonAssignment;
-use App\Models\User;
+use App\Models\User\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Livewire\Messages;
 
-use App\Models\UserMessage;
+use App\Models\User\UserMessage;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\On;

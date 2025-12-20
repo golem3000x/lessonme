@@ -14,7 +14,7 @@ use App\Jobs\Lesson\RegenerateLessonJob;
 use App\Models\Course\Course;
 use App\Models\Lesson\Lesson;
 use App\Models\Lesson\LessonAssignment;
-use App\Models\User;
+use App\Models\User\User;
 use App\Notifications\Lesson\LessonAssignedNotification;
 use App\Notifications\Lesson\LessonAssignmentRemovedNotification;
 use App\Notifications\Lesson\LessonAssignmentSentNotification;

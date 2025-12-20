@@ -9,7 +9,7 @@ use App\Jobs\Lesson\CreateLessonJob;
 use App\Livewire\Lesson\ManageLesson;
 use App\Models\Keyword\Keyword;
 use App\Models\Topic\Topic;
-use App\Models\User;
+use App\Models\User\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Queue;
 use Livewire\Livewire;

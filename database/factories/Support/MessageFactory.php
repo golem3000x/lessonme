@@ -6,7 +6,7 @@ namespace Database\Factories\Support;
 
 use App\Models\Support\ChatSession;
 use App\Models\Support\Message;
-use App\Models\User;
+use App\Models\User\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**

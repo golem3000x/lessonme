@@ -7,7 +7,7 @@ namespace App\Models\Keyword;
 use App\Enums\System\TableNameEnum;
 use App\Models\Abstracts\Slug\Slug;
 use App\Models\Topic\Topic;
-use App\Models\User;
+use App\Models\User\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

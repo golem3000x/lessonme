@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Models;
+namespace App\Models\User;
 
 use App\Enums\System\MessageTypeEnum;
 use App\Enums\System\TableNameEnum;
+use App\Models\User\Teacher\TeacherInvitation;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -21,9 +22,9 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $updated_at
  * @property MessageTypeEnum $message_type
  * @property-read bool $is_read
- * @property-read \App\Models\TeacherInvitation|null $invitation
- * @property-read \App\Models\User $recipient
- * @property-read \App\Models\User $sender
+ * @property-read \App\Models\User\Teacher\TeacherInvitation|null $invitation
+ * @property-read \App\Models\User\User $recipient
+ * @property-read \App\Models\User\User $sender
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserMessage newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserMessage newQuery()

@@ -6,7 +6,7 @@ namespace Tests\Feature\Console;
 
 use App\Enums\System\SystemLanguageEnum;
 use App\Enums\System\UserRoleEnum;
-use App\Models\User;
+use App\Models\User\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 

@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Traits;
 
 use App\Enums\System\UserRoleEnum;
-use App\Models\Role;
-use App\Models\User;
+use App\Models\User\Role;
+use App\Models\User\User;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\Log;
 

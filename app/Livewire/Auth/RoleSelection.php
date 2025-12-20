@@ -6,7 +6,7 @@ namespace App\Livewire\Auth;
 
 use App\Enums\System\SystemLanguageEnum;
 use App\Enums\System\UserRoleEnum;
-use App\Models\User;
+use App\Models\User\User;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;

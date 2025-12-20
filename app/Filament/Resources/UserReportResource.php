@@ -6,7 +6,7 @@ namespace App\Filament\Resources;
 
 use App\Enums\System\ReportReasonEnum;
 use App\Filament\Resources\UserReportResource\Pages;
-use App\Models\UserReport;
+use App\Models\User\UserReport;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;

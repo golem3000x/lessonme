@@ -10,7 +10,7 @@ use App\Enums\Notifications\LessonCreationStatusEnum;
 use App\Enums\System\LanguageLevelEnum;
 use App\Enums\System\SystemLanguageEnum;
 use App\Models\Abstracts\BaseModel;
-use App\Models\User;
+use App\Models\User\User;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Models\Support;
 
 use App\Enums\System\TableNameEnum;
-use App\Models\User;
+use App\Models\User\User;
 use Database\Factories\Support\MessageFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

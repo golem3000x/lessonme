@@ -7,7 +7,7 @@ namespace Database\Factories\Lesson;
 use App\Enums\FeedbackRatingEnum;
 use App\Models\Lesson\Lesson;
 use App\Models\Lesson\LessonFeedback;
-use App\Models\User;
+use App\Models\User\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Models;
+namespace App\Models\User;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Enums\System\SystemLanguageEnum;
@@ -13,6 +13,7 @@ use App\Models\Lesson\LessonAttempt;
 use App\Models\Lesson\LessonScore;
 use App\Models\Support\ChatSession;
 use App\Models\Support\Message;
+use App\Models\User\Teacher\TeacherReview;
 use App\Notifications\ResetPasswordNotification;
 use App\Traits\Bannable;
 use App\Traits\HasLanguages;
@@ -66,9 +67,9 @@ use Illuminate\Support\Str;
  * @property-read float|null $average_rating
  * @property-read string $full_name
  * @property-read int $reviews_count
- * @property-read Collection<int, \App\Models\TeacherReview> $givenReviews
+ * @property-read Collection<int, \App\Models\User\Teacher\TeacherReview> $givenReviews
  * @property-read int|null $given_reviews_count
- * @property-read Collection<int, \App\Models\UserLearningLanguage> $learningLanguages
+ * @property-read Collection<int, \App\Models\User\UserLearningLanguage> $learningLanguages
  * @property-read int|null $learning_languages_count
  * @property-read Collection<int, LessonAttempt> $lessonAttempts
  * @property-read int|null $lesson_attempts_count
@@ -80,9 +81,9 @@ use Illuminate\Support\Str;
  * @property-read int|null $my_assignments_count
  * @property-read DatabaseNotificationCollection<int, DatabaseNotification> $notifications
  * @property-read int|null $notifications_count
- * @property-read Collection<int, \App\Models\TeacherReview> $receivedReviews
+ * @property-read Collection<int, \App\Models\User\Teacher\TeacherReview> $receivedReviews
  * @property-read int|null $received_reviews_count
- * @property-read Collection<int, \App\Models\Role> $roles
+ * @property-read Collection<int, \App\Models\User\Role> $roles
  * @property-read int|null $roles_count
  * @property-read Collection<int, LessonScore> $scores
  * @property-read int|null $scores_count
@@ -90,7 +91,7 @@ use Illuminate\Support\Str;
  * @property-read int|null $students_count
  * @property-read Collection<int, User> $teachers
  * @property-read int|null $teachers_count
- * @property-read Collection<int, \App\Models\UserTeachingLanguage> $teachingLanguages
+ * @property-read Collection<int, \App\Models\User\UserTeachingLanguage> $teachingLanguages
  * @property-read int|null $teaching_languages_count
  *
  * @method static \Database\Factories\UserFactory factory($count = null, $state = [])

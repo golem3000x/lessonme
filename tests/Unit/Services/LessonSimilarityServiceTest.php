@@ -8,7 +8,7 @@ use App\Dto\LessonDto;
 use App\Enums\System\LanguageLevelEnum;
 use App\Enums\System\SystemLanguageEnum;
 use App\Models\Lesson\Lesson;
-use App\Models\User;
+use App\Models\User\User;
 use App\Services\Lesson\LessonSimilarityService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;

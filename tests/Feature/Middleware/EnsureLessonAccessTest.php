@@ -8,7 +8,7 @@ use App\Enums\System\UserRoleEnum;
 use App\Http\Middleware\EnsureLessonAccess;
 use App\Models\Lesson\Lesson;
 use App\Models\Lesson\LessonAssignment;
-use App\Models\User;
+use App\Models\User\User;
 use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Request;

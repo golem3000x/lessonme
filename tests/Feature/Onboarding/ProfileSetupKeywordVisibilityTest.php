@@ -10,7 +10,7 @@ use App\Models\Keyword\KeywordTranslation;
 use App\Models\Keyword\UserKeywordVisibility as UserKeywordVisibilityModel;
 use App\Models\Topic\Topic;
 use App\Models\Topic\TopicTranslation;
-use App\Models\User;
+use App\Models\User\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
 use Tests\TestCase;

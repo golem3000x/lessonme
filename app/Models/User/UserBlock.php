@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Models;
+namespace App\Models\User;
 
 use App\Enums\System\TableNameEnum;
 use Illuminate\Database\Eloquent\Model;
@@ -15,8 +15,8 @@ use Illuminate\Support\Carbon;
  * @property int $blocked_user_id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read \App\Models\User $blockedUser
- * @property-read \App\Models\User $user
+ * @property-read \App\Models\User\User $blockedUser
+ * @property-read \App\Models\User\User $user
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserBlock newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserBlock newQuery()

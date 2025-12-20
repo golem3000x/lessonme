@@ -6,7 +6,7 @@ namespace Tests\Feature\Livewire;
 
 use App\Enums\System\UserRoleEnum;
 use App\Livewire\Settings\UserSettings;
-use App\Models\User;
+use App\Models\User\User;
 use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;

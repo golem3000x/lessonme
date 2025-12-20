@@ -6,7 +6,7 @@ namespace App\Models\Abstracts\Slug;
 
 use App\Events\SlugEntityChanged;
 use App\Models\Abstracts\BaseModel;
-use App\Models\User;
+use App\Models\User\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -79,14 +79,12 @@ abstract class Slug extends BaseModel
 
     /**
      * Get translation for specific language or fallback to first available
-     *
-     * @return TTranslation|null
      */
     public function translation(?string $lang = null): ?SlugTranslation
     {
         $lang = $lang ?? app()->getLocale();
 
-        /** @var TTranslation|null $translation */
+        /** @var SlugTranslation|null $translation */
         $translation = $this->translations
             ->where('language_code', '=', $lang)
             ->first();
@@ -95,7 +93,7 @@ abstract class Slug extends BaseModel
             return $translation;
         }
 
-        /** @var TTranslation|null */
+        /** @var SlugTranslation|null */
         return $this->translations->first();
     }
 
@@ -107,7 +105,7 @@ abstract class Slug extends BaseModel
         $lang = $lang ?? app()->getLocale();
 
         // Try to get translation for requested language
-        /** @var TTranslation|null $translation */
+        /** @var SlugTranslation|null $translation */
         $translation = $this->translations
             ->firstWhere('language_code', '=', $lang);
 
@@ -116,7 +114,7 @@ abstract class Slug extends BaseModel
         }
 
         // Fallback to first available translation
-        /** @var TTranslation|null $firstTranslation */
+        /** @var SlugTranslation|null $firstTranslation */
         $firstTranslation = $this->translations->first();
 
         if ($firstTranslation) {

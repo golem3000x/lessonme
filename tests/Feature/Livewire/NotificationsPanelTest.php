@@ -6,7 +6,7 @@ namespace Tests\Feature\Livewire;
 
 use App\Enums\Notifications\LessonCreationStatusEnum;
 use App\Livewire\Notification\NotificationsPanel;
-use App\Models\User;
+use App\Models\User\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
 use Tests\TestCase;

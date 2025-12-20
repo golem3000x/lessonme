@@ -6,7 +6,7 @@ namespace App\Models\Support;
 
 use App\Enums\ChatSessionStatusEnum;
 use App\Enums\System\TableNameEnum;
-use App\Models\User;
+use App\Models\User\User;
 use Database\Factories\Support\ChatSessionFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

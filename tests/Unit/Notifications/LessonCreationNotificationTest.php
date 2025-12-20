@@ -6,7 +6,7 @@ namespace Tests\Unit\Notifications;
 
 use App\Enums\Notifications\LessonCreationStatusEnum;
 use App\Models\Lesson\Lesson;
-use App\Models\User;
+use App\Models\User\User;
 use App\Notifications\Lesson\LessonCreationNotification;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Foundation\Testing\RefreshDatabase;

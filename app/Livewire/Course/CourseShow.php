@@ -37,7 +37,7 @@ class CourseShow extends Component
             ->exists();
 
         if (! $is_owner && ! $is_assigned) {
-            throw new NotFoundHttpException();
+            throw new NotFoundHttpException;
         }
 
         $this->course = $course;

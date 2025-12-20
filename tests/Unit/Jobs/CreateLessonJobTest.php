@@ -11,7 +11,7 @@ use App\Jobs\Lesson\CreateLessonJob;
 use App\Models\Lesson\Lesson;
 use App\Models\Topic\Topic;
 use App\Models\Topic\TopicTranslation;
-use App\Models\User;
+use App\Models\User\User;
 use App\Notifications\Lesson\LessonCreationNotification;
 use App\Services\Lesson\LessonAudioService;
 use App\Services\Lesson\LessonGenerationService;

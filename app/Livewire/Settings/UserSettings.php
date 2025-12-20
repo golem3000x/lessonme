@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Livewire\Settings;
 
-use App\Models\User;
+use App\Models\User\User;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;

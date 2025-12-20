@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Notifications\Abstracts;
 
 use App\Models\Lesson\Lesson;
-use App\Models\User;
+use App\Models\User\User;
 use BackedEnum;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;

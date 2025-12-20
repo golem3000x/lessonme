@@ -6,7 +6,7 @@ namespace Tests\Feature\Livewire;
 
 use App\Livewire\Slug\CreateTopic;
 use App\Models\Topic\Topic;
-use App\Models\User;
+use App\Models\User\User;
 use App\Notifications\Slug\Processing\SlugProcessingNotification;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;

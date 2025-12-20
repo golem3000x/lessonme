@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Traits;
 
 use App\Enums\System\SystemLanguageEnum;
-use App\Models\UserLearningLanguage;
-use App\Models\UserTeachingLanguage;
+use App\Models\User\UserLearningLanguage;
+use App\Models\User\UserTeachingLanguage;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**

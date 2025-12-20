@@ -7,7 +7,7 @@ namespace Tests\Feature;
 use App\Models\Topic\Topic;
 use App\Models\Topic\TopicTranslation;
 use App\Models\Topic\UserTopicVisibility;
-use App\Models\User;
+use App\Models\User\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 

@@ -9,7 +9,7 @@ use App\Jobs\Moderate\ModerateKeywordJob;
 use App\Livewire\Onboarding\ProfileSetup;
 use App\Models\Keyword\Keyword;
 use App\Models\Topic\Topic;
-use App\Models\User;
+use App\Models\User\User;
 use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;

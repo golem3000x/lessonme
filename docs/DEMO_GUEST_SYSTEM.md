@@ -52,6 +52,7 @@ php artisan guests:cleanup --force
 - ✅ Доступ ТОЛЬКО к WebSocket каналу для уведомлений
 
 **Как это работает:**
+
 ```php
 // routes/channels.php - кастомная авторизация канала
 Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
@@ -64,7 +65,7 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
     $temp_guest_user_id = session('temp_guest_user_id');
     if ($temp_guest_user_id && (int) $temp_guest_user_id === (int) $id) {
         // Проверка что это действительно temp guest
-        $temp_user = \App\Models\User::where('id', '=', $id)
+        $temp_user = \App\Models\User\User::where('id', '=', $id)
             ->where('is_temp_guest', '=', true)
             ->where('temp_guest_expires_at', '>', now())
             ->first();

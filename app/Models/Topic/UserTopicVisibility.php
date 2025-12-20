@@ -6,7 +6,7 @@ namespace App\Models\Topic;
 
 use App\Enums\System\TableNameEnum;
 use App\Models\Abstracts\Slug\UserSlugVisibility;
-use App\Models\User;
+use App\Models\User\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 

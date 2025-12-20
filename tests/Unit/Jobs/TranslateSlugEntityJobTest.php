@@ -8,7 +8,7 @@ use App\Enums\Notifications\TranslateStatusEnum;
 use App\Jobs\Translate\TranslateSlugEntityJob;
 use App\Models\Keyword\Keyword;
 use App\Models\Topic\Topic;
-use App\Models\User;
+use App\Models\User\User;
 use App\Notifications\Slug\Translate\SlugTranslateNotification;
 use App\Services\Slug\SlugService;
 use Illuminate\Foundation\Testing\RefreshDatabase;

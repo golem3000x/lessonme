@@ -58,7 +58,7 @@ use Illuminate\Support\Carbon;
  * @property-read Collection<int, \App\Models\Lesson\LessonScore> $scores
  * @property-read int|null $scores_count
  * @property-read Topic|null $topic
- * @property-read \App\Models\User $user
+ * @property-read \App\Models\User\User $user
  *
  * @method static \Database\Factories\Lesson\LessonFactory factory($count = null, $state = [])
  * @method static Builder<static>|Lesson newModelQuery()

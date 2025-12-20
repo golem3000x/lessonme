@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Models;
+namespace App\Models\User;
 
 use App\Enums\System\TableNameEnum;
 use App\Enums\System\UserRoleEnum;
@@ -16,7 +16,7 @@ use Illuminate\Support\Carbon;
  * @property string $name
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read Collection<int, \App\Models\User> $users
+ * @property-read Collection<int, \App\Models\User\User> $users
  * @property-read int|null $users_count
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Role newModelQuery()

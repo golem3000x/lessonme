@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Observers;
 
 use App\Enums\System\UserRoleEnum;
-use App\Models\User;
-use App\Models\UserReport;
+use App\Models\User\User;
+use App\Models\User\UserReport;
 use Filament\Notifications\Notification;
 
 class UserReportObserver

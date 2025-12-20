@@ -8,7 +8,7 @@ use App\Enums\System\SystemLanguageEnum;
 use App\Enums\System\UserRoleEnum;
 use App\Livewire\Lesson\ManualLessonCreator;
 use App\Models\Topic\Topic;
-use App\Models\User;
+use App\Models\User\User;
 use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;

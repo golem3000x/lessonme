@@ -6,11 +6,11 @@ namespace App\Livewire\Messages;
 
 use App\Enums\System\ReportReasonEnum;
 use App\Events\UserMessageSent;
-use App\Models\TeacherInvitation;
-use App\Models\User;
-use App\Models\UserBlock;
-use App\Models\UserMessage;
-use App\Models\UserReport;
+use App\Models\User\Teacher\TeacherInvitation;
+use App\Models\User\User;
+use App\Models\User\UserBlock;
+use App\Models\User\UserMessage;
+use App\Models\User\UserReport;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;

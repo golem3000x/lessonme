@@ -36,7 +36,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read string $formatted_created_at
  * @property-read string $level_badge_color
  * @property-read \App\Models\Lesson\Lesson $lesson
- * @property-read \App\Models\User $user
+ * @property-read \App\Models\User\User $user
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonHistory newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonHistory newQuery()

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Models;
+namespace App\Models\User;
 
 use App\Enums\System\ReportReasonEnum;
 use App\Enums\System\TableNameEnum;
@@ -21,9 +21,9 @@ use Illuminate\Support\Carbon;
  * @property int|null $resolved_by
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read \App\Models\User $reportedUser
- * @property-read \App\Models\User $reporter
- * @property-read \App\Models\User|null $resolvedBy
+ * @property-read \App\Models\User\User $reportedUser
+ * @property-read \App\Models\User\User $reporter
+ * @property-read \App\Models\User\User|null $resolvedBy
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserReport newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserReport newQuery()

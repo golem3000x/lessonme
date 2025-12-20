@@ -6,8 +6,8 @@ namespace Tests\Feature\Livewire;
 
 use App\Enums\System\UserRoleEnum;
 use App\Livewire\User\UserProfile;
-use App\Models\TeacherReview;
-use App\Models\User;
+use App\Models\User\Teacher\TeacherReview;
+use App\Models\User\User;
 use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;

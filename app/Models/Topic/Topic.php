@@ -8,7 +8,7 @@ use App\Enums\System\TableNameEnum;
 use App\Models\Abstracts\Slug\Slug;
 use App\Models\Keyword\Keyword;
 use App\Models\Lesson\Lesson;
-use App\Models\User;
+use App\Models\User\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;

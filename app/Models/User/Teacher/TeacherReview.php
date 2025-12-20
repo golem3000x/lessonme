@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Models;
+namespace App\Models\User\Teacher;
 
 use App\Enums\System\TableNameEnum;
+use App\Models\User\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
@@ -17,8 +18,8 @@ use Illuminate\Support\Carbon;
  * @property string|null $comment
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read \App\Models\User $student
- * @property-read \App\Models\User $teacher
+ * @property-read \App\Models\User\User $student
+ * @property-read \App\Models\User\User $teacher
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TeacherReview newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TeacherReview newQuery()

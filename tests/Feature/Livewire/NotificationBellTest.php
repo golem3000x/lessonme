@@ -6,7 +6,7 @@ namespace Tests\Feature\Livewire;
 
 use App\Enums\Notifications\LessonCreationStatusEnum;
 use App\Livewire\Notification\NotificationBell;
-use App\Models\User;
+use App\Models\User\User;
 use App\Notifications\Lesson\LessonCreationNotification;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;

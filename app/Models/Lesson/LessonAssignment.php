@@ -6,7 +6,7 @@ namespace App\Models\Lesson;
 
 use App\Enums\System\AssignmentStatusEnum;
 use App\Enums\System\TableNameEnum;
-use App\Models\User;
+use App\Models\User\User;
 use Database\Factories\Lesson\LessonAssignmentFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;

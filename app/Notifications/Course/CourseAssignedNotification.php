@@ -7,7 +7,7 @@ namespace App\Notifications\Course;
 use App\Enums\Notifications\CourseAssignmentStatusEnum;
 use App\Enums\Notifications\NotificationEventTypeEnum;
 use App\Models\Course\CourseAssignment;
-use App\Models\User;
+use App\Models\User\User;
 use App\Notifications\Abstracts\AbstractCourseNotification;
 use BackedEnum;
 

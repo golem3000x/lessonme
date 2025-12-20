@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Models;
+namespace App\Models\User;
 
 use App\Enums\System\SystemLanguageEnum;
 use App\Enums\System\TableNameEnum;
@@ -16,21 +16,21 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read \App\Enums\System\SystemLanguageEnum|null $language_enum
- * @property-read \App\Models\User $user
+ * @property-read \App\Models\User\User $user
  *
- * @method static \Illuminate\Database\Eloquent\Builder<static>|UserLearningLanguage newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|UserLearningLanguage newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|UserLearningLanguage query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|UserLearningLanguage whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|UserLearningLanguage whereLanguage($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|UserLearningLanguage whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|UserLearningLanguage whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserTeachingLanguage newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserTeachingLanguage newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserTeachingLanguage query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserTeachingLanguage whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserTeachingLanguage whereLanguage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserTeachingLanguage whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserTeachingLanguage whereUserId($value)
  *
  * @mixin \Eloquent
  */
-class UserLearningLanguage extends Model
+class UserTeachingLanguage extends Model
 {
-    protected $table = TableNameEnum::USER_LEARNING_LANGUAGES->value;
+    protected $table = TableNameEnum::USER_TEACHING_LANGUAGES->value;
 
     public $incrementing = false;
 
@@ -42,7 +42,7 @@ class UserLearningLanguage extends Model
     ];
 
     /**
-     * Get the user that owns this learning language.
+     * Get the user that owns this teaching language.
      *
      * @return BelongsTo<User, $this>
      */

@@ -8,7 +8,7 @@ use App\Dto\LessonDto;
 use App\Enums\System\LanguageLevelEnum;
 use App\Enums\System\SystemLanguageEnum;
 use App\Jobs\Lesson\RegenerateLessonJob;
-use App\Models\User;
+use App\Models\User\User;
 use App\Services\Lesson\LessonAudioService;
 use App\Services\Lesson\LessonGenerationService;
 use App\Services\Lesson\LessonHistoryService;

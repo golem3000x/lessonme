@@ -8,7 +8,7 @@ use App\Enums\System\LanguageLevelEnum;
 use App\Enums\System\SystemLanguageEnum;
 use App\Models\Lesson\Lesson;
 use App\Models\Lesson\LessonHistory;
-use App\Models\User;
+use App\Models\User\User;
 use App\Services\Lesson\LessonHistoryService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;

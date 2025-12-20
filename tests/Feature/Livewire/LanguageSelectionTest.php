@@ -89,5 +89,4 @@ class LanguageSelectionTest extends TestCase
             session('registration_native_lang')
         );
     }
-
 }

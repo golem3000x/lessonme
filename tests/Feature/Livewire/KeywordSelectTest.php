@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace Tests\Feature\Livewire;
 
 use App\Livewire\Lesson\KeywordSelect;
-use App\Models\Keyword\Keyword;
 use App\Models\Topic\Topic;
-use App\Models\User;
+use App\Models\User\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
 use Tests\TestCase;

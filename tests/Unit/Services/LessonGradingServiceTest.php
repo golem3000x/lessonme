@@ -9,7 +9,7 @@ use App\Models\Lesson\Lesson;
 use App\Models\Lesson\LessonAssignment;
 use App\Models\Lesson\LessonAttempt;
 use App\Models\Lesson\LessonScore;
-use App\Models\User;
+use App\Models\User\User;
 use App\Services\Lesson\LessonGradingService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;

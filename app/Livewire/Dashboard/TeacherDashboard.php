@@ -7,7 +7,7 @@ namespace App\Livewire\Dashboard;
 use App\Models\Lesson\Lesson;
 use App\Models\Lesson\LessonAssignment;
 use App\Models\Lesson\LessonScore;
-use App\Models\User;
+use App\Models\User\User;
 use App\Services\GreetingService;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;

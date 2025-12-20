@@ -8,7 +8,7 @@ use App\Enums\Notifications\ModerationStatusEnum;
 use App\Jobs\Moderate\ModerateSlugEntityJob;
 use App\Models\Keyword\Keyword;
 use App\Models\Topic\Topic;
-use App\Models\User;
+use App\Models\User\User;
 use App\Notifications\Slug\Moderation\SlugModerationNotification;
 use App\Services\Slug\SlugService;
 use Illuminate\Foundation\Testing\RefreshDatabase;

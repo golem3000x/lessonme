@@ -8,7 +8,7 @@ use App\Enums\System\AssignmentStatusEnum;
 use App\Enums\System\UserRoleEnum;
 use App\Models\Course\Course;
 use App\Models\Course\CourseAssignment;
-use App\Models\User;
+use App\Models\User\User;
 use App\Notifications\Course\CourseAssignedNotification;
 use App\Notifications\Course\CourseAssignmentRemovedNotification;
 use App\Notifications\Course\CourseAssignmentSentNotification;

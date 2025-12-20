@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Controllers;
 
-use App\Models\User;
-use Illuminate\Auth\Notifications\ResetPassword;
+use App\Models\User\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Support\Facades\Hash;

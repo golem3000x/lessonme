@@ -7,7 +7,7 @@ namespace Tests\Feature\Middleware;
 use App\Enums\System\UserRoleEnum;
 use App\Http\Middleware\EnsureLessonBelongsToUser;
 use App\Models\Lesson\Lesson;
-use App\Models\User;
+use App\Models\User\User;
 use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Request;

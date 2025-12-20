@@ -6,8 +6,8 @@ namespace Tests\Feature\Livewire;
 
 use App\Enums\System\UserRoleEnum;
 use App\Livewire\Messages\UnreadMessagesCounter;
-use App\Models\User;
-use App\Models\UserMessage;
+use App\Models\User\User;
+use App\Models\User\UserMessage;
 use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;

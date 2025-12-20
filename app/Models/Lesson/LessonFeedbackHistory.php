@@ -6,7 +6,7 @@ namespace App\Models\Lesson;
 
 use App\Enums\FeedbackRatingEnum;
 use App\Enums\System\TableNameEnum;
-use App\Models\User;
+use App\Models\User\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
