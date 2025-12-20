@@ -1,61 +1,121 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🎓 LessonMe
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Платформа для изучения языков с AI-генерацией уроков.
 
-## About Laravel
+## ✨ Возможности
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- **AI-генерация уроков** — GPT-4o-mini создаёт персонализированные уроки по уровню CEFR (A1-C2)
+- **Интерактивные упражнения** — gap-fill, matching, true/false, sentence ordering
+- **TTS аудио** — озвучка словаря и упражнений через FPT.AI
+- **Система оценивания** — автоматическая проверка с отслеживанием прогресса
+- **Курсы** — объединение уроков в курсы с назначением студентам
+- **Учитель-ученик** — система приглашений и совместной работы
+- **Real-time уведомления** — WebSocket через Laravel Reverb
+- **Демо-режим** — временные гости могут попробовать без регистрации
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 🛠 Технологии
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+| Категория | Технология |
+|-----------|------------|
+| Backend | Laravel 11, PHP 8.1+ |
+| Frontend | Livewire 3.5+, Alpine.js, TailwindCSS, daisyUI |
+| Database | PostgreSQL 17 + pgvector |
+| AI | OpenAI GPT-4o-mini, text-embedding-3-small |
+| TTS | FPT.AI Text-to-Speech |
+| WebSocket | Laravel Reverb |
+| Queue | Laravel Queue (database driver) |
 
-## Learning Laravel
+## 🚀 Установка
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Требования
+- PHP 8.1+
+- Composer
+- Node.js / NPM
+- PostgreSQL с расширением pgvector
+- Docker (рекомендуется)
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### Docker (Laravel Sail)
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+```bash
+# Клонировать репозиторий
+git clone <repo-url>
+cd ai-demo
 
-## Laravel Sponsors
+# Установить зависимости
+composer install
+npm install
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+# Настроить окружение
+cp .env.example .env
 
-### Premium Partners
+# Запустить контейнеры
+./vendor/bin/sail up -d
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+# Миграции и сиды
+./vendor/bin/sail artisan migrate --seed
 
-## Contributing
+# Собрать assets
+./vendor/bin/sail npm run build
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Переменные окружения
 
-## Code of Conduct
+```env
+# OpenAI
+OPENAI_API_KEY=sk-...
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+# FPT.AI TTS
+FPT_TTS_API_KEY=...
 
-## Security Vulnerabilities
+# WebSocket
+BROADCAST_CONNECTION=reverb
+REVERB_APP_ID=...
+REVERB_APP_KEY=...
+REVERB_APP_SECRET=...
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## 📚 Документация
 
-## License
+Подробная документация в папке [`docs/`](./docs/README.md):
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+- [Архитектура](./docs/ARCHITECTURE.md)
+- [Схема БД](./docs/DATABASE.md)
+- [API сервисов](./docs/API_SERVICES.md)
+- [Конфигурация](./docs/CONFIGURATION.md)
+
+## 🔧 Команды
+
+```bash
+# Запуск сервисов
+./vendor/bin/sail up -d
+
+# WebSocket сервер
+./vendor/bin/sail artisan reverb:start
+
+# Queue worker
+./vendor/bin/sail artisan queue:work
+
+# Очистка временных гостей
+./vendor/bin/sail artisan app:cleanup-temp-guests
+
+# Тесты
+./vendor/bin/sail artisan test
+```
+
+## 📁 Структура проекта
+
+```
+app/
+├── Services/Lesson/     # Сервисы генерации и оценивания уроков
+├── Models/              # Eloquent модели
+├── Livewire/            # Livewire компоненты
+├── Jobs/                # Фоновые задачи
+└── Notifications/       # WebSocket уведомления
+
+docs/                    # Документация
+resources/views/         # Blade шаблоны
+```
+
+## 📄 Лицензия
+
+Проприетарное ПО. Все права защищены.
