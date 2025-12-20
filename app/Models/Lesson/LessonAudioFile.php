@@ -22,7 +22,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Lesson\Lesson $lesson
- *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAudioFile newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAudioFile newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAudioFile query()
@@ -37,7 +36,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAudioFile whereLessonId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAudioFile whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAudioFile whereUpdatedAt($value)
- *
  * @mixin \Eloquent
  */
 class LessonAudioFile extends Model

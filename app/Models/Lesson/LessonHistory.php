@@ -37,7 +37,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read string $level_badge_color
  * @property-read \App\Models\Lesson\Lesson $lesson
  * @property-read \App\Models\User\User $user
- *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonHistory newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonHistory newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonHistory query()
@@ -61,7 +60,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonHistory whereUserId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonHistory whereUuid($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonHistory whereVocabulary($value)
- *
+ * @property \App\Enums\Notifications\LessonCreationStatusEnum $status
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonHistory whereStatus($value)
  * @mixin \Eloquent
  */
 class LessonHistory extends BaseLesson

@@ -15,7 +15,6 @@ use Illuminate\Support\Carbon;
 
 /**
  * @use HasFactory<LessonAttemptFactory>
- *
  * @property int $id
  * @property int $lesson_id
  * @property int $user_id
@@ -32,7 +31,6 @@ use Illuminate\Support\Carbon;
  * @property-read \App\Models\Lesson\Lesson $lesson
  * @property-read \App\Models\Lesson\LessonScore|null $score
  * @property-read User $user
- *
  * @method static \Database\Factories\Lesson\LessonAttemptFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAttempt newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAttempt newQuery()
@@ -49,7 +47,6 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAttempt whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAttempt whereUserAnswers($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonAttempt whereUserId($value)
- *
  * @mixin \Eloquent
  */
 class LessonAttempt extends Model

@@ -18,9 +18,9 @@
 - **LessonHistory.php** - обновлен PHPDoc с новыми полями
 
 ### 3. ✅ Сервисы
-- **LessonService.php** - методы createLesson() и regenerateLesson()
-- **LessonHistoryService.php** - методы snapshot() и restore()
-- **LessonController.php** - метод store()
+- **LessonService.php** - методы `fillLessonContent()` и `regenerateLesson()`
+- **LessonHistoryService.php** - методы `snapshot()` и `restore()`
+- **LessonController.php** - методы `show()`, `history()`, `restore()`, `scores()`
 
 ### 4. ✅ Views
 - **show.blade.php** - добавлены 5 новых секций:

@@ -44,52 +44,35 @@ php artisan guests:cleanup --force
 
 ### 🔒 Безопасность
 
-**ВАЖНО:** Временные гости **НЕ логинятся** в систему!
+Временные гости управляются через middleware `EnsureTempGuestUser`:
 
-- ✅ `auth()->check() === false` - гость не аутентифицирован
-- ✅ Middleware `auth` блокирует доступ к защищенным маршрутам
+- ✅ Автоматическое создание временного пользователя
+- ✅ Ограниченный доступ только к демо-страницам
+- ✅ Флаг `is_temp_guest = true` для идентификации
+- ✅ Автоматическое истечение через `temp_guest_expires_at`
 - ✅ Нет доступа к личному кабинету, API, admin панели
-- ✅ Доступ ТОЛЬКО к WebSocket каналу для уведомлений
 
-**Как это работает:**
+**Авторизация каналов:**
 
 ```php
-// routes/channels.php - кастомная авторизация канала
+// routes/channels.php
 Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
-    // Обычные users
-    if ($user) {
-        return (int) $user->id === (int) $id;
-    }
-    
-    // Temp guests - проверка через session БЕЗ логина
-    $temp_guest_user_id = session('temp_guest_user_id');
-    if ($temp_guest_user_id && (int) $temp_guest_user_id === (int) $id) {
-        // Проверка что это действительно temp guest
-        $temp_user = \App\Models\User\User::where('id', '=', $id)
-            ->where('is_temp_guest', '=', true)
-            ->where('temp_guest_expires_at', '>', now())
-            ->first();
-        
-        return $temp_user !== null;
-    }
-    
-    return false;
+    return (int) $user->id === (int) $id;
 });
 ```
 
 ### Уведомления через WebSocket:
 
-**Вместо polling** (`wire:poll.5s`) используются **real-time WebSocket уведомления**:
+Используются **real-time WebSocket уведомления** с fallback на polling:
 
 - ✅ **Мгновенные обновления** - урок появляется сразу после создания
-- ✅ **Меньше нагрузка** - нет постоянных HTTP запросов каждые 5 секунд
 - ✅ **Laravel Reverb** - встроенный WebSocket сервер
 - ✅ **Echo.js** - автоматическое подключение и обработка событий
+- ✅ **Fallback polling** - `checkLessonStatus()` с таймаутом 3 минуты
 
 **Технические детали:**
-- User ID берется из session (НЕ из auth!)
+- User ID хранится в session (`temp_guest_user_id`)
 - Подключается к приватному каналу: `App.Models.User.{user_id}`
-- Авторизация канала через session-based проверку
 - Слушает события: `lesson.creation.successfully`, `lesson.creation.error`, `lesson.creation.exists`
 - Livewire компонент обрабатывает событие `lesson-notification`
 

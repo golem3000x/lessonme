@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\Unit\Notifications\Slug;
 
 use App\Enums\Notifications\ModerationStatusEnum;
-use App\Enums\Notifications\NotificationEventTypeEnum;
 use App\Models\Keyword\Keyword;
 use App\Models\Topic\Topic;
 use App\Models\User\User;

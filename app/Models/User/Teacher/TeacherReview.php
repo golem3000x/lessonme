@@ -20,7 +20,6 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $updated_at
  * @property-read \App\Models\User\User $student
  * @property-read \App\Models\User\User $teacher
- *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TeacherReview newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TeacherReview newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TeacherReview query()
@@ -31,7 +30,6 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TeacherReview whereStudentId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TeacherReview whereTeacherId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TeacherReview whereUpdatedAt($value)
- *
  * @mixin \Eloquent
  */
 class TeacherReview extends Model

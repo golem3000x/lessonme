@@ -26,6 +26,20 @@ use Illuminate\Support\Carbon;
  * @property-read Course $course
  * @property-read User $student
  * @property-read User $teacher
+ * @method static \Database\Factories\Course\CourseAssignmentFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CourseAssignment newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CourseAssignment newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CourseAssignment query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CourseAssignment whereAssignedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CourseAssignment whereCourseId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CourseAssignment whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CourseAssignment whereDueDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CourseAssignment whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CourseAssignment whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CourseAssignment whereStudentId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CourseAssignment whereTeacherId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CourseAssignment whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 class CourseAssignment extends Model
 {

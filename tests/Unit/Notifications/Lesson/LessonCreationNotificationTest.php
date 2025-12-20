@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\Unit\Notifications\Lesson;
 
 use App\Enums\Notifications\LessonCreationStatusEnum;
-use App\Enums\Notifications\NotificationEventTypeEnum;
 use App\Models\Lesson\Lesson;
 use App\Models\User\User;
 use App\Notifications\Lesson\LessonCreationNotification;

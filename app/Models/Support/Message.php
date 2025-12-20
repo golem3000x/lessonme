@@ -14,7 +14,6 @@ use Illuminate\Support\Carbon;
 
 /**
  * @use HasFactory<MessageFactory>
- *
  * @property int $id
  * @property int $chat_session_id
  * @property int $user_id
@@ -25,7 +24,6 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $updated_at
  * @property-read \App\Models\Support\ChatSession $chatSession
  * @property-read User $user
- *
  * @method static \Database\Factories\Support\MessageFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Message newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Message newQuery()
@@ -38,7 +36,6 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Message whereMessage($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Message whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Message whereUserId($value)
- *
  * @mixin \Eloquent
  */
 class Message extends Model

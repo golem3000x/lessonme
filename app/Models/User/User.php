@@ -93,7 +93,6 @@ use Illuminate\Support\Str;
  * @property-read int|null $teachers_count
  * @property-read Collection<int, \App\Models\User\UserTeachingLanguage> $teachingLanguages
  * @property-read int|null $teaching_languages_count
- *
  * @method static \Database\Factories\UserFactory factory($count = null, $state = [])
  * @method static Builder<static>|User newModelQuery()
  * @method static Builder<static>|User newQuery()
@@ -121,7 +120,21 @@ use Illuminate\Support\Str;
  * @method static Builder<static>|User whereUpdatedAt($value)
  * @method static Builder<static>|User whereUuid($value)
  * @method static Builder<static>|User whereZaloUserId($value)
- *
+ * @property bool $is_banned
+ * @property Carbon|null $banned_at
+ * @property int|null $banned_by
+ * @property string|null $ban_reason
+ * @property Carbon|null $ban_expires_at
+ * @property-read Collection<int, \App\Models\Course\CourseAssignment> $assignedCourses
+ * @property-read int|null $assigned_courses_count
+ * @property-read User|null $bannedByUser
+ * @property-read Collection<int, \App\Models\Course\CourseAssignment> $myCourseAssignments
+ * @property-read int|null $my_course_assignments_count
+ * @method static Builder<static>|User whereBanExpiresAt($value)
+ * @method static Builder<static>|User whereBanReason($value)
+ * @method static Builder<static>|User whereBannedAt($value)
+ * @method static Builder<static>|User whereBannedBy($value)
+ * @method static Builder<static>|User whereIsBanned($value)
  * @mixin \Eloquent
  */
 class User extends Authenticatable implements FilamentUser, HasLocalePreference, HasName

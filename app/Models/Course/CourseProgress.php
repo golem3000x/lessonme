@@ -24,7 +24,6 @@ use Illuminate\Support\Carbon;
  * @property-read \App\Models\Course\Course $course
  * @property-read Lesson $lesson
  * @property-read User $user
- *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CourseProgress newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CourseProgress newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CourseProgress query()
@@ -37,7 +36,6 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CourseProgress whereScore($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CourseProgress whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CourseProgress whereUserId($value)
- *
  * @mixin \Eloquent
  */
 class CourseProgress extends Model

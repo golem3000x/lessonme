@@ -31,38 +31,22 @@
 
 ## Ключевые изменения
 
-### 1. Session-based авторизация (БЕЗ логина!)
-
-**ВАЖНО:** Временные гости **НЕ логинятся** для безопасности!
+### 1. Авторизация каналов
 
 **routes/channels.php:**
 
 ```php
 Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
-    // Regular users
-    if ($user) {
-        return (int) $user->id === (int) $id;
-    }
-    
-    // Temp guests (NOT logged in, use session)
-    $temp_guest_user_id = session('temp_guest_user_id');
-    if ($temp_guest_user_id && (int) $temp_guest_user_id === (int) $id) {
-        $temp_user = \App\Models\User\User::where('id', '=', $id)
-            ->where('is_temp_guest', '=', true)
-            ->where('temp_guest_expires_at', '>', now())
-            ->first();
-        
-        return $temp_user !== null;
-    }
-    
-    return false;
+    return (int) $user->id === (int) $id;
 });
 ```
 
-**Зачем:** 
-- ✅ Временные гости НЕ получают доступ к защищенным маршрутам
-- ✅ Авторизация только для WebSocket канала
-- ✅ Безопасность: проверка is_temp_guest и expires_at
+**ВАЖНО:** Для работы WebSocket уведомлений с временными гостями используется middleware `EnsureTempGuestUser`, который автоматически логинит временного пользователя для доступа к приватным каналам.
+
+**Защита:**
+- ✅ Временные гости имеют ограниченный доступ (только к демо-страницам)
+- ✅ Автоматическая очистка истекших гостей
+- ✅ Проверка `is_temp_guest` и `temp_guest_expires_at`
 
 ### 2. Мета-теги для Echo.js
 
@@ -116,12 +100,11 @@ public function handleLessonNotification(array $notification): void
 
 **Зачем:** Обрабатывает уведомления от Echo.js.
 
-### 5. Удалено
+### 5. Fallback polling
 
-- ❌ `wire:poll.5s="checkLessonStatus"`
-- ❌ Метод `checkLessonStatus()`
-- ❌ Метод `handleTimeout()`
-- ❌ Константа `TIMEOUT_SECONDS`
+Для надёжности сохранён метод `checkLessonStatus()` как fallback на случай проблем с WebSocket:
+- Таймаут: 3 минуты
+- Проверяет наличие урока в БД если WebSocket не доставил уведомление
 
 ## Поток работы
 
@@ -153,54 +136,20 @@ public function handleLessonNotification(array $notification): void
 
 ## 🔒 Безопасность
 
-### Почему НЕТ автологина?
+### Middleware EnsureTempGuestUser
 
-**Проблема с автологином:**
-```php
-// ❌ ПЛОХО - дает полный доступ к сайту!
-auth()->login($temp_guest_user);
-```
-
-Если залогинить временного гостя, он получит:
-- ❌ Доступ к личному кабинету `/dashboard`
-- ❌ Возможность создавать уроки как обычный user
-- ❌ Доступ к API endpoints
-- ❌ Доступ к защищенным маршрутам
-
-### ✅ Правильное решение - Session-based авторизация
-
-**Только для WebSocket канала:**
+Временные гости управляются через middleware `EnsureTempGuestUser`:
 
 ```php
-// routes/channels.php
-Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
-    // Обычные users
-    if ($user) {
-        return (int) $user->id === (int) $id;
-    }
-    
-    // Temp guests - проверка через session
-    $temp_guest_user_id = session('temp_guest_user_id');
-    if ($temp_guest_user_id && (int) $temp_guest_user_id === (int) $id) {
-        // Дополнительная проверка безопасности
-        $temp_user = \App\Models\User\User::where('id', '=', $id)
-            ->where('is_temp_guest', '=', true)
-            ->where('temp_guest_expires_at', '>', now())
-            ->first();
-        
-        return $temp_user !== null;
-    }
-    
-    return false;
-});
+// app/Http/Middleware/EnsureTempGuestUser.php
+// Автоматически создаёт и авторизует временного пользователя
 ```
 
-**Безопасность:**
-- ✅ Временный гость НЕ залогинен (`auth()->check() === false`)
-- ✅ Middleware `auth` блокирует доступ к защищенным маршрутам
-- ✅ Доступ только к WebSocket каналу для уведомлений
-- ✅ Проверка `is_temp_guest` и `temp_guest_expires_at`
-- ✅ Нет доступа к API и личному кабинету
+**Защита:**
+- ✅ Временные гости имеют флаг `is_temp_guest = true`
+- ✅ Срок действия через `temp_guest_expires_at`
+- ✅ Ограниченный доступ только к демо-страницам
+- ✅ Автоматическая очистка истекших гостей
 
 ## Уже существующая инфраструктура
 
@@ -260,7 +209,7 @@ docker compose exec laravel.test php artisan queue:work
 ### Конфигурация (.env):
 
 ```env
-BROADCAST_DRIVER=reverb
+BROADCAST_CONNECTION=reverb
 QUEUE_CONNECTION=database
 
 REVERB_APP_ID=your_app_id
