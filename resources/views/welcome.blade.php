@@ -24,7 +24,7 @@
                 </div>
             </div>
         </div>
-        <div class="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-gray-50 to-transparent"></div>
+        <div class="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-gray-50 via-gray-50/50 to-transparent"></div>
     </div>
 
     <!-- Features Section -->
@@ -191,8 +191,9 @@
     </div>
 
     <!-- CTA Section -->
-    <div class="py-20 bg-gradient-to-r from-blue-600 to-indigo-700 text-white">
-        <div class="max-w-4xl mx-auto px-4 text-center">
+    <div class="relative py-20 bg-gradient-to-r from-blue-600 to-indigo-700 text-white">
+        <div class="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white via-white/30 to-transparent"></div>
+        <div class="relative max-w-4xl mx-auto px-4 text-center">
             <h2 class="text-3xl sm:text-4xl font-bold mb-6">{{ __('welcome.ready_to_start') }}</h2>
             <p class="text-xl text-blue-100 mb-10 max-w-2xl mx-auto">{{ __('welcome.register_now') }}</p>
             <div class="flex gap-4 justify-center flex-wrap">
