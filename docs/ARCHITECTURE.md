@@ -1,14 +1,14 @@
-# 🏗️ Архитектура приложения LessonMe
+# 🏗️ LessonMe Application Architecture
 
-## Обзор
+## Overview
 
-LessonMe - платформа для изучения языков с AI-генерацией контента. Построена на Laravel 11 с Livewire 3.5+, использует OpenAI API для генерации уроков.
+LessonMe - language learning platform with AI-generated content. Built on Laravel 11 with Livewire 3.5+, uses OpenAI API for lesson generation.
 
 ---
 
-## Технологический стек
+## Technology Stack
 
-| Компонент | Технология |
+| Component | Technology |
 |-----------|------------|
 | Backend | Laravel 11, PHP 8.1+ |
 | Frontend | Livewire 3.5+, Alpine.js, TailwindCSS, DaisyUI |
@@ -20,62 +20,62 @@ LessonMe - платформа для изучения языков с AI-ген�
 
 ---
 
-## Структура директорий
+## Directory Structure
 
 ```
 app/
 ├── Dto/                    # Data Transfer Objects
-│   └── LessonDto.php       # DTO для передачи данных урока
-├── Enums/                  # Перечисления
-│   ├── Lesson/             # Enums для уроков
-│   ├── Notifications/      # Enums для уведомлений
-│   └── System/             # Системные enums (языки, уровни, таблицы)
-├── Events/                 # События (Broadcasting)
-├── Exceptions/             # Кастомные исключения
+│   └── LessonDto.php       # DTO for lesson data transfer
+├── Enums/                  # Enumerations
+│   ├── Lesson/             # Lesson enums
+│   ├── Notifications/      # Notification enums
+│   └── System/             # System enums (languages, levels, tables)
+├── Events/                 # Events (Broadcasting)
+├── Exceptions/             # Custom exceptions
 ├── Http/
-│   ├── Controllers/        # Контроллеры
+│   ├── Controllers/        # Controllers
 │   ├── Middleware/         # Middleware
 │   └── Requests/           # Form Requests
-├── Jobs/                   # Фоновые задачи
-├── Livewire/               # Livewire компоненты
-├── Models/                 # Eloquent модели
-│   ├── Abstracts/          # Базовые абстрактные модели
-│   ├── Course/             # Модели курсов
-│   ├── Lesson/             # Модели уроков
-│   ├── Topic/              # Модели топиков
-│   └── User/               # Модели пользователей
-├── Notifications/          # Уведомления
+├── Jobs/                   # Background jobs
+├── Livewire/               # Livewire components
+├── Models/                 # Eloquent models
+│   ├── Abstracts/          # Base abstract models
+│   ├── Course/             # Course models
+│   ├── Lesson/             # Lesson models
+│   ├── Topic/              # Topic models
+│   └── User/               # User models
+├── Notifications/          # Notifications
 ├── Observers/              # Model Observers
 ├── Providers/              # Service Providers
-└── Services/               # Бизнес-логика
-    ├── Lesson/             # Сервисы уроков
-    └── FptTtsService.php   # TTS сервис
+└── Services/               # Business logic
+    ├── Lesson/             # Lesson services
+    └── FptTtsService.php   # TTS service
 ```
 
 ---
 
-## Ключевые сервисы
+## Key Services
 
 ### 1. LessonGenerationService
 
-**Путь:** `app/Services/Lesson/LessonGenerationService.php`
+**Path:** `app/Services/Lesson/LessonGenerationService.php`
 
-**Назначение:** Генерация уроков через OpenAI API.
+**Purpose:** Lesson generation via OpenAI API.
 
-**Методы:**
-- `generateLesson(LessonDto $dto): array` - Генерация контента урока
-- `createEmbedding(LessonDto $dto): array` - Создание векторного embedding
+**Methods:**
+- `generateLesson(LessonDto $dto): array` - Generate lesson content
+- `createEmbedding(LessonDto $dto): array` - Create vector embedding
 
-**Особенности:**
-- Использует GPT-4o-mini для генерации
-- Адаптирует сложность по уровню CEFR (A1-C2)
-- Возвращает JSON со структурированным контентом
+**Features:**
+- Uses GPT-4o-mini for generation
+- Adapts complexity by CEFR level (A1-C2)
+- Returns JSON with structured content
 
 ```php
-// Структура генерируемого урока
+// Generated lesson structure
 [
-    'lesson_name' => 'Название урока',
-    'lesson_text' => 'Текст урока',
+    'lesson_name' => 'Lesson title',
+    'lesson_text' => 'Lesson text',
     'vocabulary' => [...],
     'grammar_highlights' => [...],
     'dialogue' => [...],
@@ -94,57 +94,57 @@ app/
 
 ### 2. LessonService
 
-**Путь:** `app/Services/Lesson/LessonService.php`
+**Path:** `app/Services/Lesson/LessonService.php`
 
-**Назначение:** Оркестрация создания и обновления уроков.
+**Purpose:** Lesson creation and update orchestration.
 
-**Методы:**
-- `fillLessonContent(Lesson $lesson, LessonDto $dto): Lesson` - Заполнение урока контентом
-- `regenerateLesson(Lesson $lesson, LessonDto $dto): Lesson` - Регенерация урока
+**Methods:**
+- `fillLessonContent(Lesson $lesson, LessonDto $dto): Lesson` - Fill lesson with content
+- `regenerateLesson(Lesson $lesson, LessonDto $dto): Lesson` - Regenerate lesson
 
-**Зависимости:**
-- `LessonGenerationService` - генерация контента
-- `LessonSimilarityService` - проверка дубликатов
-- `LessonHistoryService` - версионирование
+**Dependencies:**
+- `LessonGenerationService` - content generation
+- `LessonSimilarityService` - duplicate checking
+- `LessonHistoryService` - versioning
 
 ### 3. LessonGradingService
 
-**Путь:** `app/Services/Lesson/LessonGradingService.php`
+**Path:** `app/Services/Lesson/LessonGradingService.php`
 
-**Назначение:** Система оценивания студентов.
+**Purpose:** Student grading system.
 
-**Методы:**
-- `startAttempt()` - Начать попытку
-- `completeAttempt()` - Завершить с оценкой
-- `assignLesson()` - Назначить урок студенту
-- `getBestScore()` / `getLatestScore()` - Получить оценки
+**Methods:**
+- `startAttempt()` - Start attempt
+- `completeAttempt()` - Complete with grade
+- `assignLesson()` - Assign lesson to student
+- `getBestScore()` / `getLatestScore()` - Get scores
 
 ### 4. LessonSimilarityService
 
-**Путь:** `app/Services/Lesson/LessonSimilarityService.php`
+**Path:** `app/Services/Lesson/LessonSimilarityService.php`
 
-**Назначение:** Поиск похожих уроков через pgvector.
+**Purpose:** Similar lesson search via pgvector.
 
-**Как работает:**
-- Использует cosine similarity через оператор `<=>`
-- Порог схожести: 0.9 (90%)
-- Предотвращает создание дубликатов
+**How it works:**
+- Uses cosine similarity via `<=>` operator
+- Similarity threshold: 0.9 (90%)
+- Prevents duplicate creation
 
 ### 5. LessonAudioService
 
-**Путь:** `app/Services/Lesson/LessonAudioService.php`
+**Path:** `app/Services/Lesson/LessonAudioService.php`
 
-**Назначение:** Генерация аудио через TTS.
+**Purpose:** Audio generation via TTS.
 
-**Генерирует аудио для:**
-- Vocabulary (слова)
-- Gap-fill упражнения
+**Generates audio for:**
+- Vocabulary (words)
+- Gap-fill exercises
 
 ---
 
-## Модели данных
+## Data Models
 
-### Lesson (Урок)
+### Lesson
 
 ```
 lessons
@@ -168,7 +168,7 @@ lessons
 └── timestamps
 ```
 
-### Связи уроков
+### Lesson Relationships
 
 ```
 Lesson
@@ -183,7 +183,7 @@ Lesson
 └── belongsToMany Course
 ```
 
-### Система оценивания
+### Grading System
 
 ```
 lesson_attempts
@@ -212,11 +212,11 @@ lesson_scores
 
 ---
 
-## Паттерны и практики
+## Patterns and Practices
 
 ### 1. DTO (Data Transfer Object)
 
-Используется `LessonDto` для передачи данных между слоями:
+`LessonDto` used for data transfer between layers:
 
 ```php
 class LessonDto
@@ -233,7 +233,7 @@ class LessonDto
 
 ### 2. Enums
 
-Строго типизированные значения через PHP 8.1 Enums:
+Strictly typed values via PHP 8.1 Enums:
 
 ```php
 enum LanguageLevelEnum: string
@@ -252,33 +252,33 @@ enum TableNameEnum: string
 
 ### 3. Service Layer
 
-Бизнес-логика вынесена в сервисы:
-- Контроллеры только маршрутизируют
-- Сервисы содержат логику
-- Модели - только данные и связи
+Business logic moved to services:
+- Controllers only route
+- Services contain logic
+- Models - only data and relationships
 
 ### 4. Event Broadcasting
 
-WebSocket события через Laravel Reverb:
+WebSocket events via Laravel Reverb:
 
 ```php
-// Отправка события
+// Send event
 broadcast(new MessageSent($message))->toOthers();
 
-// Подписка в Livewire
+// Subscribe in Livewire
 Echo.private('chat.{userId}')
     .listen('MessageSent', (e) => { ... });
 ```
 
-### 5. Jobs для тяжёлых операций
+### 5. Jobs for Heavy Operations
 
-Генерация уроков выполняется в фоне:
+Lesson generation runs in background:
 
 ```php
-// Диспатчинг задачи
+// Dispatch job
 GenerateLessonJob::dispatch($lesson, $dto);
 
-// Обработка в очереди
+// Process in queue
 public function handle(): void
 {
     $this->lessonService->fillLessonContent($this->lesson, $this->dto);
@@ -287,60 +287,60 @@ public function handle(): void
 
 ---
 
-## Безопасность
+## Security
 
-### Авторизация
-- Используются Policies и Middleware
-- `lesson.owner` middleware проверяет владельца
+### Authorization
+- Policies and Middleware used
+- `lesson.owner` middleware checks owner
 
-### Валидация
-- Form Requests для входных данных
-- Livewire валидация в компонентах
+### Validation
+- Form Requests for input data
+- Livewire validation in components
 
-### XSS защита
-- Blade `{{ }}` автоматически экранирует
-- Не использовать `{!! !!}` для пользовательских данных
+### XSS Protection
+- Blade `{{ }}` automatically escapes
+- Don't use `{!! !!}` for user data
 
 ### SQL Injection
-- Eloquent ORM с параметризованными запросами
-- Явные операторы в WHERE (`=`, `!=`)
+- Eloquent ORM with parameterized queries
+- Explicit operators in WHERE (`=`, `!=`)
 
 ---
 
-## Тестирование
+## Testing
 
 ```bash
-# Все тесты
+# All tests
 php artisan test
 
-# Unit тесты
+# Unit tests
 php artisan test --testsuite=Unit
 
-# Feature тесты
+# Feature tests
 php artisan test --testsuite=Feature
 
-# Конкретный тест
+# Specific test
 php artisan test tests/Unit/Services/LessonServiceTest.php
 ```
 
 ---
 
-## Полезные команды
+## Useful Commands
 
 ```bash
-# Очистка кэша
+# Clear cache
 php artisan cache:clear
 php artisan config:clear
 php artisan view:clear
 
-# Миграции
+# Migrations
 php artisan migrate
 php artisan migrate:fresh --seed
 
-# Очереди
+# Queues
 php artisan queue:work
 
-# WebSocket сервер
+# WebSocket server
 php artisan reverb:start
 
 # IDE Helper

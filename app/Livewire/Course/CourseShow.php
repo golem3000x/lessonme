@@ -14,6 +14,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class CourseShow extends Component
 {
+    /** @phpstan-ignore property.uninitialized (initialized in mount) */
     public Course $course;
 
     /** @var array<int,array{id:int,uuid:string,name:string,order:int,is_locked:bool,is_passed:bool,score:int|null}> */
@@ -28,6 +29,9 @@ class CourseShow extends Component
     public function mount(Course $course): void
     {
         $user = Auth::user();
+        if ($user === null) {
+            throw new NotFoundHttpException;
+        }
 
         // Check if user has access to this course
         $is_owner = $course->user_id === $user->id;
@@ -47,6 +51,9 @@ class CourseShow extends Component
     protected function loadProgress(): void
     {
         $user = Auth::user();
+        if ($user === null) {
+            return;
+        }
         $lessons = $this->course->lessons()->orderByPivot('order')->get();
 
         $this->total_count = $lessons->count();
@@ -61,7 +68,7 @@ class CourseShow extends Component
                 ->where('lesson_id', $lesson->id)
                 ->first();
 
-            $is_passed = $progress?->is_passed ?? false;
+            $is_passed = $progress !== null ? $progress->is_passed : false;
             $is_locked = ! $previous_passed;
 
             if ($is_passed) {
@@ -72,7 +79,7 @@ class CourseShow extends Component
                 'id' => $lesson->id,
                 'uuid' => $lesson->uuid,
                 'name' => $lesson->lesson_name,
-                'order' => $lesson->pivot->order,
+                'order' => (int) $lesson->getAttribute('pivot')?->getAttribute('order'),
                 'is_locked' => $is_locked,
                 'is_passed' => $is_passed,
                 'score' => $progress?->score,

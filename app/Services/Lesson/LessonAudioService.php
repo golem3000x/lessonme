@@ -38,12 +38,6 @@ class LessonAudioService
             return;
         }
 
-        if ($lesson->lesson_lang === null) {
-            Log::warning('Lesson has no language set', ['lesson_id' => $lesson->id]);
-
-            return;
-        }
-
         $voice = $this->getVoiceForLanguage($lesson->lesson_lang);
         $base_path = "lessons/$lesson->uuid/audio/vocabulary";
 
@@ -79,12 +73,6 @@ class LessonAudioService
     public function generateGapFillAudio(Lesson $lesson): void
     {
         if (empty($lesson->exercises['gap_fill'])) {
-            return;
-        }
-
-        if ($lesson->lesson_lang === null) {
-            Log::warning('Lesson has no language set', ['lesson_id' => $lesson->id]);
-
             return;
         }
 

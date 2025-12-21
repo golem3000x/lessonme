@@ -41,7 +41,7 @@ class CourseAssignmentSentNotification extends AbstractCourseNotification
 
         $base_payload['message'] = __('notifications.course_assignment_sent', [
             'count' => $this->assigned_count,
-            'course' => $this->entity?->title ?? '',
+            'course' => $this->entity !== null ? $this->entity->title : '',
         ]);
         $base_payload['assigned_count'] = $this->assigned_count;
 

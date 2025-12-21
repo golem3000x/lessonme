@@ -1,10 +1,10 @@
-# 🔌 API Сервисов
+# 🔌 Services API
 
 ## Lesson Services
 
 ### LessonGenerationService
 
-Генерация уроков через OpenAI API.
+Lesson generation via OpenAI API.
 
 #### generateLesson
 
@@ -12,14 +12,14 @@
 public function generateLesson(LessonDto $lesson_dto): array
 ```
 
-**Параметры:**
-| Параметр | Тип | Описание |
-|----------|-----|----------|
-| `$lesson_dto` | `LessonDto` | DTO с параметрами урока |
+**Parameters:**
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `$lesson_dto` | `LessonDto` | DTO with lesson parameters |
 
-**Возвращает:** `array` - Структурированные данные урока
+**Returns:** `array` - Structured lesson data
 
-**Пример:**
+**Example:**
 ```php
 $dto = new LessonDto(
     topic: 'Ordering food at a restaurant',
@@ -33,11 +33,11 @@ $generator = app(LessonGenerationService::class);
 $data = $generator->generateLesson($dto);
 ```
 
-**Структура ответа:**
+**Response Structure:**
 ```php
 [
-    'lesson_name' => string,     // Название (на native_lang)
-    'lesson_text' => string,     // Текст урока (на native_lang)
+    'lesson_name' => string,     // Name (in native_lang)
+    'lesson_text' => string,     // Lesson text (in native_lang)
     'vocabulary' => [
         ['word' => string, 'translation' => string, 'example' => string],
         // ...
@@ -78,18 +78,18 @@ $data = $generator->generateLesson($dto);
 public function createEmbedding(LessonDto $lesson_dto): array
 ```
 
-**Параметры:**
-| Параметр | Тип | Описание |
-|----------|-----|----------|
-| `$lesson_dto` | `LessonDto` | DTO с параметрами урока |
+**Parameters:**
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `$lesson_dto` | `LessonDto` | DTO with lesson parameters |
 
-**Возвращает:** `array<float>` - Вектор embedding (1536 измерений)
+**Returns:** `array<float>` - Embedding vector (1536 dimensions)
 
 ---
 
 ### LessonService
 
-Оркестрация создания уроков.
+Lesson creation orchestration.
 
 #### fillLessonContent
 
@@ -97,9 +97,9 @@ public function createEmbedding(LessonDto $lesson_dto): array
 public function fillLessonContent(Lesson $lesson, LessonDto $dto): Lesson
 ```
 
-**Исключения:** `LessonExistsException` - если найден похожий урок
+**Exceptions:** `LessonExistsException` - if similar lesson found
 
-**Пример:**
+**Example:**
 ```php
 $service = app(LessonService::class);
 
@@ -107,7 +107,7 @@ try {
     $lesson = $service->fillLessonContent($lesson, $dto);
 } catch (LessonExistsException $e) {
     $similar = $e->getSimilarLesson();
-    // Обработка дубликата
+    // Handle duplicate
 }
 ```
 
@@ -117,13 +117,13 @@ try {
 public function regenerateLesson(Lesson $lesson, LessonDto $dto): Lesson
 ```
 
-**Важно:** Автоматически создаёт snapshot в history перед регенерацией.
+**Important:** Automatically creates snapshot in history before regeneration.
 
 ---
 
 ### LessonGradingService
 
-Система оценивания.
+Grading system.
 
 #### startAttempt
 
@@ -135,9 +135,9 @@ public function startAttempt(
 ): LessonAttempt
 ```
 
-**Возвращает:** Новый объект `LessonAttempt`
+**Returns:** New `LessonAttempt` object
 
-**Пример:**
+**Example:**
 ```php
 $grading = app(LessonGradingService::class);
 $attempt = $grading->startAttempt($lesson, auth()->user());
@@ -155,16 +155,16 @@ public function completeAttempt(
 ): LessonScore
 ```
 
-**Параметры:**
-| Параметр | Тип | Описание |
-|----------|-----|----------|
-| `$attempt` | `LessonAttempt` | Активная попытка |
-| `$user_answers` | `array` | Ответы пользователя по типам |
-| `$scores` | `array` | Баллы по типам упражнений |
-| `$total_score` | `int` | Общий балл |
-| `$max_score` | `int` | Максимально возможный балл |
+**Parameters:**
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `$attempt` | `LessonAttempt` | Active attempt |
+| `$user_answers` | `array` | User answers by type |
+| `$scores` | `array` | Scores by exercise type |
+| `$total_score` | `int` | Total score |
+| `$max_score` | `int` | Maximum possible score |
 
-**Пример:**
+**Example:**
 ```php
 $score = $grading->completeAttempt(
     attempt: $attempt,
@@ -191,7 +191,7 @@ public function assignLesson(
 ): LessonAssignment
 ```
 
-**Пример:**
+**Example:**
 ```php
 $assignment = $grading->assignLesson(
     lesson: $lesson,
@@ -205,7 +205,7 @@ $assignment = $grading->assignLesson(
 
 ### LessonAudioService
 
-Генерация TTS аудио.
+TTS audio generation.
 
 #### generateAudioForLesson
 
@@ -213,7 +213,7 @@ $assignment = $grading->assignLesson(
 public function generateAudioForLesson(Lesson $lesson): void
 ```
 
-Генерирует аудио для vocabulary и gap_fill упражнений.
+Generates audio for vocabulary and gap_fill exercises.
 
 #### deleteAudioFiles
 
@@ -221,13 +221,13 @@ public function generateAudioForLesson(Lesson $lesson): void
 public function deleteAudioFiles(Lesson $lesson): void
 ```
 
-Удаляет все аудио файлы урока (вызывается автоматически при удалении урока).
+Deletes all lesson audio files (called automatically on lesson deletion).
 
 ---
 
 ### LessonHistoryService
 
-Версионирование уроков.
+Lesson versioning.
 
 #### snapshot
 
@@ -235,7 +235,7 @@ public function deleteAudioFiles(Lesson $lesson): void
 public function snapshot(Lesson $lesson): LessonHistory
 ```
 
-Создаёт snapshot текущего состояния урока.
+Creates snapshot of current lesson state.
 
 #### restore
 
@@ -243,13 +243,13 @@ public function snapshot(Lesson $lesson): LessonHistory
 public function restore(LessonHistory $history): Lesson
 ```
 
-Восстанавливает урок из snapshot. **Важно:** Перед восстановлением создаёт snapshot текущего состояния.
+Restores lesson from snapshot. **Important:** Creates snapshot of current state before restoration.
 
 ---
 
 ### LessonSimilarityService
 
-Поиск дубликатов через pgvector.
+Duplicate search via pgvector.
 
 #### findSimilar
 
@@ -257,25 +257,25 @@ public function restore(LessonHistory $history): Lesson
 public function findSimilar(int $user_id, array $embedding, LessonDto $dto): ?Lesson
 ```
 
-**Параметры:**
-| Параметр | Тип | Описание |
-|----------|-----|----------|
-| `$user_id` | `int` | ID пользователя |
-| `$embedding` | `array<float>` | Вектор embedding |
-| `$dto` | `LessonDto` | DTO для дополнительных фильтров |
+**Parameters:**
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `$user_id` | `int` | User ID |
+| `$embedding` | `array<float>` | Embedding vector |
+| `$dto` | `LessonDto` | DTO for additional filters |
 
-**Возвращает:** `Lesson|null` - Похожий урок или null
+**Returns:** `Lesson|null` - Similar lesson or null
 
-**Алгоритм:**
-1. Ищет уроки того же пользователя
-2. С тем же уровнем языка
-3. С similarity score >= 0.9
+**Algorithm:**
+1. Searches lessons of same user
+2. With same language level
+3. With similarity score >= 0.9
 
 ---
 
 ## FptTtsService
 
-TTS через FPT.AI API.
+TTS via FPT.AI API.
 
 #### generateAudio
 
@@ -283,15 +283,15 @@ TTS через FPT.AI API.
 public function generateAudio(string $text, string $voice): ?string
 ```
 
-**Параметры:**
-| Параметр | Тип | Описание |
-|----------|-----|----------|
-| `$text` | `string` | Текст для озвучки |
-| `$voice` | `string` | ID голоса (зависит от языка) |
+**Parameters:**
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `$text` | `string` | Text to vocalize |
+| `$voice` | `string` | Voice ID (language dependent) |
 
-**Возвращает:** `string|null` - URL аудио файла или null при ошибке
+**Returns:** `string|null` - Audio file URL or null on error
 
-**Поддерживаемые языки:**
+**Supported Languages:**
 - Vietnamese: `banmai`, `leminh`
 - English: `en-US-Standard-A`
 
@@ -317,7 +317,7 @@ class LessonDto
 }
 ```
 
-**Пример создания:**
+**Creation Example:**
 ```php
 $dto = new LessonDto(
     topic: 'Travel vocabulary',

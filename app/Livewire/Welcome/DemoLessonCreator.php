@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Livewire\Welcome;
 
 use App\Dto\LessonDto;
+use App\Enums\Notifications\LessonCreationStatusEnum;
 use App\Enums\System\LanguageLevelEnum;
 use App\Enums\System\SystemLanguageEnum;
 use App\Jobs\Lesson\CreateLessonJob;
@@ -201,10 +202,19 @@ class DemoLessonCreator extends Component
                 throw new \RuntimeException('Topic ID is required');
             }
 
+            // Create lesson in DB with CREATION status (placeholder)
+            $lesson = Lesson::create([
+                'user_id' => $temp_guest_user_id,
+                'topic_id' => $this->topic_id,
+                'lesson_name' => $this->topic,
+                'language_level' => $level_enum,
+                'lesson_lang' => $this->learning_lang,
+                'status' => LessonCreationStatusEnum::CREATION,
+            ]);
+
             // Dispatch job for async lesson generation
             CreateLessonJob::dispatch(
-                $temp_guest_user_id,
-                $this->topic_id,
+                $lesson->id,
                 $lesson_dto
             );
 

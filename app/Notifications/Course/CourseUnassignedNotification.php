@@ -41,7 +41,7 @@ class CourseUnassignedNotification extends AbstractCourseNotification
 
         $base_payload['message'] = __('notifications.course_unassigned', [
             'teacher' => $this->teacher_name,
-            'course' => $this->entity?->title ?? '',
+            'course' => $this->entity !== null ? $this->entity->title : '',
         ]);
         $base_payload['teacher_name'] = $this->teacher_name;
 

@@ -1,26 +1,26 @@
 # Troubleshooting Guide
 
-## ❌ Ошибка 419 при подключении к WebSocket
+## ❌ Error 419 When Connecting to WebSocket
 
-### Проблема:
+### Problem:
 ```
 POST http://127.0.0.1/broadcast/auth
 Status: 419 (CSRF token mismatch)
 ```
 
-### Причина:
-Laravel Reverb требует CSRF токен для аутентификации broadcast соединений. Без токена в мета-тегах и axios конфигурации, все broadcast auth запросы будут возвращать 419 ошибку.
+### Cause:
+Laravel Reverb requires CSRF token for broadcast connection authentication. Without the token in meta tags and axios configuration, all broadcast auth requests will return 419 error.
 
-### Решение:
+### Solution:
 
-#### 1. Добавить CSRF токен в layout
+#### 1. Add CSRF token to layout
 
 **resources/views/components/guest-layout.blade.php:**
 ```blade
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="csrf-token" content="{{ csrf_token() }}"> <!-- ✅ Обязательно! -->
+    <meta name="csrf-token" content="{{ csrf_token() }}"> <!-- ✅ Required! -->
     <title>{{ config('app.name') }}</title>
     
     @if(session('temp_guest_user_id'))
@@ -32,7 +32,7 @@ Laravel Reverb требует CSRF токен для аутентификаци�
 </head>
 ```
 
-#### 2. Настроить axios для CSRF
+#### 2. Configure axios for CSRF
 
 **resources/js/bootstrap.js:**
 ```javascript
@@ -41,7 +41,7 @@ window.axios = axios;
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
-// ✅ Получить CSRF токен из meta тега
+// ✅ Get CSRF token from meta tag
 const token = document.head.querySelector('meta[name="csrf-token"]');
 
 if (token) {
@@ -51,33 +51,33 @@ if (token) {
 }
 ```
 
-#### 3. Пересобрать assets
+#### 3. Rebuild assets
 
 ```bash
 docker compose exec laravel.test npm run build
-# или для разработки
+# or for development
 docker compose exec laravel.test npm run dev
 ```
 
-#### 4. Очистить кэш
+#### 4. Clear cache
 
 ```bash
 docker compose exec laravel.test php artisan optimize:clear
 ```
 
-### Проверка:
+### Verification:
 
-1. Откройте DevTools → Network → XHR
-2. Найдите запрос к `/broadcast/auth`
-3. Проверьте Headers → Request Headers
-4. Должен быть заголовок: `X-CSRF-TOKEN: ...`
+1. Open DevTools → Network → XHR
+2. Find request to `/broadcast/auth`
+3. Check Headers → Request Headers
+4. Should have header: `X-CSRF-TOKEN: ...`
 
-**До исправления:**
+**Before fix:**
 ```
 Status: 419 CSRF token mismatch
 ```
 
-**После исправления:**
+**After fix:**
 ```
 Status: 200 OK
 Response: {"auth": "..."}
@@ -85,14 +85,14 @@ Response: {"auth": "..."}
 
 ---
 
-## 🔍 Другие частые проблемы
+## 🔍 Other Common Issues
 
-### WebSocket не подключается
+### WebSocket Not Connecting
 
-**Проверьте:**
-1. Запущен ли Laravel Reverb: `docker compose ps`
-2. Порт 8080 доступен
-3. Переменные окружения в `.env`:
+**Check:**
+1. Is Laravel Reverb running: `docker compose ps`
+2. Port 8080 is accessible
+3. Environment variables in `.env`:
    ```env
    BROADCAST_CONNECTION=reverb
    REVERB_APP_ID=...
@@ -103,23 +103,23 @@ Response: {"auth": "..."}
    REVERB_SCHEME=http
    ```
 
-### Queue Worker не обрабатывает задачи
+### Queue Worker Not Processing Jobs
 
-**Проверьте:**
-1. Запущен ли queue worker: `php artisan queue:work`
-2. Подключение к БД корректное
-3. Логи: `tail -f storage/logs/laravel.log`
+**Check:**
+1. Is queue worker running: `php artisan queue:work`
+2. DB connection is correct
+3. Logs: `tail -f storage/logs/laravel.log`
 
-### Уведомления не приходят
+### Notifications Not Arriving
 
-**Проверьте:**
-1. CSRF токен настроен ✅
-2. User ID в meta теге ✅
-3. Echo.js слушает правильный канал ✅
-4. Laravel Reverb запущен ✅
-5. Queue Worker работает ✅
+**Check:**
+1. CSRF token configured ✅
+2. User ID in meta tag ✅
+3. Echo.js listening to correct channel ✅
+4. Laravel Reverb running ✅
+5. Queue Worker working ✅
 
-**Console должен показывать:**
+**Console should show:**
 ```javascript
 🔥 Lesson creation success: {...}
 DemoLessonCreator received notification: {...}
@@ -127,29 +127,29 @@ DemoLessonCreator received notification: {...}
 
 ---
 
-## 📚 Полезные команды
+## 📚 Useful Commands
 
-### Проверка конфигурации
+### Check Configuration
 ```bash
-# Проверить broadcast драйвер
+# Check broadcast driver
 docker compose exec laravel.test php artisan config:show broadcasting
 
-# Проверить очереди
+# Check queues
 docker compose exec laravel.test php artisan queue:list
 
-# Проверить scheduler
+# Check scheduler
 docker compose exec laravel.test php artisan schedule:list
 ```
 
-### Отладка
+### Debugging
 ```bash
-# Логи Laravel
+# Laravel logs
 docker compose exec laravel.test tail -f storage/logs/laravel.log
 
-# Логи Reverb
+# Reverb logs
 docker compose logs -f reverb
 
-# Логи Queue Worker
+# Queue Worker logs
 docker compose logs -f queue
 ```
 
@@ -161,21 +161,21 @@ docker compose exec laravel.test npm run build
 # Development watch
 docker compose exec laravel.test npm run dev
 
-# Очистка
+# Clean
 docker compose exec laravel.test npm run clean
 ```
 
-### Кэш
+### Cache
 ```bash
-# Очистить всё
+# Clear all
 docker compose exec laravel.test php artisan optimize:clear
 
-# Только конфиг
+# Config only
 docker compose exec laravel.test php artisan config:clear
 
-# Только views
+# Views only
 docker compose exec laravel.test php artisan view:clear
 
-# Только routes
+# Routes only
 docker compose exec laravel.test php artisan route:clear
 ```

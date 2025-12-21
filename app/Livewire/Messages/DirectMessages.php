@@ -81,8 +81,8 @@ class DirectMessages extends Component
                     'user_id' => $user_id,
                     'user_name' => $other_user?->full_name,
                     'user_avatar' => $other_user?->avatar_url,
-                    'last_message' => $last_message->content,
-                    'last_message_at' => $last_message->created_at,
+                    'last_message' => $last_message !== null ? $last_message->content : '',
+                    'last_message_at' => $last_message?->created_at,
                     'unread_count' => $unread,
                     'is_selected' => $this->selected_user?->id === $user_id,
                 ];
@@ -103,14 +103,15 @@ class DirectMessages extends Component
 
         /** @var User $current_user */
         $current_user = Auth::user();
+        $selected_user_id = $this->selected_user->id;
 
         $this->messages = UserMessage::query()
-            ->where(function (Builder $query) use ($current_user): void {
+            ->where(function (Builder $query) use ($current_user, $selected_user_id): void {
                 $query->where('sender_id', '=', $current_user->id)
-                    ->where('recipient_id', '=', $this->selected_user->id);
+                    ->where('recipient_id', '=', $selected_user_id);
             })
-            ->orWhere(function (Builder $query) use ($current_user): void {
-                $query->where('sender_id', '=', $this->selected_user->id)
+            ->orWhere(function (Builder $query) use ($current_user, $selected_user_id): void {
+                $query->where('sender_id', '=', $selected_user_id)
                     ->where('recipient_id', '=', $current_user->id);
             })
             ->with(['sender', 'recipient', 'invitation'])
@@ -295,14 +296,15 @@ class DirectMessages extends Component
 
         /** @var User $current_user */
         $current_user = Auth::user();
+        $selected_user_id = $this->selected_user->id;
 
         UserMessage::query()
-            ->where(function (Builder $query) use ($current_user): void {
+            ->where(function (Builder $query) use ($current_user, $selected_user_id): void {
                 $query->where('sender_id', '=', $current_user->id)
-                    ->where('recipient_id', '=', $this->selected_user->id);
+                    ->where('recipient_id', '=', $selected_user_id);
             })
-            ->orWhere(function (Builder $query) use ($current_user): void {
-                $query->where('sender_id', '=', $this->selected_user->id)
+            ->orWhere(function (Builder $query) use ($current_user, $selected_user_id): void {
+                $query->where('sender_id', '=', $selected_user_id)
                     ->where('recipient_id', '=', $current_user->id);
             })
             ->delete();

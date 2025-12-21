@@ -73,7 +73,7 @@ class LessonExercises extends Component
         // Load lesson for audio files access
         if ($lesson_id) {
             $this->lesson = Lesson::with('audioFiles')->find($lesson_id);
-            if ($this->lesson && $this->lesson->lesson_lang) {
+            if ($this->lesson !== null) {
                 $this->learning_lang = $this->lesson->lesson_lang->value;
             }
         }

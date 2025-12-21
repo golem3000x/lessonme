@@ -60,7 +60,7 @@ class ManualLessonCreator extends Component
     /** @var array<int,array{sentence:string,answer:string}> */
     public array $gap_fill = [];
 
-    /** @var array<int,array{words:array,answer:string}> */
+    /** @var array<int,array{words:array<int,string>,answer:string}> */
     public array $sentence_ordering = [];
 
     /** @var array<int,array{statement:string,answer:string}> */
@@ -69,7 +69,7 @@ class ManualLessonCreator extends Component
     /** @var array<int,array{word:string,match:string}> */
     public array $matching = [];
 
-    /** @var array<int,array{question:string,options:array,answer:string}> */
+    /** @var array<int,array{question:string,options:array<int,string>,answer:string}> */
     public array $quiz = [];
 
     // Other
@@ -144,6 +144,9 @@ class ManualLessonCreator extends Component
         }
 
         $user = Auth::user();
+        if ($user === null) {
+            return;
+        }
         $locale = app()->getLocale();
 
         $keywords_collection = Keyword::with('translations')
@@ -313,6 +316,9 @@ class ManualLessonCreator extends Component
         ]);
 
         $user = Auth::user();
+        if ($user === null) {
+            return;
+        }
 
         $exercises = [
             'gap_fill' => array_filter($this->gap_fill, fn ($item) => ! empty($item['sentence'])),

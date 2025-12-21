@@ -14,6 +14,7 @@ use Livewire\Component;
 
 class UserProfile extends Component
 {
+    /** @phpstan-ignore property.uninitialized (initialized in mount) */
     public User $user;
 
     public bool $is_own_profile = false;

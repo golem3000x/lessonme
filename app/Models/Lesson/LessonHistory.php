@@ -27,7 +27,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string|null $homework
  * @property array<array-key, mixed>|null $common_mistakes
  * @property string|null $culture_notes
- * @property array|null $embedding
+ * @property array<int, float>|null $embedding
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Lesson\LessonFeedbackHistory> $feedbacks
@@ -37,6 +37,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read string $level_badge_color
  * @property-read \App\Models\Lesson\Lesson $lesson
  * @property-read \App\Models\User\User $user
+ *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonHistory newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonHistory newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonHistory query()
@@ -60,8 +61,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonHistory whereUserId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonHistory whereUuid($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonHistory whereVocabulary($value)
+ *
  * @property \App\Enums\Notifications\LessonCreationStatusEnum $status
+ *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonHistory whereStatus($value)
+ *
  * @mixin \Eloquent
  */
 class LessonHistory extends BaseLesson

@@ -1,51 +1,51 @@
-# Тестирование системы временных гостей
+# Testing Temporary Guest System
 
-## Как протестировать:
+## How to Test:
 
-### 1. Откройте демо-страницу в нескольких браузерах/вкладках
+### 1. Open Demo Page in Multiple Browsers/Tabs
 
 ```
 http://localhost/welcome
 ```
 
-**Важно**: Используйте разные браузеры или режим инкогнито для имитации разных пользователей.
+**Important**: Use different browsers or incognito mode to simulate different users.
 
-### 2. Создайте уроки одновременно
+### 2. Create Lessons Simultaneously
 
-В каждом браузере:
-- Выберите тему
-- Нажмите "Create Demo Lesson"
-- Дождитесь создания урока
+In each browser:
+- Select a topic
+- Click "Create Demo Lesson"
+- Wait for lesson creation
 
-**Ожидаемый результат**: 
-- Каждый гость видит только свой урок
-- Уроки не пересекаются между сессиями
+**Expected result**: 
+- Each guest sees only their own lesson
+- Lessons don't overlap between sessions
 
-### 3. Проверьте базу данных
+### 3. Check Database
 
 ```bash
-# Войдите в контейнер
+# Enter container
 docker compose exec laravel.test bash
 
-# Подключитесь к MySQL
+# Connect to MySQL
 mysql -u sail -p'password' ai_demo
 
-# Проверьте временных гостей
+# Check temporary guests
 SELECT id, email, is_temp_guest, temp_guest_expires_at 
 FROM users 
 WHERE is_temp_guest = true;
 
-# Проверьте их уроки
+# Check their lessons
 SELECT l.id, l.lesson_name, u.email 
 FROM lessons l 
 JOIN users u ON l.user_id = u.id 
 WHERE u.is_temp_guest = true;
 ```
 
-### 4. Тестирование очистки
+### 4. Test Cleanup
 
 ```bash
-# Создайте тестового истекшего гостя
+# Create test expired guest
 docker compose exec laravel.test php artisan tinker
 
 >>> $user = \App\Models\User::create([
@@ -61,60 +61,60 @@ docker compose exec laravel.test php artisan tinker
 ... ]);
 >>> exit
 
-# Запустите очистку
+# Run cleanup
 docker compose exec laravel.test php artisan guests:cleanup --force
 
-# Проверьте что пользователь удален
+# Verify user was deleted
 docker compose exec laravel.test php artisan tinker
 >>> \App\Models\User::where('email', 'test_expired@temp.local')->count()
 => 0
 ```
 
-### 5. Тестирование timeout (2 минуты)
+### 5. Test Timeout (2 minutes)
 
-1. Создайте урок как гость
-2. Подождите 2 минуты
-3. Должна появиться ошибка с кнопкой "Try Again"
-4. Нажмите "Try Again" - должно создать новый урок
+1. Create a lesson as guest
+2. Wait 2 minutes
+3. An error with "Try Again" button should appear
+4. Click "Try Again" - should create new lesson
 
-### 6. Проверьте scheduler
+### 6. Check Scheduler
 
 ```bash
-# Проверьте зарегистрированные задачи
+# Check registered tasks
 docker compose exec laravel.test php artisan schedule:list
 
-# Должна быть задача:
+# Should show task:
 # guests:cleanup --force  Daily at 03:00  Clean up expired temporary guest users
 ```
 
-## Что проверять:
+## What to Check:
 
-✅ Каждая сессия создает своего временного пользователя  
-✅ Уроки изолированы между сессиями  
-✅ Истекшие пользователи удаляются командой cleanup  
-✅ Timeout работает (2 минуты)  
-✅ Кнопка retry создает новый урок  
-✅ Scheduler настроен на автоматическую очистку  
+✅ Each session creates its own temporary user  
+✅ Lessons are isolated between sessions  
+✅ Expired users are deleted by cleanup command  
+✅ Timeout works (2 minutes)  
+✅ Retry button creates new lesson  
+✅ Scheduler configured for automatic cleanup  
 
 ## Troubleshooting:
 
-### Ошибка при создании урока:
+### Error when creating lesson:
 ```bash
-# Проверьте логи
+# Check logs
 docker compose exec laravel.test tail -f storage/logs/laravel.log
 ```
 
-### Пользователи не удаляются:
+### Users not being deleted:
 ```bash
-# Проверьте is_temp_guest и expires_at
+# Check is_temp_guest and expires_at
 SELECT * FROM users WHERE is_temp_guest = true;
 
-# Запустите cleanup с выводом
+# Run cleanup with output
 docker compose exec laravel.test php artisan guests:cleanup
 ```
 
-### Queue не обрабатывается:
+### Queue not processing:
 ```bash
-# Проверьте queue worker
+# Check queue worker
 docker compose exec laravel.test php artisan queue:work --once
 ```

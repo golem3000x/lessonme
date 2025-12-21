@@ -1,37 +1,37 @@
-# Migration от Polling к WebSocket для Demo Guests
+# Migration from Polling to WebSocket for Demo Guests
 
-## Что было изменено
+## What Was Changed
 
-### ❌ Старый подход (Polling):
+### ❌ Old Approach (Polling):
 
 ```blade
-<!-- Опрос каждые 5 секунд -->
+<!-- Poll every 5 seconds -->
 <div wire:poll.5s="checkLessonStatus">
 ```
 
-**Проблемы:**
-- Постоянные HTTP запросы каждые 5 секунд
-- Задержка до 5 секунд перед отображением урока
-- Нагрузка на сервер
-- Неэффективное использование ресурсов
+**Problems:**
+- Constant HTTP requests every 5 seconds
+- Up to 5 second delay before showing lesson
+- Server load
+- Inefficient resource usage
 
-### ✅ Новый подход (WebSocket):
+### ✅ New Approach (WebSocket):
 
-**Технологии:**
-- Laravel Reverb (WebSocket сервер)
-- Echo.js (клиент WebSocket)
+**Technologies:**
+- Laravel Reverb (WebSocket server)
+- Echo.js (WebSocket client)
 - Livewire Events
 - Laravel Notifications + Broadcasting
 
-**Преимущества:**
-- ⚡ Мгновенные уведомления в реальном времени
-- 📉 Снижение нагрузки на сервер (нет polling)
-- 🔔 Использование существующей системы уведомлений
-- 🎯 Изоляция между разными гостевыми сессиями
+**Advantages:**
+- ⚡ Instant real-time notifications
+- 📉 Reduced server load (no polling)
+- 🔔 Uses existing notification system
+- 🎯 Isolation between different guest sessions
 
-## Ключевые изменения
+## Key Changes
 
-### 1. Авторизация каналов
+### 1. Channel Authorization
 
 **routes/channels.php:**
 
@@ -41,14 +41,14 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 });
 ```
 
-**ВАЖНО:** Для работы WebSocket уведомлений с временными гостями используется middleware `EnsureTempGuestUser`, который автоматически логинит временного пользователя для доступа к приватным каналам.
+**IMPORTANT:** For WebSocket notifications to work with temporary guests, `EnsureTempGuestUser` middleware is used, which automatically logs in the temporary user for private channel access.
 
-**Защита:**
-- ✅ Временные гости имеют ограниченный доступ (только к демо-страницам)
-- ✅ Автоматическая очистка истекших гостей
-- ✅ Проверка `is_temp_guest` и `temp_guest_expires_at`
+**Protection:**
+- ✅ Temporary guests have limited access (demo pages only)
+- ✅ Automatic cleanup of expired guests
+- ✅ Check `is_temp_guest` and `temp_guest_expires_at`
 
-### 2. Мета-теги для Echo.js
+### 2. Meta Tags for Echo.js
 
 **resources/views/components/guest-layout.blade.php:**
 ```blade
@@ -61,12 +61,12 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 @endif
 ```
 
-**Зачем:** 
-- `csrf-token` - **обязателен** для broadcast аутентификации (иначе 419 ошибка)
-- `user-id` - Echo.js использует для подключения к приватному каналу
-- Приоритет session для temp guests, затем auth для обычных пользователей
+**Why:** 
+- `csrf-token` - **required** for broadcast authentication (otherwise 419 error)
+- `user-id` - Echo.js uses it to connect to private channel
+- Session priority for temp guests, then auth for regular users
 
-### 3. Axios конфигурация для CSRF
+### 3. Axios Configuration for CSRF
 
 **resources/js/bootstrap.js:**
 ```javascript
@@ -80,7 +80,7 @@ if (token) {
 }
 ```
 
-**Зачем:** Axios отправляет CSRF токен при broadcast auth запросах
+**Why:** Axios sends CSRF token with broadcast auth requests
 
 ### 4. Livewire Event Listener
 
@@ -98,115 +98,115 @@ public function handleLessonNotification(array $notification): void
 }
 ```
 
-**Зачем:** Обрабатывает уведомления от Echo.js.
+**Why:** Handles notifications from Echo.js.
 
 ### 5. Fallback polling
 
-Для надёжности сохранён метод `checkLessonStatus()` как fallback на случай проблем с WebSocket:
-- Таймаут: 3 минуты
-- Проверяет наличие урока в БД если WebSocket не доставил уведомление
+For reliability, `checkLessonStatus()` method is kept as fallback in case of WebSocket issues:
+- Timeout: 3 minutes
+- Checks lesson existence in DB if WebSocket didn't deliver notification
 
-## Поток работы
+## Workflow
 
 ```
-1. Гость открывает /welcome
+1. Guest opens /welcome
    ↓
-2. DemoLessonCreator::mount() создает temp user (БЕЗ логина!)
+2. DemoLessonCreator::mount() creates temp user (WITHOUT login!)
    ↓
-3. temp_guest_user_id сохраняется в session
+3. temp_guest_user_id saved in session
    ↓
-4. Echo.js подключается к App.Models.User.{user_id} (из session)
+4. Echo.js connects to App.Models.User.{user_id} (from session)
    ↓
-5. Гость создает урок
+5. Guest creates lesson
    ↓
-6. CreateLessonJob выполняется
+6. CreateLessonJob executes
    ↓
-7. Job отправляет LessonCreationNotification
+7. Job sends LessonCreationNotification
    ↓
-8. Laravel Reverb транслирует в WebSocket
+8. Laravel Reverb broadcasts to WebSocket
    ↓
-9. Echo.js получает событие .lesson.creation.successfully
+9. Echo.js receives .lesson.creation.successfully event
    ↓
-10. Echo.js вызывает Livewire.dispatch('lesson-notification')
+10. Echo.js calls Livewire.dispatch('lesson-notification')
     ↓
-11. DemoLessonCreator::handleLessonNotification() обрабатывает
+11. DemoLessonCreator::handleLessonNotification() processes
     ↓
-12. UI обновляется мгновенно ⚡
+12. UI updates instantly ⚡
 ```
 
-## 🔒 Безопасность
+## 🔒 Security
 
 ### Middleware EnsureTempGuestUser
 
-Временные гости управляются через middleware `EnsureTempGuestUser`:
+Temporary guests are managed via `EnsureTempGuestUser` middleware:
 
 ```php
 // app/Http/Middleware/EnsureTempGuestUser.php
-// Автоматически создаёт и авторизует временного пользователя
+// Automatically creates and authorizes temporary user
 ```
 
-**Защита:**
-- ✅ Временные гости имеют флаг `is_temp_guest = true`
-- ✅ Срок действия через `temp_guest_expires_at`
-- ✅ Ограниченный доступ только к демо-страницам
-- ✅ Автоматическая очистка истекших гостей
+**Protection:**
+- ✅ Temporary guests have `is_temp_guest = true` flag
+- ✅ Expiration via `temp_guest_expires_at`
+- ✅ Limited access to demo pages only
+- ✅ Automatic cleanup of expired guests
 
-## Уже существующая инфраструктура
+## Existing Infrastructure
 
-Вся инфраструктура для WebSocket **уже была настроена**:
+All WebSocket infrastructure **was already configured**:
 
 ### ✅ Backend:
-- `AbstractLessonNotification` - базовый класс уведомлений
-- `LessonCreationNotification` - уведомление создания урока
-- `CreateLessonJob` - отправляет уведомления
-- `routes/channels.php` - авторизация broadcast каналов
+- `AbstractLessonNotification` - base notification class
+- `LessonCreationNotification` - lesson creation notification
+- `CreateLessonJob` - sends notifications
+- `routes/channels.php` - broadcast channel authorization
 
 ### ✅ Frontend:
-- `resources/js/echo.js` - уже слушает события `lesson.creation.*`
-- `Echo.js` настроен и работает
-- Laravel Reverb запущен
+- `resources/js/echo.js` - already listens to `lesson.creation.*` events
+- `Echo.js` configured and working
+- Laravel Reverb running
 
-## Что НЕ изменилось
+## What Didn't Change
 
-- ✅ Система временных пользователей работает как прежде
-- ✅ Очистка expired guests работает
-- ✅ Изоляция между сессиями сохранена
-- ✅ Все существующие уведомления продолжают работать
+- ✅ Temporary user system works as before
+- ✅ Expired guests cleanup works
+- ✅ Session isolation preserved
+- ✅ All existing notifications continue to work
 
-## Тестирование
+## Testing
 
-### 1. Проверить WebSocket подключение
+### 1. Check WebSocket Connection
 
-Откройте DevTools → Network → WS:
-- Должно быть активное WebSocket подключение
+Open DevTools → Network → WS:
+- Should have active WebSocket connection
 - URL: `ws://localhost:8080/app/{APP_KEY}`
 
-### 2. Проверить уведомления
+### 2. Check Notifications
 
-Создайте урок и проверьте Console:
+Create a lesson and check Console:
 ```
 🔥 Lesson creation success: {...}
 DemoLessonCreator received notification: {...}
 ```
 
-### 3. Проверить отсутствие polling
+### 3. Check No Polling
 
 Network → XHR:
-- НЕ должно быть повторяющихся запросов каждые 5 секунд
+- Should NOT have repeating requests every 5 seconds
 
-## Требования
+## Requirements
 
-### Сервисы должны быть запущены:
+### Services Must Be Running:
 
 ```bash
-# Laravel Reverb (WebSocket сервер)
+# Laravel Reverb (WebSocket server)
 docker compose exec laravel.test php artisan reverb:start
 
-# Queue Worker (обработка уведомлений)
+# Queue Worker (notification processing)
 docker compose exec laravel.test php artisan queue:work
 ```
 
-### Конфигурация (.env):
+### Configuration (.env):
 
 ```env
 BROADCAST_CONNECTION=reverb
@@ -222,35 +222,35 @@ REVERB_SCHEME=http
 
 ## Troubleshooting
 
-### Уведомления не приходят?
+### Notifications Not Arriving?
 
-1. Проверьте что Reverb запущен: `docker compose ps`
-2. Проверьте что Queue Worker работает
-3. Проверьте мета-тег `user-id` в HTML
-4. Проверьте Console на ошибки WebSocket
-5. Проверьте что пользователь залогинен: `auth()->check()`
+1. Check that Reverb is running: `docker compose ps`
+2. Check that Queue Worker is working
+3. Check `user-id` meta tag in HTML
+4. Check Console for WebSocket errors
+5. Check that user is logged in: `auth()->check()`
 
-### WebSocket не подключается?
+### WebSocket Not Connecting?
 
-1. Проверьте `REVERB_*` переменные в `.env`
-2. Проверьте что порт 8080 доступен
-3. Очистите кэш: `php artisan optimize:clear`
+1. Check `REVERB_*` variables in `.env`
+2. Check that port 8080 is accessible
+3. Clear cache: `php artisan optimize:clear`
 
-## Преимущества миграции
+## Migration Benefits
 
-| Метрика | Polling | WebSocket |
-|---------|---------|-----------|
-| Задержка | До 5 сек | ~100ms |
-| Нагрузка | Постоянные запросы | Одно соединение |
-| Масштабируемость | Плохая | Отличная |
-| UX | Задержки | Мгновенно |
-| Ресурсы сервера | Высокие | Низкие |
+| Metric | Polling | WebSocket |
+|--------|---------|-----------|
+| Delay | Up to 5 sec | ~100ms |
+| Load | Constant requests | Single connection |
+| Scalability | Poor | Excellent |
+| UX | Delays | Instant |
+| Server resources | High | Low |
 
-## Заключение
+## Conclusion
 
-Миграция на WebSocket:
-- ✅ Использует существующую инфраструктуру
-- ✅ Минимальные изменения кода
-- ✅ Значительно улучшает UX
-- ✅ Снижает нагрузку на сервер
-- ✅ Сохраняет все преимущества системы временных гостей
+WebSocket migration:
+- ✅ Uses existing infrastructure
+- ✅ Minimal code changes
+- ✅ Significantly improves UX
+- ✅ Reduces server load
+- ✅ Preserves all temporary guest system benefits

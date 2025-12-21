@@ -16,6 +16,7 @@ use Illuminate\Support\Carbon;
 
 /**
  * @extends Slug<KeywordTranslation, UserKeywordVisibility>
+ *
  * @property int $id
  * @property int|null $user_id
  * @property int|null $topic_id
@@ -30,6 +31,7 @@ use Illuminate\Support\Carbon;
  * @property-read User|null $user
  * @property-read Collection<int, \App\Models\Keyword\UserKeywordVisibility> $visibility
  * @property-read int|null $visibility_count
+ *
  * @method static \Database\Factories\Keyword\KeywordFactory factory($count = null, $state = [])
  * @method static Builder<static>|Keyword newModelQuery()
  * @method static Builder<static>|Keyword newQuery()
@@ -43,6 +45,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|Keyword whereTopicId($value)
  * @method static Builder<static>|Keyword whereUpdatedAt($value)
  * @method static Builder<static>|Keyword whereUserId($value)
+ *
  * @mixin \Eloquent
  */
 class Keyword extends Slug

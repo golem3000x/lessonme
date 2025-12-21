@@ -23,7 +23,6 @@ use App\Notifications\Lesson\LessonUnassignedNotification;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Computed;
@@ -154,15 +153,11 @@ class LessonIndex extends Component
                 ->toArray();
 
             $query = Lesson::whereIn('id', $assigned_lesson_ids)
-                ->with(['topic' => function (BelongsTo $q): void {
-                    $q->with('translations');
-                }]);
+                ->with(['topic.translations']);
         } else {
             // Get user's own lessons
             $query = Lesson::where('user_id', '=', $user->id)
-                ->with(['topic' => function (BelongsTo $q): void {
-                    $q->with('translations');
-                }]);
+                ->with(['topic.translations']);
         }
 
         // Apply search filter
@@ -421,10 +416,9 @@ class LessonIndex extends Component
             ]);
 
             // Send notification to student
-            /** @var User $student */
             $student = User::find($student_id);
 
-            if ($student) {
+            if ($student instanceof User) {
                 $student->notify(new LessonAssignedNotification($assignment));
             }
 

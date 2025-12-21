@@ -35,6 +35,9 @@ class CourseCreator extends Component
     public function mount(?Course $course = null): void
     {
         $user = Auth::user();
+        if ($user === null) {
+            return;
+        }
 
         // Load available languages
         $teaching_languages = $user->getTeachingLanguageValues();
@@ -65,8 +68,8 @@ class CourseCreator extends Component
             $this->course = $course;
             $this->title = $course->title;
             $this->description = $course->description ?? '';
-            $this->language_level = $course->language_level?->value ?? '';
-            $this->lesson_lang = $course->lesson_lang?->value ?? $this->lesson_lang;
+            $this->language_level = $course->language_level !== null ? $course->language_level->value : '';
+            $this->lesson_lang = $course->lesson_lang->value;
             $this->passing_score = $course->passing_score;
 
             // Load course lessons
@@ -76,7 +79,7 @@ class CourseCreator extends Component
                 ->map(fn (Lesson $l) => [
                     'id' => $l->id,
                     'name' => $l->lesson_name,
-                    'order' => $l->pivot->order,
+                    'order' => (int) $l->getAttribute('pivot')?->getAttribute('order'),
                 ])
                 ->toArray();
         }
@@ -91,6 +94,9 @@ class CourseCreator extends Component
         ]);
 
         $user = Auth::user();
+        if ($user === null) {
+            return;
+        }
 
         $data = [
             'title' => $this->title,
@@ -129,7 +135,7 @@ class CourseCreator extends Component
             ->map(fn (Lesson $l) => [
                 'id' => $l->id,
                 'name' => $l->lesson_name,
-                'order' => $l->pivot->order,
+                'order' => (int) $l->getAttribute('pivot')?->getAttribute('order'),
             ])
             ->toArray();
 

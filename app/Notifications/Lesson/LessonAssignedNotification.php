@@ -48,7 +48,7 @@ class LessonAssignedNotification extends AbstractLessonNotification
 
         $base_payload['message'] = __('notifications.lesson_assigned', [
             'teacher' => $this->teacher_name,
-            'lesson' => $this->entity?->lesson_name ?? '',
+            'lesson' => $this->entity !== null ? $this->entity->lesson_name : '',
         ]);
         $base_payload['teacher_name'] = $this->teacher_name;
         $base_payload['assigned_at'] = $this->assignment->assigned_at->toIso8601String();

@@ -37,7 +37,7 @@ use Illuminate\Support\Carbon;
  * @property string|null $homework
  * @property array<array-key, mixed>|null $common_mistakes
  * @property string|null $culture_notes
- * @property array|null $embedding
+ * @property array<int, float>|null $embedding
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read Collection<int, \App\Models\Lesson\LessonAssignment> $assignments
@@ -59,6 +59,7 @@ use Illuminate\Support\Carbon;
  * @property-read int|null $scores_count
  * @property-read Topic|null $topic
  * @property-read \App\Models\User\User $user
+ *
  * @method static \Database\Factories\Lesson\LessonFactory factory($count = null, $state = [])
  * @method static Builder<static>|Lesson newModelQuery()
  * @method static Builder<static>|Lesson newQuery()
@@ -83,8 +84,11 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|Lesson whereUserId($value)
  * @method static Builder<static>|Lesson whereUuid($value)
  * @method static Builder<static>|Lesson whereVocabulary($value)
+ *
  * @property \App\Enums\Notifications\LessonCreationStatusEnum $status
+ *
  * @method static Builder<static>|Lesson whereStatus($value)
+ *
  * @mixin \Eloquent
  */
 class Lesson extends BaseLesson

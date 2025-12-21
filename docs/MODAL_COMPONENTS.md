@@ -1,36 +1,36 @@
-# Modal Components - Документация
+# Modal Components - Documentation
 
-Два переиспользуемых компонента для модальных окон подтверждения.
+Two reusable components for confirmation modal windows.
 
 ---
 
-## 1. `<x-confirm-modal>` - Для обычных форм
+## 1. `<x-confirm-modal>` - For Regular Forms
 
-Используется для модалов с обычными HTML формами (POST, DELETE запросы).
+Used for modals with regular HTML forms (POST, DELETE requests).
 
-### Параметры:
+### Parameters:
 
-| Параметр | Тип | По умолчанию | Описание |
-|----------|-----|--------------|----------|
-| `icon` | string | `'warning'` | Тип иконки: `warning`, `danger`, `success`, `info` |
-| `title` | string | *обязательный* | Заголовок модала |
-| `message` | string | *обязательный* | Текст сообщения |
-| `confirmText` | string | `'Confirm'` | Текст кнопки подтверждения |
-| `cancelText` | string | `'Cancel'` | Текст кнопки отмены |
-| `confirmRoute` | string | `null` | Route для отправки формы |
-| `confirmMethod` | string | `'POST'` | HTTP метод (POST, DELETE, PUT и т.д.) |
-| `showVariable` | string | `'showModal'` | Имя переменной Alpine.js для управления |
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `icon` | string | `'warning'` | Icon type: `warning`, `danger`, `success`, `info` |
+| `title` | string | *required* | Modal title |
+| `message` | string | *required* | Message text |
+| `confirmText` | string | `'Confirm'` | Confirm button text |
+| `cancelText` | string | `'Cancel'` | Cancel button text |
+| `confirmRoute` | string | `null` | Route for form submission |
+| `confirmMethod` | string | `'POST'` | HTTP method (POST, DELETE, PUT, etc.) |
+| `showVariable` | string | `'showModal'` | Alpine.js variable name for control |
 
-### Пример использования:
+### Usage Example:
 
 ```blade
 <div x-data="{ showDeleteModal: false }">
-    {{-- Кнопка открытия модала --}}
+    {{-- Button to open modal --}}
     <button @click="showDeleteModal = true">
         Delete
     </button>
 
-    {{-- Модальное окно --}}
+    {{-- Modal window --}}
     <x-confirm-modal
         icon="danger"
         :title="__('Delete Item?')"
@@ -44,46 +44,46 @@
 </div>
 ```
 
-### Типы иконок:
+### Icon Types:
 
-#### `icon="danger"` или `icon="delete"`
-- Красная иконка удаления
-- Используется для деструктивных действий
+#### `icon="danger"` or `icon="delete"`
+- Red delete icon
+- Used for destructive actions
 
-#### `icon="warning"` или `icon="regenerate"` (по умолчанию)
-- Желтая/оранжевая иконка предупреждения
-- Используется для действий с предупреждением
+#### `icon="warning"` or `icon="regenerate"` (default)
+- Yellow/orange warning icon
+- Used for warning actions
 
-#### `icon="success"` или `icon="restore"`
-- Зеленая иконка успеха
-- Используется для восстановления или положительных действий
+#### `icon="success"` or `icon="restore"`
+- Green success icon
+- Used for restore or positive actions
 
 #### `icon="info"`
-- Синяя информационная иконка
-- Используется для информационных сообщений
+- Blue information icon
+- Used for informational messages
 
 ---
 
-## 2. `<x-confirm-modal-livewire>` - Для Livewire
+## 2. `<x-confirm-modal-livewire>` - For Livewire
 
-Используется для модалов внутри Livewire компонентов.
+Used for modals inside Livewire components.
 
-### Параметры:
+### Parameters:
 
-| Параметр | Тип | По умолчанию | Описание |
-|----------|-----|--------------|----------|
-| `icon` | string | `'warning'` | Тип иконки (те же, что и в обычном модале) |
-| `title` | string | *обязательный* | Заголовок модала |
-| `message` | string | *обязательный* | Текст сообщения |
-| `confirmText` | string | `'Confirm'` | Текст кнопки подтверждения |
-| `cancelText` | string | `'Cancel'` | Текст кнопки отмены |
-| `confirmMethod` | string | `null` | Имя метода Livewire для подтверждения |
-| `cancelMethod` | string | `null` | Имя метода Livewire для отмены |
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `icon` | string | `'warning'` | Icon type (same as regular modal) |
+| `title` | string | *required* | Modal title |
+| `message` | string | *required* | Message text |
+| `confirmText` | string | `'Confirm'` | Confirm button text |
+| `cancelText` | string | `'Cancel'` | Cancel button text |
+| `confirmMethod` | string | `null` | Livewire method name for confirmation |
+| `cancelMethod` | string | `null` | Livewire method name for cancel |
 
-### Пример использования в Livewire:
+### Usage Example in Livewire:
 
 ```blade
-{{-- В Livewire компоненте --}}
+{{-- In Livewire component --}}
 @if($show_delete_confirm)
     <x-confirm-modal-livewire
         icon="danger"
@@ -97,7 +97,7 @@
 @endif
 ```
 
-### В PHP классе Livewire:
+### In Livewire PHP Class:
 
 ```php
 class MyComponent extends Component
@@ -119,7 +119,7 @@ class MyComponent extends Component
 
     public function deleteLesson(): void
     {
-        // Логика удаления
+        // Delete logic
         $this->show_delete_confirm = false;
     }
 }
@@ -127,9 +127,9 @@ class MyComponent extends Component
 
 ---
 
-## Примеры реального использования:
+## Real Usage Examples:
 
-### 1. Удаление урока (Livewire)
+### 1. Delete Lesson (Livewire)
 ```blade
 <x-confirm-modal-livewire
     icon="danger"
@@ -142,7 +142,7 @@ class MyComponent extends Component
 />
 ```
 
-### 2. Регенерация урока (Livewire)
+### 2. Regenerate Lesson (Livewire)
 ```blade
 <x-confirm-modal-livewire
     icon="warning"
@@ -155,7 +155,7 @@ class MyComponent extends Component
 />
 ```
 
-### 3. Восстановление версии (обычная форма)
+### 3. Restore Version (Regular Form)
 ```blade
 <div x-data="{ showRestoreModal: false }">
     <button @click="showRestoreModal = true">Restore</button>
@@ -174,27 +174,27 @@ class MyComponent extends Component
 
 ---
 
-## Стилизация
+## Styling
 
-Компоненты автоматически применяют правильные цвета на основе типа `icon`:
+Components automatically apply correct colors based on `icon` type:
 
-- **danger/delete**: Красный градиент
-- **warning/regenerate**: Желтый/оранжевый градиент  
-- **success/restore**: Зеленый градиент
-- **info**: Синий градиент
+- **danger/delete**: Red gradient
+- **warning/regenerate**: Yellow/orange gradient  
+- **success/restore**: Green gradient
+- **info**: Blue gradient
 
-Все модалы используют:
-- Backdrop с размытием
-- Плавные анимации появления/исчезновения
-- Адаптивный дизайн
-- Красивые иконки с градиентами
+All modals use:
+- Backdrop with blur
+- Smooth appear/disappear animations
+- Responsive design
+- Beautiful icons with gradients
 
 ---
 
-## Преимущества:
+## Advantages:
 
-✅ **DRY** - код не дублируется  
-✅ **Консистентность** - все модалы выглядят одинаково  
-✅ **Легко менять** - изменения в одном месте  
-✅ **Гибкость** - можно передавать разные параметры  
-✅ **Типобезопасность** - четкая структура параметров
+✅ **DRY** - code not duplicated  
+✅ **Consistency** - all modals look the same  
+✅ **Easy to change** - changes in one place  
+✅ **Flexibility** - can pass different parameters  
+✅ **Type safety** - clear parameter structure

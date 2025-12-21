@@ -15,6 +15,7 @@ use Illuminate\Support\Carbon;
 
 /**
  * @use HasFactory<LessonFeedbackFactory>
+ *
  * @property int $id
  * @property int $lesson_id
  * @property int $user_id
@@ -24,6 +25,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $updated_at
  * @property-read \App\Models\Lesson\Lesson $lesson
  * @property-read User $user
+ *
  * @method static \Database\Factories\Lesson\LessonFeedbackFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonFeedback newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonFeedback newQuery()
@@ -35,6 +37,7 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonFeedback whereRating($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonFeedback whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonFeedback whereUserId($value)
+ *
  * @mixin \Eloquent
  */
 class LessonFeedback extends Model

@@ -17,7 +17,7 @@ return new class extends Migration
         Schema::table(TableNameEnum::USERS->value, function (Blueprint $table) {
             $table->boolean('is_banned')->default(false)->after('settings');
             $table->timestamp('banned_at')->nullable()->after('is_banned');
-            $table->foreignId('banned_by')->nullable()->constrained(TableNameEnum::USERS->value)->nullOnDelete()->after('banned_at');
+            $table->foreignId('banned_by')->nullable()->after('banned_at')->constrained(TableNameEnum::USERS->value)->nullOnDelete();
             $table->string('ban_reason')->nullable()->after('banned_by');
             $table->timestamp('ban_expires_at')->nullable()->after('ban_reason');
         });

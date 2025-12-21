@@ -41,7 +41,7 @@ class CourseAssignmentRemovedNotification extends AbstractCourseNotification
 
         $base_payload['message'] = __('notifications.course_assignment_removed', [
             'student' => $this->student_name,
-            'course' => $this->entity?->title ?? '',
+            'course' => $this->entity !== null ? $this->entity->title : '',
         ]);
         $base_payload['student_name'] = $this->student_name;
 

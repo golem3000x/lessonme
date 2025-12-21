@@ -1,58 +1,58 @@
 # Demo Guest User System
 
-## Проблема
+## Problem
 
-В демо-режиме все гости использовали одного общего пользователя (`guest@system.local`), что приводило к:
-- Конфликтам при одновременном создании уроков несколькими гостями
-- Возможности видеть уроки других гостей
-- Засорению базы данных уроками всех гостей
+In demo mode, all guests used a single shared user (`guest@system.local`), which led to:
+- Conflicts when multiple guests created lessons simultaneously
+- Ability to see other guests' lessons
+- Database cluttering with all guests' lessons
 
-## Решение
+## Solution
 
-Каждой гостевой сессии создается **временный пользователь**:
+Each guest session gets a **temporary user**:
 
-### Характеристики временных пользователей:
+### Temporary User Characteristics:
 
-- **Уникальный email**: `demo_{unique_id}@temp.local`
-- **Флаг**: `is_temp_guest = true`
-- **Срок жизни**: 24 часа (`temp_guest_expires_at`)
-- **Хранение в сессии**: `temp_guest_user_id`
+- **Unique email**: `demo_{unique_id}@temp.local`
+- **Flag**: `is_temp_guest = true`
+- **Lifetime**: 24 hours (`temp_guest_expires_at`)
+- **Session storage**: `temp_guest_user_id`
 
-### Автоматическая очистка
+### Automatic Cleanup
 
-Система автоматически удаляет истекших временных гостей и их уроки:
+The system automatically deletes expired temporary guests and their lessons:
 
 ```bash
-# Ручной запуск
+# Manual run
 php artisan guests:cleanup
 
-# Принудительная очистка без подтверждения
+# Force cleanup without confirmation
 php artisan guests:cleanup --force
 ```
 
-**Автоматический запуск**: Каждый день в 03:00 (настроено в `routes/console.php`)
+**Automatic run**: Every day at 03:00 (configured in `routes/console.php`)
 
-### Поток работы:
+### Workflow:
 
-1. **Гость заходит на страницу** → Создается временный user (БЕЗ логина!)
-2. **User ID сохраняется в session** → Используется для WebSocket авторизации
-3. **Временный user подключается к WebSocket** → Приватный канал для уведомлений
-4. **Гость создает урок** → Урок привязывается к временному user
-5. **Урок готов** → Уведомление приходит через WebSocket (не polling!)
-6. **Гость работает с уроком** → Все данные изолированы от других гостей
-7. **Через 24 часа** → Автоматическая очистка удаляет пользователя и его уроки
+1. **Guest visits page** → Temp user created (WITHOUT login!)
+2. **User ID saved in session** → Used for WebSocket authorization
+3. **Temp user connects to WebSocket** → Private channel for notifications
+4. **Guest creates lesson** → Lesson linked to temp user
+5. **Lesson ready** → Notification arrives via WebSocket (not polling!)
+6. **Guest works with lesson** → All data isolated from other guests
+7. **After 24 hours** → Automatic cleanup deletes user and their lessons
 
-### 🔒 Безопасность
+### 🔒 Security
 
-Временные гости управляются через middleware `EnsureTempGuestUser`:
+Temporary guests are managed via `EnsureTempGuestUser` middleware:
 
-- ✅ Автоматическое создание временного пользователя
-- ✅ Ограниченный доступ только к демо-страницам
-- ✅ Флаг `is_temp_guest = true` для идентификации
-- ✅ Автоматическое истечение через `temp_guest_expires_at`
-- ✅ Нет доступа к личному кабинету, API, admin панели
+- ✅ Automatic temporary user creation
+- ✅ Limited access to demo pages only
+- ✅ `is_temp_guest = true` flag for identification
+- ✅ Automatic expiration via `temp_guest_expires_at`
+- ✅ No access to dashboard, API, admin panel
 
-**Авторизация каналов:**
+**Channel Authorization:**
 
 ```php
 // routes/channels.php
@@ -61,74 +61,74 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 });
 ```
 
-### Уведомления через WebSocket:
+### WebSocket Notifications:
 
-Используются **real-time WebSocket уведомления** с fallback на polling:
+**Real-time WebSocket notifications** are used with polling fallback:
 
-- ✅ **Мгновенные обновления** - урок появляется сразу после создания
-- ✅ **Laravel Reverb** - встроенный WebSocket сервер
-- ✅ **Echo.js** - автоматическое подключение и обработка событий
-- ✅ **Fallback polling** - `checkLessonStatus()` с таймаутом 3 минуты
+- ✅ **Instant updates** - lesson appears immediately after creation
+- ✅ **Laravel Reverb** - built-in WebSocket server
+- ✅ **Echo.js** - automatic connection and event handling
+- ✅ **Fallback polling** - `checkLessonStatus()` with 3 minute timeout
 
-**Технические детали:**
-- User ID хранится в session (`temp_guest_user_id`)
-- Подключается к приватному каналу: `App.Models.User.{user_id}`
-- Слушает события: `lesson.creation.successfully`, `lesson.creation.error`, `lesson.creation.exists`
-- Livewire компонент обрабатывает событие `lesson-notification`
+**Technical details:**
+- User ID stored in session (`temp_guest_user_id`)
+- Connects to private channel: `App.Models.User.{user_id}`
+- Listens to events: `lesson.creation.successfully`, `lesson.creation.error`, `lesson.creation.exists`
+- Livewire component handles `lesson-notification` event
 
-### Компоненты:
+### Components:
 
 #### 1. Migration
 ```
 database/migrations/2025_11_19_173600_add_temp_guest_fields_to_users_table.php
 ```
-Добавляет поля `is_temp_guest` и `temp_guest_expires_at`
+Adds `is_temp_guest` and `temp_guest_expires_at` fields
 
 #### 2. Command
 ```
 app/Console/Commands/CleanupTempGuestUsers.php
 ```
-Команда для очистки истекших временных гостей
+Command for cleaning up expired temporary guests
 
 #### 3. Scheduler
 ```
 routes/console.php
 ```
-Автоматический запуск очистки каждый день
+Automatic cleanup run every day
 
 #### 4. Component Logic
 ```
 app/Livewire/Welcome/DemoLessonCreator.php
 ```
-Метод `ensureTempGuestUser()` создает и управляет временными пользователями
+Method `ensureTempGuestUser()` creates and manages temporary users
 
-### Преимущества:
+### Advantages:
 
-✅ Полная изоляция между гостевыми сессиями  
-✅ Нет конфликтов при одновременной работе  
-✅ Автоматическая очистка старых данных  
-✅ Не требует аутентификации  
-✅ Foreign key constraints работают корректно  
+✅ Full isolation between guest sessions  
+✅ No conflicts during simultaneous work  
+✅ Automatic cleanup of old data  
+✅ No authentication required  
+✅ Foreign key constraints work correctly  
 
-### Настройка срока жизни:
+### Lifetime Configuration:
 
-По умолчанию: **24 часа**
+Default: **24 hours**
 
-Изменить можно в `DemoLessonCreator.php`:
+Change in `DemoLessonCreator.php`:
 ```php
-'temp_guest_expires_at' => now()->addHours(24), // <- здесь
+'temp_guest_expires_at' => now()->addHours(24), // <- here
 ```
 
-### Мониторинг:
+### Monitoring:
 
-Количество активных временных гостей:
+Active temporary guests count:
 ```sql
 SELECT COUNT(*) FROM users 
 WHERE is_temp_guest = true 
 AND temp_guest_expires_at > NOW();
 ```
 
-Количество истекших (готовых к удалению):
+Expired guests count (ready for deletion):
 ```sql
 SELECT COUNT(*) FROM users 
 WHERE is_temp_guest = true 

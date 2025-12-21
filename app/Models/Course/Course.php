@@ -36,6 +36,7 @@ use Illuminate\Support\Carbon;
  * @property-read Collection<int, \App\Models\Course\CourseProgress> $progress
  * @property-read int|null $progress_count
  * @property-read User $user
+ *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Course newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Course newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Course query()
@@ -51,14 +52,19 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Course whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Course whereUserId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Course whereUuid($value)
+ *
  * @property-read Collection<int, \App\Models\Course\CourseAssignment> $assignments
  * @property-read int|null $assignments_count
+ *
  * @method static \Database\Factories\Course\CourseFactory factory($count = null, $state = [])
+ *
  * @mixin \Eloquent
  */
 class Course extends Model
 {
+    /** @use HasFactory<\Database\Factories\Course\CourseFactory> */
     use HasFactory;
+
     use HasUuids;
 
     protected $table = TableNameEnum::COURSES->value;

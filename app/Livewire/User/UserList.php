@@ -10,7 +10,6 @@ use App\Enums\System\SystemLanguageEnum;
 use App\Models\User\Teacher\TeacherInvitation;
 use App\Models\User\User;
 use App\Models\User\UserMessage;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
@@ -63,9 +62,9 @@ class UserList extends Component
     }
 
     /**
-     * @return LengthAwarePaginator<User>|Collection<int, User>
+     * @return \Illuminate\Pagination\LengthAwarePaginator<int, User>|Collection<int, User>
      */
-    public function getUsers(): LengthAwarePaginator|Collection
+    public function getUsers(): \Illuminate\Pagination\LengthAwarePaginator|Collection
     {
         /** @var User $current_user */
         $current_user = Auth::user();

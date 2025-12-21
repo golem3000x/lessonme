@@ -59,8 +59,8 @@ class MessagesIndex extends Component
                 return [
                     'user_id' => $user_id,
                     'user' => $other_user,
-                    'last_message' => $last_message->content,
-                    'last_message_at' => $last_message->created_at,
+                    'last_message' => $last_message !== null ? $last_message->content : '',
+                    'last_message_at' => $last_message?->created_at,
                     'unread_count' => $unread,
                 ];
             })

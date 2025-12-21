@@ -14,6 +14,7 @@ use Illuminate\Support\Carbon;
 
 /**
  * @use HasFactory<LessonScoreFactory>
+ *
  * @property int $id
  * @property int $attempt_id
  * @property int $lesson_id
@@ -31,6 +32,7 @@ use Illuminate\Support\Carbon;
  * @property-read \App\Models\Lesson\Lesson $lesson
  * @property-read User|null $teacher
  * @property-read User $user
+ *
  * @method static \Database\Factories\Lesson\LessonScoreFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonScore newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonScore newQuery()
@@ -48,6 +50,7 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonScore whereTotalQuestions($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonScore whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonScore whereUserId($value)
+ *
  * @mixin \Eloquent
  */
 class LessonScore extends Model

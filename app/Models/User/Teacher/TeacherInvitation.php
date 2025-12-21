@@ -23,6 +23,7 @@ use Illuminate\Support\Carbon;
  * @property-read \App\Models\User\UserMessage|null $message
  * @property-read \App\Models\User\User $student
  * @property-read \App\Models\User\User $teacher
+ *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TeacherInvitation newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TeacherInvitation newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TeacherInvitation query()
@@ -33,6 +34,7 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TeacherInvitation whereStudentId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TeacherInvitation whereTeacherId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TeacherInvitation whereUpdatedAt($value)
+ *
  * @mixin \Eloquent
  */
 class TeacherInvitation extends Model

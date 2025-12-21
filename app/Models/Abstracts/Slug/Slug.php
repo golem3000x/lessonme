@@ -79,22 +79,24 @@ abstract class Slug extends BaseModel
 
     /**
      * Get translation for specific language or fallback to first available
+     *
+     * @return SlugTranslation<static>|null
      */
     public function translation(?string $lang = null): ?SlugTranslation
     {
         $lang = $lang ?? app()->getLocale();
 
-        /** @var SlugTranslation|null $translation */
         $translation = $this->translations
             ->where('language_code', '=', $lang)
             ->first();
 
-        if ($translation) {
+        if ($translation instanceof SlugTranslation) {
             return $translation;
         }
 
-        /** @var SlugTranslation|null */
-        return $this->translations->first();
+        $first = $this->translations->first();
+
+        return $first instanceof SlugTranslation ? $first : null;
     }
 
     /**
@@ -105,19 +107,17 @@ abstract class Slug extends BaseModel
         $lang = $lang ?? app()->getLocale();
 
         // Try to get translation for requested language
-        /** @var SlugTranslation|null $translation */
         $translation = $this->translations
             ->firstWhere('language_code', '=', $lang);
 
-        if ($translation) {
+        if ($translation instanceof SlugTranslation) {
             return $translation->value;
         }
 
         // Fallback to first available translation
-        /** @var SlugTranslation|null $firstTranslation */
         $firstTranslation = $this->translations->first();
 
-        if ($firstTranslation) {
+        if ($firstTranslation instanceof SlugTranslation) {
             return $firstTranslation->value;
         }
 

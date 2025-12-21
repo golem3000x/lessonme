@@ -73,6 +73,9 @@ class CourseIndex extends Component
         }
 
         $user = Auth::user();
+        if ($user === null) {
+            return;
+        }
         $course = Course::where('id', $this->course_to_delete)
             ->where('user_id', $user->id)
             ->first();
@@ -86,11 +89,14 @@ class CourseIndex extends Component
     }
 
     /**
-     * @return Collection<int, Course>
+     * @return \Illuminate\Database\Eloquent\Collection<int, Course>
      */
-    public function getCourses(): Collection
+    public function getCourses(): \Illuminate\Database\Eloquent\Collection
     {
         $user = Auth::user();
+        if ($user === null) {
+            return new \Illuminate\Database\Eloquent\Collection;
+        }
 
         if ($this->view_mode === 'my_courses' && $this->isTeacher()) {
             // My Courses: Teacher sees their own courses
@@ -180,10 +186,9 @@ class CourseIndex extends Component
             ]);
 
             // Send notification to student
-            /** @var User $student */
             $student = User::find($student_id);
 
-            if ($student) {
+            if ($student instanceof User) {
                 $student->notify(new CourseAssignedNotification($assignment));
             }
 

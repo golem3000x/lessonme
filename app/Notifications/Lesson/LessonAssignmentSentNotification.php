@@ -41,7 +41,7 @@ class LessonAssignmentSentNotification extends AbstractLessonNotification
 
         $base_payload['message'] = __('notifications.lesson_assignment_sent', [
             'count' => $this->assigned_count,
-            'lesson' => $this->entity?->lesson_name ?? '',
+            'lesson' => $this->entity !== null ? $this->entity->lesson_name : '',
         ]);
         $base_payload['assigned_count'] = $this->assigned_count;
 

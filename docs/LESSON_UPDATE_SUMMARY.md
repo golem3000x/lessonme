@@ -1,17 +1,17 @@
-# Обновление структуры урока
+# Lesson Structure Update
 
-## Изменения
+## Changes
 
-### 1. Новый промпт для генерации урока
+### 1. New Lesson Generation Prompt
 
-Обновлен system prompt в `LessonGenerationService` для генерации расширенной структуры урока с новыми секциями:
-- Dialogue (диалоги)
-- Exercises (4 типа упражнений: gap_fill, sentence_ordering, true_false, matching)
-- Homework (домашнее задание)
-- Common Mistakes (типичные ошибки)
-- Culture Notes (культурные заметки)
+Updated system prompt in `LessonGenerationService` to generate extended lesson structure with new sections:
+- Dialogue (dialogues)
+- Exercises (4 types: gap_fill, sentence_ordering, true_false, matching)
+- Homework (homework assignment)
+- Common Mistakes (common mistakes)
+- Culture Notes (cultural notes)
 
-### 2. Обновленная структура JSON ответа
+### 2. Updated JSON Response Structure
 
 ```json
 {
@@ -38,43 +38,43 @@
 }
 ```
 
-### 3. Обновленные модели
+### 3. Updated Models
 
 **BaseLesson.php:**
-- Добавлены новые поля в `$fillable` и `$casts`
-- Обновлены PHPDoc блоки
+- Added new fields to `$fillable` and `$casts`
+- Updated PHPDoc blocks
 
-**Lesson.php и LessonHistory.php:**
-- Обновлены PHPDoc блоки с новыми полями
+**Lesson.php and LessonHistory.php:**
+- Updated PHPDoc blocks with new fields
 
-### 4. Обновленные сервисы
+### 4. Updated Services
 
 **LessonGenerationService:**
-- Новый system prompt
+- New system prompt
 
 **LessonService:**
-- Методы `createLesson()` и `regenerateLesson()` теперь сохраняют новые поля
+- Methods `createLesson()` and `regenerateLesson()` now save new fields
 
 **LessonHistoryService:**
-- Методы `snapshot()` и `restore()` теперь работают с новыми полями
+- Methods `snapshot()` and `restore()` now work with new fields
 
 **LessonController:**
-- Метод `store()` сохраняет все новые поля
+- Method `store()` saves all new fields
 
-### 5. Обновленные views
+### 5. Updated Views
 
 **resources/views/lessons/show.blade.php:**
-Добавлены новые секции (в порядке после Vocabulary, перед Quiz):
+Added new sections (in order after Vocabulary, before Quiz):
 - 💬 Dialogue
-- 📝 Exercises (4 типа)
+- 📝 Exercises (4 types)
 - 📚 Homework
 - ⚠️ Common Mistakes
 - 🌍 Culture Notes
 
 **resources/views/lessons/history.blade.php:**
-- Добавлена статистика по новым полям
+- Added statistics for new fields
 
-### 6. Обновленные миграции
+### 6. Updated Migrations
 
 **lessons table:**
 - `dialogue` (json, nullable)
@@ -84,56 +84,56 @@
 - `culture_notes` (text, nullable)
 
 **lesson_histories table:**
-- Те же поля
+- Same fields
 
-### 7. Обновленные тесты
+### 7. Updated Tests
 
 **LessonRelationTest.php:**
-- Добавлены новые поля при создании Lesson
+- Added new fields when creating Lesson
 
 **LessonControllerTest.php:**
-- Mock SlugService возвращает новую структуру
+- Mock SlugService returns new structure
 
-## Как протестировать
+## How to Test
 
-### 1. Запустите миграции
+### 1. Run Migrations
 
 ```bash
 docker compose exec laravel.test php artisan migrate:fresh --seed
 ```
 
-### 2. Очистите кэш
+### 2. Clear Cache
 
 ```bash
 docker compose exec laravel.test php artisan optimize:clear
 ```
 
-### 3. Запустите тесты
+### 3. Run Tests
 
 ```bash
 docker compose exec laravel.test php artisan test
 ```
 
-### 4. Создайте новый урок
+### 4. Create New Lesson
 
-1. Войдите в систему
-2. Создайте новый урок через форму
-3. Проверьте, что все новые секции отображаются:
+1. Log into system
+2. Create new lesson via form
+3. Verify all new sections display:
    - Dialogue
-   - Exercises (все 4 типа)
+   - Exercises (all 4 types)
    - Homework
    - Common Mistakes
    - Culture Notes
 
-### 5. Проверьте историю
+### 5. Check History
 
-1. Откройте существующий урок
-2. Перейдите в историю
-3. Проверьте, что статистика отображает новые поля
+1. Open existing lesson
+2. Go to history
+3. Verify statistics display new fields
 
-## Структура полей
+## Field Structure
 
-### JSON поля (array cast):
+### JSON Fields (array cast):
 - `grammar_data`
 - `vocabulary`
 - `dialogue`
@@ -141,19 +141,19 @@ docker compose exec laravel.test php artisan test
 - `common_mistakes`
 - `quiz`
 
-### TEXT поля (string):
+### TEXT Fields (string):
 - `homework`
 - `culture_notes`
 
-## Совместимость
+## Compatibility
 
-Все существующие уроки продолжат работать, так как новые поля:
-- Nullable (могут быть null)
-- Имеют fallback значения ([] для массивов, null для строк)
-- Проверяются на существование в blade шаблонах
+All existing lessons will continue to work since new fields:
+- Nullable (can be null)
+- Have fallback values ([] for arrays, null for strings)
+- Checked for existence in blade templates
 
-## Возможные проблемы
+## Potential Issues
 
-1. **LLM может не вернуть все поля** - решено через fallback значения
-2. **Старые уроки не имеют новых полей** - решено через nullable и проверки в blade
-3. **Exercises могут быть пустыми** - решено через проверку `!empty()`
+1. **LLM may not return all fields** - solved via fallback values
+2. **Old lessons don't have new fields** - solved via nullable and blade checks
+3. **Exercises may be empty** - solved via `!empty()` check

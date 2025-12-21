@@ -41,7 +41,7 @@ class LessonAssignmentRemovedNotification extends AbstractLessonNotification
 
         $base_payload['message'] = __('notifications.lesson_assignment_removed', [
             'student' => $this->student_name,
-            'lesson' => $this->entity?->lesson_name ?? '',
+            'lesson' => $this->entity !== null ? $this->entity->lesson_name : '',
         ]);
 
         return $base_payload;

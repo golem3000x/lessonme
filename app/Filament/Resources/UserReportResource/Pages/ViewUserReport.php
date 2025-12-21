@@ -10,6 +10,9 @@ use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ViewRecord;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * @property \App\Models\User\UserReport $record
+ */
 class ViewUserReport extends ViewRecord
 {
     protected static string $resource = UserReportResource::class;

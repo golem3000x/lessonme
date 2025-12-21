@@ -41,7 +41,7 @@ class LessonUnassignedNotification extends AbstractLessonNotification
 
         $base_payload['message'] = __('notifications.lesson_unassigned', [
             'teacher' => $this->teacher_name,
-            'lesson' => $this->entity?->lesson_name ?? '',
+            'lesson' => $this->entity !== null ? $this->entity->lesson_name : '',
         ]);
 
         return $base_payload;

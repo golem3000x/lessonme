@@ -17,6 +17,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $updated_at
  * @property-read \App\Enums\System\SystemLanguageEnum|null $language_enum
  * @property-read \App\Models\User\User $user
+ *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserTeachingLanguage newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserTeachingLanguage newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserTeachingLanguage query()
@@ -24,6 +25,7 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserTeachingLanguage whereLanguage($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserTeachingLanguage whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserTeachingLanguage whereUserId($value)
+ *
  * @mixin \Eloquent
  */
 class UserTeachingLanguage extends Model
@@ -32,7 +34,8 @@ class UserTeachingLanguage extends Model
 
     public $incrementing = false;
 
-    protected $primaryKey = ['user_id', 'language'];
+    /** @var string */
+    protected $primaryKey = 'user_id';
 
     protected $fillable = [
         'user_id',

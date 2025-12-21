@@ -50,7 +50,7 @@ use Illuminate\Support\Str;
  * @property string|null $zalo_user_id
  * @property string|null $facebook_id
  * @property string|null $avatar
- * @property Carbon $date_of_birth
+ * @property Carbon|null $date_of_birth
  * @property string|null $bio
  * @property string $native_lang
  * @property bool $is_looking_for_teacher
@@ -93,6 +93,7 @@ use Illuminate\Support\Str;
  * @property-read int|null $teachers_count
  * @property-read Collection<int, \App\Models\User\UserTeachingLanguage> $teachingLanguages
  * @property-read int|null $teaching_languages_count
+ *
  * @method static \Database\Factories\UserFactory factory($count = null, $state = [])
  * @method static Builder<static>|User newModelQuery()
  * @method static Builder<static>|User newQuery()
@@ -120,6 +121,7 @@ use Illuminate\Support\Str;
  * @method static Builder<static>|User whereUpdatedAt($value)
  * @method static Builder<static>|User whereUuid($value)
  * @method static Builder<static>|User whereZaloUserId($value)
+ *
  * @property bool $is_banned
  * @property Carbon|null $banned_at
  * @property int|null $banned_by
@@ -130,19 +132,22 @@ use Illuminate\Support\Str;
  * @property-read User|null $bannedByUser
  * @property-read Collection<int, \App\Models\Course\CourseAssignment> $myCourseAssignments
  * @property-read int|null $my_course_assignments_count
+ *
  * @method static Builder<static>|User whereBanExpiresAt($value)
  * @method static Builder<static>|User whereBanReason($value)
  * @method static Builder<static>|User whereBannedAt($value)
  * @method static Builder<static>|User whereBannedBy($value)
  * @method static Builder<static>|User whereIsBanned($value)
+ *
  * @mixin \Eloquent
  */
 class User extends Authenticatable implements FilamentUser, HasLocalePreference, HasName
 {
-    /** @use HasFactory<UserFactory> */
     use Bannable;
 
+    /** @use HasFactory<UserFactory> */
     use HasFactory;
+
     use HasLanguages;
     use HasRoles;
     use HasStudentsAndTeachers;

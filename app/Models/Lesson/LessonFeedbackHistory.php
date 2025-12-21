@@ -24,6 +24,7 @@ use Illuminate\Support\Carbon;
  * @property-read \App\Models\Lesson\Lesson $lesson
  * @property-read \App\Models\Lesson\LessonHistory|null $lessonHistory
  * @property-read User $user
+ *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonFeedbackHistory newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonFeedbackHistory newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonFeedbackHistory query()
@@ -36,6 +37,7 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonFeedbackHistory whereOriginalFeedbackId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonFeedbackHistory whereRating($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonFeedbackHistory whereUserId($value)
+ *
  * @mixin \Eloquent
  */
 class LessonFeedbackHistory extends Model

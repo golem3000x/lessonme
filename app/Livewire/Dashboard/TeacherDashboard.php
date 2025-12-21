@@ -40,10 +40,9 @@ class TeacherDashboard extends Component
 
     public function mount(): void
     {
-        /** @var User $teacher */
         $teacher = Auth::user();
 
-        if (! $teacher || ! $teacher->isTeacher()) {
+        if (! $teacher instanceof User || ! $teacher->isTeacher()) {
             return;
         }
 

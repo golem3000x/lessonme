@@ -76,7 +76,7 @@ class ProfileSetup extends Component
 
         $this->first_name = $user->first_name ?? '';
         $this->last_name = $user->last_name ?? '';
-        $this->date_of_birth = $user->date_of_birth?->format('Y-m-d') ?? '';
+        $this->date_of_birth = $user->date_of_birth !== null ? $user->date_of_birth->format('Y-m-d') : '';
         $this->bio = $user->bio ?? '';
         $this->native_lang = $user->native_lang;
         $this->learning_languages = $user->getLearningLanguageValues();

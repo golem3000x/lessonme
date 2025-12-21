@@ -68,7 +68,7 @@ abstract class AbstractLessonNotification extends Notification implements Should
             $data['lesson_database_id'] = $this->entity->id; // Database ID for placeholder removal
             $data['lesson_url'] = route('lessons.show', $this->entity->uuid);
             $data['lesson_name'] = $this->entity->lesson_name;
-            $data['language_name'] = $this->entity->lesson_lang?->label() ?? '';
+            $data['language_name'] = $this->entity->lesson_lang->label();
         }
 
         return $data;

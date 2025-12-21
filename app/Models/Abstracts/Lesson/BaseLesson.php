@@ -159,7 +159,6 @@ abstract class BaseLesson extends BaseModel
         return match ($this->creation_type) {
             LessonCreationTypeEnum::AI => 'bg-violet-100 text-violet-700',
             LessonCreationTypeEnum::MANUAL => 'bg-amber-100 text-amber-700',
-            default => 'bg-gray-100 text-gray-700',
         };
     }
 }

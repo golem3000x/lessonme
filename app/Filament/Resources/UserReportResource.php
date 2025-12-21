@@ -173,10 +173,15 @@ class UserReportResource extends Resource
                     ->modalDescription(__('admin.ban_user_description'))
                     ->visible(fn (UserReport $record): bool => ! $record->is_resolved && ! $record->reportedUser->isBanned())
                     ->action(function (UserReport $record, array $data): void {
+                        /** @var string|null $ban_reason */
+                        $ban_reason = $data['ban_reason'] ?? null;
+                        /** @var string|null $ban_expires_at */
+                        $ban_expires_at = $data['ban_expires_at'] ?? null;
+
                         $record->reportedUser->ban(
-                            reason: $data['ban_reason'],
-                            expires_at: $data['ban_expires_at'] ? \Carbon\Carbon::parse($data['ban_expires_at']) : null,
-                            banned_by: Auth::id()
+                            reason: $ban_reason,
+                            expires_at: $ban_expires_at ? \Illuminate\Support\Carbon::parse($ban_expires_at) : null,
+                            banned_by: Auth::id() !== null ? (int) Auth::id() : null
                         );
 
                         $record->update([

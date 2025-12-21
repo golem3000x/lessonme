@@ -1,273 +1,273 @@
-# 🗄️ Схема базы данных
+# 🗄️ Database Schema
 
-## Обзор
+## Overview
 
-- **СУБД:** PostgreSQL 17.7
-- **Расширения:** pgvector (для векторного поиска)
-- **Таблиц:** 40
-- **Размер:** ~4.72 MB
+- **DBMS:** PostgreSQL 17.7
+- **Extensions:** pgvector (for vector search)
+- **Tables:** 40
+- **Size:** ~4.72 MB
 
-## ER-диаграмма (основные сущности)
+## ER Diagram (Main Entities)
 
 ```mermaid
 erDiagram
-    users ||--o{ lessons : "создаёт"
-    users ||--o{ courses : "создаёт"
-    users ||--o{ lesson_attempts : "проходит"
-    users ||--o{ lesson_scores : "получает"
-    users ||--o{ teacher_student : "учитель/ученик"
-    users ||--o{ role_user : "имеет роли"
+    users ||--o{ lessons : "creates"
+    users ||--o{ courses : "creates"
+    users ||--o{ lesson_attempts : "takes"
+    users ||--o{ lesson_scores : "receives"
+    users ||--o{ teacher_student : "teacher/student"
+    users ||--o{ role_user : "has roles"
     
-    lessons ||--o{ lesson_histories : "версии"
-    lessons ||--o{ lesson_attempts : "попытки"
-    lessons ||--o{ lesson_scores : "оценки"
-    lessons ||--o{ lesson_assignments : "назначения"
-    lessons ||--o{ lesson_feedbacks : "отзывы"
-    lessons ||--o{ lesson_audio_files : "аудио"
-    lessons }o--|| topics : "тема"
+    lessons ||--o{ lesson_histories : "versions"
+    lessons ||--o{ lesson_attempts : "attempts"
+    lessons ||--o{ lesson_scores : "scores"
+    lessons ||--o{ lesson_assignments : "assignments"
+    lessons ||--o{ lesson_feedbacks : "feedbacks"
+    lessons ||--o{ lesson_audio_files : "audio"
+    lessons }o--|| topics : "topic"
     
-    courses ||--o{ course_lessons : "уроки"
-    courses ||--o{ course_assignments : "назначения"
-    courses ||--o{ course_progress : "прогресс"
+    courses ||--o{ course_lessons : "lessons"
+    courses ||--o{ course_assignments : "assignments"
+    courses ||--o{ course_progress : "progress"
     
-    topics ||--o{ topic_translations : "переводы"
-    topics ||--o{ keywords : "ключевые слова"
-    keywords ||--o{ keyword_translations : "переводы"
+    topics ||--o{ topic_translations : "translations"
+    topics ||--o{ keywords : "keywords"
+    keywords ||--o{ keyword_translations : "translations"
     
-    roles ||--o{ role_user : "пользователи"
+    roles ||--o{ role_user : "users"
     
-    chat_sessions ||--o{ messages : "сообщения"
+    chat_sessions ||--o{ messages : "messages"
 ```
 
-## Таблицы по доменам
+## Tables by Domain
 
-### 👤 Пользователи
+### 👤 Users
 
 #### `users`
-| Колонка | Тип | Описание |
-|---------|-----|----------|
+| Column | Type | Description |
+|--------|------|-------------|
 | id | bigint | PK |
-| uuid | uuid | Уникальный идентификатор |
-| first_name | varchar(255) | Имя |
-| last_name | varchar(255) | Фамилия |
-| email | varchar(255) | Email (уникальный) |
-| password | varchar(255) | Хеш пароля |
-| native_lang | varchar(255) | Родной язык (default: 'vi') |
-| is_temp_guest | boolean | Временный гость |
-| temp_guest_expires_at | timestamp | Срок действия гостя |
-| is_banned | boolean | Заблокирован |
-| is_looking_for_teacher | boolean | Ищет учителя |
-| is_accepting_students | boolean | Принимает учеников |
-| settings | json | Настройки пользователя |
+| uuid | uuid | Unique identifier |
+| first_name | varchar(255) | First name |
+| last_name | varchar(255) | Last name |
+| email | varchar(255) | Email (unique) |
+| password | varchar(255) | Password hash |
+| native_lang | varchar(255) | Native language (default: 'vi') |
+| is_temp_guest | boolean | Temporary guest |
+| temp_guest_expires_at | timestamp | Guest expiration |
+| is_banned | boolean | Banned |
+| is_looking_for_teacher | boolean | Looking for teacher |
+| is_accepting_students | boolean | Accepting students |
+| settings | json | User settings |
 
 #### `roles` / `role_user`
-Система ролей (admin, teacher, student).
+Role system (admin, teacher, student).
 
 #### `teacher_student`
-Связь учитель-ученик (many-to-many).
+Teacher-student relationship (many-to-many).
 
 ---
 
-### 📚 Уроки
+### 📚 Lessons
 
 #### `lessons`
-| Колонка | Тип | Описание |
-|---------|-----|----------|
+| Column | Type | Description |
+|--------|------|-------------|
 | id | bigint | PK |
-| uuid | uuid | Уникальный идентификатор |
+| uuid | uuid | Unique identifier |
 | user_id | bigint | FK → users |
 | topic_id | smallint | FK → topics |
-| lesson_name | varchar(255) | Название урока |
-| lesson_text | text | Текст урока |
-| language_level | varchar(2) | Уровень CEFR (A1-C2) |
-| lesson_lang | varchar(255) | Язык урока |
-| status | varchar(255) | Статус (created, creation, regeneration, archived, exists, error) |
-| grammar_data | json | Грамматика |
-| vocabulary | json | Словарь |
-| dialogue | json | Диалоги |
-| exercises | json | Упражнения |
-| homework | text | Домашнее задание |
-| common_mistakes | json | Типичные ошибки |
-| culture_notes | text | Культурные заметки |
-| **embedding** | **vector(1536)** | **Векторное представление (pgvector)** |
+| lesson_name | varchar(255) | Lesson name |
+| lesson_text | text | Lesson text |
+| language_level | varchar(2) | CEFR level (A1-C2) |
+| lesson_lang | varchar(255) | Lesson language |
+| status | varchar(255) | Status (created, creation, regeneration, archived, exists, error) |
+| grammar_data | json | Grammar |
+| vocabulary | json | Vocabulary |
+| dialogue | json | Dialogues |
+| exercises | json | Exercises |
+| homework | text | Homework |
+| common_mistakes | json | Common mistakes |
+| culture_notes | text | Culture notes |
+| **embedding** | **vector(1536)** | **Vector embedding (pgvector)** |
 
 #### `lesson_histories`
-История версий уроков. Структура аналогична `lessons` + `lesson_id`.
+Lesson version history. Structure similar to `lessons` + `lesson_id`.
 
 #### `lesson_audio_files`
-| Колонка | Тип | Описание |
-|---------|-----|----------|
+| Column | Type | Description |
+|--------|------|-------------|
 | lesson_id | bigint | FK → lessons |
-| audio_type | varchar(255) | Тип (vocabulary, gap_fill) |
-| audio_key | varchar(255) | Ключ аудио |
-| file_path | varchar(255) | Путь к файлу |
+| audio_type | varchar(255) | Type (vocabulary, gap_fill) |
+| audio_key | varchar(255) | Audio key |
+| file_path | varchar(255) | File path |
 | status | varchar(255) | pending / ready / failed |
 
 ---
 
-### 📝 Оценивание
+### 📝 Grading
 
 #### `lesson_assignments`
-Назначения уроков студентам учителями.
+Lesson assignments from teachers to students.
 
-| Колонка | Тип | Описание |
-|---------|-----|----------|
+| Column | Type | Description |
+|--------|------|-------------|
 | lesson_id | bigint | FK → lessons |
 | teacher_id | bigint | FK → users |
 | student_id | bigint | FK → users |
-| assigned_version | json | Snapshot упражнений |
+| assigned_version | json | Exercises snapshot |
 | status | varchar(20) | pending / in_progress / completed |
-| due_date | timestamp | Срок сдачи |
+| due_date | timestamp | Due date |
 
 #### `lesson_attempts`
-Попытки прохождения уроков.
+Lesson attempts.
 
-| Колонка | Тип | Описание |
-|---------|-----|----------|
+| Column | Type | Description |
+|--------|------|-------------|
 | lesson_id | bigint | FK → lessons |
 | user_id | bigint | FK → users |
 | assignment_id | bigint | FK → lesson_assignments (nullable) |
-| attempt_number | int | Номер попытки |
-| exercises_snapshot | json | Snapshot упражнений |
-| user_answers | json | Ответы пользователя |
-| is_completed | boolean | Завершена |
+| attempt_number | int | Attempt number |
+| exercises_snapshot | json | Exercises snapshot |
+| user_answers | json | User answers |
+| is_completed | boolean | Completed |
 
 #### `lesson_scores`
-Результаты/оценки.
+Results/scores.
 
-| Колонка | Тип | Описание |
-|---------|-----|----------|
+| Column | Type | Description |
+|--------|------|-------------|
 | attempt_id | bigint | FK → lesson_attempts |
-| total_questions | int | Всего вопросов |
-| correct_answers | int | Правильных ответов |
-| score_percentage | numeric(5,2) | Процент |
-| auto_graded | boolean | Автоматическая оценка |
-| teacher_comment | text | Комментарий учителя |
+| total_questions | int | Total questions |
+| correct_answers | int | Correct answers |
+| score_percentage | numeric(5,2) | Percentage |
+| auto_graded | boolean | Auto graded |
+| teacher_comment | text | Teacher comment |
 
 #### `lesson_feedbacks` / `lesson_feedback_history`
-Отзывы пользователей (like/dislike) и их история.
+User feedbacks (like/dislike) and history.
 
 ---
 
-### 📖 Курсы
+### 📖 Courses
 
 #### `courses`
-| Колонка | Тип | Описание |
-|---------|-----|----------|
-| uuid | uuid | Уникальный идентификатор |
-| user_id | bigint | FK → users (создатель) |
-| title | varchar(255) | Название |
-| language_level | varchar(2) | Уровень CEFR |
-| is_published | boolean | Опубликован |
-| passing_score | int | Проходной балл (default: 70) |
+| Column | Type | Description |
+|--------|------|-------------|
+| uuid | uuid | Unique identifier |
+| user_id | bigint | FK → users (creator) |
+| title | varchar(255) | Title |
+| language_level | varchar(2) | CEFR level |
+| is_published | boolean | Published |
+| passing_score | int | Passing score (default: 70) |
 
 #### `course_lessons`
-Связь курс-уроки с порядком.
+Course-lessons relationship with order.
 
 #### `course_assignments`
-Назначения курсов студентам.
+Course assignments to students.
 
 #### `course_progress`
-Прогресс студентов по курсам.
+Student progress on courses.
 
 ---
 
-### 🏷️ Темы и ключевые слова
+### 🏷️ Topics and Keywords
 
 #### `topics`
-| Колонка | Тип | Описание |
-|---------|-----|----------|
+| Column | Type | Description |
+|--------|------|-------------|
 | slug | varchar(255) | URL-slug |
-| is_system | boolean | Системная тема |
-| is_approved | boolean | Одобрена |
+| is_system | boolean | System topic |
+| is_approved | boolean | Approved |
 
 #### `topic_translations`
-Переводы тем на разные языки.
+Topic translations to different languages.
 
 #### `keywords`
-Ключевые слова, привязанные к темам.
+Keywords linked to topics.
 
 #### `keyword_translations`
-Переводы ключевых слов.
+Keyword translations.
 
 #### `user_topic_visibility` / `user_keyword_visibility`
-Настройки видимости тем/ключевых слов для пользователей.
+User visibility settings for topics/keywords.
 
 ---
 
-### 💬 Чат и сообщения
+### 💬 Chat and Messages
 
 #### `chat_sessions`
-Сессии чата поддержки.
+Support chat sessions.
 
 #### `messages`
-Сообщения в чате поддержки.
+Support chat messages.
 
 #### `user_messages`
-Личные сообщения между пользователями (teacher ↔ student).
+Private messages between users (teacher ↔ student).
 
 ---
 
-### 👨‍🏫 Учителя
+### 👨‍🏫 Teachers
 
 #### `teacher_invitations`
-Приглашения учителей студентам.
+Teacher invitations to students.
 
 #### `teacher_reviews`
-Отзывы студентов об учителях.
+Student reviews of teachers.
 
 ---
 
-### 🛡️ Безопасность
+### 🛡️ Security
 
 #### `user_blocks`
-Блокировка пользователей.
+User blocks.
 
 #### `user_reports`
-Жалобы на пользователей.
+User reports.
 
 ---
 
-### 🔧 Системные
+### 🔧 System Tables
 
-| Таблица | Описание |
-|---------|----------|
-| `migrations` | Laravel миграции |
-| `sessions` | Сессии пользователей |
-| `cache` / `cache_locks` | Кэш |
-| `jobs` / `job_batches` / `failed_jobs` | Очереди |
-| `notifications` | Уведомления |
-| `password_reset_tokens` | Токены сброса пароля |
+| Table | Description |
+|-------|-------------|
+| `migrations` | Laravel migrations |
+| `sessions` | User sessions |
+| `cache` / `cache_locks` | Cache |
+| `jobs` / `job_batches` / `failed_jobs` | Queues |
+| `notifications` | Notifications |
+| `password_reset_tokens` | Password reset tokens |
 
 ---
 
-## Индексы и Foreign Keys
+## Indexes and Foreign Keys
 
-Полная SQL схема: [`DATABASE_SCHEMA.sql`](./DATABASE_SCHEMA.sql)
+Full SQL schema: [`DATABASE_SCHEMA.sql`](./DATABASE_SCHEMA.sql)
 
-## Расширение pgvector
+## pgvector Extension
 
-Используется для семантического поиска похожих уроков:
+Used for semantic search of similar lessons:
 
 ```sql
 CREATE EXTENSION IF NOT EXISTS vector;
 
--- Поле embedding в таблице lessons
+-- embedding field in lessons table
 embedding vector(1536)
 
--- Поиск по косинусному расстоянию
+-- Cosine distance search
 SELECT *, 1 - (embedding <=> $1) as similarity
 FROM lessons
 WHERE 1 - (embedding <=> $1) >= 0.9
 ORDER BY similarity DESC;
 ```
 
-## Генерация схемы
+## Schema Generation
 
 ```bash
-# Экспорт полной SQL схемы
+# Export full SQL schema
 docker exec ai-demo-pgsql-1 pg_dump -U sail -d laravel --schema-only --no-owner > docs/DATABASE_SCHEMA.sql
 
-# Просмотр таблиц и размеров
+# View tables and sizes
 docker exec ai-demo-laravel.test-1 php artisan db:show --counts
 ```

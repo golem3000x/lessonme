@@ -67,7 +67,9 @@ class CreateAdminCommand extends Command
         $user->assignRole(UserRoleEnum::ADMIN);
 
         // Add learning languages
-        $user->syncLearningLanguages([$learning_lang]);
+        if (is_string($learning_lang)) {
+            $user->syncLearningLanguages([$learning_lang]);
+        }
 
         $this->newLine();
         $this->info('✅ Admin user created successfully!');

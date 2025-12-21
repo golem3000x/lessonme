@@ -1,22 +1,22 @@
 # 🎓 LessonMe
 
-Платформа для изучения языков с AI-генерацией уроков.
+AI-powered language learning platform with personalized lesson generation.
 
-## ✨ Возможности
+## ✨ Features
 
-- **AI-генерация уроков** — GPT-4o-mini создаёт персонализированные уроки по уровню CEFR (A1-C2)
-- **Интерактивные упражнения** — gap-fill, matching, true/false, sentence ordering
-- **TTS аудио** — озвучка словаря и упражнений через FPT.AI
-- **Система оценивания** — автоматическая проверка с отслеживанием прогресса
-- **Курсы** — объединение уроков в курсы с назначением студентам
-- **Учитель-ученик** — система приглашений и совместной работы
-- **Real-time уведомления** — WebSocket через Laravel Reverb
-- **Демо-режим** — временные гости могут попробовать без регистрации
+- **AI Lesson Generation** — GPT-4o-mini creates personalized lessons by CEFR level (A1-C2)
+- **Interactive Exercises** — gap-fill, matching, true/false, sentence ordering
+- **TTS Audio** — vocabulary and exercise audio via FPT.AI
+- **Grading System** — automatic checking with progress tracking
+- **Courses** — combine lessons into courses and assign to students
+- **Teacher-Student** — invitation system and collaborative work
+- **Real-time Notifications** — WebSocket via Laravel Reverb
+- **Demo Mode** — temporary guests can try without registration
 
-## 🛠 Технологии
+## 🛠 Tech Stack
 
-| Категория | Технология |
-|-----------|------------|
+| Category | Technology |
+|----------|------------|
 | Backend | Laravel 11, PHP 8.1+ |
 | Frontend | Livewire 3.5+, Alpine.js, TailwindCSS, daisyUI |
 | Database | PostgreSQL 17 + pgvector |
@@ -25,40 +25,40 @@
 | WebSocket | Laravel Reverb |
 | Queue | Laravel Queue (database driver) |
 
-## 🚀 Установка
+## 🚀 Installation
 
-### Требования
+### Requirements
 - PHP 8.1+
 - Composer
 - Node.js / NPM
-- PostgreSQL с расширением pgvector
-- Docker (рекомендуется)
+- PostgreSQL with pgvector extension
+- Docker (recommended)
 
 ### Docker (Laravel Sail)
 
 ```bash
-# Клонировать репозиторий
+# Clone repository
 git clone <repo-url>
 cd ai-demo
 
-# Установить зависимости
+# Install dependencies
 composer install
 npm install
 
-# Настроить окружение
+# Configure environment
 cp .env.example .env
 
-# Запустить контейнеры
+# Start containers
 ./vendor/bin/sail up -d
 
-# Миграции и сиды
+# Run migrations and seeders
 ./vendor/bin/sail artisan migrate --seed
 
-# Собрать assets
+# Build assets
 ./vendor/bin/sail npm run build
 ```
 
-### Переменные окружения
+### Environment Variables
 
 ```env
 # OpenAI
@@ -74,48 +74,48 @@ REVERB_APP_KEY=...
 REVERB_APP_SECRET=...
 ```
 
-## 📚 Документация
+## 📚 Documentation
 
-Подробная документация в папке [`docs/`](./docs/README.md):
+Full documentation in [`docs/`](./docs/README.md):
 
-- [Архитектура](./docs/ARCHITECTURE.md)
-- [Схема БД](./docs/DATABASE.md)
-- [API сервисов](./docs/API_SERVICES.md)
-- [Конфигурация](./docs/CONFIGURATION.md)
+- [Architecture](./docs/ARCHITECTURE.md)
+- [Database Schema](./docs/DATABASE.md)
+- [Services API](./docs/API_SERVICES.md)
+- [Configuration](./docs/CONFIGURATION.md)
 
-## 🔧 Команды
+## 🔧 Commands
 
 ```bash
-# Запуск сервисов
+# Start services
 ./vendor/bin/sail up -d
 
-# WebSocket сервер
+# WebSocket server
 ./vendor/bin/sail artisan reverb:start
 
 # Queue worker
 ./vendor/bin/sail artisan queue:work
 
-# Очистка временных гостей
+# Cleanup temp guests
 ./vendor/bin/sail artisan app:cleanup-temp-guests
 
-# Тесты
+# Run tests
 ./vendor/bin/sail artisan test
 ```
 
-## 📁 Структура проекта
+## 📁 Project Structure
 
 ```
 app/
-├── Services/Lesson/     # Сервисы генерации и оценивания уроков
-├── Models/              # Eloquent модели
-├── Livewire/            # Livewire компоненты
-├── Jobs/                # Фоновые задачи
-└── Notifications/       # WebSocket уведомления
+├── Services/Lesson/     # Lesson generation and grading services
+├── Models/              # Eloquent models
+├── Livewire/            # Livewire components
+├── Jobs/                # Background jobs
+└── Notifications/       # WebSocket notifications
 
-docs/                    # Документация
-resources/views/         # Blade шаблоны
+docs/                    # Documentation
+resources/views/         # Blade templates
 ```
 
-## 📄 Лицензия
+## 📄 License
 
-Проприетарное ПО. Все права защищены.
+Proprietary software. All rights reserved.

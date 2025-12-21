@@ -1,69 +1,69 @@
-# ✅ Чеклист обновления структуры урока
+# ✅ Lesson Structure Update Checklist
 
-## Выполненные изменения
+## Completed Changes
 
 ### 1. ✅ LessonGenerationService
-- **Файл:** `app/Services/Lesson/LessonGenerationService.php`
-- **Изменения:** Обновлен system prompt с новой структурой JSON
-- **Новые поля в промпте:**
-  - `dialogue` - диалоги с speaker/line
-  - `exercises` - 4 типа упражнений
-  - `homework` - домашнее задание (string)
-  - `common_mistakes` - типичные ошибки
-  - `culture_notes` - культурные заметки (string)
+- **File:** `app/Services/Lesson/LessonGenerationService.php`
+- **Changes:** Updated system prompt with new JSON structure
+- **New fields in prompt:**
+  - `dialogue` - dialogues with speaker/line
+  - `exercises` - 4 exercise types
+  - `homework` - homework assignment (string)
+  - `common_mistakes` - common mistakes
+  - `culture_notes` - culture notes (string)
 
-### 2. ✅ Модели
-- **BaseLesson.php** - добавлены новые поля в fillable, casts, PHPDoc
-- **Lesson.php** - обновлен PHPDoc с новыми полями
-- **LessonHistory.php** - обновлен PHPDoc с новыми полями
+### 2. ✅ Models
+- **BaseLesson.php** - added new fields to fillable, casts, PHPDoc
+- **Lesson.php** - updated PHPDoc with new fields
+- **LessonHistory.php** - updated PHPDoc with new fields
 
-### 3. ✅ Сервисы
-- **LessonService.php** - методы `fillLessonContent()` и `regenerateLesson()`
-- **LessonHistoryService.php** - методы `snapshot()` и `restore()`
-- **LessonController.php** - методы `show()`, `history()`, `restore()`, `scores()`
+### 3. ✅ Services
+- **LessonService.php** - methods `fillLessonContent()` and `regenerateLesson()`
+- **LessonHistoryService.php** - methods `snapshot()` and `restore()`
+- **LessonController.php** - methods `show()`, `history()`, `restore()`, `scores()`
 
 ### 4. ✅ Views
-- **show.blade.php** - добавлены 5 новых секций:
+- **show.blade.php** - added 5 new sections:
   - 💬 Dialogue
   - 📝 Exercises (gap_fill, sentence_ordering, true_false, matching)
   - 📚 Homework
   - ⚠️ Common Mistakes
   - 🌍 Culture Notes
-- **history.blade.php** - обновлена статистика
+- **history.blade.php** - updated statistics
 
-### 5. ✅ Миграции
-- **lessons table** - добавлены новые поля (вы поправили)
-- **lesson_histories table** - добавлены новые поля (вы поправили)
+### 5. ✅ Migrations
+- **lessons table** - added new fields
+- **lesson_histories table** - added new fields
 
-### 6. ✅ Тесты
-- **LessonRelationTest.php** - добавлены новые поля
-- **LessonControllerTest.php** - обновлен mock
+### 6. ✅ Tests
+- **LessonRelationTest.php** - added new fields
+- **LessonControllerTest.php** - updated mock
 
-### 7. ✅ Синтаксис
-Все PHP файлы проверены на синтаксические ошибки - все корректно
+### 7. ✅ Syntax
+All PHP files checked for syntax errors - all correct
 
-### 8. ✅ Кэш
-Кэш Laravel очищен
+### 8. ✅ Cache
+Laravel cache cleared
 
-## 🎯 Что нужно сделать дальше
+## 🎯 Next Steps
 
-### 1. Запустить миграции (если еще не запускали)
+### 1. Run migrations (if not already done)
 ```bash
 docker compose exec laravel.test php artisan migrate
 ```
 
-### 2. Протестировать создание урока
-1. Зайдите в приложение
-2. Создайте новый урок
-3. Проверьте, что LLM возвращает новые секции
-4. Проверьте отображение в show.blade.php
+### 2. Test lesson creation
+1. Open the application
+2. Create a new lesson
+3. Verify LLM returns new sections
+4. Check display in show.blade.php
 
-### 3. Проверить совместимость
-- Откройте старые уроки (без новых полей)
-- Убедитесь, что они отображаются корректно
-- Благодаря nullable и fallback значениям все должно работать
+### 3. Check compatibility
+- Open old lessons (without new fields)
+- Ensure they display correctly
+- Thanks to nullable and fallback values, everything should work
 
-## 📋 Структура новых полей
+## 📋 New Fields Structure
 
 ### JSON (array cast):
 ```php
@@ -90,24 +90,24 @@ docker compose exec laravel.test php artisan migrate
 'culture_notes' => 'Culture notes text...'
 ```
 
-## 🔍 Возможные проблемы
+## 🔍 Possible Issues
 
-1. **LLM не возвращает поле** → используется fallback ([] или null)
-2. **Старые уроки без новых полей** → проверка !empty() в blade
-3. **Exercises пустой** → секция не отображается
-4. **Testing DB** → проблема окружения, не связана с изменениями
+1. **LLM doesn't return field** → fallback used ([] or null)
+2. **Old lessons without new fields** → !empty() check in blade
+3. **Exercises empty** → section not displayed
+4. **Testing DB** → environment issue, not related to changes
 
-## 📊 Порядок секций в show.blade.php
+## 📊 Section Order in show.blade.php
 
 1. Header
 2. Lesson Text
 3. Grammar
 4. Vocabulary
-5. **💬 Dialogue** (новое)
-6. **📝 Exercises** (новое)
-7. **📚 Homework** (новое)
-8. **⚠️ Common Mistakes** (новое)
-9. **🌍 Culture Notes** (новое)
+5. **💬 Dialogue** (new)
+6. **📝 Exercises** (new)
+7. **📚 Homework** (new)
+8. **⚠️ Common Mistakes** (new)
+9. **🌍 Culture Notes** (new)
 10. Quiz
 
-Все готово к использованию! 🚀
+Ready to use! 🚀

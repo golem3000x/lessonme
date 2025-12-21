@@ -1,8 +1,8 @@
-# ⚙️ Конфигурация
+# ⚙️ Configuration
 
-## Переменные окружения
+## Environment Variables
 
-### Основные
+### Basic
 
 ```env
 APP_NAME=LessonMe
@@ -11,7 +11,7 @@ APP_DEBUG=true|false
 APP_URL=http://localhost
 ```
 
-### База данных (PostgreSQL + pgvector)
+### Database (PostgreSQL + pgvector)
 
 ```env
 DB_CONNECTION=pgsql
@@ -22,7 +22,7 @@ DB_USERNAME=sail
 DB_PASSWORD=password
 ```
 
-**Важно:** Для работы similarity search требуется расширение pgvector:
+**Important:** pgvector extension required for similarity search:
 ```sql
 CREATE EXTENSION IF NOT EXISTS vector;
 ```
@@ -34,9 +34,9 @@ OPENAI_API_KEY=sk-...
 OPENAI_ORGANIZATION=org-...  # опционально
 ```
 
-**Используемые модели:**
-- `gpt-4o-mini` - генерация уроков
-- `text-embedding-3-small` - создание embeddings
+**Models used:**
+- `gpt-4o-mini` - lesson generation
+- `text-embedding-3-small` - creating embeddings
 
 ### FPT.AI TTS
 
@@ -64,32 +64,32 @@ VITE_REVERB_PORT="${REVERB_PORT}"
 VITE_REVERB_SCHEME="${REVERB_SCHEME}"
 ```
 
-### Очереди
+### Queues
 
 ```env
 QUEUE_CONNECTION=database
 ```
 
-Для production рекомендуется Redis:
+For production, Redis is recommended:
 ```env
 QUEUE_CONNECTION=redis
 REDIS_HOST=redis
 REDIS_PORT=6379
 ```
 
-### Файловое хранилище
+### File Storage
 
 ```env
 FILESYSTEM_DISK=local
 ```
 
-Аудио файлы сохраняются в:
+Audio files are saved in:
 ```
 storage/app/lessons/{uuid}/audio/vocabulary/
 storage/app/lessons/{uuid}/audio/exercises/
 ```
 
-### Сессии
+### Sessions
 
 ```env
 SESSION_DRIVER=database
@@ -98,7 +98,7 @@ SESSION_LIFETIME=120
 
 ---
 
-## Конфигурационные файлы
+## Configuration Files
 
 ### config/openai.php
 
@@ -129,18 +129,18 @@ return [
 
 ---
 
-## Константы приложения
+## Application Constants
 
 ### Lesson Model
 
 ```php
 // app/Models/Lesson/Lesson.php
-public const float SIMILARITY_THRESHOLD = 0.9;  // 90% схожесть для дубликатов
+public const float SIMILARITY_THRESHOLD = 0.9;  // 90% similarity for duplicates
 ```
 
 ### CEFR Level Constraints
 
-Определены в `LessonGenerationService`:
+Defined in `LessonGenerationService`:
 
 | Level | Vocabulary | Grammar | Dialogue Lines | Sentence Length |
 |-------|------------|---------|----------------|-----------------|
@@ -151,7 +151,7 @@ public const float SIMILARITY_THRESHOLD = 0.9;  // 90% схожесть для �
 | C1 | 12 | 4 | 14 | 20-35 words |
 | C2 | 13 | 5 | 16 | 25-40 words |
 
-### Max Tokens по уровням
+### Max Tokens by Level
 
 ```php
 A1 => 1800
@@ -168,15 +168,15 @@ C2 => 4000
 
 ### lesson.owner
 
-Проверяет, что текущий пользователь является владельцем урока.
+Checks that the current user is the lesson owner.
 
-**Регистрация:** `app/Http/Kernel.php`
+**Registration:** `app/Http/Kernel.php`
 
 ```php
 'lesson.owner' => \App\Http\Middleware\LessonOwnerMiddleware::class,
 ```
 
-**Использование:**
+**Usage:**
 ```php
 Route::get('/lessons/{lesson}/history', [LessonController::class, 'history'])
     ->middleware(['auth', 'lesson.owner']);
@@ -184,9 +184,9 @@ Route::get('/lessons/{lesson}/history', [LessonController::class, 'history'])
 
 ---
 
-## Очереди и Jobs
+## Queues and Jobs
 
-### Настройка worker
+### Worker Setup
 
 ```bash
 # Development
@@ -196,7 +196,7 @@ php artisan queue:work
 php artisan queue:work --sleep=3 --tries=3 --max-time=3600
 ```
 
-### Supervisor конфигурация
+### Supervisor Configuration
 
 ```ini
 [program:laravel-worker]
@@ -216,36 +216,36 @@ stopwaitsecs=3600
 
 ## Docker (Sail)
 
-### Запуск
+### Start
 
 ```bash
 ./vendor/bin/sail up -d
 ```
 
-### Доступные сервисы
+### Available Services
 
-| Сервис | Порт | Описание |
-|--------|------|----------|
-| Laravel | 80 | Основное приложение |
-| PostgreSQL | 5432 | База данных |
-| Reverb | 8080 | WebSocket сервер |
-| Mailpit | 8025 | Email тестирование |
+| Service | Port | Description |
+|---------|------|-------------|
+| Laravel | 80 | Main application |
+| PostgreSQL | 5432 | Database |
+| Reverb | 8080 | WebSocket server |
+| Mailpit | 8025 | Email testing |
 
-### Выполнение команд
+### Running Commands
 
 ```bash
-# Внутри контейнера
+# Inside container
 ./vendor/bin/sail artisan migrate
 
-# Или напрямую
+# Or directly
 docker exec ai-demo-laravel.test-1 php artisan migrate
 ```
 
 ---
 
-## Логирование
+## Logging
 
-### Каналы
+### Channels
 
 ```php
 // config/logging.php
@@ -263,15 +263,15 @@ docker exec ai-demo-laravel.test-1 php artisan migrate
 ],
 ```
 
-### Использование
+### Usage
 
 ```php
 use Illuminate\Support\Facades\Log;
 
-// Общий лог
+// General log
 Log::info('Message', ['context' => 'data']);
 
-// Канал чата
+// Chat channel
 Log::channel('chat')->info('Chat message sent', [
     'user_id' => $user->id,
     'message_id' => $message->id,
@@ -280,9 +280,9 @@ Log::channel('chat')->info('Chat message sent', [
 
 ---
 
-## Кэширование
+## Caching
 
-### Очистка кэша
+### Clear Cache
 
 ```bash
 php artisan cache:clear      # Application cache
@@ -292,7 +292,7 @@ php artisan view:clear       # Compiled views
 php artisan optimize:clear   # All caches
 ```
 
-### Production кэширование
+### Production Caching
 
 ```bash
 php artisan config:cache

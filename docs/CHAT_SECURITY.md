@@ -1,20 +1,20 @@
-# Безопасность чата
+# Chat Security
 
-## Оглавление
-1. [Авторизация каналов](#авторизация-каналов)
-2. [Валидация данных](#валидация-данных)
-3. [XSS защита](#xss-защита)
+## Table of Contents
+1. [Channel Authorization](#channel-authorization)
+2. [Data Validation](#data-validation)
+3. [XSS Protection](#xss-protection)
 4. [Rate Limiting](#rate-limiting)
-5. [Мониторинг и логирование](#мониторинг-и-логирование)
-6. [Рекомендации по улучшению](#рекомендации-по-улучшению)
+5. [Monitoring and Logging](#monitoring-and-logging)
+6. [Improvement Recommendations](#improvement-recommendations)
 
 ---
 
-## Авторизация каналов
+## Channel Authorization
 
-### Текущая реализация
+### Current Implementation
 
-**Файл:** `routes/channels.php`
+**File:** `routes/channels.php`
 
 ```php
 Broadcast::channel('chat.{userId}', function ($user, $userId) {
@@ -22,23 +22,23 @@ Broadcast::channel('chat.{userId}', function ($user, $userId) {
 });
 ```
 
-**Как работает:**
-- Каждый пользователь может подписаться только на свой собственный канал чата
-- Laravel автоматически проверяет, что `$user->id` совпадает с `$userId` в имени канала
-- Неавторизованные пользователи не могут подключиться к приватным каналам
+**How it works:**
+- Each user can only subscribe to their own chat channel
+- Laravel automatically verifies that `$user->id` matches `$userId` in channel name
+- Unauthorized users cannot connect to private channels
 
-**Защита:**
-- ✅ Пользователь не может прослушивать чужие каналы
-- ✅ Администратор может отправлять сообщения любому пользователю
-- ✅ WebSocket соединения защищены Laravel Sanctum/Session
+**Protection:**
+- ✅ User cannot listen to other users' channels
+- ✅ Administrator can send messages to any user
+- ✅ WebSocket connections protected by Laravel Sanctum/Session
 
 ---
 
-## Валидация данных
+## Data Validation
 
-### Валидация отправки сообщений
+### Message Sending Validation
 
-**Файл:** `app/Livewire/ChatPanel.php`
+**File:** `app/Livewire/ChatPanel.php`
 
 ```php
 public function sendMessage(): void
@@ -51,14 +51,14 @@ public function sendMessage(): void
 }
 ```
 
-**Что проверяется:**
-- ✅ Сообщение не пустое (`required`)
-- ✅ Сообщение является строкой (`string`)
-- ✅ Максимальная длина 1000 символов (`max:1000`)
+**What is validated:**
+- ✅ Message is not empty (`required`)
+- ✅ Message is a string (`string`)
+- ✅ Maximum length 1000 characters (`max:1000`)
 
-### Рекомендации по улучшению валидации
+### Validation Improvement Recommendations
 
-**1. Добавить дополнительные правила:**
+**1. Add additional rules:**
 
 ```php
 $this->validate([
@@ -67,65 +67,65 @@ $this->validate([
         'string',
         'max:1000',
         'min:1',
-        // Запретить только пробелы
+        // Disallow only spaces
         'regex:/^(?!\s*$).+/',
     ],
 ]);
 ```
 
-**2. Фильтрация нежелательного контента:**
+**2. Filter unwanted content:**
 
 ```php
 use Illuminate\Support\Str;
 
-// Удаление лишних пробелов
+// Remove extra spaces
 $this->new_message = trim($this->new_message);
 $this->new_message = preg_replace('/\s+/', ' ', $this->new_message);
 
-// Фильтрация HTML-тегов (если не нужен HTML)
+// Filter HTML tags (if HTML not needed)
 $this->new_message = strip_tags($this->new_message);
 ```
 
 ---
 
-## XSS защита
+## XSS Protection
 
-### Автоматическая защита Blade
+### Automatic Blade Protection
 
-**Файл:** `resources/views/livewire/chat-panel.blade.php`
+**File:** `resources/views/livewire/chat-panel.blade.php`
 
 ```blade
 <p class="text-sm break-words">{{ $message->message }}</p>
 ```
 
-**Как работает:**
-- Blade синтаксис `{{ }}` автоматически экранирует HTML
-- Все специальные символы (`<`, `>`, `&`, `"`, `'`) преобразуются в HTML entities
-- Защита от внедрения JavaScript кода
+**How it works:**
+- Blade syntax `{{ }}` automatically escapes HTML
+- All special characters (`<`, `>`, `&`, `"`, `'`) are converted to HTML entities
+- Protection against JavaScript code injection
 
-**Пример:**
+**Example:**
 ```
-Ввод: <script>alert('XSS')</script>
-Вывод: &lt;script&gt;alert('XSS')&lt;/script&gt;
+Input: <script>alert('XSS')</script>
+Output: &lt;script&gt;alert('XSS')&lt;/script&gt;
 ```
 
-### ❌ НЕ ИСПОЛЬЗОВАТЬ:
+### ❌ DO NOT USE:
 
 ```blade
-<!-- ОПАСНО! Никогда не используйте {!! !!} для пользовательского контента -->
+<!-- DANGEROUS! Never use {!! !!} for user content -->
 <p>{!! $message->message !!}</p>
 ```
 
-### Дополнительная защита
+### Additional Protection
 
 **Content Security Policy (CSP):**
 
-Добавить в `.env`:
+Add to `.env`:
 ```env
 CSP_ENABLED=true
 ```
 
-Добавить middleware в `app/Http/Kernel.php`:
+Add middleware to `app/Http/Kernel.php`:
 ```php
 protected $middlewareGroups = [
     'web' => [
@@ -139,21 +139,21 @@ protected $middlewareGroups = [
 
 ## Rate Limiting
 
-### Текущее состояние
-⚠️ **Rate limiting не реализован**
+### Current State
+⚠️ **Rate limiting not implemented**
 
-### Рекомендации по реализации
+### Implementation Recommendations
 
-**1. Throttle на уровне маршрутов (для API):**
+**1. Route-level throttle (for API):**
 
 ```php
 // routes/web.php
 Route::middleware(['auth', 'throttle:60,1'])->group(function () {
-    // 60 запросов в минуту
+    // 60 requests per minute
 });
 ```
 
-**2. Throttle в Livewire компоненте:**
+**2. Throttle in Livewire component:**
 
 ```php
 use Illuminate\Support\Facades\RateLimiter;
@@ -166,21 +166,21 @@ public function sendMessage(): void
         $seconds = RateLimiter::availableIn($key);
         
         $this->addError('new_message', 
-            "Слишком много сообщений. Попробуйте через {$seconds} секунд."
+            "Too many messages. Try again in {$seconds} seconds."
         );
         
         return;
     }
     
-    RateLimiter::hit($key, 60); // 10 сообщений в минуту
+    RateLimiter::hit($key, 60); // 10 messages per minute
     
-    // ... отправка сообщения
+    // ... send message
 }
 ```
 
-**3. Глобальный rate limiting на WebSocket:**
+**3. Global WebSocket rate limiting:**
 
-В `config/broadcasting.php`:
+In `config/broadcasting.php`:
 ```php
 'reverb' => [
     'connections' => [
@@ -193,11 +193,11 @@ public function sendMessage(): void
 
 ---
 
-## Мониторинг и логирование
+## Monitoring and Logging
 
-### Рекомендуемые события для логирования
+### Recommended Events for Logging
 
-**1. Логирование отправки сообщений:**
+**1. Message sending logging:**
 
 ```php
 // app/Livewire/ChatPanel.php
@@ -220,10 +220,10 @@ public function sendMessage(): void
 }
 ```
 
-**2. Логирование подозрительной активности:**
+**2. Suspicious activity logging:**
 
 ```php
-// Логировать множественные неудачные попытки
+// Log multiple failed attempts
 if ($this->validate(...) === false) {
     Log::warning('Invalid message attempt', [
         'user_id' => auth()->id(),
@@ -233,10 +233,10 @@ if ($this->validate(...) === false) {
 }
 ```
 
-**3. Мониторинг WebSocket соединений:**
+**3. WebSocket connection monitoring:**
 
 ```php
-// В Event MessageSent
+// In MessageSent Event
 Log::channel('chat')->info('Message broadcasted', [
     'message_id' => $this->message->id,
     'user_id' => $this->message->user_id,
@@ -246,9 +246,9 @@ Log::channel('chat')->info('Message broadcasted', [
 
 ---
 
-## Рекомендации по улучшению
+## Improvement Recommendations
 
-### 1. Санитизация сообщений
+### 1. Message Sanitization
 
 ```bash
 composer require mews/purifier
@@ -258,11 +258,11 @@ composer require mews/purifier
 use Mews\Purifier\Facades\Purifier;
 
 $cleanMessage = Purifier::clean($this->new_message, [
-    'HTML.Allowed' => '', // Запретить весь HTML
+    'HTML.Allowed' => '', // Disallow all HTML
 ]);
 ```
 
-### 2. Профилирование спама
+### 2. Spam Profiling
 
 ```php
 use Illuminate\Support\Facades\Cache;
@@ -272,23 +272,23 @@ public function sendMessage(): void
     $key = 'spam-check:'.auth()->id();
     $messages = Cache::get($key, []);
     
-    // Проверка на дублирование сообщений
+    // Check for duplicate messages
     if (in_array($this->new_message, $messages)) {
-        $this->addError('new_message', 'Не отправляйте одинаковые сообщения');
+        $this->addError('new_message', 'Do not send duplicate messages');
         return;
     }
     
-    // Сохранить последние 5 сообщений на 5 минут
+    // Save last 5 messages for 5 minutes
     $messages[] = $this->new_message;
     Cache::put($key, array_slice($messages, -5), now()->addMinutes(5));
     
-    // ... отправка
+    // ... send
 }
 ```
 
-### 3. Блокировка пользователей
+### 3. User Blocking
 
-**Миграция:**
+**Migration:**
 ```php
 Schema::table('chat_sessions', function (Blueprint $table) {
     $table->boolean('is_blocked')->default(false);
@@ -297,75 +297,75 @@ Schema::table('chat_sessions', function (Blueprint $table) {
 });
 ```
 
-**Проверка в компоненте:**
+**Component check:**
 ```php
 public function sendMessage(): void
 {
     if ($this->chat_session->is_blocked) {
-        $this->addError('new_message', 'Вы не можете отправлять сообщения');
+        $this->addError('new_message', 'You cannot send messages');
         return;
     }
     
-    // ... отправка
+    // ... send
 }
 ```
 
-### 4. Двухфакторная авторизация для админов
+### 4. Two-Factor Authorization for Admins
 
-При отправке сообщений от администратора требовать дополнительную проверку.
+Require additional verification when sending messages from administrator.
 
-### 5. Шифрование сообщений
+### 5. Message Encryption
 
 ```php
 use Illuminate\Support\Facades\Crypt;
 
-// При сохранении
+// When saving
 $message = Message::create([
     'message' => Crypt::encryptString($this->new_message),
     // ...
 ]);
 
-// При чтении
+// When reading
 $decrypted = Crypt::decryptString($message->message);
 ```
 
-**⚠️ Внимание:** Шифрование в БД усложнит поиск и индексацию сообщений.
+**⚠️ Note:** Database encryption will complicate message search and indexing.
 
-### 6. CSRF защита
+### 6. CSRF Protection
 
-Laravel автоматически защищает от CSRF атак для всех POST запросов.
-Livewire компоненты автоматически включают CSRF токены.
+Laravel automatically protects against CSRF attacks for all POST requests.
+Livewire components automatically include CSRF tokens.
 
-### 7. SQL Injection защита
+### 7. SQL Injection Protection
 
-Laravel Eloquent автоматически защищает от SQL Injection через параметризованные запросы.
+Laravel Eloquent automatically protects against SQL Injection through parameterized queries.
 
-**✅ Безопасно:**
+**✅ Safe:**
 ```php
 Message::where('user_id', $userId)->get();
 ```
 
-**❌ Никогда не используйте:**
+**❌ Never use:**
 ```php
 DB::select("SELECT * FROM messages WHERE user_id = $userId");
 ```
 
 ---
 
-## Чеклист безопасности
+## Security Checklist
 
-- [x] Авторизация приватных каналов
-- [x] Валидация входных данных
-- [x] XSS защита через Blade
-- [ ] Rate Limiting (рекомендуется добавить)
-- [ ] Логирование событий чата
-- [ ] Санитизация HTML
-- [ ] Защита от спама
-- [ ] Возможность блокировки пользователей
-- [ ] Мониторинг подозрительной активности
+- [x] Private channel authorization
+- [x] Input data validation
+- [x] XSS protection via Blade
+- [ ] Rate Limiting (recommended to add)
+- [ ] Chat event logging
+- [ ] HTML sanitization
+- [ ] Spam protection
+- [ ] User blocking capability
+- [ ] Suspicious activity monitoring
 
 ---
 
-## Контакты и поддержка
+## Contact and Support
 
-При обнаружении проблем безопасности обращайтесь к администратору проекта.
+If you discover security issues, contact the project administrator.

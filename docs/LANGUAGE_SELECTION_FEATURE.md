@@ -1,100 +1,100 @@
 # Language Selection Feature
 
-## Описание
-Реализован промежуточный шаг выбора родного языка (`native_lang`) перед созданием пользователя в базе данных.
+## Description
+Implemented an intermediate step for selecting native language (`native_lang`) before creating a user in the database.
 
-## Изменения
+## Changes
 
-### 1. Новый Livewire компонент: `LanguageSelection`
-**Файлы:**
+### 1. New Livewire Component: `LanguageSelection`
+**Files:**
 - `app/Livewire/Auth/LanguageSelection.php`
 - `resources/views/livewire/auth/language-selection.blade.php`
 
-**Функциональность:**
-- Проверяет наличие данных регистрации в сессии
-- Отображает селект с доступными языками (English/Vietnamese)
-- Устанавливает язык по умолчанию на основе текущей локали
-- Автоматически определяет `learning_lang` (противоположный от `native_lang`)
-- Создает пользователя только после выбора языка
-- Отправляет приветственное уведомление
-- Логинит пользователя и редиректит на дашборд
+**Functionality:**
+- Checks for registration data in session
+- Displays select with available languages (English/Vietnamese)
+- Sets default language based on current locale
+- Automatically determines `learning_lang` (opposite of `native_lang`)
+- Creates user only after language selection
+- Sends welcome notification
+- Logs in user and redirects to dashboard
 
-### 2. Обновлен `AuthController`
-**Файл:** `app/Http/Controllers/Auth/AuthController.php`
+### 2. Updated `AuthController`
+**File:** `app/Http/Controllers/Auth/AuthController.php`
 
-**Изменения в методе `register()`:**
-- Убрано создание пользователя сразу после регистрации
-- Данные сохраняются в сессию: `name`, `email`, `password`, `timezone`
-- Редирект на страницу выбора языка: `route('auth.language')`
+**Changes in `register()` method:**
+- Removed user creation immediately after registration
+- Data saved to session: `name`, `email`, `password`, `timezone`
+- Redirect to language selection page: `route('auth.language')`
 
-### 3. Обновлен `SocialAuthController` (Facebook)
-**Файл:** `app/Http/Controllers/Auth/SocialAuthController.php`
+### 3. Updated `SocialAuthController` (Facebook)
+**File:** `app/Http/Controllers/Auth/SocialAuthController.php`
 
-**Изменения в методе `handleFacebookCallback()`:**
-- Для новых пользователей: сохранение данных в сессию и редирект на выбор языка
-- Для существующих пользователей: прямой логин и отправка welcome-уведомления
+**Changes in `handleFacebookCallback()` method:**
+- For new users: save data to session and redirect to language selection
+- For existing users: direct login and send welcome notification
 
-### 4. Обновлен `ZaloController`
-**Файл:** `app/Http/Controllers/Auth/ZaloController.php`
+### 4. Updated `ZaloController`
+**File:** `app/Http/Controllers/Auth/ZaloController.php`
 
-**Изменения в методе `callback()`:**
-- Для новых пользователей: сохранение данных в сессию и редирект на выбор языка
-- Для существующих пользователей: прямой логин и отправка welcome-уведомления
-- Убрано хардкод-значение `native_lang` при создании пользователя
+**Changes in `callback()` method:**
+- For new users: save data to session and redirect to language selection
+- For existing users: direct login and send welcome notification
+- Removed hardcoded `native_lang` value when creating user
 
-### 5. Роутинг
-**Файл:** `routes/web.php`
+### 5. Routing
+**File:** `routes/web.php`
 
-**Добавлен роут:**
+**Added route:**
 ```php
 Route::get('/auth/language', LanguageSelection::class)->name('auth.language');
 ```
 
-### 6. Переводы
-**Файлы:**
+### 6. Translations
+**Files:**
 - `resources/lang/en/auth.php`
 - `resources/lang/vi/auth.php`
 
-**Добавлена секция `language_selection`:**
-- `title` - заголовок страницы
-- `description` - описание
-- `native_lang_label` - метка для селекта
-- `select_language` - плейсхолдер
-- `submit` - текст кнопки
+**Added `language_selection` section:**
+- `title` - page title
+- `description` - description
+- `native_lang_label` - select label
+- `select_language` - placeholder
+- `submit` - button text
 
-## Процесс регистрации
+## Registration Process
 
-### Обычная регистрация:
-1. Пользователь заполняет форму на `/register`
-2. Данные сохраняются в сессию
-3. Редирект на `/auth/language`
-4. Пользователь выбирает `native_lang`
-5. Создается запись в БД с `native_lang` и автоматическим `learning_lang`
-6. Логин и редирект на `/dashboard`
+### Regular Registration:
+1. User fills form at `/register`
+2. Data saved to session
+3. Redirect to `/auth/language`
+4. User selects `native_lang`
+5. Database record created with `native_lang` and automatic `learning_lang`
+6. Login and redirect to `/dashboard`
 
-### Социальная авторизация (Facebook/Zalo):
-1. Callback от социальной сети
-2. Проверка существования пользователя
-3. **Новый пользователь:**
-   - Сохранение данных в сессию
-   - Редирект на `/auth/language`
-   - Выбор языка
-   - Создание пользователя
-   - Логин и редирект
-4. **Существующий пользователь:**
-   - Прямой логин
-   - Welcome-уведомление
-   - Редирект на `/dashboard`
+### Social Authorization (Facebook/Zalo):
+1. Callback from social network
+2. Check if user exists
+3. **New user:**
+   - Save data to session
+   - Redirect to `/auth/language`
+   - Language selection
+   - User creation
+   - Login and redirect
+4. **Existing user:**
+   - Direct login
+   - Welcome notification
+   - Redirect to `/dashboard`
 
-## Структура данных в сессии
+## Session Data Structure
 
 ```php
 session()->get('registration_data') = [
     'name' => string,
     'email' => string,
-    'password' => string, // plain text, хешируется при создании
+    'password' => string, // plain text, hashed on creation
     'timezone' => string,
-    // для социальной авторизации:
+    // for social authorization:
     'facebook_id' => string|null,
     'zalo_user_id' => string|null,
     'avatar' => string|null,
@@ -102,22 +102,22 @@ session()->get('registration_data') = [
 ]
 ```
 
-## Логика определения learning_lang
+## learning_lang Determination Logic
 
 ```php
 $learning_lang = $native_lang === 'en' ? 'vi' : 'en';
 ```
 
-## Безопасность
+## Security
 
-- Проверка наличия данных в сессии перед созданием пользователя
-- Валидация выбранного языка через Enum
-- Очистка сессии после успешной регистрации
-- Хеширование пароля перед сохранением
+- Check for session data before user creation
+- Selected language validation via Enum
+- Session cleanup after successful registration
+- Password hashing before saving
 
-## Уведомления
+## Notifications
 
-Используется `RegistrationNotification` с персонализированным приветствием:
-- Определяется время суток на основе timezone
-- Выбирается приветствие на выбранном языке
-- Отправляется через систему уведомлений Laravel
+Uses `RegistrationNotification` with personalized greeting:
+- Time of day determined based on timezone
+- Greeting selected in chosen language
+- Sent through Laravel notification system
