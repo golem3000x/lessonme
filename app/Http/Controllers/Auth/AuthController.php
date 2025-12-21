@@ -15,6 +15,20 @@ use Illuminate\View\View;
 
 class AuthController extends Controller
 {
+    /**
+     * Validate timezone against PHP's timezone list.
+     */
+    private function validateTimezone(?string $timezone, string $default = 'UTC'): string
+    {
+        if ($timezone === null || $timezone === '') {
+            return $default;
+        }
+
+        $valid_timezones = \DateTimeZone::listIdentifiers();
+
+        return in_array($timezone, $valid_timezones, true) ? $timezone : $default;
+    }
+
     public function showLogin(): Factory|View
     {
         return view('auth.login');
@@ -46,8 +60,11 @@ class AuthController extends Controller
                 ]);
             }
 
-            // Get timezone from request (if sent from browser)
-            $timezone = $request->input('timezone', $user->timezone ?? 'UTC');
+            // Get and validate timezone from request (if sent from browser)
+            $timezone = $this->validateTimezone(
+                $request->input('timezone'),
+                $user->timezone ?? 'UTC'
+            );
 
             // Update user timezone if changed
             if ($user->timezone !== $timezone) {
@@ -76,8 +93,8 @@ class AuthController extends Controller
             'date_of_birth' => 'required|date|before:today',
         ]);
 
-        // Get timezone from request (if sent from browser)
-        $timezone = $request->input('timezone', 'UTC');
+        // Get and validate timezone from request (if sent from browser)
+        $timezone = $this->validateTimezone($request->input('timezone'), 'UTC');
 
         // Save registration data to session (with hashed password)
         $request->session()->put('registration_data', [

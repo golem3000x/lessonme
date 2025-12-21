@@ -132,16 +132,34 @@ class LessonControllerTest extends TestCase
         $response->assertForbidden();
     }
 
-    public function test_history_allows_access_to_temp_guest_lessons(): void
+    public function test_history_allows_access_to_temp_guest_lessons_by_session_owner(): void
     {
         $temp_guest = User::factory()->create(['is_temp_guest' => true]);
         $lesson = Lesson::factory()->create(['user_id' => $temp_guest->id]);
 
         $regular_user = User::factory()->create();
 
+        // Set up session with temp_guest_user_id
+        session()->put('temp_guest_user_id', $temp_guest->id);
+
         $response = $this->actingAs($regular_user)->get(route('lessons.history', $lesson));
 
         $response->assertOk();
+    }
+
+    public function test_history_denies_access_to_temp_guest_lessons_by_other_session(): void
+    {
+        $temp_guest = User::factory()->create(['is_temp_guest' => true]);
+        $lesson = Lesson::factory()->create(['user_id' => $temp_guest->id]);
+
+        $regular_user = User::factory()->create();
+
+        // Set up session with different temp_guest_user_id
+        session()->put('temp_guest_user_id', 99999);
+
+        $response = $this->actingAs($regular_user)->get(route('lessons.history', $lesson));
+
+        $response->assertForbidden();
     }
 
     public function test_history_requires_authentication(): void

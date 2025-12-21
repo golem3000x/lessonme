@@ -85,16 +85,36 @@ class EnsureLessonBelongsToUserTest extends TestCase
         $this->middleware->handle($request, fn () => new Response('OK'));
     }
 
-    public function test_temp_guest_lesson_is_accessible_by_anyone(): void
+    public function test_temp_guest_lesson_is_accessible_by_session_owner(): void
     {
         $temp_guest = User::factory()->create(['is_temp_guest' => true]);
         $temp_lesson = Lesson::factory()->create(['user_id' => $temp_guest->id]);
 
         $request = $this->createRequest($this->other_user, $temp_lesson);
 
+        // Set up session with temp_guest_user_id
+        $request->setLaravelSession(session()->driver());
+        session()->put('temp_guest_user_id', $temp_guest->id);
+
         $response = $this->middleware->handle($request, fn () => new Response('OK'));
 
         $this->assertEquals('OK', $response->getContent());
+    }
+
+    public function test_temp_guest_lesson_is_not_accessible_by_other_session(): void
+    {
+        $temp_guest = User::factory()->create(['is_temp_guest' => true]);
+        $temp_lesson = Lesson::factory()->create(['user_id' => $temp_guest->id]);
+
+        $request = $this->createRequest($this->other_user, $temp_lesson);
+
+        // Set up session with different temp_guest_user_id
+        $request->setLaravelSession(session()->driver());
+        session()->put('temp_guest_user_id', 99999);
+
+        $this->expectException(HttpException::class);
+
+        $this->middleware->handle($request, fn () => new Response('OK'));
     }
 
     public function test_passes_through_when_no_lesson_in_route(): void

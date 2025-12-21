@@ -51,11 +51,16 @@ class EnsureLessonAccess
             return $next($request);
         }
 
-        // 3. Allow access to temp guest users' lessons (for demo purposes)
+        // 3. Allow access to temp guest users' lessons only for the session owner
         $lesson->loadMissing('user');
         // @phpstan-ignore-next-line - user can be null even after loadMissing
         if ($lesson->user && $lesson->user->is_temp_guest) {
-            return $next($request);
+            if ($request->hasSession()) {
+                $temp_guest_id = $request->session()->get('temp_guest_user_id');
+                if ($temp_guest_id !== null && (int) $temp_guest_id === $lesson->user_id) {
+                    return $next($request);
+                }
+            }
         }
 
         // Deny access
