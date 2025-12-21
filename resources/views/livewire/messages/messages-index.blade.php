@@ -40,18 +40,18 @@
                    class="w-full p-4 text-left hover:bg-gray-50 transition border-b border-gray-100 flex items-center gap-3">
                     @if($conversation['user']?->avatar)
                         <img src="{{ $conversation['user']->avatar_url }}" 
-                             alt="{{ $conversation['user']->full_name }}"
+                             alt="{{ $conversation['user']->name }}"
                              class="w-12 h-12 rounded-full object-cover">
                     @else
                         <div class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
                             <span class="text-lg font-bold text-white">
-                                {{ strtoupper(substr($conversation['user']?->first_name ?? '', 0, 1)) }}
+                                {{ strtoupper(substr($conversation['user']?->name ?? '', 0, 1)) }}
                             </span>
                         </div>
                     @endif
                     <div class="flex-1 min-w-0">
                         <div class="flex items-center justify-between">
-                            <span class="font-medium text-gray-900 truncate">{{ $conversation['user']?->full_name ?? __('messages.deleted_user') }}</span>
+                            <span class="font-medium text-gray-900 truncate">{{ $conversation['user']?->name ?? __('messages.deleted_user') }}</span>
                             @if($conversation['unread_count'] > 0)
                                 <span class="bg-blue-600 text-white text-xs px-2 py-0.5 rounded-full">
                                     {{ $conversation['unread_count'] }}

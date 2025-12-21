@@ -79,12 +79,12 @@
                     <div class="px-6 -mt-10">
                         @if($user->avatar)
                             <img src="{{ $user->avatar_url }}" 
-                                 alt="{{ $user->full_name }}"
+                                 alt="{{ $user->name }}"
                                  class="w-20 h-20 rounded-full border-4 border-white shadow-md object-cover">
                         @else
                             <div class="w-20 h-20 rounded-full border-4 border-white shadow-md bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
                                 <span class="text-xl font-bold text-white">
-                                    {{ strtoupper(substr($user->first_name, 0, 1) . substr($user->last_name, 0, 1)) }}
+                                    {{ strtoupper(substr($user->name, 0, 2)) }}
                                 </span>
                             </div>
                         @endif
@@ -92,7 +92,7 @@
 
                     {{-- User Info --}}
                     <div class="px-6 py-4 flex-1">
-                        <h3 class="text-lg font-semibold text-gray-900">{{ $user->full_name }}</h3>
+                        <h3 class="text-lg font-semibold text-gray-900">{{ $user->name }}</h3>
                         
                         {{-- Roles --}}
                         <div class="flex items-center gap-2 mt-2">

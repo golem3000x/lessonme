@@ -65,13 +65,13 @@
                             @if(!empty($message['user']['avatar_url']))
                                 <img 
                                     src="{{ $message['user']['avatar_url'] }}" 
-                                    alt="{{ $message['user']['full_name'] }}"
+                                    alt="{{ $message['user']['name'] }}"
                                     class="w-8 h-8 rounded-full ring-2 ring-blue-100 object-cover"
                                 >
                             @else
                                 <img 
-                                    src="https://ui-avatars.com/api/?name={{ urlencode($message['user']['full_name']) }}&background=2563EB&color=fff" 
-                                    alt="{{ $message['user']['full_name'] }}"
+                                    src="https://ui-avatars.com/api/?name={{ urlencode($message['user']['name']) }}&background=2563EB&color=fff" 
+                                    alt="{{ $message['user']['name'] }}"
                                     class="w-8 h-8 rounded-full ring-2 ring-blue-100"
                                 >
                             @endif

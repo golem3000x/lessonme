@@ -23,8 +23,7 @@ class ResetPasswordNotificationTest extends TestCase
         parent::setUp();
 
         $this->user = User::factory()->create([
-            'first_name' => 'Test',
-            'last_name' => 'User',
+            'name' => 'Test User',
             'email' => 'test@example.com',
         ]);
         $this->token = 'test-reset-token-12345';

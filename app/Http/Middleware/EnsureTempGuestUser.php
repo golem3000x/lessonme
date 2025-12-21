@@ -50,8 +50,7 @@ class EnsureTempGuestUser
         // Create a new temporary guest user only for genuinely new visitors
         $unique_id = uniqid('guest_', true);
         $temp_guest_user = User::create([
-            'first_name' => 'Demo',
-            'last_name' => 'Guest',
+            'name' => 'Demo Guest',
             'date_of_birth' => now()->subYears(25)->toDateString(),
             'email' => 'demo_'.$unique_id.'@temp.local',
             'password' => Hash::make(bin2hex(random_bytes(32))),

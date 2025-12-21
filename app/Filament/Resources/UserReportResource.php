@@ -88,12 +88,12 @@ class UserReportResource extends Resource
                     ->label(__('admin.reporter'))
                     ->searchable()
                     ->sortable()
-                    ->description(fn (UserReport $record): string => $record->reporter->full_name),
+                    ->description(fn (UserReport $record): string => $record->reporter->name),
                 Tables\Columns\TextColumn::make('reportedUser.email')
                     ->label(__('admin.reported_user'))
                     ->searchable()
                     ->sortable()
-                    ->description(fn (UserReport $record): string => $record->reportedUser->full_name),
+                    ->description(fn (UserReport $record): string => $record->reportedUser->name),
                 Tables\Columns\TextColumn::make('reason')
                     ->label(__('admin.reason'))
                     ->badge()

@@ -28,7 +28,7 @@ class LessonAssignedNotificationTest extends TestCase
     {
         parent::setUp();
 
-        $this->teacher = User::factory()->create(['first_name' => 'John', 'last_name' => 'Doe']);
+        $this->teacher = User::factory()->create(['name' => 'John Doe']);
         $this->student = User::factory()->create();
         $this->lesson = Lesson::factory()->create(['user_id' => $this->teacher->id]);
         $this->assignment = LessonAssignment::factory()->create([
@@ -52,7 +52,7 @@ class LessonAssignedNotificationTest extends TestCase
         $payload = $notification->toArray();
 
         $this->assertArrayHasKey('teacher_name', $payload);
-        $this->assertEquals($this->teacher->full_name, $payload['teacher_name']);
+        $this->assertEquals($this->teacher->name, $payload['teacher_name']);
     }
 
     public function test_payload_contains_assigned_at(): void

@@ -36,7 +36,7 @@ class UserMessageSent implements ShouldBroadcast
             'content' => $this->message->content,
             'read_at' => $this->message->read_at?->toIso8601String(),
             'created_at' => $this->message->created_at?->toIso8601String(),
-            'sender_name' => $this->message->sender->full_name,
+            'sender_name' => $this->message->sender->name,
             'sender_avatar' => $this->message->sender->avatar_url,
         ];
     }

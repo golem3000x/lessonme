@@ -229,7 +229,7 @@ class TeacherDashboardTest extends TestCase
         $performance = $component->get('student_performance');
         $this->assertCount(1, $performance);
         $this->assertEquals($this->student->id, $performance[0]['id']);
-        $this->assertEquals($this->student->full_name, $performance[0]['name']);
+        $this->assertEquals($this->student->name, $performance[0]['name']);
     }
 
     public function test_student_performance_tracks_assigned_count(): void

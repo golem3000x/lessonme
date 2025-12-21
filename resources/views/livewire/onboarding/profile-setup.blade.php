@@ -95,33 +95,18 @@
         </div>
     </div>
 
-    <!-- Name Fields -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">
-                {{ __('onboarding.first_name') }}
-            </label>
-            <input type="text"
-                   wire:model.live="first_name"
-                   placeholder="{{ __('onboarding.first_name_placeholder') }}"
-                   class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none focus:border-blue-500 transition" />
-            @error('first_name')
-            <span class="text-red-600 text-sm">{{ $message }}</span>
-            @enderror
-        </div>
-
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">
-                {{ __('onboarding.last_name') }}
-            </label>
-            <input type="text"
-                   wire:model.live="last_name"
-                   placeholder="{{ __('onboarding.last_name_placeholder') }}"
-                   class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none focus:border-blue-500 transition" />
-            @error('last_name')
-            <span class="text-red-600 text-sm">{{ $message }}</span>
-            @enderror
-        </div>
+    <!-- Name Field -->
+    <div class="mb-4">
+        <label class="block text-sm font-medium text-gray-700 mb-1">
+            {{ __('onboarding.name') }}
+        </label>
+        <input type="text"
+               wire:model.live="name"
+               placeholder="{{ __('onboarding.name_placeholder') }}"
+               class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none focus:border-blue-500 transition" />
+        @error('name')
+        <span class="text-red-600 text-sm">{{ $message }}</span>
+        @enderror
     </div>
 
     <!-- Date of Birth -->

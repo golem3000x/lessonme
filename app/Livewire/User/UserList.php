@@ -172,7 +172,7 @@ class UserList extends Component
         $message = UserMessage::create([
             'sender_id' => $teacher->id,
             'recipient_id' => $student_id,
-            'content' => __('users.invitation_message', ['teacher' => $teacher->full_name]),
+            'content' => __('users.invitation_message', ['teacher' => $teacher->name]),
             'message_type' => MessageTypeEnum::INVITATION->value,
         ]);
 

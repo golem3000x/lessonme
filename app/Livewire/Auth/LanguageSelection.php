@@ -20,7 +20,7 @@ class LanguageSelection extends Component
     {
         // Check if registration data exists in session
         if (! session()->has('registration_data')) {
-            redirect()->route('register');
+            $this->redirect(route('register'), navigate: true);
 
             return;
         }
@@ -43,7 +43,7 @@ class LanguageSelection extends Component
         $registration_data = session()->get('registration_data');
 
         if (! $registration_data) {
-            redirect()->route('register');
+            $this->redirect(route('register'), navigate: true);
 
             return;
         }
@@ -52,7 +52,7 @@ class LanguageSelection extends Component
         session()->put('registration_native_lang', $this->native_lang);
 
         // Redirect to role selection
-        redirect()->route('auth.role');
+        $this->redirect(route('auth.role'), navigate: true);
     }
 
     public function render(): Factory|View|\Illuminate\View\View

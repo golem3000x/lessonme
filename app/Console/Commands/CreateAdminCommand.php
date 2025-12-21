@@ -14,8 +14,7 @@ class CreateAdminCommand extends Command
 {
     protected $signature = 'admin:create 
                             {--email= : Admin email}
-                            {--first-name= : Admin first name}
-                            {--last-name= : Admin last name}
+                            {--name= : Admin name}
                             {--password= : Admin password}
                             {--native-lang=vi : Native language (default: vi)}
                             {--learning-lang=en : Learning language (default: en)}';
@@ -25,8 +24,7 @@ class CreateAdminCommand extends Command
     public function handle(): int
     {
         $email = $this->option('email') ?? $this->ask('Admin email');
-        $first_name = $this->option('first-name') ?? $this->ask('Admin first name');
-        $last_name = $this->option('last-name') ?? $this->ask('Admin last name');
+        $name = $this->option('name') ?? $this->ask('Admin name');
         $password = $this->option('password') ?? $this->secret('Admin password');
         $native_lang = $this->option('native-lang');
         $learning_lang = $this->option('learning-lang');
@@ -34,13 +32,11 @@ class CreateAdminCommand extends Command
         // Validation
         $validator = Validator::make([
             'email' => $email,
-            'first_name' => $first_name,
-            'last_name' => $last_name,
+            'name' => $name,
             'password' => $password,
         ], [
             'email' => ['required', 'email', 'unique:users,email'],
-            'first_name' => ['required', 'string', 'max:255'],
-            'last_name' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255'],
             'password' => ['required', 'string', 'min:8'],
         ]);
 
@@ -55,8 +51,7 @@ class CreateAdminCommand extends Command
         // Create admin
         $user = User::create([
             'email' => $email,
-            'first_name' => $first_name,
-            'last_name' => $last_name,
+            'name' => $name,
             'password' => Hash::make($password),
             'date_of_birth' => '1990-01-01',
             'email_verified_at' => now(),
@@ -78,7 +73,7 @@ class CreateAdminCommand extends Command
             ['ID', 'Name', 'Email', 'Roles', 'Native Lang', 'Learning Languages'],
             [[
                 $user->id,
-                $user->full_name,
+                $user->name,
                 $user->email,
                 $user->roles->pluck('name')->implode(', '),
                 $user->native_lang,

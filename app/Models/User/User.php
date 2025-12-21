@@ -38,8 +38,7 @@ use Illuminate\Support\Str;
 /**
  * @property int $id
  * @property string $uuid
- * @property string $first_name
- * @property string $last_name
+ * @property string $name
  * @property string $email
  * @property Carbon|null $email_verified_at
  * @property string $password
@@ -65,7 +64,6 @@ use Illuminate\Support\Str;
  * @property-read int|null $chat_sessions_count
  * @property-read string|null $avatar_url
  * @property-read float|null $average_rating
- * @property-read string $full_name
  * @property-read int $reviews_count
  * @property-read Collection<int, \App\Models\User\Teacher\TeacherReview> $givenReviews
  * @property-read int|null $given_reviews_count
@@ -106,12 +104,11 @@ use Illuminate\Support\Str;
  * @method static Builder<static>|User whereEmailVerifiedAt($value)
  * @method static Builder<static>|User whereFacebookId($value)
  * @method static Builder<static>|User whereFirstLoginCompletedAt($value)
- * @method static Builder<static>|User whereFirstName($value)
+ * @method static Builder<static>|User whereName($value)
  * @method static Builder<static>|User whereId($value)
  * @method static Builder<static>|User whereIsAcceptingStudents($value)
  * @method static Builder<static>|User whereIsLookingForTeacher($value)
  * @method static Builder<static>|User whereIsTempGuest($value)
- * @method static Builder<static>|User whereLastName($value)
  * @method static Builder<static>|User whereNativeLang($value)
  * @method static Builder<static>|User wherePassword($value)
  * @method static Builder<static>|User whereRememberToken($value)
@@ -190,8 +187,7 @@ class User extends Authenticatable implements FilamentUser, HasLocalePreference,
      */
     protected $fillable = [
         'uuid',
-        'first_name',
-        'last_name',
+        'name',
         'email',
         'password',
         'zalo_user_id',
@@ -239,7 +235,6 @@ class User extends Authenticatable implements FilamentUser, HasLocalePreference,
      */
     protected $appends = [
         'avatar_url',
-        'full_name',
     ];
 
     /**
@@ -263,14 +258,6 @@ class User extends Authenticatable implements FilamentUser, HasLocalePreference,
             'banned_at' => 'datetime',
             'ban_expires_at' => 'datetime',
         ];
-    }
-
-    /**
-     * Get the user's full name.
-     */
-    public function getFullNameAttribute(): string
-    {
-        return trim($this->first_name.' '.$this->last_name);
     }
 
     /**
@@ -313,7 +300,7 @@ class User extends Authenticatable implements FilamentUser, HasLocalePreference,
      */
     public function getFilamentName(): string
     {
-        return $this->full_name;
+        return $this->name;
     }
 
     /**

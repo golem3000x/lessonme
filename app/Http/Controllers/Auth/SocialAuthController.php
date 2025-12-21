@@ -56,6 +56,9 @@ class SocialAuthController extends Controller
                         'timezone' => 'UTC',
                     ]);
 
+                    // Explicitly save session before redirect to ensure data persists after OAuth callback
+                    session()->save();
+
                     return redirect()->route('auth.language');
                 }
             } else {

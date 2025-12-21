@@ -10,12 +10,12 @@
             <div class="relative -mt-16 mb-4">
                 @if($user->avatar)
                     <img src="{{ $user->avatar_url }}" 
-                         alt="{{ $user->full_name }}"
+                         alt="{{ $user->name }}"
                          class="w-32 h-32 rounded-full border-4 border-white shadow-lg object-cover">
                 @else
                     <div class="w-32 h-32 rounded-full border-4 border-white shadow-lg bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
                         <span class="text-4xl font-bold text-white">
-                            {{ strtoupper(substr($user->first_name, 0, 1) . substr($user->last_name, 0, 1)) }}
+                            {{ strtoupper(substr($user->name, 0, 2)) }}
                         </span>
                     </div>
                 @endif
@@ -24,7 +24,7 @@
             {{-- Name and roles --}}
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
-                    <h1 class="text-2xl font-bold text-gray-900">{{ $user->full_name }}</h1>
+                    <h1 class="text-2xl font-bold text-gray-900">{{ $user->name }}</h1>
                     <div class="flex items-center gap-2 mt-2">
                         @if($is_teacher)
                             <span class="inline-flex items-center gap-1 px-3 py-1 bg-green-100 text-green-700 text-sm font-medium rounded-full">
@@ -306,18 +306,18 @@
                     <div class="flex items-start gap-3">
                         @if($review->student->avatar)
                             <img src="{{ $review->student->avatar_url }}" 
-                                 alt="{{ $review->student->full_name }}"
+                                 alt="{{ $review->student->name }}"
                                  class="w-10 h-10 rounded-full object-cover">
                         @else
                             <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
                                 <span class="text-sm font-medium text-gray-600">
-                                    {{ strtoupper(substr($review->student->first_name, 0, 1)) }}
+                                    {{ strtoupper(substr($review->student->name, 0, 1)) }}
                                 </span>
                             </div>
                         @endif
                         <div class="flex-1">
                             <div class="flex items-center justify-between">
-                                <span class="font-medium text-gray-900">{{ $review->student->full_name }}</span>
+                                <span class="font-medium text-gray-900">{{ $review->student->name }}</span>
                                 <span class="text-xs text-gray-500">{{ $review->created_at->diffForHumans() }}</span>
                             </div>
                             <div class="flex items-center gap-1 mt-1">

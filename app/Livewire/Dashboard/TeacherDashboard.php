@@ -104,7 +104,7 @@ class TeacherDashboard extends Component
             return [
                 'id' => $assignment->id,
                 'lesson_name' => $assignment->lesson->lesson_name ?? __('dashboard.unknown_lesson'),
-                'student_name' => $assignment->student->full_name ?? __('dashboard.unknown_student'),
+                'student_name' => $assignment->student->name ?? __('dashboard.unknown_student'),
                 'assigned_at' => $assignment->assigned_at->format('M d, Y'),
                 'status' => $score !== null ? 'completed' : 'pending',
                 'score' => $score?->score_percentage !== null ? round($score->score_percentage, 1) : null,
@@ -144,7 +144,7 @@ class TeacherDashboard extends Component
 
             return [
                 'id' => $student->id,
-                'name' => $student->full_name,
+                'name' => $student->name,
                 'avatar' => $student->avatar_url,
                 'assigned' => $assigned,
                 'completed' => $completed,
@@ -175,7 +175,7 @@ class TeacherDashboard extends Component
                 $activities[] = [
                     'type' => 'completion',
                     'message' => __('dashboard.activity_completed', [
-                        'student' => $score->user->full_name,
+                        'student' => $score->user->name,
                         'lesson' => $score->lesson->lesson_name,
                         'score' => round($score->score_percentage, 0),
                     ]),
@@ -196,7 +196,7 @@ class TeacherDashboard extends Component
                 'type' => 'assignment',
                 'message' => __('dashboard.activity_assigned', [
                     'lesson' => $assignment->lesson->lesson_name,
-                    'student' => $assignment->student->full_name,
+                    'student' => $assignment->student->name,
                 ]),
                 'time' => $assignment->assigned_at->diffForHumans(),
             ];

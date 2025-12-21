@@ -27,8 +27,7 @@ class RoleSelectionTest extends TestCase
     private function setRegistrationSession(): void
     {
         session()->put('registration_data', [
-            'first_name' => 'Test',
-            'last_name' => 'User',
+            'name' => 'Test User',
             'email' => 'test@example.com',
             'password' => Hash::make('password123'),
             'date_of_birth' => '1990-01-01',
@@ -67,8 +66,7 @@ class RoleSelectionTest extends TestCase
     public function test_mount_sets_vietnamese_default_for_english_native(): void
     {
         session()->put('registration_data', [
-            'first_name' => 'Test',
-            'last_name' => 'User',
+            'name' => 'Test User',
             'email' => 'test@example.com',
             'password' => Hash::make('password'),
             'date_of_birth' => '1990-01-01',
@@ -82,8 +80,7 @@ class RoleSelectionTest extends TestCase
     public function test_mount_sets_english_default_for_vietnamese_native(): void
     {
         session()->put('registration_data', [
-            'first_name' => 'Test',
-            'last_name' => 'User',
+            'name' => 'Test User',
             'email' => 'test@example.com',
             'password' => Hash::make('password'),
             'date_of_birth' => '1990-01-01',

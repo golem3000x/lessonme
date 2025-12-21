@@ -129,32 +129,11 @@
                                     </div>
                                 </div>
 
-                                <!-- PayPal Button Placeholder -->
-                                <div class="space-y-3">
-                                    <!-- This section is ready for PayPal button integration -->
-                                    <div class="text-center">
-                                        <p class="text-sm text-gray-600 mb-3">{{ __('nav.support_methods') }}</p>
-                                    </div>
-                                    
-                                    <!-- PayPal button will be placed here -->
-                                    <div id="paypal-button-container" class="min-h-[50px]">
-                                        <!-- PayPal SDK will render button here -->
-                                        <button class="w-full bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold py-3 px-6 rounded-lg shadow-md transition duration-200 flex items-center justify-center gap-2"
-                                                onclick="alert('PayPal integration coming soon!')">
-                                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                                                <path d="M20.067 8.478c.492.88.556 2.014.3 3.327-.74 3.806-3.276 5.12-6.514 5.12h-.5a.805.805 0 00-.794.68l-.04.22-.63 3.993-.028.15a.806.806 0 01-.795.68H7.72a.483.483 0 01-.477-.558L7.418 21h1.518l.95-6.02h1.385c4.678 0 7.75-2.203 8.796-6.502z"/>
-                                                <path d="M2.379 21.582a.48.48 0 01-.477-.557l2.043-12.953a.955.955 0 01.942-.805h5.377c1.765 0 3.058.365 3.845 1.087.398.365.672.794.836 1.296.18.553.225 1.223.134 2.008a.24.24 0 01-.014.063l-.003.011a7.947 7.947 0 01-.457 1.342.24.24 0 00.013.197c.09.158.134.34.134.536 0 .179-.03.351-.09.513a2.463 2.463 0 01-1.504 1.594c-.653.232-1.446.348-2.362.348h-.476a.955.955 0 00-.942.805l-.717 4.544a.804.804 0 01-.795.68H2.379z"/>
-                                            </svg>
-                                            <span>PayPal (Coming Soon)</span>
-                                        </button>
-                                    </div>
-
-                                    <!-- Support message -->
-                                    <div class="mt-4 p-4 bg-white/50 rounded-lg">
-                                        <p class="text-xs text-gray-600 text-center leading-relaxed">
-                                            {{ __('nav.donation_help_text') }}
-                                        </p>
-                                    </div>
+                                <!-- Support message -->
+                                <div class="p-4 bg-white/50 rounded-lg">
+                                    <p class="text-xs text-gray-600 text-center leading-relaxed">
+                                        {{ __('nav.donation_help_text') }}
+                                    </p>
                                 </div>
                             </div>
                         </div>

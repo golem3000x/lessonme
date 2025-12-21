@@ -37,7 +37,7 @@ class MessageSent implements ShouldBroadcast
             'is_from_admin' => $this->message->is_from_admin,
             'is_read' => $this->message->is_read,
             'created_at' => $this->message->created_at?->toIso8601String(),
-            'user_name' => $this->message->user->full_name,
+            'user_name' => $this->message->user->name,
             'user_avatar' => $this->message->user->avatar,
         ];
     }

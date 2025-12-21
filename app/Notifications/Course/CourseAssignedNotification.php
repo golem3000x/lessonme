@@ -24,7 +24,7 @@ class CourseAssignedNotification extends AbstractCourseNotification
         /** @var User $student */
         $student = $assignment->student;
 
-        $this->teacher_name = $assignment->teacher->full_name;
+        $this->teacher_name = $assignment->teacher->name;
 
         parent::__construct($student, $assignment->course_id);
     }

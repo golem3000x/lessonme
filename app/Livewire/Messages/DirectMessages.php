@@ -79,7 +79,7 @@ class DirectMessages extends Component
 
                 return [
                     'user_id' => $user_id,
-                    'user_name' => $other_user?->full_name,
+                    'user_name' => $other_user?->name,
                     'user_avatar' => $other_user?->avatar_url,
                     'last_message' => $last_message !== null ? $last_message->content : '',
                     'last_message_at' => $last_message?->created_at,

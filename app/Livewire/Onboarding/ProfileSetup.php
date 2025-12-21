@@ -24,9 +24,7 @@ class ProfileSetup extends Component
 {
     use WithFileUploads;
 
-    public string $first_name = '';
-
-    public string $last_name = '';
+    public string $name = '';
 
     public string $date_of_birth = '';
 
@@ -74,8 +72,7 @@ class ProfileSetup extends Component
         /** @var User $user */
         $user = Auth::user();
 
-        $this->first_name = $user->first_name ?? '';
-        $this->last_name = $user->last_name ?? '';
+        $this->name = $user->name ?? '';
         $this->date_of_birth = $user->date_of_birth !== null ? $user->date_of_birth->format('Y-m-d') : '';
         $this->bio = $user->bio ?? '';
         $this->native_lang = $user->native_lang;
@@ -199,8 +196,7 @@ class ProfileSetup extends Component
     public function save()
     {
         $rules = [
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
             'date_of_birth' => 'required|date|before:today',
             'bio' => 'nullable|string|max:500',
             'native_lang' => 'required|string',
@@ -225,8 +221,7 @@ class ProfileSetup extends Component
         $user = Auth::user();
 
         $data = [
-            'first_name' => $this->first_name,
-            'last_name' => $this->last_name,
+            'name' => $this->name,
             'date_of_birth' => $this->date_of_birth,
             'bio' => $this->bio ?: null,
             'native_lang' => $this->native_lang,

@@ -31,7 +31,7 @@ class RoleSelection extends Component
     {
         // Check if registration data exists in session
         if (! session()->has('registration_data') || ! session()->has('registration_native_lang')) {
-            redirect()->route('register');
+            $this->redirect(route('register'), navigate: true);
 
             return;
         }
@@ -102,18 +102,17 @@ class RoleSelection extends Component
         $native_lang = session()->get('registration_native_lang');
 
         if (! $registration_data || ! $native_lang) {
-            redirect()->route('register');
+            $this->redirect(route('register'), navigate: true);
 
             return;
         }
 
         // Create user
         $user = User::create([
-            'first_name' => $registration_data['first_name'],
-            'last_name' => $registration_data['last_name'],
+            'name' => $registration_data['name'],
             'email' => $registration_data['email'],
             'password' => $registration_data['password'],
-            'date_of_birth' => $registration_data['date_of_birth'],
+            'date_of_birth' => $registration_data['date_of_birth'] ?? null,
             'timezone' => $registration_data['timezone'] ?? 'UTC',
             'native_lang' => $native_lang,
             'facebook_id' => $registration_data['facebook_id'] ?? null,
@@ -158,7 +157,7 @@ class RoleSelection extends Component
         session()->forget(['registration_data', 'registration_native_lang']);
 
         // Redirect to dashboard
-        redirect()->route('dashboard');
+        $this->redirect(route('dashboard'), navigate: true);
     }
 
     public function render(): Factory|View|\Illuminate\View\View

@@ -536,10 +536,10 @@ class LessonIndex extends Component
             ->delete();
 
         // Notify student that they were unassigned
-        $student->notify(new LessonUnassignedNotification($student, $lesson, $teacher->full_name));
+        $student->notify(new LessonUnassignedNotification($student, $lesson, $teacher->name));
 
         // Notify teacher (confirmation)
-        $teacher->notify(new LessonAssignmentRemovedNotification($teacher, $lesson, $student->full_name));
+        $teacher->notify(new LessonAssignmentRemovedNotification($teacher, $lesson, $student->name));
 
         // Clear computed cache
         unset($this->assignedStudentIds);

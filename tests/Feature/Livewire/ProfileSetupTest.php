@@ -29,8 +29,7 @@ class ProfileSetupTest extends TestCase
         parent::setUp();
         $this->seed(RoleSeeder::class);
         $this->user = User::factory()->create([
-            'first_name' => 'Test',
-            'last_name' => 'User',
+            'name' => 'Test User',
             'native_lang' => 'en',
         ]);
         $this->user->assignRole(UserRoleEnum::STUDENT);
@@ -49,8 +48,7 @@ class ProfileSetupTest extends TestCase
     {
         Livewire::actingAs($this->user)
             ->test(ProfileSetup::class)
-            ->assertSet('first_name', 'Test')
-            ->assertSet('last_name', 'User')
+            ->assertSet('name', 'Test User')
             ->assertSet('native_lang', 'en')
             ->assertSet('learning_languages', ['vi']);
     }
@@ -223,31 +221,22 @@ class ProfileSetupTest extends TestCase
         $this->assertEquals(0, Keyword::where('user_id', '=', $this->user->id)->count());
     }
 
-    public function test_save_validates_required_first_name(): void
+    public function test_save_validates_required_name(): void
     {
         Livewire::actingAs($this->user)
             ->test(ProfileSetup::class)
-            ->set('first_name', '')
+            ->set('name', '')
             ->call('save')
-            ->assertHasErrors(['first_name' => 'required']);
+            ->assertHasErrors(['name' => 'required']);
     }
 
-    public function test_save_validates_required_last_name(): void
+    public function test_save_validates_name_max_length(): void
     {
         Livewire::actingAs($this->user)
             ->test(ProfileSetup::class)
-            ->set('last_name', '')
+            ->set('name', str_repeat('a', 256))
             ->call('save')
-            ->assertHasErrors(['last_name' => 'required']);
-    }
-
-    public function test_save_validates_first_name_max_length(): void
-    {
-        Livewire::actingAs($this->user)
-            ->test(ProfileSetup::class)
-            ->set('first_name', str_repeat('a', 256))
-            ->call('save')
-            ->assertHasErrors(['first_name' => 'max']);
+            ->assertHasErrors(['name' => 'max']);
     }
 
     public function test_save_validates_required_native_lang(): void
@@ -287,16 +276,14 @@ class ProfileSetupTest extends TestCase
     {
         Livewire::actingAs($this->user)
             ->test(ProfileSetup::class)
-            ->set('first_name', 'Updated')
-            ->set('last_name', 'Name')
+            ->set('name', 'Updated Name')
             ->set('native_lang', 'vi')
             ->set('learning_languages', ['en'])
             ->call('save');
 
         $this->assertDatabaseHas('users', [
             'id' => $this->user->id,
-            'first_name' => 'Updated',
-            'last_name' => 'Name',
+            'name' => 'Updated Name',
             'native_lang' => 'vi',
         ]);
 
@@ -423,8 +410,7 @@ class ProfileSetupTest extends TestCase
     {
         Livewire::actingAs($this->user)
             ->test(ProfileSetup::class)
-            ->set('first_name', 'Valid')
-            ->set('last_name', 'Name')
+            ->set('name', 'Valid Name')
             ->set('native_lang', 'en')
             ->set('learning_languages', ['vi'])
             ->call('save')
@@ -435,8 +421,7 @@ class ProfileSetupTest extends TestCase
     {
         Livewire::actingAs($this->user)
             ->test(ProfileSetup::class)
-            ->set('first_name', 'Test')
-            ->set('last_name', 'User')
+            ->set('name', 'Test User')
             ->set('native_lang', 'en')
             ->set('learning_languages', ['vi'])
             ->set('avatar', null)

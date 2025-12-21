@@ -51,7 +51,7 @@ class ViewChatSession extends ViewRecord
 
     public function getTitle(): string|Htmlable
     {
-        return __('admin.chat_with', ['name' => $this->record->user->full_name]);
+        return __('admin.chat_with', ['name' => $this->record->user->name]);
     }
 
     public function infolist(Infolist $infolist): Infolist

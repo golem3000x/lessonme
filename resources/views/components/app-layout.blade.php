@@ -171,14 +171,14 @@
                             class="group flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-blue-50 transition-all duration-200">
                         @if(Auth::user()->avatar)
                             <img src="{{ Auth::user()->avatar_url }}"
-                                 alt="{{ Auth::user()->full_name }}"
+                                 alt="{{ Auth::user()->name }}"
                                  class="h-9 w-9 rounded-full ring-2 ring-gray-200 group-hover:ring-blue-400 transition-all shadow-sm object-cover">
                         @else
-                            <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->full_name) }}&background=2563EB&color=fff"
-                                 alt="{{ Auth::user()->full_name }}"
+                            <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name) }}&background=2563EB&color=fff"
+                                 alt="{{ Auth::user()->name }}"
                                  class="h-9 w-9 rounded-full ring-2 ring-gray-200 group-hover:ring-blue-400 transition-all shadow-sm">
                         @endif
-                        <span class="hidden md:inline text-sm font-medium text-gray-700 group-hover:text-blue-600 transition">{{ Auth::user()->full_name }}</span>
+                        <span class="hidden md:inline text-sm font-medium text-gray-700 group-hover:text-blue-600 transition">{{ Auth::user()->name }}</span>
                         <svg class="w-4 h-4 text-gray-500 transition-all duration-200" :class="{'rotate-180 text-blue-600': open}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                   d="M19 9l-7 7-7-7"/>
@@ -191,15 +191,15 @@
                             <div class="flex items-center gap-3 mb-2">
                                 @if(Auth::user()->avatar)
                                     <img src="{{ Auth::user()->avatar_url }}"
-                                         alt="{{ Auth::user()->full_name }}"
+                                         alt="{{ Auth::user()->name }}"
                                          class="h-10 w-10 rounded-full object-cover border-2 border-white shadow-sm">
                                 @else
-                                    <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->full_name) }}&background=2563EB&color=fff"
-                                         alt="{{ Auth::user()->full_name }}"
+                                    <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name) }}&background=2563EB&color=fff"
+                                         alt="{{ Auth::user()->name }}"
                                          class="h-10 w-10 rounded-full border-2 border-white shadow-sm">
                                 @endif
                                 <div class="flex-1 min-w-0">
-                                    <p class="text-sm font-semibold text-gray-900 truncate">{{ Auth::user()->full_name }}</p>
+                                    <p class="text-sm font-semibold text-gray-900 truncate">{{ Auth::user()->name }}</p>
                                     <p class="text-xs text-gray-500 truncate">{{ Auth::user()->email }}</p>
                                 </div>
                             </div>

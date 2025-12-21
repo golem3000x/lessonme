@@ -26,8 +26,8 @@ class UserReportObserver
             Notification::make()
                 ->title(__('admin.new_report_notification'))
                 ->body(__('admin.new_report_body', [
-                    'reporter' => $report->reporter->full_name,
-                    'reported' => $report->reportedUser->full_name,
+                    'reporter' => $report->reporter->name,
+                    'reported' => $report->reportedUser->name,
                     'reason' => $report->reason->label(),
                 ]))
                 ->warning()

@@ -699,12 +699,12 @@
                                                 <img src="{{ $student->avatar_url }}" alt="" class="w-10 h-10 rounded-full object-cover">
                                             @else
                                                 <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold">
-                                                    {{ strtoupper(substr($student->first_name, 0, 1)) }}
+                                                    {{ strtoupper(substr($student->name, 0, 1)) }}
                                                 </div>
                                             @endif
                                         </div>
                                         <div class="flex-1 min-w-0">
-                                            <p class="font-medium text-gray-900 truncate">{{ $student->full_name }}</p>
+                                            <p class="font-medium text-gray-900 truncate">{{ $student->name }}</p>
                                             <p class="text-sm text-gray-500 truncate">{{ $student->email }}</p>
                                         </div>
                                         <div class="flex-shrink-0">

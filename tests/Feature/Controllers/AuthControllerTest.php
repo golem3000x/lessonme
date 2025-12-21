@@ -65,8 +65,7 @@ class AuthControllerTest extends TestCase
         $response = $this->post(route('register'), []);
 
         $response->assertSessionHasErrors([
-            'first_name',
-            'last_name',
+            'name',
             'email',
             'password',
             'date_of_birth',
@@ -78,8 +77,7 @@ class AuthControllerTest extends TestCase
         User::factory()->create(['email' => 'existing@example.com']);
 
         $response = $this->post(route('register'), [
-            'first_name' => 'John',
-            'last_name' => 'Doe',
+            'name' => 'John Doe',
             'email' => 'existing@example.com',
             'password' => 'password123',
             'password_confirmation' => 'password123',
@@ -92,8 +90,7 @@ class AuthControllerTest extends TestCase
     public function test_register_validates_password_confirmation(): void
     {
         $response = $this->post(route('register'), [
-            'first_name' => 'John',
-            'last_name' => 'Doe',
+            'name' => 'John Doe',
             'email' => 'john@example.com',
             'password' => 'password123',
             'password_confirmation' => 'differentpassword',
@@ -106,8 +103,7 @@ class AuthControllerTest extends TestCase
     public function test_register_validates_password_min_length(): void
     {
         $response = $this->post(route('register'), [
-            'first_name' => 'John',
-            'last_name' => 'Doe',
+            'name' => 'John Doe',
             'email' => 'john@example.com',
             'password' => 'short',
             'password_confirmation' => 'short',
@@ -120,8 +116,7 @@ class AuthControllerTest extends TestCase
     public function test_register_validates_date_of_birth_before_today(): void
     {
         $response = $this->post(route('register'), [
-            'first_name' => 'John',
-            'last_name' => 'Doe',
+            'name' => 'John Doe',
             'email' => 'john@example.com',
             'password' => 'password123',
             'password_confirmation' => 'password123',

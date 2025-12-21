@@ -35,7 +35,7 @@ class ResetPasswordNotification extends Notification implements ShouldQueue
         ], false));
 
         // Get name safely - CanResetPassword interface doesn't define name property
-        $name = $notifiable instanceof \App\Models\User\User ? $notifiable->full_name : 'User';
+        $name = $notifiable instanceof \App\Models\User\User ? $notifiable->name : 'User';
 
         return (new MailMessage)
             ->subject(Lang::get('passwords.reset_email_subject'))

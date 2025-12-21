@@ -67,17 +67,17 @@
                 <div class="flex items-center gap-3">
                     @if($selected_user->avatar)
                         <img src="{{ $selected_user->avatar_url }}" 
-                             alt="{{ $selected_user->full_name }}"
+                             alt="{{ $selected_user->name }}"
                              class="w-10 h-10 rounded-full object-cover">
                     @else
                         <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
                             <span class="text-sm font-bold text-white">
-                                {{ strtoupper(substr($selected_user->first_name, 0, 1) . substr($selected_user->last_name, 0, 1)) }}
+                                {{ strtoupper(substr($selected_user->name, 0, 2)) }}
                             </span>
                         </div>
                     @endif
                     <div>
-                        <h3 class="font-semibold text-gray-900">{{ $selected_user->full_name }}</h3>
+                        <h3 class="font-semibold text-gray-900">{{ $selected_user->name }}</h3>
                         <a href="{{ route('profile.show', $selected_user) }}" class="text-sm text-blue-600 hover:underline">
                             {{ __('messages.view_profile') }}
                         </a>

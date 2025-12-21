@@ -10,7 +10,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                 </svg>
             </button>
-            <h1 class="text-3xl font-bold mb-2 pr-8">👋 {{ $greeting }}, {{ auth()->user()->full_name }}!</h1>
+            <h1 class="text-3xl font-bold mb-2 pr-8">👋 {{ $greeting }}, {{ auth()->user()->name }}!</h1>
             <p class="text-blue-100">{{ __('dashboard.student_progress_overview') }}</p>
         </div>
     @endif

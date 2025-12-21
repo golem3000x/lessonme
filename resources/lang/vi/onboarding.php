@@ -5,10 +5,8 @@ declare(strict_types=1);
 return [
     'choose_interests' => 'Chọn sở thích của bạn',
     'profile_setup' => 'Thiết lập hồ sơ',
-    'first_name' => 'Tên',
-    'last_name' => 'Họ',
-    'first_name_placeholder' => 'Nhập tên của bạn',
-    'last_name_placeholder' => 'Nhập họ của bạn',
+    'name' => 'Họ và Tên',
+    'name_placeholder' => 'Nhập họ và tên của bạn',
     'date_of_birth' => 'Ngày sinh',
     'bio' => 'Giới thiệu bản thân',
     'bio_placeholder' => 'Kể cho chúng tôi một chút về bạn...',
