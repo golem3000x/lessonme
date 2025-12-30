@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('zalo_user_id')->nullable()->unique();
             $table->string('facebook_id')->nullable()->unique();
             $table->text('avatar')->nullable();
-            $table->date('date_of_birth');
+            $table->date('date_of_birth')->nullable();
             $table->text('bio')->nullable();
             $table->string('native_lang')->default(SystemLanguageEnum::VIETNAMESE->value);
             $table->boolean('is_looking_for_teacher')->default(false);

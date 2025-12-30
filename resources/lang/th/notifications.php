@@ -46,6 +46,8 @@ return [
     'lesson_creation_regeneration' => 'กำลังสร้างบทเรียนใหม่...',
     'lesson_creation_error' => 'การสร้างบทเรียนล้มเหลว กรุณาลองใหม่',
     'lesson_creation_exists' => 'บทเรียนที่คล้ายกัน ":name" มีอยู่แล้ว',
+    'lesson_creation_pending_moderation' => 'บทเรียน ":name" กำลังรอการตรวจสอบ...',
+    'lesson_creation_rejected' => 'บทเรียน ":name" ถูกปฏิเสธจากการตรวจสอบ',
 
     // Lesson assignment notifications
     'lesson_assigned' => ':teacher มอบหมายบทเรียนให้คุณ: ":lesson"',

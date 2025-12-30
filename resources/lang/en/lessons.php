@@ -74,6 +74,7 @@ return [
     'no_keywords' => 'No keywords available',
     'creating_lesson' => 'Creating lesson...',
     'lesson_creation_in_progress' => 'Lesson creation in progress...',
+    'lesson_generation_wait' => 'Your lesson is being generated. This may take a minute. The page will update automatically when ready.',
     'lesson_created_successfully' => 'Lesson ":name" has been created successfully!',
     'lesson_exists' => 'A similar lesson ":name" already exists.',
     'lesson_creation_failed' => 'Lesson creation failed. Please try again.',

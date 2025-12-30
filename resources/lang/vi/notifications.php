@@ -46,6 +46,8 @@ return [
     'lesson_creation_regeneration' => 'Đang tạo lại bài học...',
     'lesson_creation_error' => 'Tạo bài học thất bại. Vui lòng thử lại.',
     'lesson_creation_exists' => 'Bài học tương tự ":name" đã tồn tại.',
+    'lesson_creation_pending_moderation' => 'Bài học ":name" đang được kiểm duyệt...',
+    'lesson_creation_rejected' => 'Bài học ":name" đã bị từ chối bởi kiểm duyệt.',
 
     // Lesson assignment notifications
     'lesson_assigned' => ':teacher đã giao cho bạn bài học: ":lesson"',

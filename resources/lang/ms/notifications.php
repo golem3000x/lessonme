@@ -41,10 +41,13 @@ return [
     'user_auth_registered' => 'Selamat datang ke platform kami, :name!',
 
     // Lesson creation notifications
-    'lesson_creation_processing' => 'Penciptaan pelajaran sedang berjalan...',
-    'lesson_creation_successfully' => 'Pelajaran ":name" telah berjaya dicipta!',
+    'lesson_creation_creation' => 'Penciptaan pelajaran sedang berjalan...',
+    'lesson_creation_created' => 'Pelajaran ":name" telah berjaya dicipta!',
+    'lesson_creation_regeneration' => 'Penjanaan semula pelajaran sedang berjalan...',
     'lesson_creation_error' => 'Penciptaan pelajaran gagal. Sila cuba lagi.',
     'lesson_creation_exists' => 'Pelajaran serupa ":name" sudah wujud.',
+    'lesson_creation_pending_moderation' => 'Pelajaran ":name" sedang disemak...',
+    'lesson_creation_rejected' => 'Pelajaran ":name" telah ditolak oleh moderasi.',
 
     // Lesson regeneration notifications
     'lesson_regeneration_processing' => 'Penjanaan semula pelajaran sedang berjalan...',

@@ -125,33 +125,35 @@
             </div>
         </div>
 
-        <!-- Submit Button -->
-        <div class="mt-8">
-            <button
-                    wire:click="createDemoLesson"
-                    wire:loading.attr="disabled"
-                    class="w-full px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
-                    @if($is_generating) disabled @endif
-            >
-                @if($is_generating)
-                    <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
-                         viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                                stroke-width="4"></circle>
-                        <path class="opacity-75" fill="currentColor"
-                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    <span>{{ __('lessons.generating') }}...</span>
-                @else
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                         stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
-                    </svg>
-                    <span>{{ __('welcome.create_demo_lesson') }}</span>
-                @endif
-            </button>
-        </div>
+        <!-- Submit Button - only show if no lesson exists -->
+        @if(!$show_success_message && !$pending_lesson_id)
+            <div class="mt-8">
+                <button
+                        wire:click="createDemoLesson"
+                        wire:loading.attr="disabled"
+                        class="w-full px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+                        @if($is_generating) disabled @endif
+                >
+                    @if($is_generating)
+                        <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
+                             viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                    stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor"
+                                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        <span>{{ __('lessons.generating') }}...</span>
+                    @else
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                             stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                        </svg>
+                        <span>{{ __('welcome.create_demo_lesson') }}</span>
+                    @endif
+                </button>
+            </div>
+        @endif
 
         <!-- Processing Message with Polling -->
         @if($pending_lesson_id && !$show_success_message && !$show_error_message)

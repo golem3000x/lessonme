@@ -195,7 +195,10 @@ class DemoLessonCreatorTest extends TestCase
     public function test_mount_shows_existing_lesson_for_temp_guest(): void
     {
         $temp_user = User::factory()->create(['is_temp_guest' => true]);
-        $lesson = Lesson::factory()->create(['user_id' => $temp_user->id]);
+        $lesson = Lesson::factory()->create([
+            'user_id' => $temp_user->id,
+            'status' => \App\Enums\Notifications\LessonCreationStatusEnum::CREATED,
+        ]);
 
         session()->put('temp_guest_user_id', $temp_user->id);
 

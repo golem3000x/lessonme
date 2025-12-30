@@ -5,10 +5,14 @@ declare(strict_types=1);
 namespace App\Livewire\Lesson;
 
 use App\Enums\Lesson\LessonCreationTypeEnum;
+use App\Enums\Notifications\LessonCreationStatusEnum;
+use App\Enums\System\QueueNameEnum;
 use App\Enums\System\SystemLanguageEnum;
+use App\Jobs\Moderate\ModerateLessonJob;
 use App\Models\Keyword\Keyword;
 use App\Models\Lesson\Lesson;
 use App\Models\Topic\Topic;
+use App\Notifications\Lesson\LessonCreationNotification;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
@@ -328,6 +332,10 @@ class ManualLessonCreator extends Component
             'quiz' => array_filter($this->quiz, fn ($item) => ! empty($item['question'])),
         ];
 
+        $status = $is_draft
+            ? LessonCreationStatusEnum::CREATED
+            : LessonCreationStatusEnum::PENDING_MODERATION;
+
         $lesson = Lesson::create([
             'uuid' => Str::uuid()->toString(),
             'user_id' => $user->id,
@@ -337,6 +345,7 @@ class ManualLessonCreator extends Component
             'language_level' => $this->language_level,
             'lesson_lang' => $this->lesson_language,
             'creation_type' => LessonCreationTypeEnum::MANUAL->value,
+            'status' => $status,
             'is_draft' => $is_draft,
             'vocabulary' => array_filter($this->vocabulary, fn ($item) => ! empty($item['word'])) ?: null,
             'grammar_data' => array_filter($this->grammar_data, fn ($item) => ! empty($item['phrase'])) ?: null,
@@ -346,6 +355,17 @@ class ManualLessonCreator extends Component
             'common_mistakes' => array_filter($this->common_mistakes, fn ($item) => ! empty($item['mistake'])) ?: null,
             'culture_notes' => $this->culture_notes ?: null,
         ]);
+
+        if (! $is_draft) {
+            $user->notify(new LessonCreationNotification(
+                $user,
+                LessonCreationStatusEnum::PENDING_MODERATION,
+                $lesson->id,
+            ));
+
+            ModerateLessonJob::dispatch($lesson)
+                ->onQueue(QueueNameEnum::LESSON->value);
+        }
 
         session()->flash('message', $is_draft
             ? __('lessons.lesson_saved')

@@ -46,6 +46,8 @@ return [
     'lesson_creation_regeneration' => 'ກຳລັງສ້າງບົດຮຽນໃໝ່...',
     'lesson_creation_error' => 'ການສ້າງບົດຮຽນລົ້ມເຫຼວ. ກະລຸນາລອງໃໝ່.',
     'lesson_creation_exists' => 'ບົດຮຽນຄ້າຍຄືກັນ ":name" ມີຢູ່ແລ້ວ.',
+    'lesson_creation_pending_moderation' => 'ບົດຮຽນ ":name" ກຳລັງຖືກກວດສອບ...',
+    'lesson_creation_rejected' => 'ບົດຮຽນ ":name" ຖືກປະຕິເສດໂດຍການກວດສອບ.',
 
     // Lesson assignment notifications
     'lesson_assigned' => ':teacher ມອບໝາຍບົດຮຽນໃຫ້ທ່ານ: ":lesson"',

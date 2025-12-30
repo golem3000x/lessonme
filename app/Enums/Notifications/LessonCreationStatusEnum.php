@@ -12,6 +12,8 @@ enum LessonCreationStatusEnum: string
     case ARCHIVED = 'archived';
     case EXISTS = 'exists';
     case ERROR = 'error';
+    case PENDING_MODERATION = 'pending_moderation';
+    case REJECTED = 'rejected';
 
     /**
      * Get all values as array for database enum.

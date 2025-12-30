@@ -46,6 +46,8 @@ return [
     'lesson_creation_regeneration' => 'Lesson regeneration in progress...',
     'lesson_creation_error' => 'Lesson creation failed. Please try again.',
     'lesson_creation_exists' => 'A similar lesson ":name" already exists.',
+    'lesson_creation_pending_moderation' => 'Lesson ":name" is being reviewed...',
+    'lesson_creation_rejected' => 'Lesson ":name" was rejected by moderation.',
 
     // Lesson assignment notifications
     'lesson_assigned' => ':teacher assigned you a lesson: ":lesson"',

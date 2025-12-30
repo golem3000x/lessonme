@@ -41,10 +41,13 @@ return [
     'user_auth_registered' => 'ကျွန်ုပ်တို့၏ပလက်ဖောင်းသို့ ကြိုဆိုပါသည်၊ :name!',
 
     // Lesson creation notifications
-    'lesson_creation_processing' => 'သင်ခန်းစာဖန်တီးမှု လုပ်ဆောင်နေသည်...',
-    'lesson_creation_successfully' => '":name" သင်ခန်းစာကို အောင်မြင်စွာဖန်တီးပြီးပါပြီ!',
+    'lesson_creation_creation' => 'သင်ခန်းစာဖန်တီးမှု လုပ်ဆောင်နေသည်...',
+    'lesson_creation_created' => '":name" သင်ခန်းစာကို အောင်မြင်စွာဖန်တီးပြီးပါပြီ!',
+    'lesson_creation_regeneration' => 'သင်ခန်းစာပြန်လည်ဖန်တီးမှု လုပ်ဆောင်နေသည်...',
     'lesson_creation_error' => 'သင်ခန်းစာဖန်တီးမှု မအောင်မြင်ပါ။ ထပ်မံကြိုးစားပါ။',
     'lesson_creation_exists' => 'အလားတူသင်ခန်းစာ ":name" ရှိပြီးသားဖြစ်သည်။',
+    'lesson_creation_pending_moderation' => '":name" သင်ခန်းစာကို စစ်ဆေးနေသည်...',
+    'lesson_creation_rejected' => '":name" သင်ခန်းစာကို စစ်ဆေးမှုတွင် ပယ်ချခဲ့သည်။',
 
     // Lesson regeneration notifications
     'lesson_regeneration_processing' => 'သင်ခန်းစာပြန်လည်ဖန်တီးမှု လုပ်ဆောင်နေသည်...',

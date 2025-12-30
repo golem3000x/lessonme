@@ -15,12 +15,31 @@ class SlugService
      */
     public function moderateSlug(string $slug): bool
     {
-        $response = OpenAI::moderations()->create([
-            'model' => OpenAiModelEnum::OMNI_MODERATION_LATEST->value,
-            'input' => $slug,
-        ]);
+        try {
+            $response = OpenAI::moderations()->create([
+                'model' => OpenAiModelEnum::OMNI_MODERATION_LATEST->value,
+                'input' => $slug,
+            ]);
 
-        return ! ($response->results[0]->flagged ?? false);
+            $flagged = $response->results[0]->flagged ?? false;
+            $categories = $response->results[0]->categories ?? [];
+            
+            \Log::info('OpenAI moderation result', [
+                'content' => $slug,
+                'flagged' => $flagged,
+                'categories' => $categories
+            ]);
+
+            return !$flagged;
+        } catch (\Exception $e) {
+            \Log::error('OpenAI moderation failed - rejecting content by default', [
+                'content' => $slug,
+                'error' => $e->getMessage()
+            ]);
+            
+            // Reject by default if API fails (conservative approach)
+            return false;
+        }
     }
 
     /**

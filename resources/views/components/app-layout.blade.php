@@ -318,8 +318,8 @@
                 </div>
             </div>
 
-            <!-- Support Project (only for authenticated users) -->
-            @auth
+            <!-- Temporarily hidden support project link -->
+            {{-- @auth
                 <a href="{{ route('support') }}"
                    class="group px-3 py-2 text-sm font-medium text-pink-600 hover:text-pink-700 hover:bg-pink-50 rounded-lg flex items-center gap-1 transition-all duration-200"
                    title="{{ __('nav.support_tooltip') }}">
@@ -328,7 +328,7 @@
                     </svg>
                     <span class="hidden lg:inline text-xs">{{ __('nav.about') }}</span>
                 </a>
-            @endauth
+            @endauth --}}
         </div>
     </div>
 </nav>
@@ -350,9 +350,9 @@
     <livewire:notification.notifications-panel />
 @endauth
 
-<!-- Chat button - on Support and Help pages -->
+<!-- Chat button - only on Help pages (support temporarily disabled) -->
 @auth
-    @if(request()->routeIs('support') || request()->is('help*'))
+    @if(request()->is('help*'))
         <livewire:chat.chat-button />
         <livewire:chat.chat-panel />
     @endif

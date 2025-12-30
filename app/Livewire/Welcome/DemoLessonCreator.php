@@ -106,17 +106,24 @@ class DemoLessonCreator extends Component
         $this->keywords = $this->buildKeywordsForTopic($this->topic_id);
         $this->dispatch('keywords-preloaded', keywords: $this->keywords, reset: false, selectedIds: $this->keyword_ids);
 
-        // Check if temp guest already has a lesson
+        // Check if temp guest already has a lesson (any status)
         $temp_guest_user_id = session('temp_guest_user_id');
         if ($temp_guest_user_id) {
             $existing_lesson = Lesson::where('user_id', '=', $temp_guest_user_id)
+                ->latest()
                 ->first();
 
             if ($existing_lesson) {
-                // Show existing lesson button immediately
-                $this->demo_lesson_url = route('lessons.show', $existing_lesson->uuid);
-                $this->demo_lesson_name = $existing_lesson->lesson_name;
-                $this->show_success_message = true;
+                if ($existing_lesson->status === LessonCreationStatusEnum::CREATED) {
+                    // Lesson is ready - show View Lesson button
+                    $this->demo_lesson_url = route('lessons.show', $existing_lesson->uuid);
+                    $this->demo_lesson_name = $existing_lesson->lesson_name;
+                    $this->show_success_message = true;
+                } elseif (in_array($existing_lesson->status, [LessonCreationStatusEnum::CREATION, LessonCreationStatusEnum::REGENERATION], true)) {
+                    // Lesson is still being created - resume polling
+                    $this->pending_lesson_id = $existing_lesson->id;
+                    $this->is_generating = true;
+                }
             }
         }
     }
@@ -343,13 +350,14 @@ class DemoLessonCreator extends Component
             return;
         }
 
-        // Check if lesson has been created
+        // Check if lesson has been created AND content generated (status CREATED)
         $lesson = Lesson::where('user_id', '=', $temp_guest_user_id)
+            ->where('status', '=', LessonCreationStatusEnum::CREATED)
             ->latest()
             ->first();
 
         if ($lesson) {
-            // Lesson created successfully!
+            // Lesson created successfully with content!
             $this->demo_lesson_url = route('lessons.show', $lesson->uuid);
             $this->demo_lesson_name = $lesson->lesson_name;
             $this->show_success_message = true;
@@ -365,8 +373,8 @@ class DemoLessonCreator extends Component
     }
 
     /**
-     * Get temporary guest user ID from session
-     * Middleware already created it before page render
+     * Get or create temporary guest user ID
+     * Creates on-demand if middleware skipped (e.g., has_account cookie present)
      *
      * @return int User ID of the temp guest user
      */
@@ -374,11 +382,39 @@ class DemoLessonCreator extends Component
     {
         $temp_guest_user_id = session('temp_guest_user_id');
 
-        if (! $temp_guest_user_id) {
-            throw new \RuntimeException('Temp guest user not found in session. Middleware should have created it.');
+        if ($temp_guest_user_id) {
+            // Verify the user still exists and is valid
+            $temp_guest_exists = \App\Models\User\User::where('id', '=', $temp_guest_user_id)
+                ->where('is_temp_guest', '=', true)
+                ->where('temp_guest_expires_at', '>', now())
+                ->exists();
+
+            if ($temp_guest_exists) {
+                return $temp_guest_user_id;
+            }
         }
 
-        return $temp_guest_user_id;
+        // Create a new temporary guest user on-demand
+        $unique_id = uniqid('guest_', true);
+        $temp_guest_user = \App\Models\User\User::create([
+            'name' => 'Demo Guest',
+            'date_of_birth' => now()->subYears(25)->toDateString(),
+            'email' => 'demo_'.$unique_id.'@temp.local',
+            'password' => \Illuminate\Support\Facades\Hash::make(bin2hex(random_bytes(32))),
+            'email_verified_at' => now(),
+            'native_lang' => SystemLanguageEnum::VIETNAMESE->value,
+            'is_temp_guest' => true,
+            'temp_guest_expires_at' => now()->addHours(24),
+        ]);
+
+        // Add learning languages for temp guest
+        $temp_guest_user->syncLearningLanguages([SystemLanguageEnum::ENGLISH->value]);
+
+        // Store in session
+        session(['temp_guest_user_id' => $temp_guest_user->id]);
+        session(['temp_guest_user_uuid' => $temp_guest_user->uuid]);
+
+        return $temp_guest_user->id;
     }
 
     public function render(): Factory|View

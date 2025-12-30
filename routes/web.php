@@ -28,9 +28,10 @@ Route::get('/', function () {
     return view('welcome');
 })->middleware(['guest', EnsureTempGuestUser::class]);
 
-Route::get('/support', function () {
-    return view('support');
-})->name('support');
+// Temporarily hidden support page
+// Route::get('/support', function () {
+//     return view('support');
+// })->name('support');
 
 Route::get('/locale/{locale}', function (string $locale) {
     if (in_array($locale, SystemLanguageEnum::toArray(), true)) {

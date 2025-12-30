@@ -25,7 +25,8 @@ return new class extends Migration
             $table->string('language_level', 2);
             $table->string('lesson_lang');
             $table->string('creation_type')->default('ai');
-            $table->enum('status', LessonCreationStatusEnum::values())->default(LessonCreationStatusEnum::CREATION->value);
+            // Use string instead of enum for PostgreSQL compatibility with all status values
+            $table->string('status')->default(LessonCreationStatusEnum::CREATION->value);
             $table->boolean('is_draft')->default(false);
             $table->json('grammar_data')->nullable();
             $table->json('vocabulary')->nullable();

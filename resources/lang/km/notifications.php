@@ -46,6 +46,8 @@ return [
     'lesson_creation_regeneration' => 'កំពុងបង្កើតមេរៀនឡើងវិញ...',
     'lesson_creation_error' => 'ការបង្កើតមេរៀនបានបរាជ័យ។ សូមព្យាយាមម្តងទៀត។',
     'lesson_creation_exists' => 'មេរៀនស្រដៀងគ្នា ":name" មានរួចហើយ។',
+    'lesson_creation_pending_moderation' => 'មេរៀន ":name" កំពុងត្រូវបានត្រួតពិនិត្យ...',
+    'lesson_creation_rejected' => 'មេរៀន ":name" ត្រូវបានបដិសេធដោយការត្រួតពិនិត្យ។',
 
     // Lesson assignment notifications
     'lesson_assigned' => ':teacher បានផ្តល់មេរៀនមួយដល់អ្នក: ":lesson"',
