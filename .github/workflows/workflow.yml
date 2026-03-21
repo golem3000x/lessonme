@@ -142,6 +142,16 @@ jobs:
           DB_PASSWORD: testing
         run: php artisan migrate --force
 
+      - name: Run seeders
+        env:
+          DB_CONNECTION: pgsql
+          DB_HOST: 127.0.0.1
+          DB_PORT: 5432
+          DB_DATABASE: testing
+          DB_USERNAME: testing
+          DB_PASSWORD: testing
+        run: php artisan db:seed --force
+
       - name: Run Tests
         env:
           DB_CONNECTION: pgsql

@@ -119,6 +119,8 @@ class RoleSelection extends Component
             'zalo_user_id' => $registration_data['zalo_user_id'] ?? null,
             'avatar' => $registration_data['avatar'] ?? null,
             'email_verified_at' => $registration_data['email_verified_at'] ?? null,
+            'is_looking_for_teacher' => $this->is_student,
+            'is_accepting_students' => $this->is_teacher,
         ]);
 
         // Assign roles
