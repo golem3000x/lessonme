@@ -73,6 +73,7 @@ return [
     'topic_label' => 'ຫົວຂໍ້',
     'no_keywords' => 'ບໍ່ມີຄຳສຳຄັນ',
     'creating_lesson' => 'ກຳລັງສ້າງບົດຮຽນ...',
+    'pending_moderation' => 'ລໍຖ້າການກວດສອບ...',
     'lesson_creation_in_progress' => 'ການສ້າງບົດຮຽນກຳລັງດຳເນີນການ...',
     'lesson_created_successfully' => 'ບົດຮຽນ ":name" ໄດ້ຖືກສ້າງສຳເລັດແລ້ວ!',
     'lesson_exists' => 'ບົດຮຽນຄ້າຍຄືກັນ ":name" ມີຢູ່ແລ້ວ.',

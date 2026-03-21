@@ -153,10 +153,12 @@ class LessonIndex extends Component
                 ->toArray();
 
             $query = Lesson::whereIn('id', $assigned_lesson_ids)
+                ->where('status', '!=', LessonCreationStatusEnum::REJECTED->value)
                 ->with(['topic.translations']);
         } else {
             // Get user's own lessons
             $query = Lesson::where('user_id', '=', $user->id)
+                ->where('status', '!=', LessonCreationStatusEnum::REJECTED->value)
                 ->with(['topic.translations']);
         }
 
@@ -680,7 +682,8 @@ class LessonIndex extends Component
     #[Computed]
     public function filteredLessonsCount(): int
     {
-        $query = Lesson::where('user_id', '=', Auth::id());
+        $query = Lesson::where('user_id', '=', Auth::id())
+            ->where('status', '!=', LessonCreationStatusEnum::REJECTED->value);
 
         // Apply temporary search filter
         if ($this->temp_search) {

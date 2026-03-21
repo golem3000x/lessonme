@@ -73,6 +73,7 @@ return [
     'topic_label' => 'หัวข้อ',
     'no_keywords' => 'ไม่มีคำสำคัญ',
     'creating_lesson' => 'กำลังสร้างบทเรียน...',
+    'pending_moderation' => 'รอการตรวจสอบ...',
     'lesson_creation_in_progress' => 'กำลังสร้างบทเรียน...',
     'lesson_created_successfully' => 'บทเรียน ":name" ถูกสร้างสำเร็จ!',
     'lesson_exists' => 'บทเรียนที่คล้ายกัน ":name" มีอยู่แล้ว',

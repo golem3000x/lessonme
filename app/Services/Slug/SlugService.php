@@ -10,8 +10,19 @@ use OpenAI\Laravel\Facades\OpenAI;
 
 class SlugService
 {
+    // Stricter thresholds for educational content (lower = more strict)
+    private const STRICT_THRESHOLD = 0.3;
+    private const STRICT_CATEGORIES = [
+        'sexual',
+        'sexual/minors',
+        'violence',
+        'violence/graphic',
+        'hate',
+        'harassment',
+    ];
+
     /**
-     * Moderate slug using OpenAI moderation API
+     * Moderate slug using OpenAI moderation API with stricter thresholds
      */
     public function moderateSlug(string $slug): bool
     {
@@ -21,16 +32,39 @@ class SlugService
                 'input' => $slug,
             ]);
 
-            $flagged = $response->results[0]->flagged ?? false;
-            $categories = $response->results[0]->categories ?? [];
+            $result = $response->results[0];
+            $flagged = $result->flagged ?? false;
+            $categories = $result->categories ?? [];
+            $category_scores = $result->categoryScores ?? null;
+            
+            // Check with stricter thresholds
+            $strict_flagged = false;
+            $triggered_categories = [];
+            
+            if ($category_scores) {
+                foreach (self::STRICT_CATEGORIES as $category) {
+                    $score_key = str_replace('/', '', ucwords($category, '/'));
+                    $score_key = lcfirst($score_key);
+                    
+                    $score = $category_scores->$score_key ?? 0;
+                    
+                    if ($score >= self::STRICT_THRESHOLD) {
+                        $strict_flagged = true;
+                        $triggered_categories[$category] = $score;
+                    }
+                }
+            }
             
             \Log::info('OpenAI moderation result', [
                 'content' => $slug,
                 'flagged' => $flagged,
+                'strict_flagged' => $strict_flagged,
+                'triggered_categories' => $triggered_categories,
                 'categories' => $categories
             ]);
 
-            return !$flagged;
+            // Reject if either OpenAI flags it OR our strict threshold is exceeded
+            return !$flagged && !$strict_flagged;
         } catch (\Exception $e) {
             \Log::error('OpenAI moderation failed - rejecting content by default', [
                 'content' => $slug,

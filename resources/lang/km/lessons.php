@@ -73,6 +73,7 @@ return [
     'topic_label' => 'ប្រធានបទ',
     'no_keywords' => 'មិនមានពាក្យគន្លឹះទេ',
     'creating_lesson' => 'កំពុងបង្កើតមេរៀន...',
+    'pending_moderation' => 'កំពុងរង់ចាំការត្រួតពិនិត្យ...',
     'lesson_creation_in_progress' => 'ការបង្កើតមេរៀនកំពុងដំណើរការ...',
     'lesson_created_successfully' => 'មេរៀន ":name" ត្រូវបានបង្កើតដោយជោគជ័យ!',
     'lesson_exists' => 'មេរៀនស្រដៀងគ្នា ":name" មានរួចហើយ។',

@@ -24,7 +24,7 @@ class HandleSlugEntityChanged
             new ModerateSlugEntityJob($event->entity),
             new TranslateSlugEntityJob($event->entity),
         ])->catch(fn ($e) => Log::error('SlugEntityChanged chain failed: '.$e->getMessage()))
-            ->dispatch()
-            ->onQueue(QueueNameEnum::SLUG->value);
+            ->onQueue(QueueNameEnum::SLUG->value)
+            ->dispatch();
     }
 }

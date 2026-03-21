@@ -73,6 +73,7 @@ return [
     'topic_label' => 'ခေါင်းစဉ်',
     'no_keywords' => 'သော့ချက်စကားလုံးများမရှိပါ',
     'creating_lesson' => 'သင်ခန်းစာဖန်တီးနေသည်...',
+    'pending_moderation' => 'စိစစ်ဆေးမှုပေးရန်...',
     'lesson_creation_in_progress' => 'သင်ခန်းစာဖန်တီးမှု လုပ်ဆောင်နေသည်...',
     'lesson_created_successfully' => '":name" သင်ခန်းစာကို အောင်မြင်စွာဖန်တီးပြီးပါပြီ!',
     'lesson_exists' => 'အလားတူသင်ခန်းစာ ":name" ရှိပြီးသားဖြစ်သည်။',

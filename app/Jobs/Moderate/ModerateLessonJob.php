@@ -114,6 +114,61 @@ class ModerateLessonJob implements ShouldQueue
             $parts[] = $lesson->culture_notes;
         }
 
+        // Check exercises content (gap_fill, sentence_ordering, true_false, matching, quiz)
+        if (! empty($lesson->exercises)) {
+            foreach ($lesson->exercises as $exercise_type => $exercises) {
+                if (is_array($exercises)) {
+                    foreach ($exercises as $exercise) {
+                        if (isset($exercise['sentence'])) {
+                            $parts[] = $exercise['sentence'];
+                        }
+                        if (isset($exercise['answer'])) {
+                            $parts[] = $exercise['answer'];
+                        }
+                        if (isset($exercise['statement'])) {
+                            $parts[] = $exercise['statement'];
+                        }
+                        if (isset($exercise['question'])) {
+                            $parts[] = $exercise['question'];
+                        }
+                        if (isset($exercise['word'])) {
+                            $parts[] = $exercise['word'];
+                        }
+                        if (isset($exercise['match'])) {
+                            $parts[] = $exercise['match'];
+                        }
+                    }
+                }
+            }
+        }
+
+        // Check grammar data
+        if (! empty($lesson->grammar_data)) {
+            foreach ($lesson->grammar_data as $item) {
+                if (isset($item['phrase'])) {
+                    $parts[] = $item['phrase'];
+                }
+                if (isset($item['explanation'])) {
+                    $parts[] = $item['explanation'];
+                }
+                if (isset($item['example'])) {
+                    $parts[] = $item['example'];
+                }
+            }
+        }
+
+        // Check common mistakes
+        if (! empty($lesson->common_mistakes)) {
+            foreach ($lesson->common_mistakes as $item) {
+                if (isset($item['mistake'])) {
+                    $parts[] = $item['mistake'];
+                }
+                if (isset($item['correction'])) {
+                    $parts[] = $item['correction'];
+                }
+            }
+        }
+
         return implode("\n", array_filter($parts));
     }
 }

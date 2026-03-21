@@ -94,9 +94,21 @@ if (userId) {
             status: notification.status,
             message: notification.message
         });
-        // Note: Don't dispatch 'lesson-updated' here - the component already updates when modal closes,
-        // and placeholder with wire:poll.5s handles status checking. Dispatching here can cause race
-        // condition where this notification arrives after the job completes, showing finished card too early.
+        Livewire.dispatch('lesson-updated');
+    });
+
+    channel.listen('.lesson.creation.pending_moderation', (notification) => {
+        console.log('🔥 Lesson sent for moderation:', notification);
+        Livewire.dispatch('lesson-notification', {
+            id: notification.id,
+            entity: notification.entity,
+            status: notification.status,
+            message: notification.message,
+            lesson_id: notification.lesson_id,
+            lesson_url: notification.lesson_url,
+            lesson_name: notification.lesson_name
+        });
+        Livewire.dispatch('lesson-updated');
     });
 
     channel.listen('.lesson.creation.created', (notification) => {
@@ -121,8 +133,20 @@ if (userId) {
             status: notification.status,
             message: notification.message
         });
-        // Note: Same as creation - don't dispatch 'lesson-updated' to avoid race condition.
-        // The status is already set in DB and wire:poll.5s handles checking.
+        Livewire.dispatch('lesson-updated');
+    });
+
+    channel.listen('.lesson.creation.rejected', (notification) => {
+        console.log('🔥 Lesson rejected by moderation:', notification);
+        Livewire.dispatch('lesson-notification', {
+            id: notification.id,
+            entity: notification.entity,
+            status: notification.status,
+            message: notification.message,
+            lesson_id: notification.lesson_id,
+            lesson_database_id: notification.lesson_database_id
+        });
+        Livewire.dispatch('lesson-updated');
     });
 
     channel.listen('.lesson.creation.exists', (notification) => {

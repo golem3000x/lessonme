@@ -372,6 +372,7 @@ class ManualLessonCreator extends Component
             : __('lessons.lesson_published')
         );
 
+        // Always redirect to lessons page so user can see the created lesson or placeholder
         $this->redirect(route('lessons.index'), navigate: true);
     }
 

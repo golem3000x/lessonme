@@ -340,12 +340,13 @@
                 @php
                     $isCreating = $lesson->status === \App\Enums\Notifications\LessonCreationStatusEnum::CREATION;
                     $isRegenerating = $lesson->status === \App\Enums\Notifications\LessonCreationStatusEnum::REGENERATION;
-                    $isProcessing = $isCreating || $isRegenerating;
+                    $isPendingModeration = $lesson->status === \App\Enums\Notifications\LessonCreationStatusEnum::PENDING_MODERATION;
+                    $isProcessing = $isCreating || $isRegenerating || $isPendingModeration;
                 @endphp
                 
                 @if($isProcessing)
                 {{-- Processing lesson card (creating or regenerating) --}}
-                <div wire:key="lesson-{{ $lesson->id }}" wire:poll.5s class="group bg-white border border-gray-100 rounded-xl shadow-sm p-5 relative overflow-hidden animate-pulse">
+                <div wire:key="lesson-{{ $lesson->id }}" class="group bg-white border border-gray-100 rounded-xl shadow-sm p-5 relative overflow-hidden animate-pulse">
                     {{-- Animated gradient background --}}
                     <div class="absolute inset-0 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 opacity-50"></div>
                     
@@ -388,6 +389,14 @@
                                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                             </svg>
                             <span class="text-sm">{{ __('lessons.creating_lesson') }}</span>
+                        </div>
+                        @elseif($isPendingModeration)
+                        <div class="flex items-center justify-center w-full px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-md font-medium">
+                            <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            <span class="text-sm">{{ __('lessons.pending_moderation') }}</span>
                         </div>
                         @else
                         <div class="flex items-center justify-center w-full px-4 py-2 bg-gradient-to-r from-yellow-500 to-orange-500 text-white rounded-md font-medium">

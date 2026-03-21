@@ -73,6 +73,7 @@ return [
     'topic_label' => 'Topik',
     'no_keywords' => 'Tiada kata kunci tersedia',
     'creating_lesson' => 'Mencipta pelajaran...',
+    'pending_moderation' => 'Menunggu semakan...',
     'lesson_creation_in_progress' => 'Penciptaan pelajaran sedang berjalan...',
     'lesson_created_successfully' => 'Pelajaran ":name" telah berjaya dicipta!',
     'lesson_exists' => 'Pelajaran serupa ":name" sudah wujud.',
