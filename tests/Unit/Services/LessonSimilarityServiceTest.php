@@ -150,7 +150,7 @@ class LessonSimilarityServiceTest extends TestCase
         $lesson_less_similar = Lesson::factory()->create([
             'user_id' => $user->id,
             'lesson_name' => 'Less Similar',
-            'embedding' => array_map(fn ($v) => $v + 0.02, $search_embedding),
+            'embedding' => array_map(fn ($v) => $v + 0.5, $search_embedding),
             'language_level' => LanguageLevelEnum::B1,
         ]);
 
