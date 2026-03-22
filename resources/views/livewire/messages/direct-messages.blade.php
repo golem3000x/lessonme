@@ -1,4 +1,4 @@
-<div class="flex h-full bg-gray-100">
+<div class="flex h-full bg-gray-100 overflow-hidden">
     {{-- Conversations List - full width on mobile when no conversation selected, hidden when conversation is selected on mobile --}}
     <div class="w-full md:w-80 bg-white border-r border-gray-200 flex flex-col {{ $selected_user ? 'hidden md:flex' : 'flex' }}">
         {{-- Header --}}
@@ -60,7 +60,7 @@
     </div>
 
     {{-- Chat Area - hidden on mobile when no conversation selected --}}
-    <div class="flex-1 flex flex-col {{ $selected_user ? 'flex' : 'hidden md:flex' }}">
+    <div class="flex-1 flex flex-col min-w-0 {{ $selected_user ? 'flex' : 'hidden md:flex' }}">
         @if($selected_user)
             {{-- Chat Header --}}
             <div class="bg-white border-b border-gray-200 p-4 flex items-center justify-between">
@@ -157,7 +157,7 @@
             </div>
 
             {{-- Messages --}}
-            <div class="flex-1 overflow-y-auto p-4 space-y-4" 
+            <div class="flex-1 overflow-y-auto overflow-x-hidden p-4 space-y-4" 
                  id="messages-container"
                  x-data="{ 
                      scrollToBottom() { 
@@ -239,7 +239,7 @@
                         @else
                             {{-- Regular message --}}
                             <div class="max-w-[70%] {{ $is_mine ? 'bg-blue-600 text-white' : 'bg-white text-gray-900' }} rounded-2xl px-4 py-2 shadow-sm">
-                                <p class="text-sm">{{ $message['content'] }}</p>
+                                <p class="text-sm break-words">{{ $message['content'] }}</p>
                                 <p class="text-xs {{ $is_mine ? 'text-blue-200' : 'text-gray-400' }} mt-1">
                                     {{ \Carbon\Carbon::parse($message['created_at'])->format('H:i') }}
                                     @if($is_mine && !empty($message['read_at']))
@@ -253,12 +253,12 @@
             </div>
 
             {{-- Input --}}
-            <div class="bg-white border-t border-gray-200 px-4 sm:px-6 py-3 sm:py-4">
-                <form wire:submit="sendMessage" class="flex items-center gap-2 sm:gap-3">
+            <div class="bg-white border-t border-gray-200 px-4 sm:px-6 py-3 sm:py-4 min-w-0">
+                <form wire:submit="sendMessage" class="flex items-center gap-2 sm:gap-3 min-w-0">
                     <input type="text"
                            wire:model="new_message"
                            placeholder="{{ __('messages.type_message') }}"
-                           class="flex-1 min-w-0 border border-gray-300 rounded-full px-4 py-2 text-sm sm:text-base focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                           class="flex-1 min-w-0 border border-gray-300 rounded-full px-4 py-2 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                            autocomplete="off">
                     <button type="submit"
                             class="flex-shrink-0 bg-blue-600 text-white p-2.5 sm:p-3 rounded-full hover:bg-blue-700 transition">
