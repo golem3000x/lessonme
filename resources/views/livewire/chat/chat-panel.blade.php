@@ -1,5 +1,5 @@
-<!-- Chat panel -->
-<div 
+<!-- Chat panel wrapper -->
+<div
     x-data="{ 
         scrollToBottom() { 
             this.$nextTick(() => {
@@ -12,13 +12,43 @@
             });
         }
     }"
-    x-init="$watch('$wire.is_open', value => { if (value) scrollToBottom() })"
+    x-init="$watch('$wire.is_open', value => { 
+        if (value) {
+            scrollToBottom();
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+    })"
     @message-sent.window="scrollToBottom()"
     @message-received.window="scrollToBottom()"
-    :class="$wire.is_open ? 'opacity-100 scale-100 pointer-events-auto' : 'opacity-0 scale-95 pointer-events-none'"
-    class="fixed inset-x-2 bottom-20 sm:inset-x-auto sm:bottom-24 sm:right-6 sm:w-96 h-[70vh] sm:h-[500px] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden z-40 transition-all duration-300"
-    x-cloak
 >
+    <!-- Backdrop -->
+    <div 
+        x-show="$wire.is_open"
+        x-cloak
+        @click="$wire.closeChat()"
+        x-transition:enter="transition ease-out duration-200"
+        x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100"
+        x-transition:leave="transition ease-in duration-150"
+        x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0"
+        class="fixed inset-0 bg-black/50 z-40"
+    ></div>
+
+    <!-- Chat panel -->
+    <div 
+        x-show="$wire.is_open"
+        x-cloak
+        x-transition:enter="transition ease-out duration-200"
+        x-transition:enter-start="opacity-0 scale-95"
+        x-transition:enter-end="opacity-100 scale-100"
+        x-transition:leave="transition ease-in duration-150"
+        x-transition:leave-start="opacity-100 scale-100"
+        x-transition:leave-end="opacity-0 scale-95"
+        class="fixed inset-x-2 bottom-20 sm:inset-x-auto sm:bottom-24 sm:right-6 sm:w-96 h-[70vh] sm:h-[500px] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden z-50"
+    >
     <!-- Header -->
     <div class="bg-gradient-to-r from-blue-500 to-purple-600 p-4 flex items-center justify-between">
         <div class="flex items-center gap-3">
@@ -161,4 +191,5 @@
             animation: fade-in 0.2s ease-out;
         }
     </style>
+    </div>
 </div>
