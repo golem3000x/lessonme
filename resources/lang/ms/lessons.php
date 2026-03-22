@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 return [
-    'generate_lesson' => 'Jana Pelajaran',
+    'generate_lesson' => 'Jana Pelajarana',
     'topic' => 'Topik',
     'level' => 'Tahap',
 
