@@ -1,4 +1,4 @@
-<div class="max-w-5xl mx-auto p-6" 
+<div class="space-y-6" 
     @php
         $has_unapproved_topics = $active_tab === 'custom' && $custom_topics->contains(fn($t) => !$t->is_approved);
         $has_unapproved_keywords = $active_tab === 'custom' && $custom_topics->contains(function($t) {
@@ -157,34 +157,36 @@
 
         {{-- Tabs --}}
         <div class="mb-6">
-            <div class="border-b border-gray-200">
-                <nav class="flex gap-4">
+            <div class="border-b border-gray-200 overflow-x-auto">
+                <nav class="flex gap-1 sm:gap-4 min-w-max">
                     <button
                         wire:click="switchTab('custom')"
-                        class="relative px-4 py-3 font-medium text-sm transition-all {{ $active_tab === 'custom' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-gray-700' }}"
+                        class="relative px-2 sm:px-4 py-3 font-medium text-sm transition-all whitespace-nowrap {{ $active_tab === 'custom' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-gray-700' }}"
                     >
-                        <span class="flex items-center gap-2">
-                            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <span class="flex items-center gap-1 sm:gap-2">
+                            <svg class="h-4 w-4 sm:h-5 sm:w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                             </svg>
-                            {{ __('topics.user_topics') }}
+                            <span class="hidden sm:inline">{{ __('topics.user_topics') }}</span>
+                            <span class="sm:hidden">{{ __('topics.your_short') }}</span>
                             @if($active_tab === 'custom')
-                                <span class="inline-flex items-center justify-center px-2 py-0.5 text-xs font-bold bg-blue-100 text-blue-600 rounded-full">{{ $custom_topics->total() }}</span>
+                                <span class="inline-flex items-center justify-center px-1.5 sm:px-2 py-0.5 text-xs font-bold bg-blue-100 text-blue-600 rounded-full">{{ $custom_topics->total() }}</span>
                             @endif
                         </span>
                     </button>
 
                     <button
                         wire:click="switchTab('system')"
-                        class="relative px-4 py-3 font-medium text-sm transition-all {{ $active_tab === 'system' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-gray-700' }}"
+                        class="relative px-2 sm:px-4 py-3 font-medium text-sm transition-all whitespace-nowrap {{ $active_tab === 'system' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-gray-700' }}"
                     >
-                        <span class="flex items-center gap-2">
-                            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <span class="flex items-center gap-1 sm:gap-2">
+                            <svg class="h-4 w-4 sm:h-5 sm:w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                             </svg>
-                            {{ __('topics.system_topics') }}
+                            <span class="hidden sm:inline">{{ __('topics.system_topics') }}</span>
+                            <span class="sm:hidden">{{ __('topics.system_short') }}</span>
                             @if($active_tab === 'system')
-                                <span class="inline-flex items-center justify-center px-2 py-0.5 text-xs font-bold bg-gray-100 text-gray-600 rounded-full">{{ $system_topics->count() }}</span>
+                                <span class="inline-flex items-center justify-center px-1.5 sm:px-2 py-0.5 text-xs font-bold bg-gray-100 text-gray-600 rounded-full">{{ $system_topics->count() }}</span>
                             @endif
                         </span>
                     </button>

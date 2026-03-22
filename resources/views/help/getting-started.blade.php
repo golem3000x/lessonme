@@ -1,6 +1,5 @@
 <x-app-layout>
-    <div class="py-12">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-4xl space-y-6">
             {{-- Back Button --}}
             <div class="mb-6">
                 <a href="{{ route('help.index') }}" class="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700">
@@ -88,6 +87,5 @@
                     </div>
                 </section>
             </div>
-        </div>
     </div>
 </x-app-layout>

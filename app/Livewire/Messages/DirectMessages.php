@@ -142,6 +142,13 @@ class DirectMessages extends Component
         $this->loadUnreadCount();
     }
 
+    public function deselectConversation(): void
+    {
+        $this->selected_user = null;
+        $this->messages = [];
+        $this->loadConversations();
+    }
+
     public function sendMessage(): void
     {
         if (! $this->selected_user) {

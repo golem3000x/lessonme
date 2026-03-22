@@ -30,7 +30,7 @@
         x-transition:leave="transition ease-in duration-150"
         x-transition:leave-start="opacity-100 scale-100"
         x-transition:leave-end="opacity-0 scale-95"
-        class="absolute right-0 mt-[0.625rem] w-96 bg-white rounded-xl shadow-2xl border border-gray-200 z-50 overflow-hidden"
+        class="fixed sm:absolute top-16 sm:top-auto right-2 sm:right-0 left-2 sm:left-auto sm:mt-[0.625rem] sm:w-96 bg-white rounded-xl shadow-2xl border border-gray-200 z-50 overflow-hidden"
     >
         <!-- Header -->
         <div class="px-5 py-4 bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-gray-200 flex justify-between items-center">

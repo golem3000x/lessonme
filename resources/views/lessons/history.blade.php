@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="max-w-5xl mx-auto p-6 space-y-6">
+    <div class="max-w-5xl space-y-6">
 
         {{-- Header --}}
         <div class="bg-gradient-to-br from-white to-gray-50 p-8 rounded-2xl shadow-lg border border-gray-100">

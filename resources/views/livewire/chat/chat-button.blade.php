@@ -1,6 +1,8 @@
-<!-- Chat button in bottom right corner -->
+<!-- Chat button in bottom right corner - hidden when chat is open on mobile -->
 <div 
-    class="fixed bottom-6 right-6 z-50"
+    x-data
+    class="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40"
+    x-bind:class="{ 'hidden sm:block': $wire.is_chat_open }"
 >
     <style>
         @keyframes fade-in {

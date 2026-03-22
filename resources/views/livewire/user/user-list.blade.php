@@ -1,4 +1,4 @@
-<div class="space-y-6">
+<div class="space-y-6 sm:space-y-8">
     {{-- Header --}}
     <div class="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-lg shadow-lg p-6 text-white">
         <h1 class="text-3xl font-bold mb-2">👥 {{ __('users.title') }}</h1>

@@ -24,13 +24,13 @@
         @endphp
 
         {{-- CURRENT EXERCISE CARD --}}
-        <div class="bg-white rounded-lg shadow-lg border-2 border-blue-200 p-8 min-h-[400px]">
+        <div class="bg-white rounded-lg shadow-lg border-2 border-blue-200 p-4 sm:p-6 md:p-8 min-h-[300px] sm:min-h-[400px]">
             {{-- QUIZ --}}
             @if($type === 'quiz')
                 <h4 class="text-xl font-bold mb-6 text-yellow-600 flex items-center gap-2">
                     <span class="text-2xl">🎯</span> {{ __('lessons.quiz') }}
                 </h4>
-                <div class="p-6 bg-yellow-50 rounded-lg">
+                <div class="p-4 sm:p-6 bg-yellow-50 rounded-lg">
                     <p class="text-gray-800 font-medium mb-4 text-lg">
                         {{ $item['question'] ?? '' }}
                     </p>
@@ -92,7 +92,7 @@
                     <h4 class="text-xl font-bold mb-6 text-blue-600 flex items-center gap-2">
                         <span class="text-2xl">📝</span> {{ __('lessons.gap_fill') }}
                     </h4>
-                    <div class="p-6 bg-blue-50 rounded-lg">
+                    <div class="p-4 sm:p-6 bg-blue-50 rounded-lg">
                         @php
                             $sentence = $item['sentence'] ?? '';
                             $parts = explode('___', $sentence);
@@ -331,9 +331,9 @@
                 <h4 class="text-xl font-bold mb-6 text-purple-600 flex items-center gap-2">
                     <span class="text-2xl">🔄</span> {{ __('lessons.sentence_ordering') }}
                 </h4>
-                <div class="p-6 bg-purple-50 rounded-lg">
+                <div class="p-4 sm:p-6 bg-purple-50 rounded-lg">
                     <p class="text-sm text-gray-600 mb-4">{{ __('lessons.arrange_words') }}</p>
-                    <div class="flex flex-wrap gap-3 mb-4">
+                    <div class="flex flex-wrap gap-2 sm:gap-3 mb-4">
                         @foreach($ordered_words[$index] ?? [] as $word_index => $word)
                             <div class="flex items-center gap-1 bg-white border-2 border-purple-300 rounded-lg px-4 py-3 shadow-sm">
                                 @if(!$checked)
@@ -383,9 +383,9 @@
                 <h4 class="text-xl font-bold mb-6 text-green-600 flex items-center gap-2">
                     <span class="text-2xl">✓</span> {{ __('lessons.true_false') }}
                 </h4>
-                <div class="p-6 bg-green-50 rounded-lg">
+                <div class="p-4 sm:p-6 bg-green-50 rounded-lg">
                     <p class="text-gray-800 mb-6 text-lg">{{ $item['statement'] ?? '' }}</p>
-                    <div class="flex gap-4">
+                    <div class="flex flex-col sm:flex-row gap-3 sm:gap-4">
                         <label class="cursor-pointer flex items-center gap-3 p-4 bg-white rounded-lg border-2 border-green-300 hover:border-green-500 transition-colors flex-1">
                             <input
                                 type="radio"
@@ -424,7 +424,7 @@
                 <h4 class="text-xl font-bold mb-6 text-orange-600 flex items-center gap-2">
                     <span class="text-2xl">🔗</span> {{ __('lessons.matching') }}
                 </h4>
-                <div class="p-6 bg-orange-50 rounded-lg">
+                <div class="p-4 sm:p-6 bg-orange-50 rounded-lg">
                     <div class="flex flex-col gap-4">
                         <p class="text-gray-800 font-medium text-lg">{{ $item['word'] ?? '' }}</p>
                         <input
@@ -451,23 +451,23 @@
         </div>
 
         {{-- NAVIGATION BUTTONS --}}
-        <div class="flex items-center justify-between gap-4">
+        <div class="flex items-center justify-between gap-2 sm:gap-4">
             <button
                 wire:click="previousExercise"
                 @if($current_exercise_index === 0) disabled @endif
-                class="flex items-center gap-2 px-6 py-3 rounded-lg border-2 border-gray-300 hover:border-blue-500 hover:bg-blue-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:border-gray-300"
+                class="flex items-center gap-1 sm:gap-2 px-3 sm:px-6 py-2 sm:py-3 rounded-lg border-2 border-gray-300 hover:border-blue-500 hover:bg-blue-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:border-gray-300"
             >
-                <span class="text-xl">←</span>
-                <span class="font-medium">{{ __('lessons.previous') }}</span>
+                <span class="text-lg sm:text-xl">←</span>
+                <span class="font-medium text-sm sm:text-base">{{ __('lessons.previous') }}</span>
             </button>
 
             <button
                 wire:click="nextExercise"
                 @if($current_exercise_index >= $total_exercises - 1) disabled @endif
-                class="flex items-center gap-2 px-6 py-3 rounded-lg border-2 border-gray-300 hover:border-blue-500 hover:bg-blue-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:border-gray-300"
+                class="flex items-center gap-1 sm:gap-2 px-3 sm:px-6 py-2 sm:py-3 rounded-lg border-2 border-gray-300 hover:border-blue-500 hover:bg-blue-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:border-gray-300"
             >
-                <span class="font-medium">{{ __('lessons.next') }}</span>
-                <span class="text-xl">→</span>
+                <span class="font-medium text-sm sm:text-base">{{ __('lessons.next') }}</span>
+                <span class="text-lg sm:text-xl">→</span>
             </button>
         </div>
     @endif

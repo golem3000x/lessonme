@@ -1,7 +1,6 @@
 @php use App\Enums\System\LanguageLevelEnum; @endphp
 
-<div class="min-h-screen bg-gray-50">
-    <div class="max-w-3xl mx-auto px-4 py-8">
+<div class="max-w-3xl space-y-6 sm:space-y-8">
         {{-- Header --}}
         <div class="flex items-center gap-4 mb-8">
             <a href="{{ route('courses.index') }}" class="p-2 hover:bg-gray-100 rounded-lg transition">
@@ -129,5 +128,4 @@
                 </button>
             </div>
         </div>
-    </div>
 </div>

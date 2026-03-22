@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="max-w-7xl mx-auto p-6">
+    <div class="space-y-6 sm:space-y-8">
         {{-- HEADER --}}
         <div class="mb-6">
             <a href="{{ route('lessons.show', $lesson->uuid) }}" 

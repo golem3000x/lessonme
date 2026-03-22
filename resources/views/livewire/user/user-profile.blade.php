@@ -1,4 +1,4 @@
-<div class="max-w-4xl mx-auto">
+<div class="space-y-6">
     {{-- Profile Header --}}
     <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
         {{-- Cover gradient --}}

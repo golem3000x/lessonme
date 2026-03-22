@@ -1,4 +1,4 @@
-<div class="max-w-3xl mx-auto">
+<div class="max-w-3xl space-y-6">
     {{-- HEADER --}}
     <div class="mb-8">
         <h1 class="text-3xl font-bold text-gray-900 flex items-center gap-3">

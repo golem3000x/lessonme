@@ -1,4 +1,4 @@
-<div class="max-w-6xl mx-auto p-6 space-y-8">
+<div class="space-y-6 sm:space-y-8">
     {{-- Header --}}
     <div class="flex flex-col gap-4">
         <div class="flex items-center justify-between">

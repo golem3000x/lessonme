@@ -1,5 +1,4 @@
-<div class="min-h-screen bg-gray-50">
-    <div class="max-w-4xl mx-auto px-4 py-8">
+<div class="max-w-4xl space-y-6 sm:space-y-8">
         {{-- Header --}}
         <div class="mb-8">
             <a href="{{ route('courses.index') }}" class="inline-flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 mb-4">
@@ -9,9 +8,9 @@
                 {{ __('lessons.my_courses') }}
             </a>
             
-            <div class="flex items-start justify-between">
+            <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                 <div>
-                    <h1 class="text-2xl font-bold text-gray-900">{{ $course->title }}</h1>
+                    <h1 class="text-xl sm:text-2xl font-bold text-gray-900">{{ $course->title }}</h1>
                     @if($course->description)
                         <p class="text-gray-600 mt-2">{{ $course->description }}</p>
                     @endif
@@ -111,5 +110,4 @@
                 @endforeach
             </div>
         </div>
-    </div>
 </div>
