@@ -45,6 +45,11 @@ jobs:
       - name: Install dependencies
         run: composer install --no-interaction --prefer-dist
 
+      - name: Prepare Laravel
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+
       - name: Run PHPStan
         run: vendor/bin/phpstan analyse --memory-limit=2G
 

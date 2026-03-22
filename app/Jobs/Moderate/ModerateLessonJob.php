@@ -28,7 +28,10 @@ class ModerateLessonJob implements ShouldQueue
     {
         $lesson = $this->lesson->load('user');
 
-        if (! $lesson->user) {
+        /** @var \App\Models\User\User|null $user */
+        $user = $lesson->user;
+
+        if (! $user) {
             Log::error('User not found for lesson moderation', ['lesson_id' => $lesson->id]);
 
             return;
@@ -42,8 +45,8 @@ class ModerateLessonJob implements ShouldQueue
             if (! $is_appropriate) {
                 $lesson->update(['status' => LessonCreationStatusEnum::REJECTED]);
 
-                $lesson->user->notify(new LessonCreationNotification(
-                    $lesson->user,
+                $user->notify(new LessonCreationNotification(
+                    $user,
                     LessonCreationStatusEnum::REJECTED,
                     $lesson->id,
                 ));
@@ -53,8 +56,8 @@ class ModerateLessonJob implements ShouldQueue
 
             $lesson->update(['status' => LessonCreationStatusEnum::CREATED]);
 
-            $lesson->user->notify(new LessonCreationNotification(
-                $lesson->user,
+            $user->notify(new LessonCreationNotification(
+                $user,
                 LessonCreationStatusEnum::CREATED,
                 $lesson->id,
             ));
@@ -66,8 +69,8 @@ class ModerateLessonJob implements ShouldQueue
 
             $lesson->update(['status' => LessonCreationStatusEnum::ERROR]);
 
-            $lesson->user->notify(new LessonCreationNotification(
-                $lesson->user,
+            $user->notify(new LessonCreationNotification(
+                $user,
                 LessonCreationStatusEnum::ERROR,
                 $lesson->id,
             ));
