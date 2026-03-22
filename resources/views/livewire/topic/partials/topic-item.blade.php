@@ -1,10 +1,10 @@
 <div class="group relative bg-white border-2 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 {{ $is_visible ? 'border-green-200' : 'border-gray-200' }} overflow-hidden">
     {{-- Header --}}
-    <div class="flex items-center gap-4 p-5 bg-gradient-to-r from-gray-50 to-white">
+    <div class="flex items-center gap-2 sm:gap-4 p-4 sm:p-5 bg-gradient-to-r from-gray-50 to-white">
         {{-- Visibility toggle --}}
         <button 
             wire:click="toggleTopicVisibility({{ $topic->id }})"
-            class="group/eye p-2 rounded-lg transition-all duration-200 {{ $is_visible ? 'bg-green-100 hover:bg-green-200' : 'bg-gray-100 hover:bg-gray-200' }}"
+            class="flex-shrink-0 group/eye p-2 rounded-lg transition-all duration-200 {{ $is_visible ? 'bg-green-100 hover:bg-green-200' : 'bg-gray-100 hover:bg-gray-200' }}"
             title="{{ $is_visible ? __('topics.visible_in_chat') : __('topics.hidden_in_chat') }}"
         >
             @if($is_visible)
@@ -22,7 +22,7 @@
         {{-- Topic name + expand button --}}
         <button
             wire:click="toggleAccordion({{ $topic->id }})"
-            class="flex-1 flex items-center gap-3 text-left"
+            class="flex-1 min-w-0 flex items-center gap-2 sm:gap-3 text-left"
         >
             @php
                 $title = $topic->title($locale);
@@ -30,18 +30,18 @@
                 $cleanTitle = trim($title, '— -');
                 $displayTitle = !empty($cleanTitle) ? $title : $topic->slug;
             @endphp
-            <span class="font-semibold text-gray-900 text-lg">{{ $displayTitle }}</span>
+            <span class="font-semibold text-gray-900 text-base sm:text-lg truncate">{{ $displayTitle }}</span>
             @if(!$topic->is_approved && $topic->user_id !== null)
-                <span class="flex items-center gap-1 px-2 py-1 text-xs bg-yellow-100 text-yellow-700 rounded-full font-medium">
+                <span class="flex-shrink-0 flex items-center gap-1 px-2 py-1 text-xs bg-yellow-100 text-yellow-700 rounded-full font-medium">
                     <svg class="animate-spin h-3 w-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                    {{ __('topics.processing') }}
+                    <span class="hidden sm:inline">{{ __('topics.processing') }}</span>
                 </span>
             @endif
-            <span class="px-2 py-1 text-xs bg-gray-100 text-gray-600 rounded-full">{{ $keyword_count }} {{ __('topics.keywords') }}</span>
-            <svg class="h-5 w-5 text-gray-400 ml-auto transition-transform duration-200 {{ $is_expanded ? 'rotate-180' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <span class="flex-shrink-0 px-2 py-1 text-xs bg-gray-100 text-gray-600 rounded-full whitespace-nowrap">{{ $keyword_count }} <span class="hidden sm:inline">{{ __('topics.keywords') }}</span><span class="sm:hidden">kw</span></span>
+            <svg class="flex-shrink-0 h-5 w-5 text-gray-400 ml-auto transition-transform duration-200 {{ $is_expanded ? 'rotate-180' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
             </svg>
         </button>

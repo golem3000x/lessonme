@@ -184,6 +184,7 @@ return [
     'grade' => 'Gred',
     'completed_at' => 'Diselesaikan Pada',
     'view_scores' => 'Lihat Skor',
+    'scores' => 'Skor',
     'my_attempts' => 'Percubaan Saya',
     'duration' => 'Tempoh',
     'minutes' => 'minit',

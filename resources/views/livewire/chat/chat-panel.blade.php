@@ -16,7 +16,7 @@
     @message-sent.window="scrollToBottom()"
     @message-received.window="scrollToBottom()"
     :class="$wire.is_open ? 'opacity-100 scale-100 pointer-events-auto' : 'opacity-0 scale-95 pointer-events-none'"
-    class="fixed bottom-24 right-6 w-96 h-[500px] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden z-40 transition-all duration-300"
+    class="fixed inset-x-2 bottom-20 sm:inset-x-auto sm:bottom-24 sm:right-6 sm:w-96 h-[70vh] sm:h-[500px] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden z-40 transition-all duration-300"
     x-cloak
 >
     <!-- Header -->

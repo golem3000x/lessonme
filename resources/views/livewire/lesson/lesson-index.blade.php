@@ -1,5 +1,5 @@
 @php use Illuminate\Support\Str; @endphp
-<div class="max-w-6xl mx-auto p-6 space-y-8">
+<div class="space-y-6 sm:space-y-8">
     {{-- Header with Tabs --}}
     <div class="flex flex-col gap-4">
         <div class="flex items-center justify-between">
@@ -14,23 +14,23 @@
         </div>
 
         {{-- View Mode Tabs --}}
-        <div class="flex items-center justify-between">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div class="flex gap-1 p-1 bg-gray-100 rounded-lg">
                 <button
                     wire:click="setViewMode('my_lessons')"
-                    class="px-4 py-2 text-sm font-medium rounded-md transition {{ $view_mode === 'my_lessons' ? 'bg-white text-blue-600 shadow' : 'text-gray-600 hover:text-gray-900' }}"
+                    class="px-2 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-md transition {{ $view_mode === 'my_lessons' ? 'bg-white text-blue-600 shadow' : 'text-gray-600 hover:text-gray-900' }}"
                 >
                     {{ __('lessons.my_lessons') }}
                 </button>
                 <button
                     wire:click="setViewMode('assigned')"
-                    class="px-4 py-2 text-sm font-medium rounded-md transition {{ $view_mode === 'assigned' ? 'bg-white text-blue-600 shadow' : 'text-gray-600 hover:text-gray-900' }}"
+                    class="px-2 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-md transition {{ $view_mode === 'assigned' ? 'bg-white text-blue-600 shadow' : 'text-gray-600 hover:text-gray-900' }}"
                 >
                     {{ __('lessons.assigned_to_me') }}
                 </button>
             </div>
 
-        <div class="flex items-center gap-2">
+        <div class="flex items-center gap-1 sm:gap-2">
             {{-- Show filter and sort buttons if there are lessons OR if filters are active --}}
             @if(!$lessons->isEmpty() || $this->hasActiveFilters())
                 {{-- Sort dropdown --}}
@@ -38,14 +38,14 @@
                     <button
                         type="button"
                         @click="open = !open"
-                        class="group flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 hover:bg-gray-200 text-sm font-medium rounded-lg shadow transition"
+                        class="group flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 bg-gray-100 text-gray-700 hover:bg-gray-200 text-sm font-medium rounded-lg shadow transition"
                         title="{{ __('lessons.sort_by') }}"
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"/>
                         </svg>
                         <span class="hidden sm:inline">{{ __('lessons.sort') }}</span>
-                        <svg class="w-4 h-4 text-gray-500 transition-transform" :class="{'rotate-180': open}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-3 h-3 sm:w-4 sm:h-4 text-gray-500 transition-transform" :class="{'rotate-180': open}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                         </svg>
                     </button>
@@ -85,10 +85,10 @@
                 {{-- Filter button --}}
                 <button
                         wire:click="toggleFilters"
-                        class="group flex items-center gap-2 px-4 py-2 {{ $show_filters ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' }} text-sm font-medium rounded-lg shadow transition"
+                        class="group flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 {{ $show_filters ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' }} text-sm font-medium rounded-lg shadow transition"
                         title="{{ __('lessons.filters') }}"
                 >
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 transition-transform group-hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 sm:w-5 sm:h-5 transition-transform group-hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
                     </svg>
                     <span class="hidden sm:inline">{{ __('lessons.filters') }}</span>
@@ -102,9 +102,9 @@
             @if($view_mode === 'my_lessons')
                 <button
                         wire:click="openManageModal"
-                        class="group flex items-center gap-2 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 shadow transition"
+                        class="group flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 shadow transition"
                 >
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 transition-transform group-hover:rotate-90" fill="none" viewBox="0 0 24 24"
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 sm:w-5 sm:h-5 transition-transform group-hover:rotate-90" fill="none" viewBox="0 0 24 24"
                          stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
                               d="M12 4v16m8-8H4"/>
@@ -595,28 +595,28 @@
             <div class="fixed inset-0 bg-black/50 backdrop-blur-sm" x-transition></div>
 
             {{-- Center modal window --}}
-            <div class="fixed inset-0 flex items-center justify-center p-4">
+            <div class="fixed inset-0 flex items-center justify-center p-2 sm:p-4">
                 <div
-                        class="relative bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden border border-gray-100"
+                        class="relative bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] border border-gray-100"
                         x-transition
                         @click.stop
                 >
-                    <div class="p-6 bg-gradient-to-r from-blue-600 to-indigo-600 flex justify-between items-center">
-                        <div class="flex items-center gap-3">
-                            <div class="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
-                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="p-3 sm:p-6 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-t-2xl flex justify-between items-center gap-2">
+                        <div class="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+                            <div class="flex-shrink-0 p-1.5 sm:p-2 bg-white/20 rounded-lg backdrop-blur-sm">
+                                <svg class="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                                 </svg>
                             </div>
-                            <h3 class="text-xl font-bold text-white">{{ __('lessons.manage_lesson') }}</h3>
+                            <h3 class="text-base sm:text-xl font-bold text-white truncate">{{ __('lessons.manage_lesson') }}</h3>
                         </div>
-                        <button wire:click="closeManageModal" class="p-2 text-white/80 hover:text-white hover:bg-white/20 rounded-lg transition-all duration-200">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <button wire:click="closeManageModal" class="flex-shrink-0 p-1.5 sm:p-2 text-white/80 hover:text-white hover:bg-white/20 rounded-lg transition-all duration-200">
+                            <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                             </svg>
                         </button>
                     </div>
-                    <div class="p-6 max-h-[calc(90vh-80px)] overflow-y-auto">
+                    <div class="p-4 sm:p-6 max-h-[calc(90vh-80px)] overflow-y-auto">
                         <livewire:lesson.manage-lesson :key="'manage-lesson-'.$manage_modal_key"/>
                     </div>
                 </div>

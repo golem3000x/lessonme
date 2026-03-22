@@ -184,6 +184,7 @@ return [
     'grade' => 'ເກຣດ',
     'completed_at' => 'ສຳເລັດເມື່ອ',
     'view_scores' => 'ເບິ່ງຄະແນນ',
+    'scores' => 'ຄະແນນ',
     'my_attempts' => 'ຄວາມພະຍາຍາມຂອງຂ້ອຍ',
     'duration' => 'ໄລຍະເວລາ',
     'minutes' => 'ນາທີ',

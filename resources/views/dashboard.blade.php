@@ -1,6 +1,5 @@
 <x-app-layout>
-    <div class="py-8">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="space-y-6">
             @php
                 $user = auth()->user();
                 $is_teacher = $user->isTeacher();
@@ -51,6 +50,5 @@
                 {{-- Only student (default) --}}
                 <livewire:dashboard.student-dashboard />
             @endif
-        </div>
     </div>
 </x-app-layout>

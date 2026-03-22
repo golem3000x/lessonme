@@ -1,6 +1,6 @@
 <div class="flex h-full bg-gray-100">
-    {{-- Conversations List --}}
-    <div class="w-80 bg-white border-r border-gray-200 flex flex-col">
+    {{-- Conversations List - full width on mobile when no conversation selected, hidden when conversation is selected on mobile --}}
+    <div class="w-full md:w-80 bg-white border-r border-gray-200 flex flex-col {{ $selected_user ? 'hidden md:flex' : 'flex' }}">
         {{-- Header --}}
         <div class="p-4 border-b border-gray-200">
             <h2 class="text-lg font-semibold text-gray-900 flex items-center gap-2">
@@ -59,12 +59,19 @@
         </div>
     </div>
 
-    {{-- Chat Area --}}
-    <div class="flex-1 flex flex-col">
+    {{-- Chat Area - hidden on mobile when no conversation selected --}}
+    <div class="flex-1 flex flex-col {{ $selected_user ? 'flex' : 'hidden md:flex' }}">
         @if($selected_user)
             {{-- Chat Header --}}
             <div class="bg-white border-b border-gray-200 p-4 flex items-center justify-between">
                 <div class="flex items-center gap-3">
+                    {{-- Back button - only on mobile --}}
+                    <button wire:click="deselectConversation"
+                            class="md:hidden p-2 -ml-2 rounded-lg text-gray-500 hover:text-blue-600 hover:bg-blue-50 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                        </svg>
+                    </button>
                     @if($selected_user->avatar)
                         <img src="{{ $selected_user->avatar_url }}" 
                              alt="{{ $selected_user->name }}"
@@ -246,15 +253,15 @@
             </div>
 
             {{-- Input --}}
-            <div class="bg-white border-t border-gray-200 p-4">
-                <form wire:submit="sendMessage" class="flex items-center gap-3">
+            <div class="bg-white border-t border-gray-200 px-4 sm:px-6 py-3 sm:py-4">
+                <form wire:submit="sendMessage" class="flex items-center gap-2 sm:gap-3">
                     <input type="text"
                            wire:model="new_message"
                            placeholder="{{ __('messages.type_message') }}"
-                           class="flex-1 border border-gray-300 rounded-full px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                           class="flex-1 min-w-0 border border-gray-300 rounded-full px-4 py-2 text-sm sm:text-base focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                            autocomplete="off">
                     <button type="submit"
-                            class="bg-blue-600 text-white p-3 rounded-full hover:bg-blue-700 transition">
+                            class="flex-shrink-0 bg-blue-600 text-white p-2.5 sm:p-3 rounded-full hover:bg-blue-700 transition">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
                         </svg>

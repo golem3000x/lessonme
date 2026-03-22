@@ -185,6 +185,7 @@ return [
     'grade' => 'Grade',
     'completed_at' => 'Completed At',
     'view_scores' => 'View Scores',
+    'scores' => 'Scores',
     'my_attempts' => 'My Attempts',
     'duration' => 'Duration',
     'minutes' => 'minutes',

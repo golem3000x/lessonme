@@ -184,6 +184,7 @@ return [
     'grade' => 'ថ្នាក់',
     'completed_at' => 'បញ្ចប់នៅ',
     'view_scores' => 'មើលពិន្ទុ',
+    'scores' => 'ពិន្ទុ',
     'my_attempts' => 'ការព្យាយាមរបស់ខ្ញុំ',
     'duration' => 'រយៈពេល',
     'minutes' => 'នាទី',

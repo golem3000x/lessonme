@@ -1,7 +1,6 @@
 @php use App\Enums\System\LanguageLevelEnum; @endphp
 
-<div class="min-h-screen bg-gray-50">
-    <div class="max-w-5xl mx-auto px-4 py-8">
+<div class="max-w-5xl space-y-6 sm:space-y-8">
         {{-- Header --}}
         <div class="flex items-center justify-between mb-8">
             <div class="flex items-center gap-4">
@@ -400,5 +399,4 @@
                 @endif
             </div>
         </div>
-    </div>
 </div>

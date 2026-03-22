@@ -1,6 +1,5 @@
 <x-app-layout>
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="space-y-6 sm:space-y-8">
             {{-- Header --}}
             <div class="mb-8 text-center">
                 <h1 class="text-4xl font-bold text-gray-900 mb-3">
@@ -158,6 +157,5 @@
                     </p>
                 </div>
             </div>
-        </div>
     </div>
 </x-app-layout>

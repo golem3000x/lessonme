@@ -184,6 +184,7 @@ return [
     'grade' => 'Xếp loại',
     'completed_at' => 'Hoàn thành lúc',
     'view_scores' => 'Xem Điểm',
+    'scores' => 'Điểm',
     'my_attempts' => 'Lần Thử Của Tôi',
     'duration' => 'Thời gian',
     'minutes' => 'phút',

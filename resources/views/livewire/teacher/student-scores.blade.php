@@ -1,4 +1,4 @@
-<div class="space-y-6">
+<div class="space-y-6 sm:space-y-8">
     {{-- HEADER --}}
     <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
         <h2 class="text-2xl font-bold text-gray-800 mb-2">

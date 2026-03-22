@@ -184,6 +184,7 @@ return [
     'grade' => 'เกรด',
     'completed_at' => 'เสร็จสิ้นเมื่อ',
     'view_scores' => 'ดูคะแนน',
+    'scores' => 'คะแนน',
     'my_attempts' => 'ความพยายามของฉัน',
     'duration' => 'ระยะเวลา',
     'minutes' => 'นาที',
