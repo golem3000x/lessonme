@@ -2,7 +2,7 @@
     {{-- Conversations List - full width on mobile when no conversation selected, hidden when conversation is selected on mobile --}}
     <div class="w-full md:w-80 bg-white border-r border-gray-200 flex flex-col {{ $selected_user ? 'hidden md:flex' : 'flex' }}">
         {{-- Header --}}
-        <div class="p-4 border-b border-gray-200">
+        <div class="h-[72px] px-4 border-b border-gray-200 flex items-center">
             <h2 class="text-lg font-semibold text-gray-900 flex items-center gap-2">
                 <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
@@ -63,7 +63,7 @@
     <div class="flex-1 flex flex-col min-w-0 {{ $selected_user ? 'flex' : 'hidden md:flex' }}">
         @if($selected_user)
             {{-- Chat Header --}}
-            <div class="bg-white border-b border-gray-200 p-4 flex items-center justify-between">
+            <div class="bg-white border-b border-gray-200 h-[72px] px-4 flex items-center justify-between">
                 <div class="flex items-center gap-3">
                     {{-- Back button - only on mobile --}}
                     <button wire:click="deselectConversation"
