@@ -46,12 +46,12 @@
     <!-- Messages -->
     <div 
         x-ref="messagesContainer"
-        class="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50"
+        class="flex-1 overflow-y-auto overflow-x-hidden p-4 space-y-4 bg-gray-50"
         style="scroll-behavior: smooth;"
     >
         @forelse($messages as $message)
             <div class="flex {{ $message['is_from_admin'] ? 'justify-start' : 'justify-end' }} animate-fade-in">
-                <div class="flex items-start gap-2 max-w-[80%] {{ $message['is_from_admin'] ? 'flex-row' : 'flex-row-reverse' }}">
+                <div class="flex items-start gap-2 max-w-[80%] min-w-0 {{ $message['is_from_admin'] ? 'flex-row' : 'flex-row-reverse' }}">
                     <!-- Avatar -->
                     <div class="flex-shrink-0">
                         @if($message['is_from_admin'])
@@ -79,7 +79,7 @@
                     </div>
 
                     <!-- Message -->
-                    <div>
+                    <div class="min-w-0">
                         <div class="
                             {{ $message['is_from_admin'] 
                                 ? 'bg-white border border-gray-200' 
