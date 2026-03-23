@@ -253,8 +253,8 @@
             </div>
 
             {{-- Input --}}
-            <div class="bg-white border-t border-gray-200 px-4 sm:px-6 py-3 sm:py-4 min-w-0">
-                <form wire:submit="sendMessage" class="flex items-center gap-2 sm:gap-3 min-w-0">
+            <div class="bg-white border-t border-gray-200 px-4 sm:px-6 py-3 sm:py-4 min-w-0 flex-shrink-0">
+                <form wire:submit="sendMessage" class="flex items-center gap-2 sm:gap-3 w-full">
                     <input type="text"
                            wire:model="new_message"
                            placeholder="{{ __('messages.type_message') }}"

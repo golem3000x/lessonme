@@ -529,7 +529,7 @@
 </nav>
 
 @if(request()->is('messages*'))
-<main class="max-w-6xl mx-auto px-4 sm:px-6 py-4 h-[calc(100vh-64px)] overflow-hidden">
+<main class="max-w-6xl mx-auto px-4 sm:px-6 py-4 h-[calc(100dvh-64px)] overflow-hidden">
     <div class="h-full">
         {{ $slot }}
     </div>
