@@ -399,5 +399,13 @@
             container.scrollTop = container.scrollHeight;
         }
     });
+
+    // iOS keyboard fix
+    if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', () => {
+            document.documentElement.style.setProperty('--viewport-height', `${window.visualViewport.height}px`);
+        });
+        document.documentElement.style.setProperty('--viewport-height', `${window.visualViewport.height}px`);
+    }
 </script>
 @endscript
