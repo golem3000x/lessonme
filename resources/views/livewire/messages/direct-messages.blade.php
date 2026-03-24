@@ -400,8 +400,9 @@
         }
     });
 
-    // iOS keyboard fix - set CSS variable for viewport height
-    if (window.visualViewport) {
+    // iOS keyboard fix - only apply on iOS devices (Android handles keyboard correctly)
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    if (isIOS && window.visualViewport) {
         window.visualViewport.addEventListener('resize', () => {
             document.documentElement.style.setProperty('--viewport-height', `${window.visualViewport.height}px`);
         });
