@@ -60,7 +60,7 @@
     </div>
 
     {{-- Chat Area - hidden on mobile when no conversation selected --}}
-    <div class="flex-1 flex flex-col min-w-0 {{ $selected_user ? 'flex' : 'hidden md:flex' }}">
+    <div class="flex-1 flex flex-col min-w-0 overflow-hidden {{ $selected_user ? 'flex' : 'hidden md:flex' }}">
         @if($selected_user)
             {{-- Chat Header --}}
             <div class="bg-white border-b border-gray-200 h-[72px] px-4 flex items-center justify-between">
