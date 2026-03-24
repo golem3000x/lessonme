@@ -1,4 +1,4 @@
-<div class="flex h-full bg-gray-100 overflow-hidden" data-chat-container>
+<div class="flex h-full bg-gray-100 overflow-hidden">
     {{-- Conversations List - full width on mobile when no conversation selected, hidden when conversation is selected on mobile --}}
     <div class="w-full md:w-80 bg-white border-r border-gray-200 flex flex-col {{ $selected_user ? 'hidden md:flex' : 'flex' }}">
         {{-- Header --}}
@@ -259,8 +259,7 @@
                            wire:model="new_message"
                            placeholder="{{ __('messages.type_message') }}"
                            class="flex-1 min-w-0 border border-gray-300 rounded-full px-4 py-2 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                           autocomplete="off"
-                           data-chat-input>
+                           autocomplete="off">
                     <button type="submit"
                             class="flex-shrink-0 bg-blue-600 text-white p-2.5 sm:p-3 rounded-full hover:bg-blue-700 transition">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -401,41 +400,12 @@
         }
     });
 
-    // iOS keyboard fix - more robust approach
-    const chatContainer = document.querySelector('[data-chat-container]');
-    const inputField = document.querySelector('[data-chat-input]');
-    
-    if (inputField && chatContainer) {
-        // On input focus, scroll to bottom after keyboard animation
-        inputField.addEventListener('focus', () => {
-            setTimeout(() => {
-                // Scroll input into view
-                inputField.scrollIntoView({ behavior: 'smooth', block: 'end' });
-                // Also scroll messages to bottom
-                const messagesContainer = document.getElementById('messages-container');
-                if (messagesContainer) {
-                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                }
-            }, 300);
-        });
-    }
-
-    // Handle visualViewport resize for dynamic height
+    // iOS keyboard fix - set CSS variable for viewport height
     if (window.visualViewport) {
-        const updateHeight = () => {
-            const vh = window.visualViewport.height;
-            document.documentElement.style.setProperty('--viewport-height', `${vh}px`);
-            // Force scroll to bottom when keyboard opens
-            const messagesContainer = document.getElementById('messages-container');
-            if (messagesContainer) {
-                setTimeout(() => {
-                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                }, 100);
-            }
-        };
-        window.visualViewport.addEventListener('resize', updateHeight);
-        window.visualViewport.addEventListener('scroll', updateHeight);
-        updateHeight();
+        window.visualViewport.addEventListener('resize', () => {
+            document.documentElement.style.setProperty('--viewport-height', `${window.visualViewport.height}px`);
+        });
+        document.documentElement.style.setProperty('--viewport-height', `${window.visualViewport.height}px`);
     }
 </script>
 @endscript
