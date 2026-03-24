@@ -12,23 +12,14 @@
             });
         }
     }"
-    x-init="
-        // iOS keyboard fix
-        if (window.visualViewport) {
-            window.visualViewport.addEventListener('resize', () => {
-                document.documentElement.style.setProperty('--viewport-height', `${window.visualViewport.height}px`);
-            });
-            document.documentElement.style.setProperty('--viewport-height', `${window.visualViewport.height}px`);
+    x-init="$watch('$wire.is_open', value => { 
+        if (value) {
+            scrollToBottom();
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
         }
-        $watch('$wire.is_open', value => { 
-            if (value) {
-                scrollToBottom();
-                document.body.style.overflow = 'hidden';
-            } else {
-                document.body.style.overflow = '';
-            }
-        });
-    "
+    })"
     @message-sent.window="scrollToBottom()"
     @message-received.window="scrollToBottom()"
 >
@@ -56,8 +47,7 @@
         x-transition:leave="transition ease-in duration-150"
         x-transition:leave-start="opacity-100 scale-100"
         x-transition:leave-end="opacity-0 scale-95"
-        class="fixed inset-x-2 bottom-20 sm:inset-x-auto sm:bottom-24 sm:right-6 sm:w-96 sm:h-[500px] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden z-50"
-        style="height: calc(var(--viewport-height, 70vh) * 0.7);"
+        class="fixed inset-x-2 bottom-20 sm:inset-x-auto sm:bottom-24 sm:right-6 sm:w-96 h-[70vh] sm:h-[500px] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden z-50"
     >
     <!-- Header -->
     <div class="bg-gradient-to-r from-blue-500 to-purple-600 p-4 flex items-center justify-between">
