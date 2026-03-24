@@ -529,7 +529,7 @@
 </nav>
 
 @if(request()->is('messages*'))
-<main class="max-w-6xl mx-auto px-4 sm:px-6 py-4 overflow-hidden" style="height: calc(var(--viewport-height, 100dvh) - 64px);">
+<main class="fixed inset-x-0 top-16 bottom-0 max-w-6xl mx-auto px-4 sm:px-6 py-4 overflow-hidden">
     <div class="h-full">
         {{ $slot }}
     </div>
