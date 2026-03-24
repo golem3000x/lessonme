@@ -37,7 +37,7 @@
     @livewireStyles
 </head>
 
-<body class="bg-gray-50 min-h-screen font-sans antialiased">
+<body class="bg-gray-50 min-h-screen font-sans antialiased {{ request()->is('messages*') ? 'overflow-hidden h-screen' : '' }}">
 
 <nav class="bg-gradient-to-r from-white via-gray-50 to-white border-b border-gray-200 sticky top-0 z-50 shadow-lg backdrop-blur-md" x-data="{ mobileMenuOpen: false }">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 flex justify-between items-center h-16">
